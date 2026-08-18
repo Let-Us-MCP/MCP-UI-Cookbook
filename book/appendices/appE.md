@@ -14,6 +14,7 @@ summary: Where each part of this book is anchored, and every specification, guid
 | Prior UI-over-MCP practice | MCP-UI; OpenAI Apps SDK |
 | Component keyboard and ARIA behaviour | ARIA Authoring Practices Guide; WAI-ARIA 1.2; WCAG 2.2 |
 | Semantic colour roles | Material Design 3; Fluent 2 |
+| Theme wire format | Plain CSS custom properties, per the extension. Not DTCG. |
 | Adaptive appearance | Apple Human Interface Guidelines |
 | Sandboxing, drag and drop, page visibility | HTML Living Standard |
 | Content security policy, permissions | CSP Level 3; Permissions Policy |
@@ -73,6 +74,13 @@ W3C, Web Content Accessibility Guidelines (WCAG) 2.2.
 
 Design Tokens Community Group, Design Tokens Format Module.
 <https://www.designtokens.org/>
+
+Listed because the outline this book was planned from assumed the host theme
+would arrive as DTCG tokens. It does not. The MCP Apps extension sends plain
+CSS custom properties with standardised names, which Chapter 12 documents, and
+no conversion step exists in either direction. The DTCG format remains the
+right thing if you are generating those variables from a design system, which
+is a build-time concern rather than a wire one.
 
 Google, Material Design 3. <https://m3.material.io/>
 

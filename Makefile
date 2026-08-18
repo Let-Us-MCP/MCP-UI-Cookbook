@@ -25,7 +25,7 @@ figures:
 site:
 	python3 tools/build_site.py
 
-check: lint refs listings counts claims identifiers transcripts render
+check: lint refs listings counts claims identifiers webclaims transcripts render
 
 lint:
 	python3 tools/lint_prose.py
@@ -46,6 +46,14 @@ claims:
 
 identifiers:
 	python3 tools/check_identifiers.py
+
+webclaims:
+	python3 tools/check_web_claims.py
+
+# Downloads the W3C, WHATWG and ecosystem references the book cites into
+# proto/refs/, which is never committed.
+refs-fetch:
+	bash tools/fetch_refs.sh
 
 # Drives every demonstration in headless Chrome and diffs the recorded
 # JSON-RPC log. UPDATE_TRANSCRIPTS=1 accepts a new one.

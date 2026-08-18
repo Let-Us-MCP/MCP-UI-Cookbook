@@ -30,6 +30,7 @@ jobs:
         run: |
           python3 tools/check_claims.py
           python3 tools/check_identifiers.py
+          python3 tools/check_web_claims.py
       - name: Build the demos and the site
         run: |
           python3 tools/build_demos.py

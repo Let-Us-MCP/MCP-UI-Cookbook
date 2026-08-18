@@ -189,7 +189,7 @@
 </tbody>
 </table></div>
 <p><strong>Start from the native element.</strong> <code>&lt;button&gt;</code>, <code>&lt;input type="checkbox"&gt;</code>, <code>&lt;input type="range"&gt;</code>, <code>&lt;select&gt;</code> all work, all come with keyboard and screen reader support, and all are one CSS file away from matching your design. The recipes use native elements everywhere except the combobox, which does not exist natively.</p>
-<p><strong>Target size is a host-dependent decision.</strong> Forty-four pixels on touch, smaller with a pointer, and <code>deviceCapabilities</code> is where you find out which. A toolbar designed at 28 pixels is unusable on a phone, and you cannot detect a phone by width when the same width is a side panel on a desktop.</p>
+<p><strong>Target size is a host-dependent decision.</strong> WCAG 2.2 requires 24 by 24 CSS pixels at AA and 44 by 44 at AAA, and <code>deviceCapabilities</code> is where you find out whether you are on touch. A toolbar designed at 28 pixels clears AA and is still unpleasant on a phone, and you cannot detect a phone by width when the same width is a side panel on a desktop.</p>
 <p><strong>Disabled controls carry an obligation.</strong> A disabled button is a promise that something could enable it, and the user is entitled to know what. If the reason is a missing host capability, do not disable, omit: Chapter 1’s argument. If the reason is state, say so.</p>
 <p><strong>The combobox is the one worth buying rather than building.</strong> It is the most complex pattern in the APG, it involves a listbox that must be positioned within the frame, and getting the <code>aria-activedescendant</code> and expanded state right takes longer than any other component here. If a plain <code>&lt;select&gt;</code> or a text input with a datalist will do, take it.</p>
 <h2 id="text-input">Text input</h2>
@@ -305,7 +305,7 @@
 <li>Escape closes any overlay and resolves whatever was awaiting it.</li>
 <li>No overlay renders outside the frame’s bounds.</li>
 <li>Native controls are used where they exist, and replacements carry the same keyboard behaviour.</li>
-<li>Hit targets are at least 44 pixels when <code>deviceCapabilities.touch</code> is set.</li>
+<li>Hit targets clear 24 by 24 CSS pixels everywhere, and 44 by 44 when <code>deviceCapabilities.touch</code> is set.</li>
 <li>Validation errors appear on blur and on submit, not on keystroke.</li>
 <li>Every error is associated with its field through <code>aria-describedby</code>.</li>
 </ol>
