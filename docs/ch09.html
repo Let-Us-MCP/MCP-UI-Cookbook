@@ -155,6 +155,79 @@ panX = px - ((px - panX) / before) * scale;
 panY = py - ((py - panY) / before) * scale;</code></pre>
 <p><code>{ passive: false }</code> on the wheel listener is required, because you have to call <code>preventDefault()</code> to stop the page zooming, and browsers default wheel listeners to passive.</p>
 <p><strong>Accessibility.</strong> Every spatial gesture needs a non-spatial equivalent. Buttons for zoom in, zoom out, reset and fit, and arrow keys to pan. A canvas that can only be operated by dragging is a canvas that cannot be operated at all by a large number of people.</p>
+<h2 id="the-keyboard-model-in-one-table">The keyboard model, in one table</h2>
+<p>This is the set users bring with them. Implementing it is about twenty lines and not implementing it is the most common reason an embedded table feels unfinished.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>In a list or grid</th>
+<th>In a menu</th>
+<th>In a dialog</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arrow keys</td>
+<td>Move the active item</td>
+<td>Move the highlight</td>
+<td>Nothing</td>
+</tr>
+<tr>
+<td>Space</td>
+<td>Toggle selection</td>
+<td>Activate</td>
+<td>Activate the focused control</td>
+</tr>
+<tr>
+<td>Enter</td>
+<td>Open or activate</td>
+<td>Activate and close</td>
+<td>Submit</td>
+</tr>
+<tr>
+<td>Shift with arrows</td>
+<td>Extend the selection</td>
+<td>Nothing</td>
+<td>Nothing</td>
+</tr>
+<tr>
+<td>Cmd/Ctrl+A</td>
+<td>Select all</td>
+<td>Nothing</td>
+<td>Select the field’s text</td>
+</tr>
+<tr>
+<td>Home, End</td>
+<td>First, last item</td>
+<td>First, last item</td>
+<td>Nothing</td>
+</tr>
+<tr>
+<td>Escape</td>
+<td>Clear the selection</td>
+<td>Close, restore focus</td>
+<td>Close, restore focus</td>
+</tr>
+<tr>
+<td>Tab</td>
+<td>Leave the widget</td>
+<td>Close, then leave</td>
+<td>Cycle inside</td>
+</tr>
+</tbody>
+</table></div>
+<p>The row that matters most is the last one. A composite widget is <em>one</em> tab stop, and the arrow keys move within it. A table where Tab visits every cell is a table nobody can get past.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>Keyboard events originating in the view are not swallowed by the host.</li>
+<li>A list of N rows presents one tab stop, not N.</li>
+<li>Shift-click and Cmd/Ctrl-click produce range and additive selection.</li>
+<li><code>contextmenu</code> inside the view is not shadowed by a host menu.</li>
+<li>Pointer capture keeps a drag alive when the pointer leaves the element.</li>
+<li>A wheel listener that calls <code>preventDefault()</code> is honoured, so the view can zoom without the host scrolling.</li>
+<li>Every gesture in the view has a keyboard equivalent.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>Nine capabilities and one line of protocol between them. The lesson is not that this group is easy; it is that the effort belongs in your view rather than in the channel. When something here does not work, the answer is almost never a message you are missing.</p>
 

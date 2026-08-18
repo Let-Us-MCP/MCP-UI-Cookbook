@@ -149,6 +149,28 @@
 <p><strong>Accessibility and voice.</strong> A user who cannot point still needs to open the panel. An agent driving <code>show_panel</code> on their behalf is doing exactly what the mouse would have done, through an interface designed for it.</p>
 <p><strong>Testing.</strong> A sandboxed frame cannot be driven from outside by a test harness, because the harness cannot reach its DOM either. It can be driven through the same tools. The conformance harness in Part VI drives views this way, and the golden transcripts for this chapter’s demonstration are recordings of a test doing exactly what an agent would do.</p>
 <p>Three requirements, one mechanism, one set of tools to write. That is unusual enough to be worth designing around: if you are choosing which parts of your view to expose, choose the ones that would make all three easier.</p>
+<h2 id="designing-the-tool-surface">Designing the tool surface</h2>
+<p>A view with twenty registered tools is a view whose tools the model will choose between badly. Four to six is the range the recipes here settle on, and the way to get there is to design the surface as a vocabulary rather than as an API.</p>
+<p><strong>Name operations, not implementation.</strong> <code>show_panel("items")</code> reads from a description; <code>set_state({activeTabIndex: 1})</code> does not, and breaks when the tabs are reordered.</p>
+<p><strong>Take stable identifiers.</strong> Names and ids that survive a re-render. Never selectors, never coordinates, never array positions that depend on the current sort.</p>
+<p><strong>Return what happened, not what was asked.</strong> “Held. The user is editing” and “Proposed. The user has not submitted it” are both outcomes an agent needs, and both are outcomes a naive implementation would report as success. This is the single highest-value habit in the chapter: an agent that receives “done” will tell the user it is done.</p>
+<p><strong>Include one read tool.</strong> <code>get_state</code> costs almost nothing and removes the need to publish everything through <code>ui/update-model-context</code> every turn.</p>
+<p><strong>Annotate honestly.</strong> <code>readOnlyHint: true</code> is the claim that earns automatic approval, so it is the claim that must be true.</p>
+<h2 id="failure-modes-across-the-group">Failure modes across the group</h2>
+<p><strong>Unsupported.</strong> The view declares <code>tools</code> and the host never sends <code>tools/list</code>. Everything still works by pointer; nothing works by agent. Do not build a view whose only route to a function is a tool.</p>
+<p><strong>Unknown tool.</strong> Return an error naming the tool, so the agent can correct rather than retry.</p>
+<p><strong>Invalid arguments.</strong> Validate before acting. The SDK does this from the schema; the bridge in this repository does not, which is a real difference between a teaching implementation and a production one.</p>
+<p><strong>Called after teardown.</strong> The frame is gone and the host must return an error. Tools are tied to the render, and hosts must not persist registrations.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>A view declaring <code>tools</code> receives <code>tools/list</code> and answers with descriptors.</li>
+<li><code>tools/call</code> for a registered tool runs it and returns its result.</li>
+<li><code>tools/call</code> for an unknown name returns an error rather than hanging.</li>
+<li>Registering or removing a tool sends <code>notifications/tools/list_changed</code> when the view declared <code>listChanged</code>.</li>
+<li>App tools disappear when the frame is torn down.</li>
+<li>A prefill tool changes an input and does not submit it.</li>
+<li>Every agent-initiated change is visible and reversible.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>The agent cannot see your interface, and giving it a set of named, stable, honestly annotated operations is both the safest and the most useful thing you can do about that. Every one of them should be something a user could have done, should be visible when it happens, and should be reversible. Chapter 20 is what happens when it is not.</p>
 

@@ -101,6 +101,22 @@
 <p>The same suite against several hosts, with results published per host and per capability, in the manner of the public web platform test dashboards.</p>
 <p><strong>What does not run.</strong> Nothing. This book runs against one emulator. The <code>basic-host</code> in the extension SDK, the MCP-UI client, and the production hosts that implement the standard are all candidates, and the checklists in Appendix C are written so that they could be run against any of them.</p>
 <p>The reason this matters more than the missing Layer 3 is that cross-host results are the only evidence that would answer the completeness test in Chapter 25. One host running thirteen recipes proves the recipes work. Several hosts running them unmodified proves the capability model is general, which is the claim the whole book is making.</p>
+<h2 id="what-one-run-looks-like">What one run looks like</h2>
+<p><code>node tools/check_demos.mjs</code> starts a static server over <code>docs/</code>, launches headless Chrome, and for each of the thirty demonstrations opens the harness page, waits for <code>ui/initialize</code> and <code>ui/notifications/initialized</code> to appear in the log, clicks every host control in order with time to settle, and then reads the transcript back out of the DOM.</p>
+<p>The log is normalised before comparison: request ids and timings are dropped because they vary, and object keys are sorted because insertion order is not meaningful. What is left is a list of direction, method and payload, which is the part that is supposed to be stable.</p>
+<p class="provenance captured">Captured output from <code>node tools/check_demos.mjs</code></p><pre><code>  lab-surface: 10 messages
+  lab-theme: 11 messages
+  r01-data-explorer: 9 messages
+  r07-workflow-builder: 20 messages
+  r13-settings: 11 messages
+30 demos driven, 0 transcripts written, 0 failing</code></pre>
+<p>“0 transcripts written” is the assertion. A demonstration whose behaviour changed writes nothing and fails, and the diff of its transcript file is what the change actually was.</p>
+<h2 id="the-checks-that-are-not-about-the-protocol">The checks that are not about the protocol</h2>
+<p>Four more run on every build, and between them they catch a class of error that no browser test would.</p>
+<p><code>check_refs.py</code> verifies that every figure the prose asks for exists, that every capability in the registry has exactly one defining entry, and that every <code>@demo</code> names a directory that is really there. It found the missing <code>tool.cancel</code> entry.</p>
+<p><code>check_listings.py</code> takes every code block tagged <em>extracted from</em> a file and checks it against that file line by line. It found two listings that had been quietly abridged and presented as extracted.</p>
+<p><code>check_counts.py</code> recomputes every number the prose asserts about the repository and fails when the prose disagrees. It found the Core capability count wrong in Chapter 1, which had been written from an estimate.</p>
+<p><code>check_identifiers.py</code> pulls every protocol identifier out of the prose and requires it to appear in the pinned specification, the SDK, or this repository’s own source. Two hundred and three identifiers, and the reason it exists is that a plausible-looking field name reads as a fact and is not one.</p>
 <h2 id="the-layer-that-is-not-on-the-list">The layer that is not on the list</h2>
 <p>Human usability sessions. None were run for this edition, and none of the design claims here are backed by watching somebody use these applications. The recipes are built to a set of principles with arguments behind them, and the arguments could be wrong in ways no automated check would detect.</p>
 <p>That is the largest single gap in this book’s evidence, and it is a bigger one than Layers 3 and 5 combined.</p>

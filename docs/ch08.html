@@ -136,6 +136,19 @@
 <p>This matters most for the recipes that run over time. Recipe 9’s monitoring console sees an error at three in the morning. Recipe 11’s control centre has a task that failed and needs a retry. Recipe 10’s approval queue has a refund waiting. In every case the interface knows and the user does not.</p>
 <p><strong>Workarounds.</strong> Make the state loud on return rather than at the moment it happens: the console raises a banner describing what happened while the view was hidden, which the user meets when they come back. Where the host supports it, <code>ui/update-model-context</code> puts the fact where the model can raise it in the next turn, which is indirect but real. And a view can send <code>notifications/message</code> at warning level, which lands in the host’s log and is at least auditable.</p>
 <p><strong>What a mechanism would look like.</strong> A <code>ui/request-attention</code> notification with a severity and a short label, and the host free to badge, chime, or ignore. The host has to stay in control, because the alternative is thirty embedded views competing for a notification badge. Appendix B has it, next to <code>surface.reveal</code>, which is the same problem seen from the other side.</p>
+<h2 id="what-the-host-is-doing-while-you-do-this">What the host is doing while you do this</h2>
+<p>Nothing, and that is the point worth stating. There is no message in this chapter, so a host has no way to know that your view has a modal open, and no way to coordinate.</p>
+<p>Three consequences follow. Your dialog is clipped by the frame, so a dialog taller than the view is a dialog with its buttons off screen; size for the container and scroll the body rather than the dialog. Your backdrop dims your frame and not the host’s window, so a “modal” here is modal to a card and the user can still click anything outside it. And if the host tears the view down while your dialog is open, the promise you are awaiting never resolves, which is a leak rather than a crash but is worth a <code>finally</code>.</p>
+<p>The corollary is that a genuinely blocking decision, the kind where the user must not be able to do anything else, cannot be built inside a view at all. That is an approval, it belongs to the host, and Chapter 21 is about the fact that the mechanism for it does not exist yet.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>window.alert</code>, <code>window.confirm</code> and <code>window.prompt</code> are inert, and the view does not depend on them.</li>
+<li>A dialog opened in the view traps focus and restores it on close.</li>
+<li>Escape closes any open overlay and resolves its promise.</li>
+<li>A dialog taller than the container scrolls its body rather than overflowing the frame.</li>
+<li>Toasts carry <code>role="status"</code> or announce into a live region.</li>
+<li>A banner is removed when the condition it describes ends.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>The whole of this chapter is yours to build, which means the whole of it is also yours to get consistent. Pick one dialog implementation, one toast, one banner, and use them everywhere. The recipes in Part V share exactly one of each, defined once in <code>apps/lib/view.js</code>, and that is the entire reason thirteen applications built over one night look like they came from the same place.</p>
 

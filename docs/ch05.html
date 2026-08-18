@@ -118,8 +118,54 @@
 <p><em>Captured</em> means it is real output from a real run, quoted verbatim, including the parts that are inconvenient.</p>
 <p><em>Illustrative</em> means it was written for the page and nothing executes it. Message shapes quoted from the specification are illustrative. So are the sketches of code you might write.</p>
 <p>The reason for the convention is that books about protocols accumulate code that used to work. A reader who cannot tell which listings are load-bearing has to treat all of them as suspect. Chapter 29 describes the check that keeps the tags honest.</p>
+<h2 id="a-worked-failure-table">A worked failure table</h2>
+<p>Here is the same capability, <code>file.export</code>, written out as the template asks, so that the shape is concrete before Part II starts using it eighty-five times.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>When you learn</th>
+<th>What the interface does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unsupported</td>
+<td>Initialisation</td>
+<td>No export control is rendered. Copy is offered instead.</td>
+</tr>
+<tr>
+<td>Denied</td>
+<td>The click</td>
+<td>“The host declined to save that file.” The control stays.</td>
+</tr>
+<tr>
+<td>Cancelled</td>
+<td>The click</td>
+<td>Nothing. The user changed their mind and the interface is unchanged.</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>Your deadline</td>
+<td>“No answer from the host.” The control returns to idle.</td>
+</tr>
+<tr>
+<td>Failed</td>
+<td>The click</td>
+<td>The host’s message, verbatim, next to the button.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Five rows, and notice that three of them leave the interface in a different state and two leave it identical. Cancelled and unsupported both produce no error and no message, for opposite reasons: one because nothing was attempted, the other because nothing was ever offered.</p>
+<p>The row people skip is timeout, and skipping it is what produces the single most common defect in embedded applications: a spinner with no end, in a frame whose host stopped listening, that only a reload will clear.</p>
+<h2 id="where-these-templates-came-from">Where these templates came from</h2>
+<p>Both are adapted from how specification-anchored test suites describe web platform features, and the borrowing is deliberate. A capability entry that names its host behaviour and its failure modes can be turned into assertions mechanically, which is what Appendix C does. An entry that describes only the happy path cannot, which is why so much interface documentation is unfalsifiable and therefore ages without anybody noticing.</p>
 <h2 id="what-to-remember">What to remember</h2>
 <p>If you take one thing from Part I into the rest of the book, take the failure section. Every capability entry from here on has one, and in almost every case it is longer than the section describing the happy path. That ratio is the point. The happy path is a few lines of code you would have written anyway. The rest is what makes an application survive a host that says no.</p>
+<h2 id="reading-an-entry-critically">Reading an entry critically</h2>
+<p>Two habits worth having, because not every entry in Parts II and III deserves equal trust.</p>
+<p><strong>Check the ground badge against your own experience.</strong> A <em>platform</em> entry is a claim about browsers, and browsers differ. A <em>wire</em> entry is a claim about a specification that is still moving, and eight of them carry a draft badge. A <em>gap</em> entry is the strongest claim in the book, because it asserts that something does not exist, and absence is the hardest thing to verify.</p>
+<p><strong>Ask what the failure section leaves out.</strong> The template asks for five modes and most entries have something to say about three. Where an entry is silent on cancelled or timeout, it is usually because the capability is synchronous and local, and that reasoning should be visible rather than assumed. Where it is silent and the capability is neither, the entry is thin and you should treat it as a starting point rather than as a specification.</p>
 
 <div class="pager"><a href="ch04.html"><span class="dir">Previous</span>4. The Sandbox and What It Costs You</a><a href="ch06.html" style="text-align:right"><span class="dir">Next</span>6. Surfaces and Geometry</a></div>
 </main>

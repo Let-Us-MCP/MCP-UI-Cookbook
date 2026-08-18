@@ -103,3 +103,35 @@ model and which belong to the interface. Chapter 3 argues that sorting a
 column, opening a menu, and dragging a node should never involve a language
 model, and the rest of the book follows from that. If you disagree, the
 capability entries are still accurate. The recipes will just look overbuilt.
+
+## What this book gets wrong
+
+Three things, stated here rather than discovered later.
+
+**It runs against one host.** The emulator in this repository implements the
+host half of the bridge faithfully, and it was written by the same person who
+wrote the applications, which is exactly the condition under which a capability
+model looks more general than it is. Chapter 26 lists cross-host conformance
+as the layer that is missing, and it is the one that would turn the argument
+here into evidence.
+
+**No usability sessions were run.** Every design claim is an argument with
+reasoning behind it, and arguments about interfaces are wrong more often than
+their authors expect. Where a claim is a preference rather than a finding, the
+prose tries to say so.
+
+**It is pinned to a moving specification.** The MCP Apps extension is at
+`2026-01-26` with an active draft, and eight of the message names used here
+exist only in the draft. Those entries carry a badge. The rest will age at the
+speed the extension does, which the build can detect and a reader cannot.
+
+## Conventions
+
+Every code block says where it came from: *extracted* from a file the tests
+run, *captured* from a real run, or *illustrative* and executed by nothing.
+Capability identifiers are in `code`, and every one of them appears in
+Appendix A. Message names are quoted exactly as the specification writes them,
+and a build step greps the specification for each one.
+
+British spelling, one space after a full stop, and no em dashes anywhere,
+which is a house rule enforced by a linter rather than a claim about style.

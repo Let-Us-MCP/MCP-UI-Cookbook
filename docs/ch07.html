@@ -103,6 +103,19 @@
 <p>Your view is embedded in a conversation that has scrolled on. Something happens inside the view that the user needs to see: an error, a completed step, an incoming approval. <code>scrollIntoView</code> inside the frame scrolls your container. It cannot scroll the conversation, so the user sees nothing.</p>
 <p><strong>Workarounds.</strong> If the host supports <code>updateModelContext</code> or <code>message</code>, the view can make the conversation itself move by putting something in it, but that is a heavy instrument for “please look over here” and it costs a turn. The realistic mitigation is to design for the view being invisible: assume nobody sees a change until they next look, make state legible on arrival rather than announcing it at the moment it happens, and use <code>notify.banner</code> for anything that must survive being missed.</p>
 <p><strong>What a mechanism would look like.</strong> A <code>ui/request-reveal</code> notification, with the host free to ignore it or to badge the collapsed view instead of scrolling to it. Chapter 8’s <code>notify.attention</code> is the same gap wearing a different hat, and a single mechanism would probably serve both.</p>
+<h2 id="a-worked-example-the-escape-hatch">A worked example: the escape hatch</h2>
+<p>Consider a view with a search field, inside a host with its own message composer. The user is typing in the composer, notices the view, clicks into the search field, types a query, and presses Enter. So far so ordinary.</p>
+<p>Now they want to go back to the conversation. What are their options? Clicking works. Tabbing forward eventually leaves the frame, if the view has not trapped focus and if the remaining tab stops are few. Pressing Escape does nothing, because Escape is not defined as “leave this frame” anywhere, and the view has no way to hand focus back even if it wanted to.</p>
+<p>For a mouse user this is invisible. For somebody driving by keyboard it is the difference between an application and an obstacle, and the reason the fix is not simply “add fewer tab stops” is that the view legitimately has controls.</p>
+<p>What the recipes in Part V do about it is bound the number of tab stops with roving tabindex, never trap outside a modal, and end multi-step interactions with an explicit action that removes the view. That is a workaround for a missing message, and it is the best available answer today.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>Tab from the host’s own controls reaches the view’s first focusable element and eventually leaves it.</li>
+<li>A modal opened inside the view traps focus and returns it on close.</li>
+<li>The focus ring is visible against the host’s background in both themes.</li>
+<li>Nothing in the view calls <code>focus()</code> before the user has interacted with it.</li>
+<li>Scrolling inside the view does not chain to the host’s conversation scroller while the view’s own scroller has room left.</li>
+</ol>
 <h2 id="the-pattern-to-notice">The pattern to notice</h2>
 <p>Both gaps here are the same shape: a capability the view has <em>inside itself</em> that it cannot exercise <em>at the boundary</em>. It is worth carrying that shape into the rest of Part II, because it recurs. Drag and drop works inside the frame and stops at its edge. The clipboard can be written and not read. Dialogs can be drawn and not raised above the host. In every case the platform gives the view a local version of something, and the boundary is where the local version runs out.</p>
 <p>That is not an accident or an oversight. Every one of those boundaries is a place where a hostile view could reach into the host’s window, and the extension’s answer so far has been to leave the boundary closed and add explicit messages one at a time where the value is clear. <code>ui/open-link</code> and <code>ui/download-file</code> are two that made it through. The entries in Appendix B are the ones still waiting.</p>

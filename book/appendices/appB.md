@@ -195,3 +195,29 @@ that touches authentication.
 
 *Reopens.* Credential phishing, unless the prohibition is carried over
 unchanged.
+
+## Reading this appendix as a work list
+
+The fourteen are not equally urgent, and the ordering that matters is by how
+many applications they block and how cheap a mechanism would be.
+
+**Cheap and clearly justified.** `tool.partialOutput` and `input.shortcut`.
+The first is an asymmetry with the input side that is hard to defend; the
+second is a list in `hostContext` and reopens nothing.
+
+**Cheap, with prior art on both sides of this ecosystem.** `state.save` and
+`state.restore`. The Apps SDK has `setWidgetState`, the specification lists
+state persistence as deferred, and the shape is well understood.
+
+**Needs a design, not just a message.** `approval.request` and
+`elicit.request`. Both require the host to render a consent surface the user
+trusts, and both have to carry the core specification's prohibition on
+collecting credentials into an untrusted frame.
+
+**One feature wearing three hats.** `surface.reveal`, `notify.attention` and
+the visibility half of `lifecycle.visibility` are all the same missing signal:
+the host knows whether a view is being looked at, and the view does not.
+
+**Genuinely hard.** `clipboard.read` and `input.dragBoundary`, because both
+move data across the boundary in the direction the sandbox exists to prevent.
+

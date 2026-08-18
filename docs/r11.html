@@ -119,6 +119,10 @@
 <p>Resetting the bar to zero would say nothing happened, which is false. Leaving it at sixty percent would suggest the work is still there, which is also false. Saying where it stopped and what state that leaves is the only honest option, and it is one sentence.</p>
 <h2 id="retry-that-keeps-the-arguments">Retry that keeps the arguments</h2>
 <p>The failed task keeps its name and its configuration, and Retry re-runs the same call. The user does not rebuild anything. Chapter 16 argues that a failure that clears the form is the same failure plus a punishment.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Press “Agent streams a task in”.</strong> The row appears while the name is still <code>Reindex sh</code>, then fills in. That is the difference between an interface that feels immediate and a spinner.</p>
+<p><strong>Start a task and cancel it halfway.</strong> The task reports the step it reached and says that completed steps were not rolled back, which is unglamorous and true.</p>
+<p><strong>Press “Make the next task fail”, then start one.</strong> The failure keeps its step history, explains what state it left, and offers Retry with the same arguments.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

@@ -125,6 +125,11 @@
                   &quot;version&quot;: &quot;9.2.4&quot;, &quot;p95&quot;: 1290, &quot;errors&quot;: 143 } ] }</code></pre>
 <p>Not the sort order, not the filter, not the page, not the hover. Press “Show what the model was told” with nothing selected and the answer is that nothing has been published. Select two rows and it fills in.</p>
 <p>The server’s side of the same discipline is in <code>summarise()</code>: the model gets “8 deployments. Worst p95 is 1290ms on billing.” and the eight full records go to the view in <code>structuredContent</code>.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Select two rows, then press “Show what the model was told”.</strong> The payload is the selection as structured data and nothing else. Select a third and press it again: the payload was replaced, not appended to.</p>
+<p><strong>Press “Break the server”, then “Reload from the server”.</strong> The table keeps its rows, a banner explains that the data is from the previous successful call, and the reload button still works. Press “Fix the server” and reload again.</p>
+<p><strong>Press “Switch to ja-JP / Tokyo”.</strong> Every timestamp and number re-renders. The selection survives, because formatting is a render concern and selection is state.</p>
+<p><strong>Open the <code>server.js</code> tab and find <code>summarise</code>.</strong> That one function is the whole two-channel argument: the model gets its sentence, the view gets the eight records.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

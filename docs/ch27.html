@@ -104,9 +104,20 @@
 <h2 id="reading-the-checklist-as-an-application-author">Reading the checklist as an application author</h2>
 <p>The order is different. Assume Level 1, check for everything above it, and make the check the thing that decides whether a control exists.</p>
 <p>Then use the failure column of the recipe entries in Part V as a design prompt. Every one of those tables was written by asking, for each capability, what the application looks like without it. That exercise takes an hour and produces most of the progressive enhancement work you were going to do anyway, before the code makes it expensive.</p>
+<h2 id="what-the-deltas-look-like-in-order">What the deltas look like in order</h2>
+<p>The delta column is the load-bearing part of the matrix, and reading it in recipe order is the closest thing this book has to evidence for its own premise.</p>
+<p>Recipe 1 claims sixteen capabilities, because it is the baseline: a table, a selection, an export, an escalation. Recipes 2 and 3 add roughly a dozen each, because monitoring and hierarchy are genuinely different surfaces. By Recipe 7 the deltas are down to three or four, and by Recipes 11 to 13 most of what each one needs is already in the model.</p>
+<p>That taper is what convergence looks like. If the thirteenth recipe still needed six new primitives, the honest conclusion would be that eighty-five is not enough and the model is still growing. It does not, which is weak evidence that the surface has been covered.</p>
+<p>Weak, and worth being precise about why. The recipes were written by the same person who wrote the capability list, against one emulator, in one sitting. Convergence under those conditions could equally mean the recipes were chosen to fit. The test that would settle it is Layer 5 from Chapter 26: someone else’s application, someone else’s host, and a delta that still comes out small.</p>
 <h2 id="the-matrix-as-an-argument">The matrix as an argument</h2>
 <p>One last use. The matrix is the closest thing this book has to a proof, and it is not one. What it shows is that thirteen recognisable applications were built from eighty-five named primitives, that the primitives were sufficient for all thirteen, and that fourteen of them had to be worked around because no mechanism exists.</p>
 <p>That is evidence for the completeness test in Chapter 25 and not an answer to it. The answer needs Layer 5 from Chapter 26: the same recipes, unmodified, running in hosts that were not built alongside them.</p>
+<h2 id="using-the-matrix-on-your-own-project">Using the matrix on your own project</h2>
+<p>The exercise transfers, and it is cheap. Take your application, list the interactions it has, and map each one to a capability identifier from Appendix A. Three things fall out within an hour.</p>
+<p><strong>The host dependency list.</strong> Everything you mapped to a <em>wire</em> capability is something a host has to support, and the level column tells you which hosts those are. That list is what you test against, and it is usually shorter than people fear.</p>
+<p><strong>The gap list.</strong> Anything you mapped to a <em>not standardised</em> capability is a place where you are about to invent a private convention. Better to know before the code than after the second host.</p>
+<p><strong>The work list.</strong> Everything mapped to <em>yours to build</em> is real engineering that no protocol will do for you, and it is typically the largest of the three. Undo, dialogs, toasts and the whole attention system live here.</p>
+<p>If an interaction maps to nothing, that is the interesting case, and it is the one Chapter 28 is about.</p>
 
 <div class="pager"><a href="ch26.html"><span class="dir">Previous</span>26. The Verification Layers</a><a href="ch28.html" style="text-align:right"><span class="dir">Next</span>28. The Missing Primitive Loop, and the Live Book</a></div>
 </main>

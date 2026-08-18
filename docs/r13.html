@@ -114,6 +114,11 @@ if (!email &amp;&amp; (!live || $(&quot;#email&quot;).dataset.touched)) { /* sho
 <p>On <code>ui/resource-teardown</code>, if the form is dirty, it saves before answering. Chapter 14 explains why that window is the only chance, and Recipe 4 explains why the flush has to be small enough to finish.</p>
 <h2 id="live-preview-without-commitment">Live preview without commitment</h2>
 <p>Changing the accent colour or the density updates the view immediately, and the change is not saved until Save is pressed. Preview is not commitment, and a form that saves as you type has no discard.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Clear the email field and click away.</strong> The error appears on blur, not on the keystroke that made it invalid.</p>
+<p><strong>Type an obviously invalid address and press Save.</strong> Focus moves to the field, the error is announced, and no tool call is sent.</p>
+<p><strong>Edit something, then press “Close with unsaved changes”.</strong> The form saves inside the teardown window before answering the host.</p>
+<p><strong>Press “Switch to ja-JP / Tokyo”.</strong> The stored values do not change and everything rendered does, which is the whole of Chapter 11 in one button.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

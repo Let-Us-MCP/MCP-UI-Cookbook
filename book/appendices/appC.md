@@ -55,3 +55,23 @@ Answer `ui/resource-teardown` promptly, and flush before you do. Publish state
 to the model, not events, and only state that changes an answer. Put every
 agent write on the undo stack. Handle all five failure modes from Chapter 5,
 and check that the interface is honest in each.
+
+## Publishing a result
+
+A host that runs these checks has a number, and the number is worth publishing
+in a form somebody can act on: the level claimed, the checks that failed, and
+the date of the run. The model to copy is the public web platform test
+dashboards, where a per-feature, per-implementation grid makes it possible to
+write portable code without guessing.
+
+Nothing here requires that infrastructure. A markdown table in a repository is
+enough to be more useful than the current situation, which is that application
+authors discover a host's level by shipping into it.
+
+## What this appendix cannot tell you
+
+Whether a host is good. Every check here is about whether a defined behaviour
+happens, and none of them is about whether the result is usable. A host can
+pass every Level 2 check and still render views in a 200 pixel column with the
+theme variables of a different product. Conformance is the floor, not the
+ceiling.

@@ -117,6 +117,10 @@ tile.querySelector(&quot;svg&quot;)?.replaceWith(spark(m.series));</code></pre>
 <h2 id="reduced-motion-changes-the-poll-not-just-the-transition">Reduced motion changes the poll, not just the transition</h2>
 <p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>setInterval(() =&gt; { /* ... */ }, reduced.matches ? 4000 : 1400);</code></pre>
 <p>A stylesheet rule that disables transitions does nothing for a value that repaints continuously. Under a reduced motion preference the dashboard slows down, which is a different response from removing an animation and the correct one for something that is moving rather than animating.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Watch the first tile for ten seconds.</strong> The value and the sparkline change; the tile element does not. Tab to it while it is updating and the focus stays put, which is the entire reason it patches instead of rebuilding.</p>
+<p><strong>Open a tile, then press “Show the model context”.</strong> The model is told which panel is open, not which tiles were hovered on the way there.</p>
+<p><strong>Press “Withdraw fullscreen”, then press Expand.</strong> The view checks <code>availableDisplayModes</code> before asking and reports that the mode is gone, instead of sending a request that would be refused.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

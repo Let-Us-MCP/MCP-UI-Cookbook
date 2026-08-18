@@ -119,6 +119,10 @@
 <h2 id="range-selection-and-the-clipboard">Range selection and the clipboard</h2>
 <p>Anchor and head, shift to extend, arrows to move, and the selected range is highlighted rather than just the active cell. Copy produces tab-separated values with newlines, which is what every other spreadsheet reads.</p>
 <p>Chapter 10 has the general rule: CSV for a file, TSV for the clipboard. A range copied as prose is a range nobody can paste.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Type <code>=B2*C2*2</code> into D2.</strong> The column recomputes, and so does the total in D6, because evaluation is recursive rather than cached.</p>
+<p><strong>Type <code>=D2</code> into B2.</strong> The grid shows <code>#CYCLE</code>, the cell keeps your text, and the banner explains. Nothing is cleared.</p>
+<p><strong>Shift with the arrow keys, then press Copy.</strong> The clipboard holds tab-separated values, which is what a spreadsheet expects and what prose is not.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

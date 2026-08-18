@@ -125,6 +125,10 @@ panY = py - ((py - panY) / before) * scale;</code></pre>
   return;
 }</code></pre>
 <p>Press “Refuse downloads” in the demonstration. The button stays, its behaviour changes, and the toast says why. This is the one place in Part V where a missing capability changes what a control does rather than whether it exists, and it is defensible because the underlying user need, getting the annotations out, has an alternative that works.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Zoom with the wheel while the pointer is over the burr.</strong> The point under the cursor stays under the cursor. Zooming about the origin is the version that feels wrong, and the six lines that fix it are in Chapter 9.</p>
+<p><strong>Draw a box, then drag past the edge of the stage.</strong> Pointer capture keeps the gesture alive, so the box is the size you drew rather than the size that fit.</p>
+<p><strong>Press “Refuse downloads”, then Export.</strong> The button stays and its behaviour changes: the JSON goes to the clipboard and the toast says why.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

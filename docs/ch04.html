@@ -115,6 +115,24 @@
 <h2 id="tools-your-view-provides-are-untrusted-too">Tools your view provides are untrusted too</h2>
 <p>When a view registers tools, the trust direction reverses. The agent can now call code inside a sandboxed frame that a server delivered. The specification is direct about the consequences: descriptions may not fully capture side effects, names may collide with server tools, and results should be validated against declared schemas. It recommends per-app or per-server approval policies, clear attribution in the host’s UI so a user can see which app is calling, resource limits, and an audit trail.</p>
 <p>For an application author the practical rule is smaller. Annotate honestly. <code>readOnlyHint: true</code> on a tool that mutates is the one lie in this system that a host will believe, and it is the lie that gets automatic approval. Chapter 18 registers four tools and marks exactly the two that change something.</p>
+<h2 id="a-short-security-review-of-your-own-server">A short security review of your own server</h2>
+<p>Six questions, in the order a cautious host reviewer would ask them. They take ten minutes and they are the difference between a server that gets approved and one that gets a request for changes.</p>
+<p><strong>Does the CSP declare anything?</strong> If your view loads nothing, say so with an empty block rather than omitting it. <code>csp: {}</code> reads as considered; a missing field reads as unexamined, even though they produce the same policy.</p>
+<p><strong>Is every declared origin actually used?</strong> A <code>resourceDomains</code> entry left over from a font you removed is a hole with no purpose, and it is the kind of thing a reviewer finds and you do not.</p>
+<p><strong>Are the permissions the minimum?</strong> Four exist. Most views need none. A view that requests <code>camera</code> for a feature that is not built yet gets declined today for a benefit it gets later.</p>
+<p><strong>Is <code>_meta.ui</code> on the resource?</strong> Not on the tool. A policy on a tool descriptor is ignored, and the view renders under the restrictive default with nobody noticing until a <code>fetch</code> fails.</p>
+<p><strong>Which tools can the model call?</strong> Anything not marked <code>visibility: ["app"]</code> is in the agent’s tool list and can be invoked by a model that misreads a description. Saves, deletes and anything with a side effect should be app-only unless you specifically want the model to be able to trigger them.</p>
+<p><strong>Are the annotations true?</strong> <code>readOnlyHint: true</code> is the one claim a host acts on automatically. Every tool you mark read-only should be one you would be comfortable having called without asking.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>The frame carries <code>allow-scripts</code> and not <code>allow-same-origin</code>.</li>
+<li>The CSP is constructed from <code>_meta.ui.csp</code>, and undeclared origins are blocked.</li>
+<li>With no <code>_meta.ui.csp</code>, the restrictive default applies.</li>
+<li><code>_meta.ui</code> on the <code>resources/read</code> content item takes precedence over the <code>resources/list</code> entry.</li>
+<li>Permissions granted are reported in <code>hostCapabilities.sandbox.permissions</code>.</li>
+<li><code>prefersBorder</code> is honoured, or the host’s own boundary is visible anyway.</li>
+<li>Messages from the frame are matched by <code>event.source</code> rather than by origin.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>The sandbox is why this book has fourteen gaps, and most of them are gaps on purpose. Before proposing a mechanism for one, it is worth asking which of the five attacks the mechanism reopens. Some of them have good answers. <code>clipboard.read</code> behind an explicit user gesture and a host-mediated permission is a reasonable proposal. Others do not: a view that could read the conversation would make the fifth attack considerably easier, and no amount of convenience is worth that.</p>
 

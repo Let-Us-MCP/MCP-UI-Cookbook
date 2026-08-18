@@ -113,6 +113,10 @@
 <p>“Explain this change” sends the selected lines with their diff markers as a <code>ui/message</code>. Not the whole file, not the whole hunk, and not a summary: the lines the reviewer pointed at.</p>
 <h2 id="comments-are-local">Comments are local</h2>
 <p>A comment is attached to a line and rendered under it, and it never leaves the view unless the reviewer escalates. That is the right default: a review comment is a note to a colleague, not a prompt.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Click line 42, then shift-click line 45.</strong> The published context is those four lines with their numbers and their kinds, which is what makes “explain this change” answerable precisely.</p>
+<p><strong>Press “Explain this change”.</strong> The message carries the selected lines with their diff markers, not a description of them.</p>
+<p><strong>Press “Refuse to open links”, then “Open on the server”.</strong> The refusal is reported rather than swallowed, which is the correct handling for a capability that was present at initialisation and declined at use.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

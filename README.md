@@ -43,7 +43,7 @@ make check     # what CI runs
 make serve     # docs/ on http://127.0.0.1:8977/
 ```
 
-`make check` runs six things:
+`make check` runs seven things:
 
 | Check | What it proves |
 |---|---|
@@ -52,10 +52,12 @@ make serve     # docs/ on http://127.0.0.1:8977/
 | `check_listings.py` | Every listing tagged *extracted* matches the file it names |
 | `check_counts.py` | Every number the prose asserts is still true |
 | `check_claims.py` | Every wire claim appears in the pinned specification text |
+| `check_identifiers.py` | Every identifier in the prose exists in a spec, the SDK or the source |
 | `check_demos.mjs` | All 30 demonstrations run in Chrome and their transcripts match |
 
-The last one needs Chrome. The claims check needs `proto/`, a pair of
-specification clones that are never committed, and skips cleanly without them.
+The last one needs Chrome. The two specification checks need `proto/`, a pair
+of specification clones that are never committed, and skip cleanly without
+them.
 
 ## Running a recipe server for real
 

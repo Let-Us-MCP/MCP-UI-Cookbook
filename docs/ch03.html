@@ -104,6 +104,52 @@
 <p>Two mistakes are symmetrical and equally common.</p>
 <p>Under-crossing produces an application the model cannot see. The user selects three deployments, asks “why are these slow”, and the model has no idea what “these” refers to because the view never published the selection. From the user’s side this reads as the assistant being stupid, and there is nothing in the interface to suggest why.</p>
 <p>Over-crossing produces the sorting example, plus its uglier relative: a view that publishes its entire state on every change, so the model’s context fills with sixteen near-identical snapshots of a table. The specification is direct about this. Each <code>ui/update-model-context</code> overwrites the previous one, hosts may deduplicate identical updates, and where several arrive before the next user message the host should forward only the last. The protocol is built expecting you to be disciplined and forgiving you when you are not, which is not the same as it being free.</p>
+<h2 id="the-three-crossings-priced">The three crossings, priced</h2>
+<p>The weights are not rhetorical. They are roughly an order of magnitude apart in every dimension that matters.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Tool call</th>
+<th>Context update</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Who is involved</td>
+<td>Host, server</td>
+<td>Host</td>
+<td>Host, model, the user reading</td>
+</tr>
+<tr>
+<td>Typical latency</td>
+<td>Tens of milliseconds to a second</td>
+<td>Immediate</td>
+<td>A turn</td>
+</tr>
+<tr>
+<td>Token cost</td>
+<td>None</td>
+<td>The payload, once</td>
+<td>The payload plus a response</td>
+</tr>
+<tr>
+<td>Visible to the user</td>
+<td>No</td>
+<td>Usually not</td>
+<td>Yes, in their conversation</td>
+</tr>
+<tr>
+<td>Reversible</td>
+<td>By calling again</td>
+<td>By publishing again</td>
+<td>No</td>
+</tr>
+</tbody>
+</table></div>
+<p>The last row is the one that should decide the design. A tool call that was wrong can be repeated. A context update that was wrong is replaced by the next one. A message that was wrong is a paragraph in somebody’s conversation that they did not ask for, and there is no unsend.</p>
+<p>That asymmetry is why a message needs a deliberate user action behind it and the other two do not, and it is why “the button that starts a turn should say so” is a rule rather than a preference.</p>
 <h2 id="declaring-the-split">Declaring the split</h2>
 <p>Every recipe in Part V declares its split explicitly, in a table like this one, before any code:</p>
 <div class="table-wrap"><table>
@@ -133,6 +179,14 @@
 </tbody>
 </table></div>
 <p>Writing that table is a five minute exercise that removes most of the architectural argument from the rest of the work. It also produces the list of tools the server actually needs, which is usually shorter than the list somebody was about to build.</p>
+<h2 id="what-over-crossing-looks-like-in-a-transcript">What over-crossing looks like in a transcript</h2>
+<p>The clearest way to see the principle violated is to watch the messages. A view that publishes on every change produces a log like this:</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre><code>app→host  ui/update-model-context   { hovering: &quot;INC-4102&quot; }
+app→host  ui/update-model-context   { hovering: &quot;INC-4118&quot; }
+app→host  ui/update-model-context   { hovering: &quot;INC-4133&quot; }
+app→host  ui/update-model-context   { selected: [&quot;INC-4133&quot;] }</code></pre>
+<p>Four messages, of which one carries information. The host is permitted to deduplicate and to forward only the last before a user message, so this may cost nothing at all, or it may cost three quarters of the view’s context budget. Neither outcome is one you chose.</p>
+<p>The lab in Chapter 17 has a control that turns hover publishing on so you can watch this happen, and the counter next to it shows the ratio: thousands of local events, a handful of published facts.</p>
 <h2 id="the-one-exception-worth-naming">The one exception worth naming</h2>
 <p>There is a case where routing an ordinary interaction through the model is right: when the user cannot perform it directly. Voice control, accessibility tooling, and hands-free operation all mean the model is the only pointing device available.</p>
 <p>That case is exactly why the extension lets a view register tools of its own. A view that exposes <code>show_panel</code>, <code>highlight_line_item</code> and <code>get_state</code> as tools has given the agent a semantic interface to the same operations the mouse performs, without routing the mouse through the model. Chapter 18 builds one, and it is worth noticing that the same design serves both accessibility and testability: the harness in Part VI drives views through exactly those tools.</p>

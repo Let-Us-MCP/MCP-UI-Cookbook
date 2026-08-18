@@ -118,6 +118,10 @@ if ($(&quot;#follow&quot;).checked) $(&quot;#log&quot;).scrollTop = $(&quot;#log
 <p>A console that clears itself when the connection drops has destroyed the evidence at the exact moment somebody needs it.</p>
 <h2 id="the-error-nobody-saw">The error nobody saw</h2>
 <p>When an error line arrives while <code>document.hidden</code> is true, the console raises a banner that survives until the user comes back, and publishes the alert to the model’s context. Neither is a substitute for <code>notify.attention</code>, which does not exist. Both are what you can do instead.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Select a log line, then press “Stream 40 more lines”.</strong> The selection survives, because the list appends and trims and never rebuilds.</p>
+<p><strong>Scroll up while lines are arriving.</strong> Following stops and the checkbox unticks itself, which is the behaviour every terminal has taught people.</p>
+<p><strong>Watch the rate chip.</strong> It is the only honest signal that the buffer is dropping lines during a burst.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

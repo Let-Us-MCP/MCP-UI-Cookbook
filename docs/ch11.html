@@ -109,16 +109,65 @@
     $(&quot;#out&quot;).textContent = `Refused: ${error.message}`;
   }
 };</code></pre>
-<p><strong>The awkward part.</strong> There is no resource <em>listing</em> in the view’s subset of the protocol as it stands, only <code>resources/read</code>. So a picker has to learn its options some other way: from the tool result that rendered the view, from a server tool that returns a list, or from a hard-coded namespace the server documents. In the demonstration the list is provided by the host fixture, and the “missing” entry is there so you can watch a refused read.</p>
-<p>That is a small design wart rather than a gap, because a server tool returning a list is a perfectly good answer, and it is the answer that also gets you filtering and pagination.</p>
+<p><strong>The awkward part, and a live discrepancy.</strong> The specification’s list of standard MCP messages available to a view names exactly one resource method: <code>resources/read</code>. On a plain reading, a view can read a resource it already knows the URI of and cannot discover one.</p>
+<p>The SDK disagrees. <code>@modelcontextprotocol/ext-apps</code> ships <code>App.listServerResources()</code>, and its own documentation uses it to build a picker by filtering the returned list on MIME type. <code>hostCapabilities</code> also carries <code>serverResources.listChanged</code>, which only means something if listing is proxied at all.</p>
+<p>So the honest position is that <code>resources/list</code> from a view is supported by the reference implementation and unstated in the specification text, which means hosts may reasonably differ. Treat it as an enhancement: try the list, and have a fallback for a host that refuses. This book files it as a documentation gap rather than as a design one, because the SDK’s behaviour looks like the intended one.</p>
+<p>A picker can also learn its options without listing at all: from the tool result that rendered the view, from a server tool that returns a list, or from a namespace the server documents. The last two are worth preferring anyway, because a server tool returning a list also gets you filtering and pagination. In the demonstration the options come from the host fixture, and the “missing” entry is there so you can watch a refused read.</p>
 <p><strong>Security.</strong> This is the good path for reading server-side data, and it is worth choosing over a <code>fetch</code> to your own API even when you could declare the origin in <code>connectDomains</code>. A read through the host is visible to the host, subject to the host’s policy, and appears in the transcript. A direct fetch is a hole you asked the host to open and then used unobserved.</p>
 <p><strong>Failure modes.</strong> Unsupported when <code>serverResources</code> is absent: the picker should not appear, and whatever it was going to configure needs a different route. Denied and failed both come back as JSON-RPC errors, and the error message is the host’s, so display it rather than replacing it with your own guess.</p>
 <h2 id="dropzones">Dropzones</h2>
 <div class="cap" id="file.dropzone"><div class="cap-head"><code class="cap-id">file.dropzone</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Accept dropped files with validation, preview, and progress.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r06.html">Image Annotator</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
 <p>Covered in Chapter 10, listed here because a dropzone and a picker are two routes to the same thing and an application that offers one should usually offer both. The picker is discoverable, the dropzone is fast, and users split roughly evenly between them.</p>
 <p>The one addition specific to this chapter: a dropzone that accepts a <em>type</em> of file should say so in its resting state, not only in its error state. “Drop a JSON annotation file” tells somebody what to look for. “Drop files here” followed by “wrong file type” tells them what they did wrong.</p>
+<h2 id="what-a-picker-costs-at-each-level">What a picker costs at each level</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What you get</th>
+<th>What you build</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Native date, time and colour inputs</td>
+<td>Formatting through the host’s locale</td>
+</tr>
+<tr>
+<td>2</td>
+<td>The same, plus files through <code>file.open</code></td>
+<td>Validation and preview</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Resource reads through the host</td>
+<td>The list, and a fallback when reads fail</td>
+</tr>
+</tbody>
+</table></div>
+<p>The table is worth reading as a warning about the third row. A resource picker looks like a small feature and it is the only one here that depends on a host capability, a server round trip, and a listing mechanism the specification does not describe. Budget accordingly, and consider whether a server tool returning exactly the options you need would be simpler than a general picker.</p>
+<h2 id="failure-modes-across-the-group">Failure modes across the group</h2>
+<p><strong>Unsupported.</strong> The native inputs cannot be unsupported; every browser has them. <code>picker.resource</code> is unsupported when <code>serverResources</code> is absent, and the correct response is to omit the picker and configure the thing some other way, usually from the tool arguments that rendered the view.</p>
+<p><strong>Denied.</strong> Only <code>picker.resource</code> can be denied, as a JSON-RPC error from the host. Show the host’s message rather than replacing it with a guess.</p>
+<p><strong>Failed.</strong> A resource that does not exist returns an error with the URI in it. Say which resource, because a picker with three options and one broken one is a picker whose failure the user can work around.</p>
+<p><strong>Cancelled and timeout.</strong> The native pickers cannot be cancelled from outside, and a dismissed picker simply leaves the value unchanged, which needs no handling. A resource read has no timeout of its own, so give it one.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>Native date, time and colour inputs render and open their platform pickers inside the sandbox.</li>
+<li>Values are displayed using <code>hostContext.locale</code> and <code>hostContext.timeZone</code>, not the machine’s.</li>
+<li>Changing the host locale re-renders every formatted value without a reload.</li>
+<li><code>resources/read</code> through the host returns content for a known URI.</li>
+<li>A read for an unknown URI returns an error, and the view reports it.</li>
+<li>With <code>serverResources</code> absent, the view sends no <code>resources/read</code>.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>Two rules. Use the platform’s inputs, because they are better than the ones you would write and they are free. And format every value you display through the host’s locale and timezone rather than the browser’s, because in this environment the browser is not where the user is.</p>
+<h2 id="a-note-on-what-native-buys-you">A note on what “native” buys you</h2>
+<p>The date input is worth one more paragraph, because the argument generalises to every native control in Chapter 22.</p>
+<p>Ask what a replacement has to know. Which day the week starts on, in the user’s region. The names of the months, in the user’s language, in the correct grammatical case for a date rather than for a list. Whether the region uses a non-Gregorian calendar. How to type a date rather than pick one, because most people type. What a screen reader should say when the value changes. How the picker behaves at 200% zoom, and on a touch device, and under forced colours.</p>
+<p>The browser knows all of that, for every locale it supports, and it was paid for by somebody else. A component library knows some of it for the locales its authors tested. A component you write in a four hundred pixel frame at the end of a sprint knows the first two.</p>
+<p>The visual mismatch is real and it is the only cost. In an embedded view that is already visually distinct from its host by design, it is a smaller cost than it looks.</p>
 
 <div class="pager"><a href="ch10.html"><span class="dir">Previous</span>10. Clipboard, Files and System Integration</a><a href="ch12.html" style="text-align:right"><span class="dir">Next</span>12. Host Environment and Theming</a></div>
 </main>

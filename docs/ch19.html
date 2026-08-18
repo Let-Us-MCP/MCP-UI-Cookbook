@@ -131,6 +131,61 @@ bridge.on(&quot;toolinput&quot;, ({ arguments: args }) =&gt; {
 <p><code>notifications/progress</code> helps a little, because it carries a message string, but it is a progress report rather than a result channel and the extension does not list it among the notifications a view receives.</p>
 <p><strong>What a mechanism would look like.</strong> A <code>ui/notifications/tool-result-partial</code> mirroring the input side, with the same “never rely on it, always get a final one” contract. The asymmetry between input and output streaming is hard to justify from the view’s point of view: the model streams its arguments <em>to</em> you and the server cannot stream its results <em>to</em> you.</p>
 <p><strong>Design around it.</strong> Update stable elements in place rather than rebuilding. Recipe 9 appends rows and never redraws the list, so selection and scroll survive. Whatever your streaming mechanism turns out to be, that discipline is what keeps it usable, and it is the discipline the conformance checks assert.</p>
+<h2 id="where-the-two-directions-meet">Where the two directions meet</h2>
+<p>It is worth putting the whole tool picture in one place, because four different things in this book are all called “a tool call” and they are not the same.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Message</th>
+<th>Needs</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View to server</td>
+<td><code>tools/call</code></td>
+<td><code>hostCapabilities.serverTools</code></td>
+<td>Refresh, save, load</td>
+</tr>
+<tr>
+<td>Model to server</td>
+<td><code>tools/call</code></td>
+<td>Nothing from the view</td>
+<td>The call that rendered you</td>
+</tr>
+<tr>
+<td>Model to view</td>
+<td><code>tools/call</code></td>
+<td><code>appCapabilities.tools</code></td>
+<td>Agent acting on the interface</td>
+</tr>
+<tr>
+<td>View to model</td>
+<td><code>sampling/createMessage</code></td>
+<td><code>hostCapabilities.sampling</code></td>
+<td>Private completions</td>
+</tr>
+</tbody>
+</table></div>
+<p>The second row is the one people forget is different. Your view exists because the model called a server tool; the result arrives as a notification rather than as a return value, and the view never sent anything. Everything else in the table is a call your code makes or answers.</p>
+<h2 id="failure-modes-across-the-group">Failure modes across the group</h2>
+<p><strong>Unsupported.</strong> No <code>serverTools</code> means no refresh, no save, no pagination. The recipes all render from their initial tool result under this condition, which is worth testing rather than assuming.</p>
+<p><strong>Denied.</strong> The host may refuse a specific call on policy grounds even with the capability present. Report its message.</p>
+<p><strong>Failed.</strong> <code>isError: true</code> with readable text. Keep the last good state.</p>
+<p><strong>Cancelled.</strong> Either direction. Keep the last good state and say where it stopped.</p>
+<p><strong>Timeout.</strong> Give every call a deadline. A host that never answers is indistinguishable from a slow server, and a spinner with no end is the worst of the five failure modes because it never resolves into anything the user can act on.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>tools/call</code> from the view reaches the server and its result returns.</li>
+<li>A tool with <code>visibility: ["app"]</code> is absent from the agent’s tool list.</li>
+<li>A cross-server call for an app-only tool is refused.</li>
+<li><code>ui/notifications/tool-input</code> arrives exactly once, after any partials.</li>
+<li>Partial arguments are recoverable JSON and never a fragment.</li>
+<li><code>ui/notifications/tool-result</code> carries the standard result shape.</li>
+<li>With <code>serverTools</code> absent, the view sends no <code>tools/call</code>.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p><code>tool.invoke</code> is the workhorse of Part III and the one most applications under-use, because it is easy to think of every server round trip as a conversation. It is not. A refresh button that calls an app-only tool is cheaper, faster, more reliable and more testable than anything routed through a model, and it is the mechanism that lets a view be an application rather than a rendering of one turn.</p>
 

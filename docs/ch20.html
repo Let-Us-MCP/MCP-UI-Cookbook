@@ -138,6 +138,23 @@
 <p>The single most important thing in this chapter, and it belongs to Chapter 15 mechanically.</p>
 <p>Every agent write goes onto the same undo stack as the user’s own edits, as one transaction, with a label that names the agent. One Cmd+Z restores the human’s words. Recipe 4 does this for accepted rewrites, and the whole safety argument for agent-assisted editing rests on it: a change you can take back in one keystroke is a change you can afford to let a model make.</p>
 <p>An agent whose changes are outside the undo stack is an agent whose changes are permanent, and users respond to permanent changes by not using the feature.</p>
+<h2 id="the-four-policies-chosen-by-question">The four policies, chosen by question</h2>
+<p>A shortcut for picking one, since the choice is usually made under time pressure.</p>
+<p><strong>Is losing this write cheap?</strong> Reject. The tool says no with a reason and the agent can relay it.</p>
+<p><strong>Is the region a field rather than a document?</strong> Merge, if writes touch different fields, and last-writer-wins with a notice if they do not.</p>
+<p><strong>Is a human likely to be editing it right now?</strong> Ask, as defined above. This is the default for anything a person types into, and the cost of getting it wrong is somebody watching their sentence disappear as they write it.</p>
+<p><strong>Is the region computed rather than authored?</strong> Agent-owned. There is no conflict, because the user does not write it; if they disagree they change the inputs.</p>
+<p>The demonstration implements Ask with a 1.5 second idle timer, which is crude and works. A more careful version would key on whether the field has focus rather than on a timer, and would still need the timer for the case where somebody types and then looks away.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>An agent write to a user-owned region returns <code>isError: true</code> with a reason.</li>
+<li>An agent write to a shared region while the user is typing is held rather than applied.</li>
+<li>A held write is offered to the user rather than dropped.</li>
+<li>The tool result distinguishes held, offered and applied.</li>
+<li>Every applied agent write is one undo transaction.</li>
+<li>A failed optimistic update is rolled back and the reason is shown.</li>
+<li>A cancelled multi-step operation reports how far it got.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>Three labels, four policies, and a decision made before the code rather than after the bug report. Keep the shared set small, hold agent writes while a human is typing, tell the agent what actually happened, and put everything the agent does on the undo stack. That is the entire chapter, and every part of it is cheaper to build than the merge algorithm you were considering.</p>
 

@@ -122,6 +122,10 @@
 <p>Registering a tool in order to refuse it looks strange until you consider the alternative: an agent that finds no approval tool tries something else, and what it tries may not have a gate. Press “Agent tries to approve it itself” in the demonstration.</p>
 <h2 id="what-crosses-the-boundary">What crosses the boundary</h2>
 <p>Decisions, and nothing else. Not which cards were expanded, not how long the person took, not the order they read them in. The audit trail is local; the context update carries the outcomes.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Read the provenance on the refund card before deciding.</strong> Five fields, and the one that changes the decision is “prior approvals: none for this customer”.</p>
+<p><strong>Press “Agent queues a deletion”, then “Agent tries to approve it itself”.</strong> The tool refuses and says why. Registering a tool in order to decline it is the point of the recipe.</p>
+<p><strong>Approve the deletion, then press “Show the audit trail”.</strong> The decision is recorded locally and published to the model; how long you took and which cards you expanded are not.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

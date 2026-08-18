@@ -130,6 +130,11 @@
 <p>Every mutation goes through the same <code>apply()</code>, whether it came from a pointer or from a tool. The agent adds a step; one Cmd+Z removes it. Chapter 20 argues this is what makes agent editing acceptable, and this recipe is the clearest case: a graph an agent can restructure and a human cannot un-restructure is a graph nobody will let an agent near.</p>
 <h2 id="the-minimap">The minimap</h2>
 <p>Eleven lines of canvas drawing, showing node positions and the current viewport rectangle. It is the cheapest orientation aid available and the first thing users miss on a pannable surface.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Press “Agent: what is wrong with this?”.</strong> The reply is a count of structural problems, computed from the graph rather than described from pixels.</p>
+<p><strong>Press “Agent: connect Assign owner to Notify”.</strong> An edge appears, the validation chip goes green, and one Cmd/Ctrl+Z removes it. That is the whole safety argument for letting a model edit a graph.</p>
+<p><strong>Press “Agent: connect to a step that is not there”.</strong> The tool fails with the missing name in the message, so the agent can correct itself.</p>
+<p><strong>Drag a node, then press Undo.</strong> One transaction for the whole drag, not sixty.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

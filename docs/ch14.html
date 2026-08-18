@@ -107,7 +107,7 @@
 <h2 id="before-close">Before close</h2>
 <div class="cap" id="lifecycle.beforeClose"><div class="cap-head"><code class="cap-id">lifecycle.beforeClose</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Get one chance to finish before the frame goes away.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/resource-teardown</code><code>reason</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
 <p>The one guarantee in the whole lifecycle, and the reason the previous entry’s gap is survivable.</p>
-<p>When a host tears down a view, it must send <code>ui/resource-teardown</code> first. That is a <em>request</em>, with an id and a reason, and the host should wait for the response before removing the frame. Between the request and your response is the only window in the entire protocol where a view can finish something.</p>
+<p>Chapter 6 introduced this message from the view’s side of the pair. Here is what it is worth: the interval between the host asking and your code answering is the only interval in the whole protocol during which a view is guaranteed to still exist and to have the host’s attention. Everything you were going to lose has to be flushed inside it.</p>
 <p class="provenance extracted">Extracted from from <code>apps/recipes/r04-document-editor/index.html</code></p><pre class="js"><code>bridge.on(&quot;teardown&quot;, async ({ reason }) =&gt; {
   $(&quot;#log&quot;).textContent = `Host is closing this view: ${reason}`;
   if (dirty) {
@@ -119,6 +119,25 @@
 <p><strong>Failure modes.</strong> A host that does not send the request at all takes your work with it, which is why autosave matters more here than in a page. A host that sends it and does not wait looks identical from the inside, and the only way to know is to measure. The demonstration’s teardown control reports how long the view took to answer, which is the same measurement a conformance test makes.</p>
 <h2 id="asking-to-be-closed">Asking to be closed</h2>
 <p>The other direction is <code>ui/notifications/request-teardown</code>, covered as <code>surface.close</code> in Chapter 6. It is worth restating the asymmetry here, because the pair is the whole lifecycle contract: the view <em>asks</em> with a notification that may be ignored, and the host <em>tells</em> with a request that must be answered. Neither side can force the other, and the protocol is deliberately arranged so that the party who owns the window has the last word.</p>
+<h2 id="a-worked-example-what-the-editor-does-in-one-second">A worked example: what the editor does in one second</h2>
+<p>Recipe 4’s document editor is the clearest illustration of this whole chapter, because everything it does is a response to not being able to rely on anything.</p>
+<p>The user types. A timer starts. After 900 milliseconds of quiet the view commits an undo transaction and calls <code>save_document</code>, which is an app-only tool, so the model neither sees the save nor can trigger one. The chip goes from amber to green.</p>
+<p>Now the host tears the view down. <code>ui/resource-teardown</code> arrives with a reason. If the chip is green, the view answers immediately and the frame goes away with nothing lost. If it is amber, the view saves first and then answers, and the demonstration reports how many milliseconds that took, because that number is the thing a host either waits for or does not.</p>
+<p>The total exposure is 900 milliseconds of typing, and it is bounded by a constant the view chose rather than by anything the protocol promises. That is the shape of every lifecycle decision in this environment: pick a bound, make it small, and assume the warning may not come.</p>
+<h2 id="host-behaviour-in-detail">Host behaviour, in detail</h2>
+<p>Send <code>ui/resource-teardown</code> before removing a frame, for any reason, including reasons the user initiated. Give the reason, because a view can behave differently for “the user closed the conversation” and “this view is being replaced by a newer result”.</p>
+<p>Wait for the response, with a deadline that is generous rather than tight. A view flushing to a server needs a network round trip, and a host that waits 200 milliseconds has effectively not waited.</p>
+<p>Answer <code>ping</code>. It is the only way a view can check that the channel is still there, and a host that ignores it leaves the view unable to distinguish a slow call from a dead one.</p>
+<p>Do not send anything before <code>ui/notifications/initialized</code>. A host that sends tool input early loses it, and the loss is silent.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>ui/resource-teardown</code> is sent before the frame is removed, with a reason.</li>
+<li>The host waits for the response, and a view that takes 600 milliseconds is not cut off.</li>
+<li>Nothing is sent to the view before <code>ui/notifications/initialized</code>.</li>
+<li><code>ping</code> is answered.</li>
+<li>Hiding the host’s tab fires <code>visibilitychange</code> inside the frame.</li>
+<li>A view that is scrolled out of view receives no signal, which is the gap in Appendix B rather than a conformance failure.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>Assume you will be destroyed at any moment with one request of warning, and that the warning may not come. Every design decision in this group follows from that: autosave rather than save, server state rather than view state, cheap by default rather than suspend on a signal you may not receive.</p>
 

@@ -126,6 +126,36 @@ switches between the message log and the exact file the frame is running.
 That last point carries weight. The frame loads `demos/lab-surface/index.html`;
 the code tab fetches `demos/lab-surface/index.html`. They cannot disagree.
 
+## Four ways in
+
+**You arrived with a specific problem.** Appendix A is the index. Find the
+capability, read its ground badge first, and the entry will tell you in one
+line whether you are looking for a message, a browser feature, or an
+afternoon's work.
+
+**You arrived with an application to build.** Part V. Find the recipe closest
+to what you are building, read its local and agentic split, then read its host
+dependency table. That table is the list of things that can go wrong in a host
+you have not tested against.
+
+**You are implementing a host.** Chapter 1 for the ladder, Chapter 2 for the
+wire, Appendix C for the checklist, and then Chapter 27's ordering advice,
+which is that the handshake, `surface.resize` and the teardown handshake are
+worth more than everything else put together.
+
+**You want to know what is missing.** Appendix B, which is fourteen entries
+long and is the most actionable page here.
+
+## What this book assumes you know
+
+Enough HTML, CSS and JavaScript to build a small interface without a framework,
+because every application here is built that way and none of them uses one.
+Enough of MCP to know what a tool and a resource are. Nothing about the Apps
+extension, which Chapter 2 covers completely in one sitting.
+
+It does not assume you have a host to test against, which is why the
+demonstrations run on this page.
+
 ## The question
 
 Everything here exists to answer one question:

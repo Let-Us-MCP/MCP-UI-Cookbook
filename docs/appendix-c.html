@@ -87,6 +87,11 @@
 <h2 id="for-application-authors">For application authors</h2>
 <p>The mirror image, as a pre-ship list.</p>
 <p>Read <code>hostCapabilities</code> once, at initialisation, and let it decide which controls exist. Define a fallback for every style variable you use. Format through <code>hostContext.locale</code> and <code>timeZone</code>. Report your size on change only. Answer <code>ui/resource-teardown</code> promptly, and flush before you do. Publish state to the model, not events, and only state that changes an answer. Put every agent write on the undo stack. Handle all five failure modes from Chapter 5, and check that the interface is honest in each.</p>
+<h2 id="publishing-a-result">Publishing a result</h2>
+<p>A host that runs these checks has a number, and the number is worth publishing in a form somebody can act on: the level claimed, the checks that failed, and the date of the run. The model to copy is the public web platform test dashboards, where a per-feature, per-implementation grid makes it possible to write portable code without guessing.</p>
+<p>Nothing here requires that infrastructure. A markdown table in a repository is enough to be more useful than the current situation, which is that application authors discover a host’s level by shipping into it.</p>
+<h2 id="what-this-appendix-cannot-tell-you">What this appendix cannot tell you</h2>
+<p>Whether a host is good. Every check here is about whether a defined behaviour happens, and none of them is about whether the result is usable. A host can pass every Level 2 check and still render views in a 200 pixel column with the theme variables of a different product. Conformance is the floor, not the ceiling.</p>
 
 <div class="pager"><a href="appendix-b.html"><span class="dir">Previous</span>Appendix B. The Gaps</a><a href="appendix-d.html" style="text-align:right"><span class="dir">Next</span>Appendix D. Glossary</a></div>
 </main>

@@ -115,6 +115,10 @@ $(&quot;#note&quot;).textContent = mode === target
 <h2 id="a-share-button-with-nothing-behind-it">A share button with nothing behind it</h2>
 <p><code>navigator.share</code> needs the <code>web-share</code> permission policy, which the extension does not have. <code>system.share</code> is a gap. What the recipe does instead is ask the host to open a canonical link, and fall back to putting that link on the clipboard, and say which it did.</p>
 <p>That is the general shape for a missing capability with a real user need behind it: find the nearest thing the host will do, do that, and be explicit about the substitution rather than pretending.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Press Play, then press “Withdraw fullscreen” and the Fullscreen button.</strong> The view reports the mode the host actually kept, rather than assuming the request succeeded.</p>
+<p><strong>Press Share with links allowed, then press “Refuse to open links” and press it again.</strong> The first goes through <code>ui/open-link</code>; the second falls back to the clipboard and says so. There is no share capability to fall back from.</p>
+<p><strong>Turn captions on and scrub.</strong> The caption line follows the position, and the toggle carries <code>aria-pressed</code> rather than a colour change.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

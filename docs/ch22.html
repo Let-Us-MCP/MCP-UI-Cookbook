@@ -127,6 +127,10 @@
 <p><strong>Everything is clipped by the frame.</strong> A popover that would overflow the viewport in a page just overflows; here it is cut off by the iframe’s edge and there is no way to render outside it. Position with the frame’s bounds, not the screen’s, and prefer flipping to a different side over letting the content extend past the boundary. A dropdown that opens downward at the bottom of the frame is a dropdown nobody can read.</p>
 <p><strong>Tooltips need a second route.</strong> They are hover-only by construction, and <code>hostContext.deviceCapabilities.hover</code> tells you when hover does not exist. On a touch device, move the content into the label, a popover triggered by tap, or a description that is always visible.</p>
 <p><strong>Context menus need a keyboard route.</strong> Shift+F10, a visible button, or both. Chapter 9 has the details.</p>
+<h3 id="why-dialog-and-not-a-div">Why <code>&lt;dialog&gt;</code> and not a div</h3>
+<p>Worth spelling out, because hand-rolled overlays are still the common case and the list of what you lose is longer than people expect.</p>
+<p><code>showModal()</code> puts the dialog in the top layer, which means it renders above everything regardless of stacking context, and no <code>z-index</code> arms race is needed. It makes the rest of the document inert, so clicks and focus cannot reach it. It gives you <code>::backdrop</code> as a real pseudo-element. It handles Escape, firing a <code>cancel</code> event you can intercept. It restores focus to the previously focused element on close. And it carries the modal semantics assistive technology needs without a single ARIA attribute.</p>
+<p>A div with <code>position: fixed</code> gives you none of those, and the versions people write typically reimplement two of them badly. The one thing to remember is the <code>cancel</code> event: a dialog whose promise is only resolved by its buttons hangs forever when the user presses Escape, and in an application that awaits the answer, a hung promise is a frozen interface.</p>
 <h2 id="controls">Controls</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -240,9 +244,71 @@
 <p><strong>Search fields want a shortcut and cannot safely have one.</strong> Cmd/Ctrl+F is the convention and the host may own it. Bind it, expect to lose it sometimes, and always provide the visible field.</p>
 <p><strong>Rich text is where the agent shows up.</strong> A text field can be prefilled and the user sees the value change. A document cannot: the agent’s rewrite has to appear as a proposal, with the original still visible, and accepting it has to be one undo transaction. Recipe 4 is the worked example, and the proposal card is a component in its own right that Chapter 24 lists.</p>
 <p><strong>Code editors are a decision about weight.</strong> A real editor is a large dependency inside a frame with a restrictive CSP and no CDN unless the server declares one. A <code>&lt;pre&gt;</code> with syntax highlighting done server-side covers reading, which is most of what a review interface does. Recipe 8 renders a diff with no editor at all.</p>
+<h2 id="what-each-overlay-costs-in-a-frame">What each overlay costs in a frame</h2>
+<p>A quick reference, because the trade is different here than on a page.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Cost in a four hundred pixel frame</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alert</td>
+<td>Blocks everything, clipped by the frame</td>
+<td>Almost never; usually a toast</td>
+</tr>
+<tr>
+<td>Confirmation</td>
+<td>Blocks, but small</td>
+<td>The action is destructive and not undoable</td>
+</tr>
+<tr>
+<td>Modal</td>
+<td>Covers the whole view</td>
+<td>The task genuinely needs the whole surface</td>
+</tr>
+<tr>
+<td>Sheet or drawer</td>
+<td>Covers most of the view, animates</td>
+<td>A secondary task the user returns from</td>
+</tr>
+<tr>
+<td>Popover</td>
+<td>Clipped at the frame edge</td>
+<td>Short content anchored to a control</td>
+</tr>
+<tr>
+<td>Tooltip</td>
+<td>Unreachable without hover</td>
+<td>Never the only route to information</td>
+</tr>
+<tr>
+<td>Context menu</td>
+<td>Clipped, needs a keyboard route</td>
+<td>Per-item actions, with a visible alternative</td>
+</tr>
+</tbody>
+</table></div>
+<p>The pattern in the right-hand column is that the answer is almost always “smaller than you think”. A modal inside a card is a card that has become unusable for the duration; a sheet that covers eighty percent of a small frame is a modal wearing a different animation.</p>
+<h2 id="the-one-component-this-book-would-buy-rather-than-build">The one component this book would buy rather than build</h2>
+<p>The combobox, and it is worth being specific about why. It is the most complex pattern in the Authoring Practices Guide. It needs a listbox positioned within a frame that clips it. It needs <code>aria-activedescendant</code>, an expanded state, a value that may or may not be one of the options, and typeahead that does not fight the input. And it needs all of that to work with a virtual list once the option count passes a few hundred.</p>
+<p>Recipe 1 uses a plain <code>&lt;select&gt;</code> for its environment filter for exactly this reason. The filter has four options; a combobox would be worse in every dimension including the one it exists to improve.</p>
 <h2 id="the-embedded-rule-that-applies-to-all-of-them">The embedded rule that applies to all of them</h2>
 <p>Every component in this chapter is smaller than the version you have built before, because the frame is smaller. A toolbar with nine buttons becomes a toolbar with four and an overflow menu. A form with three columns becomes one column. A modal that would be 600 pixels wide has to work at 380.</p>
 <p>The useful discipline is to design at the narrowest width you will accept, and to let <code>surface.resize</code> report the height rather than trying to fit a fixed one. Everything in this book is built at 380 pixels first, and the recipes look the same at 900 because the layout only ever had one column to lose.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>Every overlay traps focus while open and restores it on close.</li>
+<li>Escape closes any overlay and resolves whatever was awaiting it.</li>
+<li>No overlay renders outside the frame’s bounds.</li>
+<li>Native controls are used where they exist, and replacements carry the same keyboard behaviour.</li>
+<li>Hit targets are at least 44 pixels when <code>deviceCapabilities.touch</code> is set.</li>
+<li>Validation errors appear on blur and on submit, not on keystroke.</li>
+<li>Every error is associated with its field through <code>aria-describedby</code>.</li>
+</ol>
 
 <div class="pager"><a href="ch21.html"><span class="dir">Previous</span>21. Approval, Elicitation and the Context Boundary</a><a href="ch23.html" style="text-align:right"><span class="dir">Next</span>23. Components II: Navigation, Data and Visualization</a></div>
 </main>

@@ -25,7 +25,7 @@ figures:
 site:
 	python3 tools/build_site.py
 
-check: lint refs listings counts claims transcripts
+check: lint refs listings counts claims identifiers transcripts
 
 lint:
 	python3 tools/lint_prose.py
@@ -39,10 +39,13 @@ listings:
 counts:
 	python3 tools/check_counts.py
 
-# Needs proto/, the pair of specification clones. Skips cleanly without them so
-# CI stays green; run it locally before publishing.
+# Both need proto/, the pair of specification clones. They skip cleanly without
+# them so CI stays green; run them locally before publishing.
 claims:
 	python3 tools/check_claims.py
+
+identifiers:
+	python3 tools/check_identifiers.py
 
 # Drives every demonstration in headless Chrome and diffs the recorded
 # JSON-RPC log. UPDATE_TRANSCRIPTS=1 accepts a new one.

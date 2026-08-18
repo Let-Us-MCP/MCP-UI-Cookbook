@@ -127,6 +127,23 @@
 <p>Three facts in nineteen words: what happened, what the consequence was (nothing was written, so no partial state to worry about), and what to do. Compare it with “Error: operation failed”, which has none of them and is what most tools return.</p>
 <p><strong>Show it where the action was.</strong> An error about an export belongs next to the export button, not in a toast that vanishes and not in a banner at the top of a view the user has scrolled past.</p>
 <p><strong>Keep the last good state.</strong> Recipe 1’s table keeps its rows when a reload fails and says the data is from the previous successful call. An empty table with an error above it has thrown away information the user still needed.</p>
+<h2 id="the-four-states-of-a-long-operation">The four states of a long operation</h2>
+<p>Every operation in this chapter moves through the same small state machine, and naming it is what stops each application inventing a different one.</p>
+<p><strong>Idle.</strong> No work in flight. The control that starts it is enabled, and whatever the last run produced is still on screen.</p>
+<p><strong>Running.</strong> Determinate or indeterminate progress, a phase name, and a cancel control that is enabled. The control that started it is disabled or idempotent.</p>
+<p><strong>Settled.</strong> Done, failed, or cancelled. All three are terminal, all three leave something on screen, and the difference between them is what the interface says rather than what it shows. Done keeps the new result. Failed keeps the previous one and explains. Cancelled keeps the previous one and says how far the work got.</p>
+<p><strong>Retrying.</strong> A distinct state, because it is not idle: the arguments are still there, the failure is still visible, and the user is deciding.</p>
+<p>Recipe 11 renders all four with a chip whose text is the state name, which is unglamorous and turns out to be the most legible thing in the interface.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>notifications/progress</code> from a server reaches the view, or the view degrades to indeterminate progress.</li>
+<li><code>notifications/cancelled</code> from the view carries the id of the request being abandoned.</li>
+<li><code>ui/notifications/tool-cancelled</code> from the host leaves the last good state on screen.</li>
+<li>A tool result with <code>isError: true</code> is rendered as a readable message rather than as a thrown exception.</li>
+<li>A retry re-sends the same arguments without the user re-entering them.</li>
+<li><code>ui/request-display-mode</code> with <code>fullscreen</code> is the route a media view takes, and <code>requestFullscreen</code> is not called.</li>
+<li>Media never autoplays.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>Everything in the second half of this chapter is about the same thing: the user is waiting, and the interface owes them an accurate account. Progress says how far. Cancellation says where it stopped. Errors say what happened and what to do. Retry says try again without starting over. Applications that do all four feel reliable even when the things behind them are not, and applications that do none of them feel broken even when everything worked.</p>
 

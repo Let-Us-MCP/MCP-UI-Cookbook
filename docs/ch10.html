@@ -127,7 +127,6 @@
     &quot;mimeType&quot;: &quot;text/csv&quot;,
     &quot;text&quot;: &quot;service,env,version\ncheckout,production,4.18.2\n&quot; } } ] } }</code></pre>
 <p>For something the host can fetch itself, a <code>ResourceLink</code> with a URL.</p>
-<p><strong>Host behaviour.</strong> The host should confirm before saving, should derive the filename from the last segment of the URI, must sanitise it against path traversal, and may refuse on size or policy grounds.</p>
 <p><strong>Failure modes.</strong> This one has no fallback worth the name. If <code>hostCapabilities.downloadFile</code> is absent, a sandboxed frame genuinely cannot save a file. The honest response is to not show an export button, and to offer copy instead, which is what Recipe 6 does: press “Refuse downloads” in its demonstration and the export path switches to the clipboard with a sentence explaining why.</p>
 <h2 id="opening-a-link">Opening a link</h2>
 <div class="cap" id="link.open"><div class="cap-head"><code class="cap-id">link.open</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Delegate external navigation instead of attempting it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/open-link</code><code>openLinks</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r08.html">Code and Diff Reviewer</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
@@ -141,6 +140,27 @@
 <p>Two more closed doors, and both are the same story: the browser API exists, the permission that would enable it is not in the extension’s set, and no message replaces it.</p>
 <p><code>navigator.share</code> needs the <code>web-share</code> permission policy. <code>window.print</code> needs <code>allow-modals</code>. Neither is granted. Feature detection reports them as present and then they fail or do nothing, which is worse than absent.</p>
 <p><strong>Workarounds.</strong> For sharing: <code>ui/open-link</code> with a canonical URL, or copy the URL to the clipboard. Recipe 12 does the first and falls back to the second, and says which it did. For printing: <code>ui/download-file</code> with a generated PDF, or accept that printing an embedded view is not a thing that happens.</p>
+<h2 id="a-worked-example-getting-a-table-out-of-a-frame">A worked example: getting a table out of a frame</h2>
+<p>The Data Explorer in Recipe 1 has eight rows the user might want elsewhere. Four routes exist and the recipe offers two of them, which is the right number.</p>
+<p><strong>Copy</strong> works everywhere, needs no capability, and puts the data where the user’s next action already expects it. It is the default and it should be the first thing you build.</p>
+<p><strong>Export</strong> through <code>ui/download-file</code> produces a file, needs <code>hostCapabilities.downloadFile</code>, and is the only way to move something too large to paste. The recipe omits the button when the capability is absent.</p>
+<p><strong>Drag out</strong> does not exist. Chapter 9 has the gap.</p>
+<p><strong>A link to the data on the server</strong> through <code>ui/open-link</code> is the fourth route, and it is worth considering before the other three: if the rows came from a system that has a URL for them, sending the user there gives them the data and the context, and costs one message.</p>
+<p>That ordering generalises. Ask what the user is going to do with the thing, then pick the route that lands closest to it, rather than picking the route that is easiest to build.</p>
+<h2 id="host-behaviour-in-detail">Host behaviour, in detail</h2>
+<p>For <code>ui/open-link</code>, the host opens in the user’s default browser or a new tab, and may refuse. A host that opens links in a frame inside its own window has missed the point of the message, which is to get the navigation out of the sandbox and somewhere the user can see an address bar.</p>
+<p>For <code>ui/download-file</code>, the host should confirm, derive the filename from the last segment of <code>resource.uri</code>, sanitise it against path traversal, and may refuse on size or policy grounds. For a <code>ResourceLink</code> it fetches the content itself, which means the fetch happens with the host’s network identity rather than the view’s, and the host should treat the URL accordingly.</p>
+<p>For <code>clipboardWrite</code>, the host maps the permission onto the frame’s <code>allow</code> attribute and reports what it granted in <code>hostCapabilities.sandbox</code>.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>With <code>clipboardWrite</code> granted, <code>navigator.clipboard.writeText</code> succeeds inside the frame.</li>
+<li>Without it, the <code>execCommand</code> fallback still copies from a user gesture.</li>
+<li><code>ui/download-file</code> with an <code>EmbeddedResource</code> produces a file named from the last segment of its URI.</li>
+<li><code>ui/download-file</code> with <code>downloadFile</code> absent from <code>hostCapabilities</code> is never sent by a conforming view.</li>
+<li><code>ui/open-link</code> opens outside the sandbox, or returns an error.</li>
+<li>An <code>&lt;a download&gt;</code> inside the frame does nothing, and the view does not rely on it.</li>
+<li>A file chosen with <code>&lt;input type="file"&gt;</code> is readable in the view and is not transmitted anywhere the view did not send it.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>Look at the shape of this chapter. Every capability that reaches outside the frame either has a message (<code>ui/open-link</code>, <code>ui/download-file</code>) or is a gap (<code>clipboard.read</code>, <code>system.share</code>, <code>system.print</code>). Every capability that stays inside the frame just works. That line is the sandbox boundary, and once you can see it you can predict which of your requirements are going to be difficult before you write any code.</p>
 

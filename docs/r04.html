@@ -146,6 +146,11 @@
 <h2 id="proposal-not-replacement">Proposal, not replacement</h2>
 <p>The agent’s <code>propose_rewrite</code> tool does not touch the document. It shows the proposed text with Accept and Decline, and returns “Shown to the user. Not applied.” so the agent does not report a change that has not happened.</p>
 <p>Accepting is one transaction. One Cmd+Z puts the human’s words back, which is the entire safety argument for letting a model near a document.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Type in the document and watch the chip.</strong> Amber on the first keystroke, green about 900 milliseconds after you stop, with a <code>save_document</code> call in the transcript between the two.</p>
+<p><strong>Press “Agent proposes a rewrite”.</strong> The document is untouched; the proposal appears below it. Press Accept, then Cmd/Ctrl+Z once. Your words are back.</p>
+<p><strong>Type something, then immediately press “Close the view”.</strong> The note in the transcript reports how many milliseconds the view took to answer <code>ui/resource-teardown</code>, and the save happened inside that window.</p>
+<p><strong>Press “Agent reads the document”.</strong> The tool reports the text and the dirty flag, which is the pull half of the pair whose push half is <code>ui/update-model-context</code>.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

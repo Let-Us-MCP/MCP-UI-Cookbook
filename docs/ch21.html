@@ -119,6 +119,23 @@
 <p>Context is finite and shared with the conversation, so anything you publish displaces something else. Published state is <em>not</em> deletable in the way it feels: hosts may hold the last update until the next user message, and the model may reason from it for several turns. And some UI state is information the user did not intend to disclose. What somebody hovered over before deciding is a record of their hesitation, and a view that publishes it has told the model something the user would not have said.</p>
 <p><strong>The test.</strong> Would this change a reasonable answer to the next question? Selection changes the answer to “why are these slow”. Hover does not change the answer to anything. Sort order does not, unless the user is about to ask “what is at the top”. Scroll position never does.</p>
 <p><strong>Two directions of failure.</strong> Under-publishing produces the assistant that does not know what “these” refers to, which reads as stupidity. Over-publishing produces a context window full of near-identical snapshots and answers that get worse as the session goes on. The second is harder to notice, because nothing looks broken.</p>
+<h2 id="why-the-enforcement-cannot-live-in-the-view">Why the enforcement cannot live in the view</h2>
+<p>It is worth being precise, because the queue-and-perform pattern looks like security and is only a convention.</p>
+<p>The view is HTML from a server, running in a sandbox, and its Approve button is an ordinary button. Nothing signs the click. Nothing attests that a human made it. A compromised view, or a view whose server was compromised, can call the performing tool directly without rendering anything at all, and the server cannot tell the difference because the call arrives over the same channel with the same credentials.</p>
+<p>What the pattern does buy is real, and it is worth having:</p>
+<p>The <strong>model</strong> cannot approve, because the performing tool is <code>visibility: ["app"]</code> and the host must not put it in the agent’s tool list. That closes the case where a model talks itself into an action.</p>
+<p>The <strong>audit trail</strong> is coherent, because the queue and the performance are separate server-side events with a shared id.</p>
+<p>The <strong>user</strong> sees provenance, which is the difference between an approval and a reflex.</p>
+<p>What it does not buy is protection from a hostile view, and that requires the host to render the consent surface, which requires a message that does not exist. That is the finding, and it belongs upstream rather than in a private extension.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>A view’s approval control has no protocol effect, and the enforcing gate is on the server.</li>
+<li>The tool that performs a gated action carries <code>visibility: ["app"]</code>.</li>
+<li>An approval tool exposed to the agent refuses rather than approving.</li>
+<li>No credentials are collected in a view.</li>
+<li>Context updates carry decisions and outcomes, not interaction traces.</li>
+<li>Hover, scroll and sort produce no messages.</li>
+</ol>
 <h2 id="what-to-remember-from-part-iii">What to remember from Part III</h2>
 <p>Four chapters, and the through-line is that both parties can now act, and neither can see the other. The view cannot see the conversation. The host cannot see the view’s DOM. The agent cannot see the screen. Everything in Part III is a way of passing a small, explicit, auditable amount of information across that gap, and every capability that got a message got one because somebody argued that the alternative was worse.</p>
 <p>The two that did not, approval and elicitation, are the two where the honest answer is that the host has to be involved and nobody has written down how.</p>

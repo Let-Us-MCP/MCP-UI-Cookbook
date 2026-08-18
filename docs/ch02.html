@@ -220,6 +220,16 @@
 <p>A view is rendered because a tool was called. Finding out which tool, with which arguments, and what came back, happens in four steps that arrive in order.</p>
 <p><code>hostContext.toolInfo</code> arrives in the initialize result and names the tool. <code>ui/notifications/tool-input-partial</code> may arrive zero or more times while the model is still writing the arguments, carrying best-effort recovered JSON with unclosed brackets closed. <code>ui/notifications/tool-input</code> arrives exactly once with the complete arguments. <code>ui/notifications/tool-result</code> arrives when the tool finishes, carrying the standard <code>CallToolResult</code>, or <code>ui/notifications/tool-cancelled</code> arrives instead if it did not.</p>
 <p>Rendering something useful during the partial phase is the difference between an application that feels instant and a spinner that lasts as long as the model does. Chapter 19 has the demonstration.</p>
+<h2 id="reading-a-transcript">Reading a transcript</h2>
+<p>The transcript pane on every page in this book prints these messages as they happen, and learning to read one is the fastest way to understand what an embedded application is actually doing. A healthy startup looks like this, every time:</p>
+<p class="provenance captured">Captured output from <code>conformance/transcripts/lab-surface.json</code></p><pre><code>app→host  ui/initialize
+host→app  result
+app→host  ui/notifications/initialized
+app→host  ui/notifications/size-changed   { width: 836, height: 147 }
+app→host  ui/notifications/size-changed   { width: 836, height: 306 }</code></pre>
+<p>Five lines, and four facts. The view started. The host answered. The view finished initialising, so the host may now speak. And the view reported its size twice, because the first report was of an empty document and the second was of the drawn one.</p>
+<p>That second size is worth dwelling on. It is not a bug; it is what happens when a view draws asynchronously, which every view does. A host that acted only on the first report would show a 147 pixel frame around 306 pixels of content.</p>
+<p>The absence of lines is as informative as their presence. No <code>ui/initialize</code> means the view’s script never ran. No <code>ui/notifications/initialized</code> means it threw between connecting and finishing. No <code>size-changed</code> means it never observed its own content, which in a flexible container means a frame that never grows.</p>
 <h2 id="two-content-channels-on-purpose">Two content channels, on purpose</h2>
 <p>A tool result has a <code>content</code> array and a <code>structuredContent</code> object, and they are for different readers.</p>
 <p><code>content</code> is what the model sees. It should be a sentence, not a data dump: if the model is going to read three hundred table rows it has just paid for, the view is about to render them anyway and the model gains nothing. <code>structuredContent</code> is what your view sees, and it never reaches the model’s context.</p>
@@ -230,6 +240,16 @@
 <p>Everything above is implemented by <code>@modelcontextprotocol/ext-apps</code>, which ships both halves: <code>App</code> for the view side and <code>AppBridge</code> for the host side. It handles schema validation, request timeouts, capability assertions, and the <code>ResizeObserver</code> wiring for size reporting. Use it.</p>
 <p>This book ships its own bridge instead, in about two hundred and forty lines, for one reason: the transcript pane on every page has to have nothing hidden behind it. When you press a button in a demonstration and see <code>ui/update-model-context</code> appear in the log, the path from the click to the message is short enough to read. That is a pedagogical choice, not a recommendation.</p>
 <p>Both are in the repository, and the code tab of every demonstration shows the one that is actually running.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>ui/initialize</code> receives a result carrying <code>protocolVersion</code>, <code>hostInfo</code>, <code>hostCapabilities</code> and <code>hostContext</code>.</li>
+<li>Nothing is sent to the view before <code>ui/notifications/initialized</code>.</li>
+<li>Every capability present in <code>hostCapabilities</code> behaves as described when used.</li>
+<li><code>ui/notifications/host-context-changed</code> carries only changed keys.</li>
+<li><code>ui/notifications/tool-input</code> arrives exactly once, after any partials.</li>
+<li>A view with a script error produces no handshake, and the host surfaces that rather than waiting silently.</li>
+<li>Messages from the frame are identified by <code>event.source</code>, not by origin.</li>
+</ol>
 
 <div class="pager"><a href="ch01.html"><span class="dir">Previous</span>1. The Capability Model</a><a href="ch03.html" style="text-align:right"><span class="dir">Next</span>3. The Local-First Principle</a></div>
 </main>

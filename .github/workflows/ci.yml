@@ -26,8 +26,10 @@ jobs:
           python3 tools/check_refs.py
           python3 tools/check_listings.py
           python3 tools/check_counts.py
-      - name: Specification claims
-        run: python3 tools/check_claims.py
+      - name: Specification claims and prose identifiers
+        run: |
+          python3 tools/check_claims.py
+          python3 tools/check_identifiers.py
       - name: Build the demos and the site
         run: |
           python3 tools/build_demos.py

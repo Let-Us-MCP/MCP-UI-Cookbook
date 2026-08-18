@@ -186,6 +186,10 @@
 <p><strong>Streaming updates must not rebuild the list.</strong> Appending a row is fine. Replacing the container’s children destroys selection, focus and scroll position at the same time, and the user notices all three. Recipe 9 appends and trims, never redraws, which is what makes selecting a log line survive a thousand lines arriving after it.</p>
 <p><strong>Virtualise past a few thousand rows</strong>, and be aware that virtualisation and <code>surface.resize</code> interact badly: a virtual list has a fixed height by design, so it wants a fixed container, which means telling the host a stable size and scrolling inside it.</p>
 <p><strong>Copy as the destination wants it.</strong> TSV for the clipboard, CSV for a file. Chapter 10.</p>
+<h2 id="the-column-budget-worked">The column budget, worked</h2>
+<p>Six columns at 380 pixels is the practical ceiling, and reaching it takes deliberate work rather than restraint alone.</p>
+<p>Right-align every number and use tabular figures, which buys a character of width per column and makes outliers scannable. Put units in the header rather than in every cell: “p95 ms” once beats “412ms” eight times. Use chips for enumerated values, because a chip reads at a glance and a word does not. Format dates to the shortest form that is still unambiguous, which usually means dropping the year for anything inside the current one. And put anything that is only occasionally needed behind row expansion rather than in a column.</p>
+<p>When that is not enough, the answer is not a horizontal scrollbar. It is a different component: a property list per row, which turns a wide table into a tall list and is what every mobile client does with the same problem. Recipe 1 switches at 480 pixels.</p>
 <h2 id="visualization">Visualization</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -229,6 +233,18 @@
 <p><strong>Colour alone is never the encoding.</strong> Forced-colors mode replaces your palette. A status that is only a green dot becomes a dot. Pair every colour with a shape, a label, or text.</p>
 <p><strong>Charts need a text equivalent.</strong> A <code>&lt;table&gt;</code> behind a disclosure, or an <code>aria-label</code> that states the shape of the data, or figures in the caption. “Checkout p95, 412 milliseconds, up 18 percent since the 4.18.2 deploy” is worth more to every reader than the sparkline is, and Recipe 2 puts exactly that sentence under each tile.</p>
 <p><strong>Progress that never moves is worse than no progress.</strong> An indeterminate spinner with a phase name beats a determinate bar whose number is invented. Chapter 16.</p>
+<h2 id="a-table-that-survives-everything">A table that survives everything</h2>
+<p>The four properties that separate a table people can work in from a table people take screenshots of. All four appear in Recipe 1, and none of them is more than a few lines.</p>
+<p><strong>Selection survives updates.</strong> Keyed by identifier, not by row index. A table that re-sorts and keeps three rows selected is behaving; one that keeps rows three, four and five selected is not.</p>
+<p><strong>Scroll survives updates.</strong> Append and patch rather than replace. Recipe 9 appends up to a cap and never rebuilds, which is what makes a log tail usable at five lines a second.</p>
+<p><strong>Focus survives updates.</strong> The consequence of the first two, and the one users feel most sharply. A grid that rebuilds on every tick moves focus to the document body twice a second, which makes keyboard operation impossible.</p>
+<p><strong>Numbers are aligned and tabular.</strong> <code>text-align: right</code> and <code>font-variant-numeric: tabular-nums</code>. Two declarations, and they turn a column of figures into something you can scan for an outlier. This is not accessibility and it is not decoration; it is the reason the table exists.</p>
+<h2 id="charts-without-a-dependency-in-practice">Charts without a dependency, in practice</h2>
+<p>The three shapes that cover most of what an embedded view needs, and what each costs in inline SVG.</p>
+<p>A <strong>sparkline</strong> is a <code>polyline</code> whose points are the series scaled to the box. Nine lines, no axes, no labels, and it belongs next to a number rather than instead of one. Recipe 2 builds one per tile.</p>
+<p>A <strong>bar chart</strong> is a loop of rects with a shared scale. Fifteen lines. The work is in the labels, not the bars, and in a narrow frame the labels usually have to go under the bars rather than beside them.</p>
+<p>A <strong>status strip</strong> is not a chart at all: a row of chips with text in them. It is what most dashboards actually need, it is legible at any size, and it survives forced colours because the state is in the words.</p>
+<p>Anything beyond those three is worth asking whether the view is the right place for it. A dense multi-series chart in four hundred pixels is a chart nobody can read, and the honest answer is often a table plus a link the host can open.</p>
 <h2 id="what-to-remember">What to remember</h2>
 <p>The URL bar and the CDN are the two things this chapter keeps running into, and they are the two things a page has that a view does not. Design navigation that does not need history, and visualisation that does not need a dependency, and most of the rest of your components will port over unchanged.</p>
 

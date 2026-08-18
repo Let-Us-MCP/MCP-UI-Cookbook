@@ -122,6 +122,11 @@ apply({ label: `delete ${node.name}`,
 <p>Chapter 8 argues that a confirmation without undo trains people to click through it, and that undo without confirmation loses a folder before anyone notices. Doing both costs four lines and the confirmation stops being ritual.</p>
 <h2 id="move-as-a-transaction">Move as a transaction</h2>
 <p>Dragging a node onto a folder is one transaction that remembers the index it came from, so undo puts it back where it was rather than at the end of its old parent’s list. That detail is invisible when it works and obvious when it does not.</p>
+<h2 id="try-this">Try this</h2>
+<p><strong>Drag <code>notes.txt</code> onto the <code>documents</code> folder, then press Undo.</strong> It returns to its original position in its original parent, because the transaction recorded the index rather than just the parent.</p>
+<p><strong>Right click any node.</strong> The menu is drawn by the view, positioned inside the frame, and closes on Escape with focus restored.</p>
+<p><strong>Select a file and press Delete.</strong> The confirmation says the action can be undone, which is what makes the confirmation honest rather than ritual.</p>
+<p><strong>Tab into the tree, then use the arrow keys.</strong> The whole tree is one tab stop.</p>
 <h2 id="host-dependencies">Host dependencies</h2>
 <div class="table-wrap"><table>
 <thead>

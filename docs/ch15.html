@@ -130,6 +130,29 @@ function apply({ label, forward, back }) {
 <h2 id="the-persistence-and-history-pairing">The persistence and history pairing</h2>
 <p>These two capabilities interact in a way worth naming. Undo depth is state, and it is state that does not survive a teardown, because the closures cannot be serialised. So a view that persists its document but not its history comes back with a document it cannot un-edit.</p>
 <p>That is usually the right trade. Serialising a transaction stack means representing every operation as data rather than as a closure, which is a substantially larger design, and the value of undoing something from before a reload is low. But it should be a decision rather than a discovery. Recipe 4 persists the document, drops the history, and says so.</p>
+<h2 id="what-to-persist-and-what-to-reconstruct">What to persist, and what to reconstruct</h2>
+<p>Because persistence is expensive here, the useful discipline is to sort state into three buckets before writing any of it.</p>
+<p><strong>Reconstructible.</strong> Anything derivable from the tool arguments or the tool result. A sort order, a filter, which tab is open, the current page. All of it comes back for free on the next render, and persisting it is work that buys nothing.</p>
+<p><strong>Worth a round trip.</strong> Documents, drafts, annotations, preferences. Things a person made. These go to a server tool, and the cost is real, so debounce them and save on pause rather than on change.</p>
+<p><strong>Deliberately forgotten.</strong> Undo history, scroll position, transient selections. Losing them is mildly annoying and keeping them is disproportionate work, particularly for undo, where serialising a stack of closures means redesigning the whole transaction model as data.</p>
+<p>Recipes 4 and 13 persist exactly the second bucket and say so in their entries. The value of writing the buckets down is that it turns “we should save state” into three short lists, one of which is empty work.</p>
+<h2 id="a-transaction-in-full">A transaction, in full</h2>
+<p>The shape is small enough to state completely, and every recipe that has undo uses exactly this.</p>
+<p>A transaction is an object with a label, a <code>forward</code> closure and a <code>back</code> closure. <code>apply()</code> runs forward, pushes it onto the past, and clears the future. <code>undo()</code> pops the past, runs back, and pushes onto the future. <code>redo()</code> does the reverse. Four methods, about twenty lines, and no library.</p>
+<p>Three refinements the recipes add, each for a specific reason.</p>
+<p><strong>Coalescing by pause.</strong> Typing produces one transaction per quiet period rather than per keystroke, because undo that steps back a character at a time is undo nobody uses.</p>
+<p><strong>Capturing by value, not by reference.</strong> A <code>back</code> closure that restores an array must have captured a copy, or it restores a reference to the array that was mutated. This is the bug that makes undo appear to work and then not.</p>
+<p><strong>Recording the index.</strong> Removing an item and putting it back at the end is not an undo. Recipe 3’s move records where the node came from, which is the difference between reversing a change and approximating it.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>localStorage</code> inside the frame either throws or is discarded with the frame, and the view does not depend on it.</li>
+<li>A view’s persisted state survives a teardown and a re-render, through whatever server tool it uses.</li>
+<li>An app-only save tool is absent from the agent’s tool list.</li>
+<li>Undo reverses exactly the last transaction and leaves later changes alone.</li>
+<li>A new action clears the redo stack.</li>
+<li>An agent-initiated change is undone by one Cmd/Ctrl+Z.</li>
+<li>Undo and redo announce what they did.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>Persistence is a gap with a workable but heavy workaround, so keep the set of things that must survive as small as you can defend. Undo is not a gap, it is a design, and in an agentic application it is the mechanism that makes it safe for a model to touch a document at all.</p>
 

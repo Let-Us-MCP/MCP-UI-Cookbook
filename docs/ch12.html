@@ -145,6 +145,27 @@ bridge.on(&quot;hostcontextchanged&quot;, (patch) =&gt; {
   padding-left: calc(12px + var(--safe-left, 0px));
 }</code></pre>
 <p>The controls most affected are the ones pinned to an edge: a bottom toolbar, a floating action button, a toast stack. Everything in the middle of the view is fine, which is why this bug survives testing on a desktop and appears on the first phone.</p>
+<h2 id="the-variables-grouped-by-what-they-are-for">The variables, grouped by what they are for</h2>
+<p>The standardised set is long and the grouping is what makes it usable. There are four families, and a view that uses one member of a family should use the rest of it rather than mixing in its own values.</p>
+<p><strong>Backgrounds and text</strong> come in pairs by role: primary, secondary, tertiary, inverse, and the status roles info, success, warning, danger, plus disabled. The pairing is the contrast guarantee. <code>--color-text-danger</code> on <code>--color-background-danger</code> is legible in every theme a host can send; a red you chose on a background the host chose is legible in the theme you tested.</p>
+<p><strong>Borders and rings</strong> mirror the same roles. The ring set exists because focus indication needs to be distinguishable from a border, and a host with an unusual palette needs to be able to say so.</p>
+<p><strong>Typography</strong> carries families, four weights, a text scale in four sizes and a heading scale in seven, each with a matching line height. Using the size without its line height is the most common way to end up with cramped text in a host that sends a larger scale than you designed against.</p>
+<p><strong>Radii, border width and four shadow levels</strong> are the shape vocabulary. These are the ones most likely to be absent, because many hosts do not have opinions about them, so their fallbacks matter more than the colours’.</p>
+<p>Spacing is deliberately absent, and the specification says why: layouts break when spacing varies from what they were designed against. Your rhythm is yours.</p>
+<h2 id="failure-modes-across-the-group">Failure modes across the group</h2>
+<p><strong>No styles at all.</strong> The common case, and it must look deliberate rather than unstyled. Every view in this book renders correctly with an empty <code>hostContext</code>, which is the test worth running first.</p>
+<p><strong>Half the variables.</strong> The dangerous case, and the one the specification warns about. Use role pairs consistently so a missing background and a present foreground fail together rather than separately.</p>
+<p><strong>A theme that changes mid-interaction.</strong> Re-read rather than cache. Anything you computed in JavaScript from a variable is stale the moment <code>ui/notifications/host-context-changed</code> arrives.</p>
+<p><strong>A font block that does not load.</strong> Your fallback stack is what people see, so make it a real stack. A single exotic family name with no fallback is a view rendered in whatever the browser picks.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>hostContext</code> carries <code>theme</code>, <code>locale</code> and <code>timeZone</code> in the initialize result.</li>
+<li>Style variables are applied to the document root and removed when the host stops sending them.</li>
+<li>A theme change arrives as a partial <code>ui/notifications/host-context-changed</code> and the view re-renders without a reload.</li>
+<li>The view renders correctly with no <code>styles</code> at all.</li>
+<li><code>safeAreaInsets</code> moves content away from every edge it names.</li>
+<li><code>deviceCapabilities.touch</code> produces targets of at least 44 pixels.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
 <p>Read the environment in a function, not in a constant. Define a fallback for every variable you use. Format through the host’s locale and timezone. Those three habits cover almost everything in this chapter, and the demonstration above will break a view that lacks any of them within three button presses.</p>
 
