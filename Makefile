@@ -25,7 +25,7 @@ figures:
 site:
 	python3 tools/build_site.py
 
-check: lint refs listings counts claims identifiers transcripts
+check: lint refs listings counts claims identifiers transcripts render
 
 lint:
 	python3 tools/lint_prose.py
@@ -51,6 +51,11 @@ identifiers:
 # JSON-RPC log. UPDATE_TRANSCRIPTS=1 accepts a new one.
 transcripts:
 	$(NODE) tools/check_demos.mjs
+
+# Starts each recipe's real MCP server, renders the view it delivers, feeds it
+# that server's real tool output, and asserts on the resulting DOM.
+render:
+	$(NODE) tools/check_render.mjs
 
 serve:
 	$(NODE) tools/serve.mjs

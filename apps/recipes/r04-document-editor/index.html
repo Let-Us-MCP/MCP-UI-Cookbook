@@ -204,13 +204,19 @@ View.boot({ name: "document-editor", version: "1.0.0" },
   }));
 
   $("#accept").onclick = () => {
-    snapshot("accept the agent's rewrite");
+    // Accepting is one transaction, so one Undo puts the human's words back.
+    // It has to be pushed explicitly: `snapshot` compares the document against
+    // itself and would find no change, because the replacement has not
+    // happened yet.
+    const before = $("#doc").innerHTML;
     $("#doc").innerHTML = proposed;
+    past.push({ label: "accept the agent's rewrite", before, after: proposed });
+    future.length = 0;
     last = proposed;
+    buttons();
     $("#proposal").hidden = true;
     setDirty(true);
     save();
-    // Accepting is one transaction, so one Undo puts the human's words back.
     toast("Applied. Undo reverts it in one step.");
   };
   $("#decline").onclick = () => {

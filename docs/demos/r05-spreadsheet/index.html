@@ -56,7 +56,11 @@ const inRange = (c, r) =>
 // dependency graph and therefore enough to have cycles.
 function evaluate(ref, seen = new Set()) {
   const raw = cells.get(ref) ?? "";
-  if (!String(raw).startsWith("=")) return Number(raw) || (raw === "" ? 0 : NaN);
+  if (!String(raw).startsWith("=")) {
+    if (raw === "") return 0;
+    const number = Number(raw);
+    return Number.isNaN(number) ? 0 : number;
+  }
   if (seen.has(ref)) throw new Error(`Circular reference at ${ref}`);
   seen.add(ref);
   let body = String(raw).slice(1).toUpperCase();
@@ -81,10 +85,18 @@ function draw() {
     h("tr", {}, h("th", { text: String(r + 1) }),
       ...COLS.map((_, c) => {
         const ref = key(c, r);
+        const raw = cells.get(ref);
         let shown = "";
         try {
-          const value = cells.has(ref) ? evaluate(ref) : "";
-          shown = value === "" ? "" : (Number.isNaN(value) ? "#VALUE" : value);
+          // A cell holding text shows its text. Only a formula, or a cell used
+          // as a number, is evaluated; passing "Region" through Number() and
+          // rendering the NaN is how a grid ends up full of #VALUE.
+          if (raw === undefined || raw === "") shown = "";
+          else if (!String(raw).startsWith("=")) shown = raw;
+          else {
+            const value = evaluate(ref);
+            shown = Number.isNaN(value) ? "#VALUE" : value;
+          }
         } catch (error) {
           shown = "#CYCLE";
         }

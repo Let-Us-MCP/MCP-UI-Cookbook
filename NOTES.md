@@ -65,7 +65,19 @@ each recipe's server over stdio and records its answers. The demonstration is
 honest even though the server is not executing in the browser, and the chain is
 regenerated on every build.
 
-**The harness drives views through their registered tools.** A sandboxed frame
+**Render conformance runs the real server.** `tools/check_render.mjs` starts
+each recipe's server over stdio, does the host handshake, reads the view's HTML
+through `resources/read`, renders it, proxies the view's own tool calls back to
+that server, forwards its progress notifications, and asserts on the DOM. No
+model is involved: a host connects, renders and mediates, and none of that
+needs one.
+
+**The frame is read over CDP, not from page script.** Page script cannot,
+because the frame has an opaque origin, which is the property that stops a host
+reading a view. Attaching flatly to the child target gives a session that can
+evaluate inside it. The shipped sandbox is unchanged.
+
+**The harness also drives views through their registered tools.** A sandboxed frame
 with an opaque origin cannot be driven from outside, which is the same property
 that stops a host reading it. Recipes that register tools are driven deeply;
 the rest are checked for handshake, render and host-side flows. This is the
@@ -91,6 +103,19 @@ it is the right one.
 - **The Core capability count was wrong in Chapter 1**, written from an
   estimate rather than from the registry. `tools/check_counts.py` exists
   because of that.
+- **A spreadsheet full of `#VALUE`.** Every text cell rendered as an error,
+  because the evaluator passed cell contents through `Number()` and the view
+  rendered the `NaN`. Present in every screenshot; nobody had read the
+  top-left cell.
+- **Accepting the agent's rewrite could not be undone.** Recipe 4 recorded its
+  transaction by comparing the document against itself before replacing it, so
+  nothing was pushed. The book asserts this exact safety property in two
+  chapters and the code did not have it.
+- **The monitoring console rendered every line twice**, because it received the
+  tool result it was rendered for and also called the tool on mount. Two rows
+  shared an identifier, so selecting one selected both.
+- **A server died of EPIPE** when its host went away mid-write. Guarded in
+  `apps/lib/mcp-server.js`.
 - **A specification and SDK divergence.** The extension's list of standard MCP
   messages available to a view names only `resources/read`, while the SDK ships
   `listServerResources()` and documents building a picker with it, and
@@ -105,10 +130,11 @@ it is the right one.
 
 ## Open items
 
-- **One host.** Everything runs against the emulator in this repository. Layer
-  5 of Chapter 26, the same suite against `basic-host` and against production
-  hosts, is the check that would turn the completeness argument into evidence.
-  It is the largest gap in the book's own verification.
+- **One host.** Everything runs against hosts written in this repository: the
+  browser emulator and the render driver. Layer 5 of Chapter 26, the same suite
+  against `basic-host` and against production hosts, is the check that would
+  turn the completeness argument into evidence. It is now the largest gap in
+  the book's own verification.
 - **No component layer tests.** Part IV components are a shared stylesheet and
   helper file rather than a library with stories, and no `axe-core` run is
   wired in. Accessibility claims come from the Chapter 13 checklist applied by

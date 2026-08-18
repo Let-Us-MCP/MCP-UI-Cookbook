@@ -1,0 +1,9 @@
+{ "server": "apps/recipes/r05-spreadsheet/server.js", "tool": "load_sheet",
+  "arguments": {}, "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "formulas are evaluated, not shown",
+      "expect": [ { "selector": "table.sheet tbody tr", "count": 6 },
+                  { "selector": "input[aria-label=D2]", "value": "91164" },
+                  { "selector": "input[aria-label=B6]", "value": "4562" },
+                  { "selector": "input[aria-label=A1]", "value": "Region" },
+                  { "selector": "#error", "hidden": true } ] } ] }

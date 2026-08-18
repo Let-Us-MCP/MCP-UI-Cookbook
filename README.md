@@ -43,7 +43,7 @@ make check     # what CI runs
 make serve     # docs/ on http://127.0.0.1:8977/
 ```
 
-`make check` runs seven things:
+`make check` runs eight things:
 
 | Check | What it proves |
 |---|---|
@@ -54,10 +54,38 @@ make serve     # docs/ on http://127.0.0.1:8977/
 | `check_claims.py` | Every wire claim appears in the pinned specification text |
 | `check_identifiers.py` | Every identifier in the prose exists in a spec, the SDK or the source |
 | `check_demos.mjs` | All 30 demonstrations run in Chrome and their transcripts match |
+| `check_render.mjs` | Each recipe's real server renders and produces the expected DOM |
 
-The last one needs Chrome. The two specification checks need `proto/`, a pair
+The last two need Chrome. The two specification checks need `proto/`, a pair
 of specification clones that are never committed, and skip cleanly without
 them.
+
+### Render conformance
+
+`make render` is the check that covers what the book is actually about. For
+each of the thirteen recipes it starts the real MCP server as a child process,
+does the host's `initialize` declaring the UI extension, reads
+`_meta.ui.resourceUri` off the tool, fetches the view's HTML through
+`resources/read`, renders it in a sandboxed iframe, proxies the view's own
+`tools/call` back to that server, forwards the server's progress
+notifications, and then asserts on the DOM inside the frame.
+
+No model is involved at any point. A host connects to servers, renders
+surfaces and mediates privileged operations, and none of that needs one. This
+harness is a host driven by a JSON file.
+
+Reading into the frame is done over the DevTools Protocol rather than from page
+script, because page script cannot: the frame has an opaque origin, which is
+the property that stops a host reading a view. A debugger can, which makes the
+sandbox that ships testable without weakening it.
+
+```
+node tools/check_render.mjs                  # 13 cases, 88 assertions
+node tools/check_render.mjs r04-document-editor
+```
+
+Cases live in `conformance/render/*.json` and can click inside the view, call
+its registered tools, and change the host context between assertions.
 
 ## Running a recipe server for real
 

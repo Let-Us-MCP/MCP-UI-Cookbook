@@ -1,0 +1,12 @@
+{ "server": "apps/recipes/r08-diff-reviewer/server.js", "tool": "load_diff",
+  "arguments": {}, "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "the hunk renders",
+      "expect": [ { "selector": ".line", "count": 8 },
+                  { "selector": "#file", "text": "src/transport/retry.ts" },
+                  { "selector": "#stat", "text": "+3 -2" },
+                  { "selector": ".line.add", "count": 3 },
+                  { "selector": ".line.del", "count": 2 } ] },
+    { "label": "selecting a line enables escalation", "click": ".line.del",
+      "expect": [ { "selector": ".line.sel", "count": 1 },
+                  { "selector": "#explain", "attr": { "name": "disabled", "value": null } } ] } ] }

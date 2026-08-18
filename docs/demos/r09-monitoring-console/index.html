@@ -42,7 +42,14 @@ let selectedId = null;
 let suspended = false;
 let bridge;
 
+const seen = new Set();
+
 function append(entry) {
+  // A line can arrive twice: once in the tool result this view was rendered
+  // for, and once from the view's own call on mount. Keying on the id is what
+  // makes selection survive later batches, so it has to be unique.
+  if (seen.has(entry.id)) return;
+  seen.add(entry.id);
   const node = h("div", { class: entry.level, "data-id": entry.id,
     "aria-selected": entry.id === selectedId ? "true" : "false",
     text: `${entry.at}  ${entry.service.padEnd(14)}  ${entry.text}`,

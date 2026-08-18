@@ -1,0 +1,16 @@
+{ "server": "apps/recipes/r07-workflow-builder/server.js", "tool": "load_workflow",
+  "arguments": {}, "expectToolText": "Notify is disconnected", "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "graph renders and validates as invalid",
+      "expect": [ { "selector": ".node", "count": 4 },
+                  { "selector": "#valid", "text": "2 problem(s)" },
+                  { "selector": ".node.bad", "minCount": 1 },
+                  { "selector": "#wires path", "count": 2 } ] },
+    { "label": "the agent connects the loose step", "appTool": "connect_steps",
+      "arguments": { "from": "Assign owner", "to": "Notify" },
+      "expect": [ { "selector": "#wires path", "count": 3 },
+                  { "selector": "#valid", "text": "valid" },
+                  { "selector": ".node.bad", "count": 0 } ] },
+    { "label": "one undo reverses the agent", "click": "#undo",
+      "expect": [ { "selector": "#wires path", "count": 2 },
+                  { "selector": "#valid", "text": "2 problem(s)" } ] } ] }

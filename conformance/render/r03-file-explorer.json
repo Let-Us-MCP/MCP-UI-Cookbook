@@ -1,0 +1,11 @@
+{ "server": "apps/recipes/r03-file-explorer/server.js", "tool": "list_files",
+  "arguments": {}, "expectToolText": "Three top level entries", "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "tree renders",
+      "expect": [ { "selector": "#tree > li", "count": 3 },
+                  { "selector": "[role=treeitem]", "minCount": 6 },
+                  { "selector": "#detail p", "text": "Select something." } ] },
+    { "label": "select a node", "click": "[role=treeitem]",
+      "expect": [ { "selector": "#detail h2", "textContains": "documents" },
+                  { "selector": "[aria-selected=\"true\"]", "count": 1 },
+                  { "selector": "#rename", "attr": { "name": "disabled", "value": null } } ] } ] }

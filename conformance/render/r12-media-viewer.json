@@ -1,0 +1,11 @@
+{ "server": "apps/recipes/r12-media-viewer/server.js", "tool": "list_clips",
+  "arguments": {}, "expectToolText": "Three clips", "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "the gallery renders",
+      "expect": [ { "selector": ".strip button", "count": 3 },
+                  { "selector": "#clock", "text": "0:00 / 1:36" },
+                  { "selector": "#frame", "attr": { "name": "aria-label", "value": "Assembly line, wide" } },
+                  { "selector": "#caption", "hidden": true } ] },
+    { "label": "switching clip", "click": ".strip button:nth-child(2)",
+      "expect": [ { "selector": "#clock", "text": "0:00 / 1:02" },
+                  { "selector": "[aria-current=\"true\"]", "count": 1 } ] } ] }

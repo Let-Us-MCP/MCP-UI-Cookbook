@@ -48,7 +48,23 @@ export function serve({ name, version = "1.0.0", resourceUri, viewFile,
       case "tools/call": {
         const tool = tools[params?.name];
         if (!tool) return fail(-32602, `Unknown tool: ${params?.name}`);
-        return reply(tool.run(params.arguments ?? {}));
+        // A tool may be async and may report progress while it runs. Progress
+        // is a notification against the request that is running, so the token
+        // comes off `_meta` exactly as core MCP defines it.
+        const token = params?._meta?.progressToken;
+        const notify = (method, notifyParams) => write(
+          { jsonrpc: "2.0", method, params: notifyParams });
+        const result = tool.run(params.arguments ?? {}, {
+          progress: (progress, total, message) => {
+            if (token === undefined) return;
+            notify("notifications/progress",
+              { progressToken: token, progress, total, message });
+          },
+          notify,
+        });
+        return result instanceof Promise
+          ? result.then(reply)
+          : reply(result);
       }
 
       case "resources/list":
@@ -83,6 +99,14 @@ export function serve({ name, version = "1.0.0", resourceUri, viewFile,
     }
   }
 
+  process.stdout.on("error", () => { /* the host went away mid-write */ });
+
+  const write = (message) => {
+    try {
+      process.stdout.write(`${JSON.stringify(message)}\n`);
+    } catch { /* the host went away mid-write */ }
+  };
+
   let buffer = "";
   process.stdin.on("data", (chunk) => {
     buffer += chunk;
@@ -98,7 +122,8 @@ export function serve({ name, version = "1.0.0", resourceUri, viewFile,
         response = { jsonrpc: "2.0", id: null,
                      error: { code: -32700, message: String(error.message) } };
       }
-      if (response) process.stdout.write(`${JSON.stringify(response)}\n`);
+      if (response instanceof Promise) response.then((r) => r && write(r));
+      else if (response) write(response);
     }
   });
 

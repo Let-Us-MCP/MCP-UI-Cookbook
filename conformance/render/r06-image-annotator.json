@@ -1,0 +1,8 @@
+{ "server": "apps/recipes/r06-image-annotator/server.js", "tool": "load_annotations",
+  "arguments": {}, "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "saved regions render",
+      "expect": [ { "selector": ".box", "count": 2 },
+                  { "selector": ".box span", "text": "scratch" },
+                  { "selector": "#art rect", "minCount": 5 },
+                  { "selector": "#undo", "attr": { "name": "disabled", "value": "" } } ] } ] }

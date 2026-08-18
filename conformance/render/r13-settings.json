@@ -1,0 +1,9 @@
+{ "server": "apps/recipes/r13-settings/server.js", "tool": "load_preferences",
+  "arguments": {}, "expectToolText": "Digest at 08:30", "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "the form is populated and clean",
+      "expect": [ { "selector": "#digest", "value": "08:30" },
+                  { "selector": "#email", "value": "sam@meridian.example" },
+                  { "selector": "#state", "text": "no changes" },
+                  { "selector": "#save", "attr": { "name": "disabled", "value": "" } },
+                  { "selector": "#email-err", "hidden": true } ] } ] }

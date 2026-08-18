@@ -1,0 +1,12 @@
+{ "server": "apps/recipes/r02-dashboard/server.js", "tool": "service_health",
+  "arguments": {}, "expectToolText": "Checkout p95 is 412ms", "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "tiles render from the server's metrics",
+      "expect": [ { "selector": ".tile", "count": 4 },
+                  { "selector": ".tile .d", "text": "Checkout p95" },
+                  { "selector": ".tile svg.spark", "count": 4 },
+                  { "selector": "#drill", "hidden": true } ] },
+    { "label": "drill down", "click": ".tile:nth-child(2)",
+      "expect": [ { "selector": "#drill", "hidden": false },
+                  { "selector": "#drill-title", "text": "Error rate" },
+                  { "selector": "#drill-body tr", "count": 3 } ] } ] }

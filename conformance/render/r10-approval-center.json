@@ -1,0 +1,16 @@
+{ "server": "apps/recipes/r10-approval-center/server.js", "tool": "pending_approvals",
+  "arguments": {}, "expectToolText": "Two actions are waiting", "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
+  "steps": [
+    { "label": "the queue renders with provenance",
+      "expect": [ { "selector": ".req", "count": 2 },
+                  { "selector": ".req.high", "count": 1 },
+                  { "selector": ".req dt", "minCount": 5 },
+                  { "selector": "#count", "text": "2" },
+                  { "selector": "#trail", "hidden": true } ] },
+    { "label": "the agent queues a third", "appTool": "queue_approval",
+      "arguments": { "id": "delete-19", "title": "Delete dataset", "risk": "high",
+        "at": "2026-08-18T09:41:00Z", "description": "Permanently delete rows.",
+        "consequence": "No restore path.", "question": "Who asked?",
+        "provenance": { "asked by": "the agent", "tool": "warehouse.drop_dataset" } },
+      "expect": [ { "selector": ".req", "count": 3 },
+                  { "selector": "#count", "text": "3" } ] } ] }

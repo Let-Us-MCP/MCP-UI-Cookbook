@@ -36,5 +36,7 @@ jobs:
           python3 tools/build_site.py
       - name: Drive every demonstration and diff its transcript
         run: node tools/check_demos.mjs
+      - name: Render conformance against every recipe's real server
+        run: node tools/check_render.mjs
       - name: The site must be committed and current
         run: git diff --exit-code -- docs

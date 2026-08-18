@@ -1,0 +1,54 @@
+{
+  "server": "apps/recipes/r01-data-explorer/server.js",
+  "tool": "list_deployments",
+  "arguments": {},
+  "expectToolText": "8 deployments",
+  "host": {
+    "hostCapabilities": {
+      "serverTools": {}, "downloadFile": {}, "message": { "text": {} },
+      "updateModelContext": { "text": {}, "structuredContent": {} },
+      "logging": {}
+    },
+    "hostContext": {
+      "theme": "light", "locale": "en-US", "timeZone": "America/New_York",
+      "containerDimensions": { "maxHeight": 620 }
+    }
+  },
+  "steps": [
+    {
+      "label": "first render",
+      "expect": [
+        { "selector": "tbody tr", "count": 6 },
+        { "selector": "#count", "text": "8 rows, 0 selected" },
+        { "selector": "#page", "text": "page 1 of 2" },
+        { "selector": "#error", "hidden": true },
+        { "selector": "#ask", "attr": { "name": "disabled", "value": "" } }
+      ]
+    },
+    {
+      "label": "select a row",
+      "click": "tbody tr",
+      "expect": [
+        { "selector": "#count", "text": "8 rows, 1 selected" },
+        { "selector": "tbody tr[aria-selected=\"true\"]", "count": 1 },
+        { "selector": "#ask", "attr": { "name": "disabled", "value": null } }
+      ]
+    },
+    {
+      "label": "page forward",
+      "click": "#next",
+      "expect": [
+        { "selector": "#page", "text": "page 2 of 2" },
+        { "selector": "tbody tr", "count": 2 }
+      ]
+    },
+    {
+      "label": "the host switches locale",
+      "patchContext": { "locale": "ja-JP", "timeZone": "Asia/Tokyo" },
+      "expect": [
+        { "selector": "#count", "text": "8 rows, 1 selected" },
+        { "selector": "tbody tr", "count": 2 }
+      ]
+    }
+  ]
+}

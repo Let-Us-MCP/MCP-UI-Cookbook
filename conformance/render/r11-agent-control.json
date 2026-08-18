@@ -1,0 +1,68 @@
+{
+  "server": "apps/recipes/r11-agent-control/server.js",
+  "tool": "run_task",
+  "arguments": {
+    "name": "Reindex shard 1"
+  },
+  "host": {
+    "hostCapabilities": {
+      "serverTools": {},
+      "downloadFile": {},
+      "openLinks": {},
+      "message": {
+        "text": {}
+      },
+      "updateModelContext": {
+        "text": {},
+        "structuredContent": {}
+      },
+      "logging": {},
+      "serverResources": {}
+    },
+    "hostContext": {
+      "theme": "light",
+      "locale": "en-US",
+      "timeZone": "UTC",
+      "displayMode": "inline",
+      "availableDisplayModes": [
+        "inline",
+        "fullscreen"
+      ],
+      "containerDimensions": {
+        "maxHeight": 620
+      },
+      "deviceCapabilities": {
+        "hover": true,
+        "touch": false
+      }
+    }
+  },
+  "settleMs": 1600,
+  "steps": [
+    {
+      "label": "the streamed task ran to completion",
+      "expect": [
+        {
+          "selector": ".task",
+          "count": 1
+        },
+        {
+          "selector": ".task .chip",
+          "text": "done"
+        },
+        {
+          "selector": "#running",
+          "text": "0 running"
+        },
+        {
+          "selector": ".task .bar > span",
+          "count": 1
+        },
+        {
+          "selector": ".task .steps",
+          "textContains": "writing"
+        }
+      ]
+    }
+  ]
+}

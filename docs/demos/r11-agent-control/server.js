@@ -14,10 +14,18 @@ serve({
       description: "Run a long task and report progress against it.",
       inputSchema: { type: "object", properties: { name: { type: "string" } },
                      required: ["name"] },
-      run: ({ name }) => ({
-        content: [{ type: "text", text: `${name} completed in 5 steps.` }],
-        structuredContent: { name, steps: 5 },
-      }),
+      run: async ({ name }, { progress }) => {
+        const steps = ["reading manifest", "scanning segments",
+                       "building index", "verifying", "writing"];
+        for (const [i, step] of steps.entries()) {
+          await new Promise((r) => setTimeout(r, 120));
+          progress(i + 1, steps.length, step);
+        }
+        return {
+          content: [{ type: "text", text: `${name} completed in 5 steps.` }],
+          structuredContent: { name, steps: steps.length },
+        };
+      },
     },
     list_tasks: {
       description: "List tasks the server knows about.",

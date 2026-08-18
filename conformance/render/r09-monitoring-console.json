@@ -1,0 +1,11 @@
+{ "server": "apps/recipes/r09-monitoring-console/server.js", "tool": "tail_logs",
+  "arguments": {}, "expectToolText": "24 recent lines", "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}}, "settleMs": 900,
+  "steps": [
+    { "label": "the tail renders",
+      "expect": [ { "selector": "#log div", "minCount": 24 },
+                  { "selector": "#conn", "text": "live" },
+                  { "selector": "#log div.err", "minCount": 1 },
+                  { "selector": "#banner", "hidden": true } ] },
+    { "label": "selecting a line survives more lines arriving",
+      "click": "#log div", "settleMs": 200,
+      "expect": [ { "selector": "#log div[aria-selected=\"true\"]", "count": 1 } ] } ] }
