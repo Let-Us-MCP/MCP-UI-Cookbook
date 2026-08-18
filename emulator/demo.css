@@ -34,6 +34,7 @@
   display: block;
   width: 100%;
   height: 260px;
+  max-height: 460px;
   border: 1px solid var(--rule);
   border-radius: 8px;
   background: var(--paper);
@@ -72,11 +73,49 @@
   padding: 5px 9px;
 }
 
+.demo-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+}
+
+/* Above this width the source sits beside the running application. Below it,
+   they stack, because two columns in four hundred pixels is neither. */
+@media (min-width: 1100px) {
+  .demo-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .demo-code { border-left: 1px solid var(--rule); }
+}
+
+.demo-code { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+
+/* The source pane takes whatever height the running application has and
+   scrolls inside it, so the demonstration and its code stay in one frame
+   however long the file is. */
+.demo-code .demo-pane {
+  flex: 1 1 0;
+  min-height: 220px;
+  max-height: none;
+  border-top: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.demo-code .demo-pane pre { white-space: pre; }
+
+.demo-label {
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 10px 14px 4px;
+}
+
+.demo-log { border-top: 1px solid var(--rule); }
+
 .demo-tabs {
   display: flex;
   gap: 2px;
-  padding: 8px 14px 0;
-  border-top: 1px solid var(--rule);
+  padding: 0 14px;
   overflow-x: auto;
 }
 
@@ -102,10 +141,12 @@
 
 .demo-pane {
   border-top: 1px solid var(--rule);
-  max-height: 340px;
+  max-height: 420px;
   overflow: auto;
   background: var(--wash);
 }
+
+.demo-log .demo-transcript { max-height: 260px; overflow: auto; }
 
 .demo-pane pre { margin: 0; border: 0; border-radius: 0; background: none; }
 
@@ -138,3 +179,29 @@
   .demo-stage { padding: 8px; }
   .demo-pane { max-height: 260px; }
 }
+
+/* Visible sliders. A pane that scrolls without saying so reads as a pane whose
+   content has been cut off, which is what a clipped line of code looks like. */
+.demo-pane, .demo-transcript {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muted) 55%, transparent) transparent;
+}
+.demo-pane::-webkit-scrollbar,
+.demo-transcript::-webkit-scrollbar { width: 11px; height: 11px; }
+.demo-pane::-webkit-scrollbar-track,
+.demo-transcript::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--rule) 35%, transparent);
+}
+.demo-pane::-webkit-scrollbar-thumb,
+.demo-transcript::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted) 60%, transparent);
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.demo-pane::-webkit-scrollbar-thumb:hover,
+.demo-transcript::-webkit-scrollbar-thumb:hover { background: var(--muted); background-clip: content-box; }
+.demo-pane::-webkit-scrollbar-corner { background: transparent; }
+
+/* Line numbers make a scrolled file navigable. */
+.demo-pane code { counter-reset: line; }

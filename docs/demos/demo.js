@@ -61,60 +61,57 @@ class Demo {
     this.transcript = el("div", { class: "demo-transcript" });
     this.notes = el("div", { class: "demo-notes" });
 
-    this.panes = {
-      transcript: el("div", { class: "demo-pane" }, this.transcript),
-    };
-
-    const tabs = el("div", { class: "demo-tabs" });
-    const files = [
-      ["transcript", "Messages"],
-      ...(spec.files ?? []).map((f) => [f, f]),
-    ];
-    for (const [key, label] of files) {
-      const tab = el("button", {
-        class: "demo-tab", type: "button", text: label,
-        onclick: () => this.show(key),
+    // The source sits beside the running application rather than behind a tab
+    // nobody presses. A cookbook whose code is one click away from its
+    // examples is a cookbook whose code does not get read.
+    this.tabs = {};
+    this.panes = {};
+    const files = spec.files ?? [];
+    const tabStrip = el("div", { class: "demo-tabs" });
+    for (const file of files) {
+      this.tabs[file] = el("button", {
+        class: "demo-tab", type: "button", text: file,
+        onclick: () => this.show(file),
       });
-      tabs.append(tab);
-      if (!this.tabs) this.tabs = {};
-      this.tabs[key] = tab;
-      if (key !== "transcript") {
-        this.panes[key] = el("div", { class: "demo-pane" },
-          el("pre", {}, el("code", { text: "Loading…" })));
-      }
+      tabStrip.append(this.tabs[file]);
+      this.panes[file] = el("div", { class: "demo-pane" },
+        el("pre", {}, el("code", { text: "Loading…" })));
     }
+
+    const codeColumn = el("div", { class: "demo-code" },
+      el("div", { class: "demo-label", text: "Source" }),
+      tabStrip, ...Object.values(this.panes));
 
     this.mount.append(
       el("div", { class: "demo-head" },
         el("span", { class: "demo-title", text: spec.title ?? this.id }),
         el("span", { class: "demo-sub", text: spec.subtitle ?? "" })),
-      this.stage,
-      this.controls,
-      this.notes,
-      tabs,
-      ...Object.values(this.panes),
+      el("div", { class: "demo-main" },
+        el("div", { class: "demo-live" },
+          this.stage, this.controls, this.notes),
+        files.length ? codeColumn : null),
+      el("div", { class: "demo-log" },
+        el("div", { class: "demo-label", text: "Messages" }),
+        this.transcript),
     );
 
-    this.show("transcript");
+    if (files.length) this.show(files[0]);
   }
 
   show(key) {
-    for (const [k, pane] of Object.entries(this.panes)) {
-      pane.hidden = k !== key;
-      this.tabs[k].classList.toggle("current", k === key);
+    for (const [name, pane] of Object.entries(this.panes)) {
+      pane.hidden = name !== key;
+      this.tabs[name].classList.toggle("current", name === key);
     }
-    if (key !== "transcript" && !this.panes[key].dataset.loaded) {
-      this.panes[key].dataset.loaded = "1";
-      fetch(`${this.base}${this.id}/${key}`)
-        .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
-        .then((text) => {
-          this.panes[key].querySelector("code").textContent = text;
-        })
-        .catch(() => {
-          this.panes[key].querySelector("code").textContent =
-            "Source unavailable.";
-        });
-    }
+    const pane = this.panes[key];
+    if (pane.dataset.loaded) return;
+    pane.dataset.loaded = "1";
+    fetch(`${this.base}${this.id}/${key}`)
+      .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
+      .then((text) => { pane.querySelector("code").textContent = text; })
+      .catch(() => {
+        pane.querySelector("code").textContent = "Source unavailable.";
+      });
   }
 
   async boot() {
