@@ -1,0 +1,164 @@
+{
+  "demo": "lab-tools",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "tools-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "serverTools": {
+            "listChanged": true
+          }
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 440
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 250,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-input-partial",
+      "id": null,
+      "payload": {
+        "arguments": {
+          "region": "Nor"
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "Oslo 11, Bergen 9, Tromso 4.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "cities": [
+            {
+              "name": "Oslo",
+              "sky": "cloud",
+              "temp": 11
+            },
+            {
+              "name": "Bergen",
+              "sky": "rain",
+              "temp": 9
+            },
+            {
+              "name": "Tromso",
+              "sky": "sleet",
+              "temp": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 308,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-input-partial",
+      "id": null,
+      "payload": {
+        "arguments": {
+          "region": "Nordics",
+          "units": "c"
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "The weather service returned 503. The table is unchanged.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 250,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-input",
+      "id": null,
+      "payload": {
+        "arguments": {
+          "region": "Nordics",
+          "units": "celsius"
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-cancelled",
+      "id": null,
+      "payload": {
+        "reason": "The user asked something else"
+      }
+    }
+  ]
+}

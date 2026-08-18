@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>State ownership</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="banner" id="owner">Nobody is editing.</div>
+
+  <label class="stack">Summary <span class="muted">shared: last writer wins, with a notice</span>
+    <textarea id="summary" rows="3">Renewal is on track for the 14th.</textarea>
+  </label>
+
+  <label class="stack">Internal note <span class="muted">user owned: the agent may read it, never write it</span>
+    <textarea id="note" rows="2">Call Priya before sending.</textarea>
+  </label>
+
+  <label class="stack">Risk score <span class="muted">agent owned: the view displays it and does not edit it</span>
+    <input id="risk" value="0.31" readonly>
+  </label>
+
+  <div class="row">
+    <button id="accept" class="primary" hidden>Keep the agent's version</button>
+    <button id="reject" hidden>Keep mine</button>
+  </div>
+
+  <p class="muted" id="log">No conflicts yet.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { $, toast, announce } = View;
+
+let userTyping = false;
+let pending = null;
+let mine = null;
+
+View.boot({ name: "ownership-lab", version: "1.0.0" },
+  { tools: { listChanged: true } }, async (bridge) => {
+
+  const setOwner = (text, kind = "") => {
+    $("#owner").textContent = text;
+    $("#owner").className = `banner ${kind}`;
+  };
+
+  let idle = null;
+  $("#summary").addEventListener("input", () => {
+    userTyping = true;
+    setOwner("You are editing the summary. The agent's writes will be held.", "warn");
+    clearTimeout(idle);
+    idle = setTimeout(() => {
+      userTyping = false;
+      setOwner("Nobody is editing.");
+      if (pending) offer(pending);
+    }, 1500);
+  });
+
+  // The conflict policy has to be declared before it happens, because the
+  // moment it happens there is no good default. This view holds the agent's
+  // write while the human is typing, then offers it as a choice.
+  function offer(text) {
+    mine = $("#summary").value;
+    pending = text;
+    setOwner("The agent rewrote the summary while you were typing.", "warn");
+    $("#accept").hidden = false;
+    $("#reject").hidden = false;
+    $("#log").textContent = `Agent proposed: ${text}`;
+    announce("The agent proposed a different summary");
+  }
+
+  $("#accept").onclick = () => {
+    $("#summary").value = pending;
+    pending = null;
+    $("#accept").hidden = $("#reject").hidden = true;
+    setOwner("The agent's version is in place.", "good");
+  };
+  $("#reject").onclick = () => {
+    pending = null;
+    $("#accept").hidden = $("#reject").hidden = true;
+    setOwner("Your version stands. The agent was told.", "good");
+  };
+
+  bridge.registerTool({
+    name: "rewrite_summary",
+    description: "Replace the shared summary text",
+    inputSchema: { type: "object", properties: { text: { type: "string" } },
+                   required: ["text"] },
+    annotations: { readOnlyHint: false },
+  }, async ({ text }) => {
+    if (userTyping) {
+      pending = text;
+      setOwner("Agent write held: the human is typing.", "warn");
+      return { content: [{ type: "text",
+        text: "Held. The user is editing; the change will be offered to them." }] };
+    }
+    offer(text);
+    return { content: [{ type: "text", text: "Offered to the user for review." }] };
+  });
+
+  bridge.registerTool({
+    name: "set_risk",
+    description: "Set the agent-owned risk score",
+    inputSchema: { type: "object", properties: { score: { type: "number" } },
+                   required: ["score"] },
+    annotations: { readOnlyHint: false },
+  }, async ({ score }) => {
+    $("#risk").value = score.toFixed(2);
+    toast("Risk score updated by the agent");
+    return { content: [{ type: "text", text: `Risk is now ${score}.` }] };
+  });
+
+  bridge.registerTool({
+    name: "read_note",
+    description: "Read the user's internal note",
+    inputSchema: { type: "object" },
+    annotations: { readOnlyHint: true },
+  }, async () => ({
+    content: [{ type: "text", text: $("#note").value }],
+  }));
+
+  bridge.registerTool({
+    name: "write_note",
+    description: "Attempt to write the user-owned note",
+    inputSchema: { type: "object", properties: { text: { type: "string" } },
+                   required: ["text"] },
+    annotations: { readOnlyHint: false },
+  }, async () => ({
+    isError: true,
+    content: [{ type: "text",
+      text: "The internal note is user owned. Propose a change in the "
+          + "conversation instead of writing it." }],
+  }));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tool invocation and streaming</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div id="skeleton" class="card">
+    <h2 id="title">Waiting for tool input</h2>
+    <p class="muted" id="args">The host has not said what was asked yet.</p>
+  </div>
+
+  <div class="row">
+    <button id="refresh" class="primary">Refresh (app-only tool)</button>
+    <button id="slow">Call a slow tool</button>
+    <button id="cancel" disabled>Cancel it</button>
+  </div>
+
+  <table>
+    <thead><tr><th>City</th><th class="num">Temp</th><th>Sky</th></tr></thead>
+    <tbody id="body"><tr><td colspan="3" class="muted">No result yet.</td></tr></tbody>
+  </table>
+
+  <p class="muted" id="state">Idle.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast } = View;
+
+function render(structured) {
+  const rows = structured?.cities ?? [];
+  $("#body").replaceChildren(...(rows.length
+    ? rows.map((c) => h("tr", {},
+        h("td", { text: c.name }),
+        h("td", { class: "num", text: `${c.temp}°` }),
+        h("td", { text: c.sky })))
+    : [h("tr", {}, h("td", { colspan: "3", class: "muted", text: "No rows." }))]));
+}
+
+View.boot({ name: "tools-lab", version: "1.0.0" }, {}, async (bridge) => {
+  // Partial input arrives while the model is still writing the arguments.
+  // Rendering the parts you have is the difference between a view that feels
+  // instant and a spinner that lasts as long as the model does.
+  bridge.on("toolinputpartial", ({ arguments: args }) => {
+    $("#title").textContent = args?.region
+      ? `Weather in ${args.region}` : "Weather in";
+    $("#args").textContent = "Arguments still arriving: "
+      + JSON.stringify(args ?? {});
+  });
+
+  bridge.on("toolinput", ({ arguments: args }) => {
+    $("#title").textContent = `Weather in ${args?.region ?? "nowhere"}`;
+    $("#args").textContent = `Complete arguments: ${JSON.stringify(args)}`;
+  });
+
+  bridge.on("toolresult", (result) => {
+    render(result.structuredContent);
+    $("#state").textContent = result.isError
+      ? `Failed: ${result.content?.[0]?.text}` : "Result delivered.";
+  });
+
+  bridge.on("toolcancelled", ({ reason }) => {
+    $("#state").textContent = `The host cancelled the call: ${reason}. `
+      + "The table still shows the last good result.";
+    toast("Call cancelled");
+  });
+
+  // An app-only tool is invisible to the model and callable from a button.
+  // Refresh buttons are the canonical case: the user wants new data, and
+  // nobody needs the model's opinion about it.
+  $("#refresh").onclick = async () => {
+    $("#state").textContent = "Refreshing.";
+    const result = await bridge.callServerTool("refresh_weather", { region: "Nordics" });
+    render(result.structuredContent);
+    $("#state").textContent = "Refreshed by the view, not by the model.";
+  };
+
+  let inflight = null;
+  $("#slow").onclick = async () => {
+    $("#cancel").disabled = false;
+    $("#state").textContent = "Calling a tool that takes its time.";
+    inflight = bridge.callServerTool("slow_lookup", {});
+    try {
+      const result = await inflight;
+      render(result.structuredContent);
+      $("#state").textContent = "Slow call finished.";
+    } catch (error) {
+      $("#state").textContent = `Slow call failed: ${error.message}`;
+    } finally {
+      $("#cancel").disabled = true;
+      inflight = null;
+    }
+  };
+
+  $("#cancel").onclick = () => {
+    bridge.notify("notifications/cancelled",
+      { requestId: bridge._id, reason: "The user gave up" });
+    $("#state").textContent = "Cancellation sent. The optimistic state is rolled back.";
+    $("#cancel").disabled = true;
+  };
+});
+</script>
+</body>
+</html>

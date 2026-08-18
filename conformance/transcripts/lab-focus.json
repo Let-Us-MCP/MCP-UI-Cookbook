@@ -1,0 +1,66 @@
+{
+  "demo": "lab-focus",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "focus-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {}
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 400
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 149,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 389,
+        "width": 836
+      }
+    }
+  ]
+}

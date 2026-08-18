@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Persistence and history</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <button id="undo">Undo</button>
+    <button id="redo">Redo</button>
+    <span class="spacer"></span>
+    <span class="chip" id="depth">0 undo, 0 redo</span>
+  </div>
+
+  <div class="row">
+    <button id="add" class="primary">Add a task</button>
+    <button id="rename">Rename the first</button>
+    <button id="clear" class="danger">Clear all</button>
+  </div>
+
+  <ul id="list" class="stack" style="list-style:none;margin:0;padding:0"></ul>
+
+  <div class="banner warn" id="storage">Checking what storage this frame has.</div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, promptDialog, toast, announce } = View;
+
+// A transaction is a pair of closures, not a diff of the whole document.
+// Undo that replays a snapshot works until the agent edits the same document
+// from the other side, and then it silently reverts the agent's work too.
+const past = [];
+const future = [];
+let tasks = ["Draft the agenda", "Book the room"];
+
+function apply({ label, forward, back }) {
+  forward();
+  past.push({ label, forward, back });
+  future.length = 0;
+  draw();
+  announce(label);
+}
+
+function undo() {
+  const entry = past.pop();
+  if (!entry) return;
+  entry.back();
+  future.push(entry);
+  draw();
+  announce(`Undid ${entry.label}`);
+}
+
+function redo() {
+  const entry = future.pop();
+  if (!entry) return;
+  entry.forward();
+  past.push(entry);
+  draw();
+  announce(`Redid ${entry.label}`);
+}
+
+function draw() {
+  $("#list").replaceChildren(...tasks.map((task) =>
+    h("li", { class: "card", text: task })));
+  $("#depth").textContent = `${past.length} undo, ${future.length} redo`;
+  $("#undo").disabled = !past.length;
+  $("#redo").disabled = !future.length;
+}
+
+View.boot({ name: "state-lab", version: "1.0.0" }, {}, async (bridge) => {
+  draw();
+
+  $("#add").onclick = async () => {
+    const name = await promptDialog({ title: "New task", label: "What needs doing?",
+                                      value: "Send the notes" });
+    if (!name) return;
+    apply({ label: `add ${name}`,
+            forward: () => tasks.push(name),
+            back: () => tasks.pop() });
+  };
+
+  $("#rename").onclick = async () => {
+    if (!tasks.length) return;
+    const before = tasks[0];
+    const after = await promptDialog({ title: "Rename", label: "New name",
+                                       value: before });
+    if (!after || after === before) return;
+    apply({ label: `rename ${before}`,
+            forward: () => { tasks[0] = after; },
+            back: () => { tasks[0] = before; } });
+  };
+
+  $("#clear").onclick = () => {
+    const before = [...tasks];
+    apply({ label: "clear all",
+            forward: () => { tasks = []; },
+            back: () => { tasks = before; } });
+  };
+
+  $("#undo").onclick = undo;
+  $("#redo").onclick = redo;
+
+  addEventListener("keydown", (event) => {
+    if (!(event.metaKey || event.ctrlKey)) return;
+    if (event.key === "z" && !event.shiftKey) { event.preventDefault(); undo(); }
+    if (event.key === "z" && event.shiftKey) { event.preventDefault(); redo(); }
+  });
+
+  // There is no state.save message. What there is, is a sandbox whose origin
+  // is opaque, so this is what actually happens when a view reaches for
+  // storage. The workaround is a server tool, which is what the Document
+  // Editor recipe does.
+  let storage = "unavailable";
+  try {
+    localStorage.setItem("probe", "1");
+    localStorage.removeItem("probe");
+    storage = "available";
+  } catch (error) {
+    storage = `refused (${error.name})`;
+  }
+  $("#storage").textContent =
+    `localStorage in this frame: ${storage}. `
+    + "There is no message for saving view state, so persistence goes through "
+    + "a server tool or it does not happen.";
+  if (storage === "available") $("#storage").className = "banner";
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Accessibility signals</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="row">
+    <span class="chip" id="motion">motion: ?</span>
+    <span class="chip" id="contrast">contrast: ?</span>
+    <span class="chip" id="scheme">scheme: ?</span>
+    <span class="chip" id="scale">root font: ?</span>
+  </div>
+
+  <div class="card">
+    <h2>A status that announces itself</h2>
+    <div class="row">
+      <button id="start" class="primary">Start the import</button>
+      <button id="fail">Make it fail</button>
+    </div>
+    <div class="bar" style="margin-top:10px"><span id="fill" style="width:0"></span></div>
+    <p class="muted" id="phase">Idle.</p>
+  </div>
+
+  <div class="card">
+    <h2>A dot that moves, or does not</h2>
+    <div id="track" style="height:8px;border-radius:99px;
+         background:var(--color-background-secondary);position:relative">
+      <span id="ball" style="position:absolute;width:16px;height:16px;top:-4px;
+            border-radius:50%;background:var(--color-text-info);left:0"></span>
+    </div>
+    <p class="muted">Under a reduced motion preference the dot jumps instead of
+      sliding, and the progress bar stops pulsing.</p>
+  </div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { $, announce, toast } = View;
+
+// These three preferences never appear on the wire. They are media queries,
+// they work inside the sandbox, and they reflect the operating system rather
+// than the host. A host that themes itself dark while the OS is light will
+// disagree with the second row of this strip, which is a real bug in this
+// part of the platform.
+const motion = matchMedia("(prefers-reduced-motion: reduce)");
+const contrast = matchMedia("(prefers-contrast: more)");
+const scheme = matchMedia("(prefers-color-scheme: dark)");
+
+function paint() {
+  $("#motion").textContent = `motion: ${motion.matches ? "reduced" : "full"}`;
+  $("#contrast").textContent = `contrast: ${contrast.matches ? "more" : "normal"}`;
+  $("#scheme").textContent = `scheme: ${scheme.matches ? "dark" : "light"}`;
+  $("#scale").textContent = "root font: "
+    + getComputedStyle(document.documentElement).fontSize;
+}
+
+for (const query of [motion, contrast, scheme]) {
+  query.addEventListener("change", paint);
+}
+
+View.boot({ name: "a11y-lab", version: "1.0.0" }, {}, async () => {
+  paint();
+
+  let timer = null;
+  const run = (failAt) => {
+    clearInterval(timer);
+    let percent = 0;
+    $("#phase").textContent = "Reading rows.";
+    timer = setInterval(() => {
+      percent += 8;
+      $("#fill").style.width = `${percent}%`;
+      $("#ball").style.left = `calc(${Math.min(percent, 100)}% - 8px)`;
+      $("#ball").style.transition = motion.matches ? "none" : "left .25s ease";
+      // Announcing every tick would make a screen reader unusable. Announcing
+      // at phase boundaries is what a sighted user actually perceives.
+      if (percent === 40) {
+        $("#phase").textContent = "Validating.";
+        announce("Validating");
+      }
+      if (failAt && percent >= failAt) {
+        clearInterval(timer);
+        $("#phase").textContent = "Row 812 has a malformed date. Nothing imported.";
+        announce("Import failed. Row 812 has a malformed date.");
+        toast("Import failed");
+        return;
+      }
+      if (percent >= 100) {
+        clearInterval(timer);
+        $("#phase").textContent = "Imported 1,284 rows.";
+        announce("Import finished. 1,284 rows.");
+      }
+    }, 160);
+  };
+
+  $("#start").onclick = () => run(0);
+  $("#fail").onclick = () => run(56);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+{ "calls": [
+  { "tool": "load_document", "arguments": {} },
+  { "tool": "save_document", "arguments": { "html": "<p>Edited.</p>" },
+    "as": "save_document" } ] }

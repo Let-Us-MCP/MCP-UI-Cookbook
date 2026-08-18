@@ -1,0 +1,44 @@
+{
+  "recordedFrom": "apps/recipes/r05-spreadsheet/server.js",
+  "serverInfo": {
+    "name": "cookbook-spreadsheet",
+    "version": "1.0.0"
+  },
+  "results": {
+    "load_sheet": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Four regions with units and price; column D and row 6 are formulas."
+        }
+      ],
+      "structuredContent": {
+        "cells": {
+          "A1": "Region",
+          "B1": "Units",
+          "C1": "Price",
+          "D1": "Revenue",
+          "A2": "North",
+          "B2": "1284",
+          "C2": "71",
+          "D2": "=B2*C2",
+          "A3": "South",
+          "B3": "932",
+          "C3": "69",
+          "D3": "=B3*C3",
+          "A4": "East",
+          "B4": "1601",
+          "C4": "74",
+          "D4": "=B4*C4",
+          "A5": "West",
+          "B5": "745",
+          "C5": "69",
+          "D5": "=B5*C5",
+          "A6": "Total",
+          "B6": "=SUM(B2:B5)",
+          "D6": "=SUM(D2:D5)"
+        }
+      }
+    }
+  }
+}

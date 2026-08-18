@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Code and Diff Reviewer</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  .diff { font-family:var(--font-mono); font-size:12px; border-radius:var(--border-radius-md);
+    border:1px solid var(--color-border-primary); overflow:auto; max-height:250px }
+  .line { display:grid; grid-template-columns:38px 12px 1fr; gap:0;
+    padding:0 6px; white-space:pre; cursor:pointer }
+  .line:hover { background:var(--color-background-secondary) }
+  .line.add { background:color-mix(in srgb, var(--color-text-success) 12%, transparent) }
+  .line.del { background:color-mix(in srgb, var(--color-text-danger) 12%, transparent) }
+  .line.sel { outline:2px solid var(--color-ring-primary); outline-offset:-2px }
+  .line .n { color:var(--color-text-tertiary); text-align:right; padding-right:6px }
+  .comment { margin:2px 0 2px 50px; padding:6px 8px; border-radius:6px;
+    background:var(--color-background-info); font-family:var(--font-sans); font-size:12px }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <strong id="file">…</strong>
+    <span class="chip" id="stat"></span>
+    <span class="spacer"></span>
+    <button id="comment" disabled>Comment</button>
+    <button id="explain" class="primary" disabled>Explain this change</button>
+    <button id="source">Open on the server</button>
+  </div>
+
+  <div class="diff" id="diff" tabindex="0" role="group" aria-label="Unified diff"></div>
+
+  <p class="muted" id="hint">Click a line, shift-click another to take a range.
+    The selection is what gets sent, and nothing else does.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce, promptDialog } = View;
+
+let hunk = null;
+let anchor = null, headLine = null;
+const comments = new Map();
+let bridge;
+
+const range = () => {
+  if (anchor == null) return [];
+  const [lo, hi] = [Math.min(anchor, headLine), Math.max(anchor, headLine)];
+  return hunk.lines.slice(lo, hi + 1).map((l, i) => ({ ...l, index: lo + i }));
+};
+
+function draw() {
+  const nodes = [];
+  hunk.lines.forEach((line, i) => {
+    const selected = anchor != null
+      && i >= Math.min(anchor, headLine) && i <= Math.max(anchor, headLine);
+    nodes.push(h("div", {
+      class: `line ${line.kind} ${selected ? "sel" : ""}`,
+      onclick: (event) => {
+        if (event.shiftKey && anchor != null) headLine = i;
+        else { anchor = headLine = i; }
+        draw();
+        publish();
+      },
+    }, h("span", { class: "n", text: line.no ? String(line.no) : "" }),
+       h("span", { text: line.kind === "add" ? "+" : line.kind === "del" ? "-" : " " }),
+       h("span", { text: line.text })));
+    if (comments.has(i)) {
+      nodes.push(h("div", { class: "comment", text: comments.get(i) }));
+    }
+  });
+  $("#diff").replaceChildren(...nodes);
+  const any = anchor != null;
+  $("#comment").disabled = $("#explain").disabled = !any;
+}
+
+// The selection is the unit of conversation. Publishing it as structured
+// content means the model gets line numbers and file paths rather than a
+// screenshot of a diff described in prose.
+function publish() {
+  if (!bridge.hostCapabilities.updateModelContext) return;
+  const lines = range();
+  if (!lines.length) return;
+  bridge.updateModelContext({
+    content: [{ type: "text", text:
+      `Reviewing ${hunk.file}, lines ${lines[0].no ?? "?"} to `
+      + `${lines.at(-1).no ?? "?"}.` }],
+    structuredContent: { file: hunk.file,
+      lines: lines.map((l) => ({ no: l.no, kind: l.kind, text: l.text })) },
+  }).catch(() => {});
+}
+
+View.boot({ name: "diff-reviewer", version: "1.0.0" },
+  { availableDisplayModes: ["inline", "fullscreen"] }, async (instance) => {
+  bridge = instance;
+  const result = await bridge.callServerTool("load_diff", {});
+  hunk = result.structuredContent?.hunk;
+  $("#file").textContent = hunk.file;
+  $("#stat").textContent = `+${hunk.lines.filter((l) => l.kind === "add").length} `
+    + `-${hunk.lines.filter((l) => l.kind === "del").length}`;
+  draw();
+
+  $("#comment").onclick = async () => {
+    const text = await promptDialog({ title: "Comment", label: "On this range",
+      value: "Why is the timeout constant now 30?" });
+    if (!text) return;
+    comments.set(Math.max(anchor, headLine), text);
+    draw();
+    announce("Comment added");
+  };
+
+  $("#explain").onclick = async () => {
+    const lines = range();
+    await bridge.sendMessage(
+      `Explain this change in ${hunk.file}:\n`
+      + lines.map((l) => `${l.kind === "add" ? "+" : l.kind === "del" ? "-" : " "}`
+          + `${l.text}`).join("\n"));
+    toast("Asked in the conversation");
+  };
+
+  $("#source").onclick = async () => {
+    try {
+      await bridge.openLink(`https://example.invalid/blob/main/${hunk.file}`);
+      toast("Handed to the host");
+    } catch (error) {
+      toast(`The host declined: ${error.message}`);
+    }
+  };
+
+  $("#diff").addEventListener("keydown", (event) => {
+    if (anchor == null) return;
+    if (event.key === "ArrowDown") { headLine = Math.min(hunk.lines.length - 1, headLine + 1); }
+    else if (event.key === "ArrowUp") { headLine = Math.max(0, headLine - 1); }
+    else return;
+    if (!event.shiftKey) anchor = headLine;
+    event.preventDefault();
+    draw();
+    publish();
+  });
+});
+</script>
+</body>
+</html>

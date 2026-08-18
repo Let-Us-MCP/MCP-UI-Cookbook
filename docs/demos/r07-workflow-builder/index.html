@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workflow Builder</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  #board { position:relative; height:280px; overflow:hidden; touch-action:none;
+    border:1px solid var(--color-border-primary); border-radius:var(--border-radius-md);
+    background:var(--color-background-secondary) }
+  #world { position:absolute; transform-origin:0 0; width:1200px; height:800px }
+  .node { position:absolute; width:130px; padding:7px 9px; border-radius:8px;
+    background:var(--color-background-primary); border:2px solid var(--color-border-primary);
+    font-size:12px; cursor:grab; user-select:none }
+  .node.sel { border-color:var(--color-ring-primary) }
+  .node.bad { border-color:var(--color-text-danger) }
+  .node.lit { box-shadow:0 0 0 4px color-mix(in srgb, var(--color-text-warning) 45%, transparent) }
+  .node small { display:block; color:var(--color-text-secondary) }
+  #wires { position:absolute; inset:0; pointer-events:none }
+  #mini { position:absolute; right:8px; bottom:8px; width:110px; height:74px;
+    border:1px solid var(--color-border-primary); border-radius:6px;
+    background:var(--color-background-primary); opacity:.9 }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <button id="add">Add step</button>
+    <button id="connect" disabled>Connect</button>
+    <button id="undo" disabled>Undo</button>
+    <span class="spacer"></span>
+    <span class="chip" id="valid">not validated</span>
+  </div>
+
+  <div id="board">
+    <div id="world">
+      <svg id="wires" width="1200" height="800"></svg>
+    </div>
+    <canvas id="mini" width="220" height="148"></canvas>
+  </div>
+
+  <p class="muted" id="hint">Drag nodes. Select two and connect them. The agent
+    can do both through tools, and every change it makes is undoable.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce } = View;
+
+let graph = { nodes: [], edges: [] };
+const past = [];
+let selected = [];
+let scale = 0.72, panX = 10, panY = 10;
+let bridge;
+
+function apply(entry) {
+  entry.forward();
+  past.push(entry);
+  draw();
+  announce(entry.label);
+}
+
+function validate() {
+  const problems = [];
+  const targets = new Set(graph.edges.map((e) => e.to));
+  const sources = new Set(graph.edges.map((e) => e.from));
+  for (const node of graph.nodes) {
+    if (node.kind !== "trigger" && !targets.has(node.id)) {
+      problems.push({ id: node.id, why: "nothing reaches it" });
+    }
+    if (node.kind !== "output" && !sources.has(node.id)) {
+      problems.push({ id: node.id, why: "it goes nowhere" });
+    }
+  }
+  return problems;
+}
+
+function draw() {
+  const world = $("#world");
+  for (const node of [...world.querySelectorAll(".node")]) node.remove();
+  const problems = validate();
+  const bad = new Set(problems.map((p) => p.id));
+
+  for (const node of graph.nodes) {
+    world.append(h("div", {
+      class: `node ${selected.includes(node.id) ? "sel" : ""} `
+        + `${bad.has(node.id) ? "bad" : ""} ${node.lit ? "lit" : ""}`,
+      style: `left:${node.x}px;top:${node.y}px`,
+      tabindex: "0",
+      onpointerdown: (e) => startDrag(e, node),
+      onclick: (e) => {
+        selected = e.shiftKey
+          ? [...new Set([...selected, node.id])].slice(-2) : [node.id];
+        draw();
+      },
+    }, h("strong", { text: node.name }), h("small", { text: node.kind })));
+  }
+
+  const svg = $("#wires");
+  svg.replaceChildren();
+  for (const edge of graph.edges) {
+    const from = graph.nodes.find((n) => n.id === edge.from);
+    const to = graph.nodes.find((n) => n.id === edge.to);
+    if (!from || !to) continue;
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const [x1, y1] = [from.x + 130, from.y + 18];
+    const [x2, y2] = [to.x, to.y + 18];
+    line.setAttribute("d", `M${x1},${y1} C${x1 + 50},${y1} ${x2 - 50},${y2} ${x2},${y2}`);
+    line.setAttribute("fill", "none");
+    line.setAttribute("stroke", "var(--color-text-secondary)");
+    line.setAttribute("stroke-width", "2");
+    svg.append(line);
+  }
+
+  world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+  $("#connect").disabled = selected.length !== 2;
+  $("#undo").disabled = !past.length;
+  $("#valid").textContent = problems.length
+    ? `${problems.length} problem(s)` : "valid";
+  $("#valid").className = `chip ${problems.length ? "bad" : "good"}`;
+
+  // The minimap is the cheapest orientation aid a canvas can have and the
+  // first thing users miss when it is absent.
+  const mini = $("#mini").getContext("2d");
+  mini.clearRect(0, 0, 220, 148);
+  mini.fillStyle = "#8894a4";
+  for (const node of graph.nodes) {
+    mini.fillRect(node.x / 5.5, node.y / 5.5, 24, 8);
+  }
+  mini.strokeStyle = "#3a7ca8";
+  mini.lineWidth = 2;
+  mini.strokeRect(-panX / (5.5 * scale), -panY / (5.5 * scale),
+                  $("#board").clientWidth / (5.5 * scale),
+                  $("#board").clientHeight / (5.5 * scale));
+}
+
+function startDrag(event, node) {
+  event.stopPropagation();
+  const board = $("#board").getBoundingClientRect();
+  const from = { x: node.x, y: node.y };
+  const grab = { x: (event.clientX - board.left - panX) / scale - node.x,
+                 y: (event.clientY - board.top - panY) / scale - node.y };
+  const move = (e) => {
+    node.x = (e.clientX - board.left - panX) / scale - grab.x;
+    node.y = (e.clientY - board.top - panY) / scale - grab.y;
+    draw();
+  };
+  const up = () => {
+    removeEventListener("pointermove", move);
+    removeEventListener("pointerup", up);
+    const to = { x: node.x, y: node.y };
+    if (from.x === to.x && from.y === to.y) return;
+    past.push({ label: `move ${node.name}`,
+                forward: () => Object.assign(node, to),
+                back: () => { Object.assign(node, from); draw(); } });
+    draw();
+  };
+  addEventListener("pointermove", move);
+  addEventListener("pointerup", up);
+}
+
+View.boot({ name: "workflow-builder", version: "1.0.0" },
+  { tools: { listChanged: true } }, async (instance) => {
+  bridge = instance;
+  const result = await bridge.callServerTool("load_workflow", {});
+  graph = result.structuredContent?.graph ?? graph;
+  draw();
+
+  $("#board").addEventListener("wheel", (event) => {
+    event.preventDefault();
+    scale = Math.min(2, Math.max(0.3, scale * (event.deltaY < 0 ? 1.1 : 0.9)));
+    draw();
+  }, { passive: false });
+
+  let panFrom = null;
+  $("#board").addEventListener("pointerdown", (event) => {
+    if (event.target.closest(".node")) return;
+    panFrom = { x: event.clientX - panX, y: event.clientY - panY };
+    selected = [];
+    draw();
+  });
+  addEventListener("pointermove", (event) => {
+    if (!panFrom) return;
+    panX = event.clientX - panFrom.x;
+    panY = event.clientY - panFrom.y;
+    draw();
+  });
+  addEventListener("pointerup", () => { panFrom = null; });
+
+  let nextNodeId = 0;
+  const addNode = (name, kind) => {
+    const node = { id: `n${++nextNodeId}`, name, kind,
+                   x: 60 + graph.nodes.length * 24, y: 40 + graph.nodes.length * 30 };
+    apply({ label: `add ${name}`, forward: () => graph.nodes.push(node),
+            back: () => { graph.nodes = graph.nodes.filter((n) => n !== node); } });
+    return node;
+  };
+
+  const connect = (from, to) => {
+    const edge = { from, to };
+    apply({ label: "connect", forward: () => graph.edges.push(edge),
+            back: () => { graph.edges = graph.edges.filter((e) => e !== edge); } });
+  };
+
+  $("#add").onclick = () => addNode(`Step ${graph.nodes.length + 1}`, "action");
+  $("#connect").onclick = () => connect(selected[0], selected[1]);
+  $("#undo").onclick = () => {
+    const entry = past.pop();
+    if (!entry) return;
+    entry.back();
+    draw();
+  };
+
+  bridge.registerTool({
+    name: "add_step",
+    description: "Add a step to the workflow",
+    inputSchema: { type: "object", properties: { name: { type: "string" },
+      kind: { type: "string", enum: ["trigger", "action", "output"] } },
+      required: ["name"] },
+    annotations: { readOnlyHint: false },
+  }, async ({ name, kind = "action" }) => {
+    const node = addNode(name, kind);
+    return { content: [{ type: "text", text: `Added ${name}.` }],
+             structuredContent: { id: node.id } };
+  });
+
+  bridge.registerTool({
+    name: "connect_steps",
+    description: "Connect two steps by name",
+    inputSchema: { type: "object", properties: { from: { type: "string" },
+      to: { type: "string" } }, required: ["from", "to"] },
+    annotations: { readOnlyHint: false },
+  }, async ({ from, to }) => {
+    const a = graph.nodes.find((n) => n.name === from);
+    const b = graph.nodes.find((n) => n.name === to);
+    if (!a || !b) {
+      return { isError: true, content: [{ type: "text",
+        text: `No step called ${a ? to : from}.` }] };
+    }
+    connect(a.id, b.id);
+    return { content: [{ type: "text", text: `Connected ${from} to ${to}.` }] };
+  });
+
+  bridge.registerTool({
+    name: "highlight_step",
+    description: "Draw attention to one step",
+    inputSchema: { type: "object", properties: { name: { type: "string" } },
+      required: ["name"] },
+    annotations: { readOnlyHint: true },
+  }, async ({ name }) => {
+    graph.nodes.forEach((n) => { n.lit = n.name === name; });
+    draw();
+    return { content: [{ type: "text", text: `Highlighted ${name}.` }] };
+  });
+
+  bridge.registerTool({
+    name: "get_workflow",
+    description: "Read the graph and its validation problems",
+    inputSchema: { type: "object" },
+    annotations: { readOnlyHint: true },
+  }, async () => ({
+    content: [{ type: "text", text:
+      `${graph.nodes.length} steps, ${graph.edges.length} connections, `
+      + `${validate().length} problems.` }],
+    structuredContent: { graph, problems: validate() },
+  }));
+});
+</script>
+</body>
+</html>

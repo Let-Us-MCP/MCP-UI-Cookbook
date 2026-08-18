@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>24. Components III: Spatial, Media and Agent-Native &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.">
+<meta property="og:title" content="24. Components III: Spatial, Media and Agent-Native">
+<meta property="og:description" content="Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html" class="current">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 24</p><h1>Components III: Spatial, Media and Agent-Native</h1><p class="summary">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</p><p>Two familiar groups and one that has no precedent. The last group is the interesting one: five components that could not have been designed before there was a second party that acts on the interface, and that every agentic application ends up needing.</p>
+<h2 id="spatial">Spatial</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Canvas</td>
+<td><code>input.pointer</code>, <code>input.zoompan</code>, <code>surface.viewport</code></td>
+<td>(application)</td>
+</tr>
+<tr>
+<td>Node graph</td>
+<td><code>input.dragdrop</code>, <code>input.selection</code>, <code>input.zoompan</code></td>
+<td>(application)</td>
+</tr>
+<tr>
+<td>Bounding box editor</td>
+<td><code>input.pointer</code>, <code>input.zoompan</code>, <code>history.transaction</code></td>
+<td>(application)</td>
+</tr>
+<tr>
+<td>Image annotation</td>
+<td><code>input.pointer</code>, <code>file.dropzone</code>, <code>file.export</code></td>
+<td>(application)</td>
+</tr>
+<tr>
+<td>Minimap</td>
+<td><code>input.pointer</code>, <code>surface.viewport</code></td>
+<td>(decorative)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>A spatial surface needs a fixed height</strong>, which conflicts with letting the frame grow. Pick a height that works at the narrowest width you accept, report it once, and scroll or zoom inside it. A canvas that grows with its content will fight <code>surface.resize</code> and lose.</p>
+<p><strong>Pointer capture, <code>touch-action: none</code>, and zoom about the cursor.</strong> All three in Chapter 9, and all three are the difference between a canvas that feels right and one that fights.</p>
+<p><strong>A minimap is the cheapest orientation aid there is</strong>, and the first thing people miss when it is absent. Recipe 7 draws one into a 220 by 148 canvas in eleven lines and it makes a graph twice as usable.</p>
+<p><strong>Every gesture needs a button.</strong> Zoom in, zoom out, reset, fit, and arrow keys to pan. A canvas that can only be operated by dragging cannot be operated at all by a significant number of people, and this is the group where that failure is most common.</p>
+<p><strong>Undo per gesture, not per frame.</strong> A drag produces one transaction on pointerup, not sixty during pointermove. Recipe 7 records the start position on pointerdown and pushes a single transaction at the end.</p>
+<h2 id="media">Media</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Player transport</td>
+<td><code>media.playback</code>, <code>input.keyboard</code></td>
+<td>Toolbar, Slider</td>
+</tr>
+<tr>
+<td>Scrubber</td>
+<td><code>media.playback</code>, <code>input.pointer</code></td>
+<td>Slider</td>
+</tr>
+<tr>
+<td>Caption selector</td>
+<td><code>media.playback</code>, <code>input.keyboard</code></td>
+<td>Listbox</td>
+</tr>
+<tr>
+<td>Thumbnail strip</td>
+<td><code>input.selection</code>, <code>input.keyboard</code></td>
+<td>Tabs, Listbox</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Consider not replacing the native controls.</strong> They handle keyboard, screen readers, captions, picture-in-picture, playback rate and every platform’s conventions, and they do it in less code than your version. Replace them when you need controls the native set does not have, and inherit the whole accessibility contract when you do: Space to play, arrows to seek, a labelled slider with <code>aria-valuetext</code> in minutes and seconds rather than in seconds, and a caption toggle with <code>aria-pressed</code>.</p>
+<p><strong>Pause when hidden.</strong> Chapter 14. Audio continuing from a frame nobody can see is genuinely alarming, and it is the fastest way to make a user close a conversation.</p>
+<p><strong>Fullscreen goes through the host.</strong> <code>ui/request-display-mode</code>, not the Fullscreen API, because <code>fullscreen</code> is not in the extension’s permission set. Chapter 16.</p>
+<p><strong>A thumbnail strip is a tab list.</strong> Give it roving tabindex, <code>aria-current</code> on the selected item, and real labels rather than image alt text that says “thumbnail”.</p>
+<h2 id="agent-native">Agent-native</h2>
+<p>These five have no conventional web precedent. They exist because of Part III.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>Where it appears</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Approval card</td>
+<td><code>approval.request</code>, <code>dialog.confirm</code>, <code>agent.contextUpdate</code></td>
+<td>Recipe 10</td>
+</tr>
+<tr>
+<td>Tool status chip</td>
+<td><code>tool.invoke</code>, <code>op.progress</code>, <code>op.cancel</code>, <code>op.error</code></td>
+<td>Recipes 9, 11</td>
+</tr>
+<tr>
+<td>Streaming log</td>
+<td><code>tool.partialOutput</code>, <code>input.selection</code>, <code>a11y.announce</code></td>
+<td>Recipe 9</td>
+</tr>
+<tr>
+<td>Context inspector</td>
+<td><code>agent.contextUpdate</code>, <code>agent.boundary</code></td>
+<td>Every demonstration</td>
+</tr>
+<tr>
+<td>Proposal card</td>
+<td><code>ui.prefill</code>, <code>history.transaction</code>, <code>state.ownership</code></td>
+<td>Recipes 4, 7</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>The approval card</strong> is a decision surface with provenance attached. Who asked, on whose behalf, using which tool, with which arguments, with what consequence, and what has been approved before. Chapter 21 argues that without those fields it is a dialog with a lever, and that users learn to pull levers. The card is also where the confirmation belongs for high-risk actions, and where the audit trail is exposed.</p>
+<p><strong>The tool status chip</strong> is a small object that represents one call: its name, its state, its progress, and the controls that apply to it. The states are queued, running, cancelled, failed and done, and each has a different set of available actions. The chip is worth extracting as a component because applications end up with several calls in flight, and a consistent representation of “what is happening” is what makes that legible.</p>
+<p><strong>The streaming log</strong> is the append-only list from Chapter 23 with the selection and follow behaviour that terminals taught everybody: follow the tail until the user scrolls up, then stop following and say so. Recipe 9 turns following off automatically when the user scrolls away from the bottom, which is the behaviour nobody notices when it is right.</p>
+<p><strong>The context inspector</strong> shows what the view has published to the model. It is a debugging tool that deserves to ship. A user who can see that the assistant knows about three selected rows and nothing else can predict what it will say, and the same panel is how a developer finds out that their view has been publishing hover state for a week. Every demonstration in this book has one, in the form of the “Show what the model was told” control.</p>
+<p><strong>The proposal card</strong> is the shape that makes agent editing safe. The agent’s version, visible next to the current one, with Accept and Decline, and accepting recorded as one undo transaction. Chapters 18 and 20 both arrive at it, from prefill and from conflict policy respectively, which is a decent sign that it is the right primitive.</p>
+<h2 id="the-pattern-behind-all-five">The pattern behind all five</h2>
+<p>Every agent-native component makes an invisible thing visible. What the model was told. What it is doing. What it is proposing. What it wants permission for. What it has been told before.</p>
+<p>That is the design brief for this whole layer, and it comes out of the same constraint the rest of the book keeps hitting: the two parties cannot see each other. The user cannot see the model’s context. The model cannot see the screen. Components that surface one to the other are the ones that make an agentic interface feel like a place rather than a slot machine.</p>
+
+<div class="pager"><a href="ch23.html"><span class="dir">Previous</span>23. Components II: Navigation, Data and Visualization</a><a href="r01.html" style="text-align:right"><span class="dir">Next</span>Recipe 1. Data Explorer</a></div>
+</main>
+</div>
+
+</body>
+</html>

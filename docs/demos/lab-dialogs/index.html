@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dialogs and attention</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="row">
+    <button id="alert">Alert</button>
+    <button id="confirm" class="danger">Confirm a deletion</button>
+    <button id="prompt">Prompt for a name</button>
+    <button id="toast">Toast</button>
+    <button id="banner">Toggle a banner</button>
+    <button id="native">Try window.confirm</button>
+  </div>
+
+  <div id="bannerslot"></div>
+
+  <div class="card">
+    <h2>Items</h2>
+    <ul id="items" class="stack" style="list-style:none;margin:0;padding:0"></ul>
+  </div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, confirmDialog, promptDialog, announce } = View;
+
+let items = ["Invoices", "Contracts", "Receipts"];
+
+function draw() {
+  $("#items").replaceChildren(...items.map((name) =>
+    h("li", { class: "row" },
+      h("span", { text: name }),
+      h("span", { class: "spacer" }),
+      h("button", { class: "quiet", text: "Delete",
+        onclick: () => remove(name) }))));
+}
+
+async function remove(name) {
+  // A confirmation is a decision, so it gets a dialog. A completion is not,
+  // so it gets a toast. Reversing those two is the most common attention bug
+  // in this category.
+  const yes = await confirmDialog({
+    title: `Delete ${name}?`,
+    body: "This cannot be undone in this demonstration, which is itself a "
+        + "design smell: prefer undo over confirmation where you can.",
+    confirm: "Delete", destructive: true,
+  });
+  if (!yes) return;
+  items = items.filter((i) => i !== name);
+  draw();
+  toast(`${name} deleted`);
+  announce(`${name} deleted`);
+}
+
+View.boot({ name: "dialogs-lab", version: "1.0.0" }, {}, async () => {
+  draw();
+
+  $("#alert").onclick = () => confirmDialog({
+    title: "Export finished",
+    body: "Two hundred rows written. Nothing to decide, which means this "
+        + "should probably have been a toast.",
+    confirm: "Close", cancel: "Also close",
+  });
+
+  $("#confirm").onclick = () => remove(items[0] ?? "nothing");
+
+  $("#prompt").onclick = async () => {
+    const name = await promptDialog({ title: "New folder", label: "Name",
+                                      value: "Untitled" });
+    if (name) { items = [...items, name]; draw(); toast(`${name} added`); }
+  };
+
+  $("#toast").onclick = () => toast("Copied to clipboard");
+
+  $("#banner").onclick = () => {
+    const slot = $("#bannerslot");
+    if (slot.firstChild) { slot.replaceChildren(); return; }
+    slot.append(h("div", { class: "banner warn", role: "status" },
+      h("span", { text: "Working from a cached snapshot taken 4 minutes ago. "
+                      + "A banner stays until the condition does." })));
+  };
+
+  // window.alert, confirm and prompt need the allow-modals sandbox token,
+  // which the MCP Apps sandbox does not include. This is what happens.
+  $("#native").onclick = () => {
+    try {
+      const answer = window.confirm("Does this even appear?");
+      toast(`window.confirm returned ${answer}`);
+    } catch (error) {
+      toast(`window.confirm threw: ${error.message}`);
+    }
+  };
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipe 4. Document Editor &middot; The MCP UI Cookbook</title>
+<meta name="description" content="The recipe where the agent writes too. Undo, autosave through a tool, a teardown that flushes, and a rewrite that has to be proposed rather than applied.">
+<meta property="og:title" content="Recipe 4. Document Editor">
+<meta property="og:description" content="The recipe where the agent writes too. Undo, autosave through a tool, a teardown that flushes, and a rewrite that has to be proposed rather than applied.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html" class="current">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Recipe 4</p><h1>Document Editor</h1><p class="summary">The recipe where the agent writes too. Undo, autosave through a tool, a teardown that flushes, and a rewrite that has to be proposed rather than applied.</p><div class="cap recipe" id="r04"><div class="cap-head"><code class="cap-id">r04</code><span class="cap-tag core">Document Editor</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Authoring with agent-assisted rewriting.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch15.html#history.redo">history.redo</a></code><code><a href="ch15.html#state.save">state.save</a></code><code><a href="ch15.html#state.restore">state.restore</a></code><code><a href="ch14.html#lifecycle.dirty">lifecycle.dirty</a></code><code><a href="ch14.html#lifecycle.beforeClose">lifecycle.beforeClose</a></code><code><a href="ch20.html#state.ownership">state.ownership</a></code><code><a href="ch20.html#state.conflict">state.conflict</a></code><code><a href="ch18.html#ui.prefill">ui.prefill</a></code><code><a href="ch18.html#ui.highlight">ui.highlight</a></code><code><a href="ch09.html#input.shortcut">input.shortcut</a></code><code><a href="ch17.html#agent.sampling">agent.sampling</a></code><code><a href="ch06.html#surface.close">surface.close</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch15.html#history.transaction">history.transaction</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch15.html#history.redo">history.redo</a></code><code><a href="ch15.html#state.save">state.save</a></code><code><a href="ch15.html#state.restore">state.restore</a></code><code><a href="ch14.html#lifecycle.dirty">lifecycle.dirty</a></code><code><a href="ch14.html#lifecycle.beforeClose">lifecycle.beforeClose</a></code><code><a href="ch20.html#state.ownership">state.ownership</a></code><code><a href="ch20.html#state.conflict">state.conflict</a></code><code><a href="ch18.html#ui.prefill">ui.prefill</a></code><code><a href="ch18.html#ui.highlight">ui.highlight</a></code><code><a href="ch09.html#input.shortcut">input.shortcut</a></code><code><a href="ch17.html#agent.sampling">agent.sampling</a></code><code><a href="ch06.html#surface.close">surface.close</a></code></dd></dl></div>
+<p>This is the recipe the ownership model in Chapter 20 was written for, and the one where the gaps in Chapter 15 hurt most. It is also the clearest demonstration of why undo is the safety mechanism that makes agentic editing acceptable.</p>
+<div class="demo" data-demo="r04-document-editor" id="r04-document-editor"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-split">The split</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Normally local</th>
+<th>Worth crossing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type, format, undo, redo</td>
+<td>“Rewrite this to be shorter”</td>
+</tr>
+<tr>
+<td>Autosave</td>
+<td>“Check these dates against the ticket”</td>
+</tr>
+<tr>
+<td>Find</td>
+<td>“Draft a reply to the vendor”</td>
+</tr>
+<tr>
+<td>Accept or decline a proposal</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Accepting a proposal is local, and that is the whole point. The agent’s contribution enters the document through a decision the human made in the interface.</p>
+<h2 id="the-ownership-map">The ownership map</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Owner</th>
+<th>Policy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Document body</td>
+<td>Shared</td>
+<td>Agent proposes, human accepts, one transaction</td>
+</tr>
+<tr>
+<td>Selection and caret</td>
+<td>User</td>
+<td>Agent never touches</td>
+</tr>
+<tr>
+<td>Save state</td>
+<td>View</td>
+<td>Autosave on pause, flush on teardown</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="persistence-through-a-tool">Persistence through a tool</h2>
+<p>There is no <code>state.save</code> message, so the document lives on the server and the view calls <code>save_document</code> with <code>visibility: ["app"]</code>. The model neither sees that tool nor can call it, which means the model cannot save a document it has not been asked to save.</p>
+<p>Autosave fires 900 milliseconds after typing stops, which is also when the undo transaction is committed. One pause, one save, one undo step.</p>
+<h2 id="the-teardown-flush">The teardown flush</h2>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>bridge.on(&quot;teardown&quot;, async ({ reason }) =&gt; {
+  $(&quot;#log&quot;).textContent = `Host is closing this view: ${reason}`;
+  if (dirty) {
+    $(&quot;#log&quot;).textContent += &quot; Flushing unsaved changes first.&quot;;
+    await save();
+  }
+});</code></pre>
+<p>This is the only window in the protocol where a view can finish something. Press “Close the view” in the demonstration: the control reports how long the view took to answer, which is exactly the measurement a conformance test makes to find out whether a host really waits.</p>
+<h2 id="proposal-not-replacement">Proposal, not replacement</h2>
+<p>The agent’s <code>propose_rewrite</code> tool does not touch the document. It shows the proposed text with Accept and Decline, and returns “Shown to the user. Not applied.” so the agent does not report a change that has not happened.</p>
+<p>Accepting is one transaction. One Cmd+Z puts the human’s words back, which is the entire safety argument for letting a model near a document.</p>
+<h2 id="host-dependencies">Host dependencies</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Needs</th>
+<th>Without it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Render, resize, theme</td>
+<td>Nothing works</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>lifecycle.beforeClose</code></td>
+<td>Unsaved work is lost on teardown</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tool.invoke</code></td>
+<td>No load and no save; the editor is a scratchpad</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>app.tools</code></td>
+<td>The agent cannot propose anything</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>agent.sampling</code></td>
+<td>Drafting happens in the conversation instead</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="failure-cases">Failure cases</h2>
+<p><strong>The host does not wait for the teardown response.</strong> Indistinguishable from the inside. Autosave is what makes it survivable: at worst 900 milliseconds of typing is lost.</p>
+<p><strong>The save fails.</strong> The dirty flag stays set, the chip stays amber, and the next autosave retries. The document is never marked saved on a failure.</p>
+<p><strong>The agent proposes while the user is typing.</strong> The proposal appears below rather than replacing anything, so there is no race. Recipe 20’s lab shows the harder version of this, where the agent writes directly into a shared field.</p>
+<h2 id="accessibility">Accessibility</h2>
+<p>The editable region is <code>role="textbox"</code> with <code>aria-multiline</code>. Undo and redo announce their labels. The proposal card is a live region so its arrival is announced, and its buttons are reachable in tab order immediately after the document. Formatting shortcuts are duplicated as toolbar buttons.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>load_document</code> populates the editor.</li>
+<li>Typing sets the dirty state; a pause clears it via <code>save_document</code>.</li>
+<li><code>ui/resource-teardown</code> receives a response, and the response comes after a save when the document was dirty.</li>
+<li><code>propose_rewrite</code> does not modify the document.</li>
+<li>Accepting a proposal is exactly one undo step.</li>
+<li><code>get_document</code> reports the current text and dirty state.</li>
+</ol>
+
+<div class="pager"><a href="r03.html"><span class="dir">Previous</span>Recipe 3. File Explorer</a><a href="r05.html" style="text-align:right"><span class="dir">Next</span>Recipe 5. Spreadsheet</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

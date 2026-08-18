@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Agent to UI</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="row">
+    <span class="chip" id="tab-a" role="tab">Summary</span>
+    <span class="chip" id="tab-b" role="tab">Line items</span>
+    <span class="spacer"></span>
+    <span class="muted" id="who">no agent activity</span>
+  </div>
+
+  <div id="panel" class="card"></div>
+
+  <label class="stack">Reason for the adjustment
+    <textarea id="reason" rows="2" placeholder="The agent may propose text here."></textarea>
+  </label>
+  <div class="row">
+    <button id="submit" class="primary">Submit</button>
+    <span class="muted" id="proposed" hidden>Proposed by the agent. Review before submitting.</span>
+  </div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce } = View;
+
+const ITEMS = [
+  ["Licence renewal", 4200],
+  ["Onboarding", 1800],
+  ["Support, tier 2", 960],
+  ["Overage, March", 312],
+];
+
+let tab = "a";
+
+function draw(highlight = null) {
+  $("#tab-a").className = `chip ${tab === "a" ? "info" : ""}`;
+  $("#tab-b").className = `chip ${tab === "b" ? "info" : ""}`;
+  if (tab === "a") {
+    $("#panel").replaceChildren(
+      h("h2", { text: "Invoice 2026-0814" }),
+      h("p", { class: "muted", text:
+        "Four line items totalling 7,272. One of them is an overage the "
+        + "customer has queried." }));
+    return;
+  }
+  $("#panel").replaceChildren(h("table", {},
+    h("thead", {}, h("tr", {}, h("th", { text: "Item" }),
+                                h("th", { class: "num", text: "Amount" }))),
+    h("tbody", {}, ...ITEMS.map(([name, amount], i) =>
+      h("tr", { "aria-selected": highlight === i ? "true" : "false" },
+        h("td", { text: name }),
+        h("td", { class: "num", text: amount.toLocaleString() }))))));
+}
+
+View.boot({ name: "invoice-view", version: "1.0.0" },
+  { tools: { listChanged: true } }, async (bridge) => {
+  draw();
+  $("#tab-a").onclick = () => { tab = "a"; draw(); };
+  $("#tab-b").onclick = () => { tab = "b"; draw(); };
+
+  const seen = (what) => {
+    $("#who").textContent = `agent: ${what}`;
+    announce(`The agent ${what}`);
+  };
+
+  // Registering tools is how an agent acts on a view without the host ever
+  // touching its DOM. Every one of these is a visible, reversible change that
+  // a human could have made with the mouse.
+  bridge.registerTool({
+    name: "show_panel",
+    description: "Switch the invoice view to a named panel",
+    inputSchema: { type: "object",
+      properties: { panel: { type: "string", enum: ["summary", "items"] } },
+      required: ["panel"] },
+    annotations: { readOnlyHint: false },
+  }, async ({ panel }) => {
+    tab = panel === "items" ? "b" : "a";
+    draw();
+    seen(`opened the ${panel} panel`);
+    return { content: [{ type: "text", text: `Showing ${panel}.` }] };
+  });
+
+  bridge.registerTool({
+    name: "highlight_line_item",
+    description: "Draw the user's attention to one line item by index",
+    inputSchema: { type: "object",
+      properties: { index: { type: "integer", minimum: 0, maximum: 3 } },
+      required: ["index"] },
+    annotations: { readOnlyHint: true },
+  }, async ({ index }) => {
+    tab = "b";
+    draw(index);
+    seen(`highlighted ${ITEMS[index][0]}`);
+    return { content: [{ type: "text", text: `Highlighted ${ITEMS[index][0]}.` }],
+             structuredContent: { item: ITEMS[index][0], amount: ITEMS[index][1] } };
+  });
+
+  // Prefill proposes. It never submits, because the signature on the form is
+  // the human's and an agent cannot forge one on their behalf.
+  bridge.registerTool({
+    name: "propose_reason",
+    description: "Propose wording for the adjustment reason, for human review",
+    inputSchema: { type: "object", properties: { text: { type: "string" } },
+      required: ["text"] },
+    annotations: { readOnlyHint: false },
+  }, async ({ text }) => {
+    $("#reason").value = text;
+    $("#proposed").hidden = false;
+    $("#reason").focus();
+    seen("proposed wording");
+    return { content: [{ type: "text",
+      text: "Proposed. The user has not submitted it." }] };
+  });
+
+  bridge.registerTool({
+    name: "get_state",
+    description: "Read the view's current state",
+    annotations: { readOnlyHint: true },
+    inputSchema: { type: "object" },
+  }, async () => ({
+    content: [{ type: "text", text: `Panel ${tab}, reason ${
+      $("#reason").value ? "drafted" : "empty"}.` }],
+    structuredContent: { panel: tab === "a" ? "summary" : "items",
+                         reason: $("#reason").value,
+                         submitted: false },
+  }));
+
+  $("#submit").onclick = () => {
+    $("#proposed").hidden = true;
+    toast("Submitted by the user");
+    seen("watched a human press submit");
+  };
+});
+</script>
+</body>
+</html>

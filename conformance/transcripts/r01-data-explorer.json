@@ -1,0 +1,282 @@
+{
+  "demo": "r01-data-explorer",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "data-explorer",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "downloadFile": {},
+          "logging": {},
+          "message": {
+            "text": {}
+          },
+          "serverTools": {
+            "listChanged": false
+          },
+          "updateModelContext": {
+            "structuredContent": {},
+            "text": {}
+          }
+        },
+        "hostContext": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ],
+          "containerDimensions": {
+            "maxHeight": 520
+          },
+          "deviceCapabilities": {
+            "hover": true,
+            "touch": false
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "platform": "web",
+          "theme": "light",
+          "timeZone": "America/New_York"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 159,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "list_deployments"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "8 deployments. Worst p95 is 1290ms on billing.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "deployments": [
+            {
+              "at": "2026-08-17T09:12:00Z",
+              "env": "production",
+              "errors": 17,
+              "id": "d1",
+              "p95": 412,
+              "service": "checkout",
+              "version": "4.18.2"
+            },
+            {
+              "at": "2026-08-18T06:40:00Z",
+              "env": "canary",
+              "errors": 2,
+              "id": "d2",
+              "p95": 388,
+              "service": "checkout",
+              "version": "4.19.0-rc1"
+            },
+            {
+              "at": "2026-08-15T14:03:00Z",
+              "env": "production",
+              "errors": 0,
+              "id": "d3",
+              "p95": 96,
+              "service": "search",
+              "version": "2.7.11"
+            },
+            {
+              "at": "2026-08-18T08:21:00Z",
+              "env": "staging",
+              "errors": 1,
+              "id": "d4",
+              "p95": 104,
+              "service": "search",
+              "version": "2.8.0"
+            },
+            {
+              "at": "2026-08-16T22:55:00Z",
+              "env": "production",
+              "errors": 143,
+              "id": "d5",
+              "p95": 1290,
+              "service": "billing",
+              "version": "9.2.4"
+            },
+            {
+              "at": "2026-08-18T07:02:00Z",
+              "env": "staging",
+              "errors": 4,
+              "id": "d6",
+              "p95": 502,
+              "service": "billing",
+              "version": "9.3.0"
+            },
+            {
+              "at": "2026-08-14T11:30:00Z",
+              "env": "production",
+              "errors": 6,
+              "id": "d7",
+              "p95": 233,
+              "service": "notifications",
+              "version": "1.14.0"
+            },
+            {
+              "at": "2026-08-18T05:15:00Z",
+              "env": "canary",
+              "errors": 0,
+              "id": "d8",
+              "p95": 219,
+              "service": "notifications",
+              "version": "1.15.0-rc2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 357,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "8 deployments. Worst p95 is 1290ms on billing.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "deployments": [
+            {
+              "at": "2026-08-17T09:12:00Z",
+              "env": "production",
+              "errors": 17,
+              "id": "d1",
+              "p95": 412,
+              "service": "checkout",
+              "version": "4.18.2"
+            },
+            {
+              "at": "2026-08-18T06:40:00Z",
+              "env": "canary",
+              "errors": 2,
+              "id": "d2",
+              "p95": 388,
+              "service": "checkout",
+              "version": "4.19.0-rc1"
+            },
+            {
+              "at": "2026-08-15T14:03:00Z",
+              "env": "production",
+              "errors": 0,
+              "id": "d3",
+              "p95": 96,
+              "service": "search",
+              "version": "2.7.11"
+            },
+            {
+              "at": "2026-08-18T08:21:00Z",
+              "env": "staging",
+              "errors": 1,
+              "id": "d4",
+              "p95": 104,
+              "service": "search",
+              "version": "2.8.0"
+            },
+            {
+              "at": "2026-08-16T22:55:00Z",
+              "env": "production",
+              "errors": 143,
+              "id": "d5",
+              "p95": 1290,
+              "service": "billing",
+              "version": "9.2.4"
+            },
+            {
+              "at": "2026-08-18T07:02:00Z",
+              "env": "staging",
+              "errors": 4,
+              "id": "d6",
+              "p95": 502,
+              "service": "billing",
+              "version": "9.3.0"
+            },
+            {
+              "at": "2026-08-14T11:30:00Z",
+              "env": "production",
+              "errors": 6,
+              "id": "d7",
+              "p95": 233,
+              "service": "notifications",
+              "version": "1.14.0"
+            },
+            {
+              "at": "2026-08-18T05:15:00Z",
+              "env": "canary",
+              "errors": 0,
+              "id": "d8",
+              "p95": 219,
+              "service": "notifications",
+              "version": "1.15.0-rc2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "locale": "ja-JP",
+        "timeZone": "Asia/Tokyo"
+      }
+    }
+  ]
+}

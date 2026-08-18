@@ -1,0 +1,28 @@
+{
+  "recordedFrom": "apps/recipes/r04-document-editor/server.js",
+  "serverInfo": {
+    "name": "cookbook-document-editor",
+    "version": "1.0.0"
+  },
+  "results": {
+    "load_document": {
+      "content": [
+        {
+          "type": "text",
+          "text": "The renewal is on track for the 14th. Priya has the vendor patch in staging and expects to promote it on Thursday."
+        }
+      ],
+      "structuredContent": {
+        "html": "<p>The renewal is <strong>on track</strong> for the 14th. Priya has the vendor patch in staging and expects to promote it on Thursday.</p>"
+      }
+    },
+    "save_document": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Saved revision 1 at the server."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Read This Book &middot; The MCP UI Cookbook</title>
+<meta name="description" content="The four layers, the vocabulary, the labels on every entry, and the one question the whole book is trying to answer.">
+<meta property="og:title" content="How to Read This Book">
+<meta property="og:description" content="The four layers, the vocabulary, the labels on every entry, and the one question the whole book is trying to answer.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html" class="current">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<h1>How to Read This Book</h1><p class="summary">The four layers, the vocabulary, the labels on every entry, and the one question the whole book is trying to answer.</p><h2 id="the-four-layers">The four layers</h2>
+<figure>
+<img src="figures/diag-layers.png" alt="The four layers, and the direction each part of the book travels through them" />
+<figcaption aria-hidden="true">The four layers, and the direction each part of the book travels through them</figcaption>
+</figure>
+<p>The book has one shape and it repeats at every scale.</p>
+<p><strong>Atomic capability.</strong> The smallest independently useful operation, with a namespaced identifier. <code>surface.resize</code>. <code>input.selection</code>. <code>tool.invoke</code>. Flat names are not used, because the namespace is what makes the index navigable once there are eighty of them.</p>
+<p><strong>Reusable component.</strong> Capabilities composed into something with a name a designer would recognise. A combobox is <code>input.keyboard</code> plus <code>input.selection</code> plus focus management plus an ARIA pattern. A component entry lists which capabilities it composes, which agent interactions it participates in, and which Authoring Practices Guide pattern governs its keyboard behaviour.</p>
+<p><strong>Application recipe.</strong> Components composed into an application: a data explorer, a spreadsheet, an approval queue. Each recipe declares a <strong>capability delta</strong>, the primitives it exercises that no earlier recipe does. A recipe with an empty delta gets merged or deleted, because it is not teaching anything and not testing anything.</p>
+<p><strong>Capability validation.</strong> The recipes run as tests. A host either passes them or does not, and the coverage matrix in Appendix A is generated from the test annotations rather than written by hand.</p>
+<h2 id="the-vocabulary">The vocabulary</h2>
+<dl>
+<dt>Host</dt>
+<dd>
+The application the user is actually in: a chat client, an IDE, a console. It connects to MCP servers, allocates surfaces, and mediates everything privileged. There is no way around it and no way to see past it.
+</dd>
+<dt>Surface</dt>
+<dd>
+The region the host gives your application. Inline card, side panel, modal, fullscreen. You do not own it, you are lent it, and the terms change without warning.
+</dd>
+<dt>Application, or view</dt>
+<dd>
+The UI your server delivers as a <code>ui://</code> resource and the host renders in a sandboxed iframe. The specification calls it the View. This book uses both words, and means the same thing by them.
+</dd>
+<dt>Agent</dt>
+<dd>
+The model-driven participant. It can call tools, receive context, and hold the conversation the user is in the middle of.
+</dd>
+<dt>Atomic capability</dt>
+<dd>
+The smallest independently useful UI or host-interaction operation, with a stable namespaced identifier.
+</dd>
+<dt>Agent boundary</dt>
+<dd>
+The line between interactions handled locally and interactions that involve the model, tools, or external state. Chapter 3 is entirely about where to draw it.
+</dd>
+<dt>Golden transcript</dt>
+<dd>
+The recorded JSON-RPC message log for a scenario. Replaying the scenario and diffing the transcript is how this book proves anything.
+</dd>
+</dl>
+<h2 id="reading-a-capability-entry">Reading a capability entry</h2>
+<p>Every entry in Parts II and III opens with a block like this one:</p>
+<div class="cap" id="surface.resize"><div class="cap-head"><code class="cap-id">surface.resize</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Report content size so the host can size the frame around it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/size-changed</code><code>containerDimensions</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
+<p>The badges are not decoration and they are not opinion. Each is generated from the registry, and the build fails if any of them stops being true.</p>
+<p><strong>Level 1 to 4</strong> places the capability on the conformance ladder in Chapter 1. Levels are cumulative: a Level 3 host supports everything at Levels 1 and 2.</p>
+<p><strong>Core or Extended</strong> says whether the capability is mandatory at its level. Core capabilities are the promise a host makes by claiming the level. Extended capabilities are optional at any level, which means your application must handle their absence rather than assuming a modern host will have them.</p>
+<p><strong>The ground badge</strong> is the most useful thing on the page, and the labels mean exactly this:</p>
+<p><em>On the wire</em> means the MCP Apps extension defines a message for it, and the entry names the message. You send it, the host answers it, and the transcript pane shows it.</p>
+<p><em>Core MCP</em> means the base protocol defines it and views inherit it. Cancellation and progress work this way.</p>
+<p><em>Platform</em> means the browser inside the sandbox already does it and there is no host round trip at all. Pointer events, text selection, and the date picker are in this group. Looking for a protocol feature here is a way to waste an afternoon.</p>
+<p><em>Yours to build</em> means the view implements it and nobody else can. Undo is the clearest case: no host can undo your document model for you.</p>
+<p><em>Not standardised</em> means there is no mechanism, anywhere, today. Fourteen capabilities carry this label. Each entry says what you can do instead, and Appendix B collects them into one table, because a list of the things a platform cannot yet do is the most actionable page in a book like this.</p>
+<p><strong>Draft only</strong> appears when a message exists in the current specification draft but not in the last dated release, <code>2026-01-26</code>. If you are writing against a host that shipped early, those are the messages most likely to be missing.</p>
+<h2 id="the-demonstrations">The demonstrations</h2>
+<p>Entries that have a live demonstration embed it directly:</p>
+<div class="demo" data-demo="lab-surface" id="lab-surface"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<p>Click something in the frame. The transcript underneath fills with the actual messages, in order, with direction arrows. The buttons in the grey strip are things only a host can do, so the page does them on the host’s behalf: change the container size, withdraw a display mode, start a teardown. The tab strip switches between the message log and the exact file the frame is running.</p>
+<p>That last point carries weight. The frame loads <code>demos/lab-surface/index.html</code>; the code tab fetches <code>demos/lab-surface/index.html</code>. They cannot disagree.</p>
+<h2 id="the-question">The question</h2>
+<p>Everything here exists to answer one question:</p>
+<blockquote>
+<p>Can a host construct conventional, native-like applications entirely from a small, well defined set of reusable UI capabilities?</p>
+</blockquote>
+<p>If a recipe needs host behaviour that the primitives in Parts II and III cannot express, the recipe has found a missing capability, and that finding belongs upstream in the specification rather than in a private extension. If the recipes run unmodified across several hosts, the capability model is evidence rather than opinion. Part VI describes the machinery that makes both outcomes observable.</p>
+
+<div class="pager"><a href="preface.html"><span class="dir">Previous</span>What This Book Is</a><a href="ch01.html" style="text-align:right"><span class="dir">Next</span>1. The Capability Model</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "recordedFrom": "apps/recipes/r06-image-annotator/server.js",
+  "serverInfo": {
+    "name": "cookbook-image-annotator",
+    "version": "1.0.0"
+  },
+  "results": {
+    "load_annotations": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Two saved regions: a scratch and a burr."
+        }
+      ],
+      "structuredContent": {
+        "boxes": [
+          {
+            "x": 112,
+            "y": 62,
+            "w": 62,
+            "h": 46,
+            "label": "scratch",
+            "colour": "#b4531a"
+          },
+          {
+            "x": 292,
+            "y": 172,
+            "w": 86,
+            "h": 38,
+            "label": "burr",
+            "colour": "#9b2226"
+          }
+        ]
+      }
+    }
+  }
+}

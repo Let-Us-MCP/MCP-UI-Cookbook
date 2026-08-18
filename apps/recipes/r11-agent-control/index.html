@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Agent Control Center</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  .task { border:1px solid var(--color-border-primary); border-radius:var(--border-radius-md);
+    padding:9px 11px }
+  .task.err { border-color:var(--color-border-danger) }
+  .task .steps { font-size:11.5px; color:var(--color-text-secondary);
+    font-family:var(--font-mono); max-height:56px; overflow:auto }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <button id="start" class="primary">Start a task</button>
+    <button id="cancelall">Cancel everything</button>
+    <span class="spacer"></span>
+    <span class="chip" id="running">0 running</span>
+  </div>
+
+  <div id="tasks" class="stack"></div>
+  <div id="attention" class="banner warn" hidden></div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce } = View;
+
+const tasks = new Map();
+let nextId = 1;
+let bridge;
+
+function draw() {
+  $("#running").textContent =
+    `${[...tasks.values()].filter((t) => t.state === "running").length} running`;
+  $("#tasks").replaceChildren(...[...tasks.values()].reverse().map((task) =>
+    h("div", { class: `task ${task.state === "failed" ? "err" : ""}` },
+      h("div", { class: "row" },
+        h("strong", { text: task.name }),
+        h("span", { class: `chip ${task.state === "failed" ? "bad"
+          : task.state === "done" ? "good" : "info"}`, text: task.state }),
+        h("span", { class: "spacer" }),
+        task.state === "running"
+          ? h("button", { class: "quiet", text: "Cancel",
+              onclick: () => cancel(task) })
+          : task.state === "failed"
+            ? h("button", { class: "quiet", text: "Retry",
+                onclick: () => run(task.name, task) })
+            : null),
+      h("div", { class: "bar", style: "margin:7px 0" },
+        h("span", { style: `width:${task.percent}%` })),
+      h("div", { class: "steps",
+        text: task.steps.slice(-3).join("\n") || "waiting" }),
+      task.error ? h("p", { class: "muted", style: "margin:6px 0 0",
+        text: task.error }) : null)));
+}
+
+function cancel(task) {
+  task.controller?.abort();
+  task.state = "cancelled";
+  task.steps.push("cancelled by the user");
+  // Cancellation has to leave the interface in a state that matches reality.
+  // Rolling the bar back to zero says "nothing happened", which is a lie when
+  // three of five steps did happen.
+  task.error = `Stopped after ${task.done} of ${task.total} steps. `
+    + "Completed steps were not rolled back.";
+  draw();
+  bridge.notify("notifications/cancelled",
+    { requestId: task.requestId, reason: "The user cancelled" });
+}
+
+async function run(name, existing) {
+  const task = existing ?? { id: nextId++, name, steps: [], percent: 0,
+                             done: 0, total: 5 };
+  Object.assign(task, { state: "running", error: null, percent: 0, done: 0,
+                        controller: new AbortController() });
+  tasks.set(task.id, task);
+  draw();
+
+  try {
+    const result = await bridge.callServerTool("run_task", { name });
+    if (task.controller.signal.aborted) return;
+    if (result.isError) throw new Error(result.content?.[0]?.text ?? "failed");
+    task.state = "done";
+    task.percent = 100;
+    task.steps.push("finished");
+    announce(`${name} finished`);
+  } catch (error) {
+    if (task.controller.signal.aborted) return;
+    task.state = "failed";
+    task.error = error.message;
+    task.steps.push("failed");
+    if (document.hidden) {
+      $("#attention").hidden = false;
+      $("#attention").textContent = `${name} needs you: ${error.message}`;
+    }
+    announce(`${name} failed`);
+  }
+  draw();
+}
+
+View.boot({ name: "agent-control", version: "1.0.0" }, {}, async (instance) => {
+  bridge = instance;
+
+  // Partial input is what makes a task list feel live before anything has
+  // actually started. The row appears while the model is still writing the
+  // arguments, and fills in as they arrive.
+  bridge.on("toolinputpartial", ({ arguments: args }) => {
+    const id = "pending";
+    const task = tasks.get(id) ?? { id, name: "…", steps: [], percent: 0,
+                                    done: 0, total: 5, state: "queued" };
+    task.name = args?.name ?? task.name;
+    task.steps = [`arguments arriving: ${JSON.stringify(args ?? {})}`];
+    tasks.set(id, task);
+    draw();
+  });
+
+  bridge.on("toolinput", ({ arguments: args }) => {
+    tasks.delete("pending");
+    run(args?.name ?? "Unnamed task");
+  });
+
+  addEventListener("message", (event) => {
+    const message = event.data;
+    if (message?.method !== "notifications/progress") return;
+    const { progress, total, message: text } = message.params ?? {};
+    const task = [...tasks.values()].reverse().find((t) => t.state === "running");
+    if (!task) return;
+    task.percent = (progress / total) * 100;
+    task.done = progress;
+    task.total = total;
+    if (text) task.steps.push(text);
+    draw();
+  });
+
+  $("#start").onclick = () => run(`Reindex shard ${nextId}`);
+  $("#cancelall").onclick = () => {
+    for (const task of tasks.values()) if (task.state === "running") cancel(task);
+    toast("Everything cancelled");
+  };
+});
+</script>
+</body>
+</html>

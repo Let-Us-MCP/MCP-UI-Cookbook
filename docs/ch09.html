@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9. Keyboard, Pointer and Selection &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Nine capabilities, one message between them. The browser does almost all of this, which is why the two places it stops are worth naming.">
+<meta property="og:title" content="9. Keyboard, Pointer and Selection">
+<meta property="og:description" content="Nine capabilities, one message between them. The browser does almost all of this, which is why the two places it stops are worth naming.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html" class="current">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 9</p><h1>Keyboard, Pointer and Selection</h1><p class="summary">Nine capabilities, one message between them. The browser does almost all of this, which is why the two places it stops are worth naming.</p><p>This is the largest group in Part II and the one with the least protocol in it. Eight of its nine capabilities are the browser working normally inside the sandbox. Nothing needs a host round trip, nothing needs a permission, and an application that tries to route any of it through the model has made the mistake Chapter 3 is about.</p>
+<p>What deserves attention is the two boundaries: a shortcut you take that the host may already own, and a drag that stops at the edge of your frame.</p>
+<div class="demo" data-demo="lab-input" id="lab-input"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="pointer">Pointer</h2>
+<div class="cap" id="input.pointer"><div class="cap-head"><code class="cap-id">input.pointer</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Click, hover, drag, and capture across mouse, touch, and pen.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r06.html">Image Annotator</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>Pointer Events unify mouse, touch and pen, and the unification is why you should use them rather than mouse events with touch handlers bolted on.</p>
+<p>The capability that makes drag work is <strong>pointer capture</strong>. Without it, a drag that outruns the layout leaves the element behind the moment the pointer exits its box. With <code>setPointerCapture(event.pointerId)</code>, every subsequent event for that pointer goes to the capturing element until it is released, and the drag survives leaving the frame’s own bounds.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-input/index.html</code></p><pre class="js"><code>dot.addEventListener(&quot;pointerdown&quot;, (event) =&gt; {
+  dragging = true;
+  dot.setPointerCapture(event.pointerId);
+  offset = { x: event.offsetX, y: event.offsetY };
+});
+dot.addEventListener(&quot;pointermove&quot;, (event) =&gt; {
+  if (!dragging) return;
+  const box = pad.getBoundingClientRect();
+  dot.style.left = `${Math.max(0, Math.min(box.width - 22,
+    event.clientX - box.left - offset.x))}px`;
+});
+dot.addEventListener(&quot;pointerup&quot;, (event) =&gt; {
+  dragging = false;
+  dot.releasePointerCapture(event.pointerId);
+});</code></pre>
+<p>Two more details that only show up on real devices. <code>touch-action: none</code> on the draggable surface stops the browser interpreting a drag as a scroll, which otherwise makes touch dragging impossible. And hit targets need to be at least 44 pixels on a touch device, which Chapter 12 gets from <code>hostContext.deviceCapabilities.touch</code> rather than from a user agent string.</p>
+<h2 id="keyboard">Keyboard</h2>
+<div class="cap" id="input.keyboard"><div class="cap-head"><code class="cap-id">input.keyboard</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Keys, modifiers, and the platform conventions users already have.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r05.html">Spreadsheet</a>, <a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>Keys, modifiers, and the platform conventions people already have.</p>
+<p>Use the platform’s modifier, not one of them. <code>event.metaKey || event.ctrlKey</code> is the whole of cross-platform accelerator handling and there is no excuse for getting it wrong. Read <code>event.key</code> rather than <code>keyCode</code>, which has been deprecated for a decade and reports the wrong thing on non-US layouts.</p>
+<p>Escape is the interesting one. In an embedded view, Escape has at least three plausible meanings: close my dialog, clear my selection, and leave fullscreen. Only one of them is yours at any moment, and the host may believe a fourth. The rule that works is to handle Escape only when you have something open, and to let the event propagate otherwise.</p>
+<h2 id="shortcuts">Shortcuts</h2>
+<div class="cap" id="input.shortcut"><div class="cap-head"><code class="cap-id">input.shortcut</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Own an accelerator without fighting the host for it.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r05.html">Spreadsheet</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>Here is the first boundary. Your view can bind Ctrl+F. So can the host. There is no negotiation, no way to ask what the host has taken, and no way to be told when you have collided.</p>
+<p>Whoever calls <code>preventDefault()</code> first wins, and “first” is decided by whether the event reaches your frame at all, which depends on where focus is. From the user’s side this reads as an application that sometimes has a find bar and sometimes does not.</p>
+<p><strong>What actually works.</strong> Take few. Take the ones with strong conventions inside a document: Cmd/Ctrl+Z and Shift+Z for undo and redo, Cmd/Ctrl+C for copy, Cmd/Ctrl+S for save, Escape and Delete in context. Leave the ones with strong conventions in a <em>browser</em>: Cmd+T, Cmd+W, Cmd+L, Cmd+R. Never bind a bare letter without a modifier; the user is probably typing.</p>
+<p>And show them. A view that binds shortcuts without displaying them anywhere is a view whose shortcuts nobody uses, which is the same as not having them.</p>
+<p><strong>What a mechanism would look like.</strong> The host declares reserved chords in <code>hostContext</code>, and the view either avoids them or requests one and is told whether it got it. Neither exists. In the demonstration, press Cmd/Ctrl+F: the view takes it, and the host it is embedded in may or may not agree.</p>
+<h2 id="long-press-and-context-menus">Long press and context menus</h2>
+<div class="cap" id="input.longpress"><div class="cap-head"><code class="cap-id">input.longpress</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Touch equivalent of a right click.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<div class="cap" id="input.contextmenu"><div class="cap-head"><code class="cap-id">input.contextmenu</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Contextual actions on right click or long press.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>These are one intent on two modalities: “give me the actions for this thing”.</p>
+<p><strong>Application behaviour.</strong> Handle <code>contextmenu</code> with <code>preventDefault()</code> and draw your own menu. Position it in the viewport, keep it inside the frame, close it on Escape and on outside click, and move focus into it so a keyboard user can reach it. On touch, a <code>pointerdown</code> timer of roughly 500ms with cancellation on move or up gives the same menu.</p>
+<p><strong>The boundary.</strong> Your <code>preventDefault()</code> suppresses the browser’s menu inside your frame. It does not suppress the host’s, if the host has one, and it cannot tell the host that a menu is open. A host that also shows a menu on right click produces two menus, and neither party can currently detect the other. In practice hosts do not do this, but nothing in the protocol prevents it.</p>
+<p><strong>Accessibility.</strong> A context menu that only opens on right click is unreachable for keyboard users. Give it a second route: Shift+F10, or a visible button, or both. <code>role="menu"</code> with <code>role="menuitem"</code> children, arrow key navigation, Escape to close and return focus.</p>
+<h2 id="selection">Selection</h2>
+<div class="cap" id="input.selection"><div class="cap-head"><code class="cap-id">input.selection</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Single, additive, range, and select-all over text and objects.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r03.html">File Explorer</a>, <a href="r05.html">Spreadsheet</a>, <a href="r07.html">Workflow Builder</a>, <a href="r08.html">Code and Diff Reviewer</a>, <a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>The single most under-implemented capability in embedded applications, and the one users notice fastest, because they bring the model from every other application they have used.</p>
+<p>Three gestures, and all three are expected:</p>
+<p><em>Click</em> replaces the selection and sets the anchor. <em>Cmd/Ctrl-click</em> toggles one item and moves the anchor. <em>Shift-click</em> extends from the anchor to the clicked item.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-input/index.html</code></p><pre class="js"><code>function select(i, event) {
+  if (event.shiftKey) {
+    const [lo, hi] = [Math.min(anchor, i), Math.max(anchor, i)];
+    for (let k = lo; k &lt;= hi; k += 1) selected.add(k);
+  } else if (event.metaKey || event.ctrlKey) {
+    selected.has(i) ? selected.delete(i) : selected.add(i);
+    anchor = i;
+  } else {
+    selected.clear();
+    selected.add(i);
+    anchor = i;
+  }
+}</code></pre>
+<p>The keyboard model is the other half: arrows move, Space toggles, Shift with arrows extends, Cmd/Ctrl+A selects everything, Escape clears. Together they are about twenty lines and they are the difference between a table and a picture of a table.</p>
+<p><strong>Accessibility.</strong> <code>role="listbox"</code> with <code>aria-multiselectable</code>, or <code>role="grid"</code>, and <code>aria-selected</code> on each row. Announce the count on change, not the individual rows, or a screen reader user selecting forty rows hears forty announcements. The lab does exactly one announcement per change.</p>
+<p><strong>The other reason selection matters.</strong> It is the unit of conversation. Chapter 17’s escalation carries the selection, and Recipe 8 makes a range of diff lines the thing the model is asked about. A view with no selection model has nothing precise to escalate, so its users end up describing what they mean in prose.</p>
+<h2 id="drag-and-drop">Drag and drop</h2>
+<div class="cap" id="input.dragdrop"><div class="cap-head"><code class="cap-id">input.dragdrop</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Drag and drop inside the view, with structured transfer data.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r06.html">Image Annotator</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>Inside the frame, drag and drop is the HTML drag and drop API, with all of its familiar unpleasantness: <code>dragover</code> must call <code>preventDefault()</code> or the drop never fires, and <code>dataTransfer</code> types are the only structured channel between source and target.</p>
+<p>For reordering within one list, pointer events are usually better than the drag API: you get pointer capture, you can animate, and you avoid the drag image entirely. Recipe 7 drags nodes with pointer events and Recipe 3 uses the drag API because it needs a drop target with feedback.</p>
+<div class="cap" id="input.dragBoundary"><div class="cap-head"><code class="cap-id">input.dragBoundary</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Drag something out of the view and into the host, or the reverse.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>The second boundary, and the more visible one. A file dragged from the desktop into your frame works, because the browser routes it. Anything else does not. You cannot drag a row out of your view and onto the host’s conversation. The host cannot drag one of its attachments into your view. There is no <code>dataTransfer</code> shared across the frame boundary and no message that carries one.</p>
+<p><strong>Workarounds.</strong> For getting data out: copy to the clipboard, or offer <code>ui/download-file</code>. For getting data in: a file input, or a paste target, or a host-proxied <code>resources/read</code> if the thing lives on the server anyway.</p>
+<h2 id="zoom-and-pan">Zoom and pan</h2>
+<div class="cap" id="input.zoompan"><div class="cap-head"><code class="cap-id">input.zoompan</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Wheel and pinch zoom, pan, reset, fit to content.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r06.html">Image Annotator</a>, <a href="r07.html">Workflow Builder</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>For any spatial surface: wheel to zoom, drag to pan, a reset, and a fit.</p>
+<p>The detail that separates a canvas that feels right from one that fights you is zooming about the pointer rather than the origin. The transform has to be adjusted so the point under the cursor stays under the cursor.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r06-image-annotator/index.html</code></p><pre class="js"><code>const before = scale;
+scale = Math.min(6, Math.max(0.4, scale * (event.deltaY &lt; 0 ? 1.12 : 0.89)));
+const rect = stage.getBoundingClientRect();
+const px = event.clientX - rect.left, py = event.clientY - rect.top;
+panX = px - ((px - panX) / before) * scale;
+panY = py - ((py - panY) / before) * scale;</code></pre>
+<p><code>{ passive: false }</code> on the wheel listener is required, because you have to call <code>preventDefault()</code> to stop the page zooming, and browsers default wheel listeners to passive.</p>
+<p><strong>Accessibility.</strong> Every spatial gesture needs a non-spatial equivalent. Buttons for zoom in, zoom out, reset and fit, and arrow keys to pan. A canvas that can only be operated by dragging is a canvas that cannot be operated at all by a large number of people.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Nine capabilities and one line of protocol between them. The lesson is not that this group is easy; it is that the effort belongs in your view rather than in the channel. When something here does not work, the answer is almost never a message you are missing.</p>
+
+<div class="pager"><a href="ch08.html"><span class="dir">Previous</span>8. Dialogs and Attention</a><a href="ch10.html" style="text-align:right"><span class="dir">Next</span>10. Clipboard, Files and System Integration</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

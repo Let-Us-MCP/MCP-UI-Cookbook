@@ -1,0 +1,149 @@
+{
+  "demo": "r08-diff-reviewer",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ]
+        },
+        "appInfo": {
+          "name": "diff-reviewer",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "message": {
+            "text": {}
+          },
+          "openLinks": {},
+          "serverTools": {},
+          "updateModelContext": {
+            "structuredContent": {},
+            "text": {}
+          }
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 480
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 126,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "load_diff"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "One hunk in src/transport/retry.ts: the base delay goes from 100ms to 250ms and the backoff is capped at 30 seconds.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "hunk": {
+            "file": "src/transport/retry.ts",
+            "lines": [
+              {
+                "kind": "ctx",
+                "no": 41,
+                "text": "export function backoff(attempt: number) {"
+              },
+              {
+                "kind": "del",
+                "no": 42,
+                "text": "  const base = 100;"
+              },
+              {
+                "kind": "add",
+                "no": 42,
+                "text": "  const base = 250;"
+              },
+              {
+                "kind": "ctx",
+                "no": 43,
+                "text": "  const jitter = Math.random() * base;"
+              },
+              {
+                "kind": "del",
+                "no": 44,
+                "text": "  return base * 2 ** attempt + jitter;"
+              },
+              {
+                "kind": "add",
+                "no": 44,
+                "text": "  const capped = Math.min(base * 2 ** attempt, 30_000);"
+              },
+              {
+                "kind": "add",
+                "no": 45,
+                "text": "  return capped + jitter;"
+              },
+              {
+                "kind": "ctx",
+                "no": 46,
+                "text": "}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 265,
+        "width": 836
+      }
+    }
+  ]
+}

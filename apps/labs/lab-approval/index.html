@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Approval and the context boundary</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="card">
+    <h2>Pending action</h2>
+    <p class="muted" id="what">Nothing queued.</p>
+    <dl class="row" id="provenance" style="gap:16px"></dl>
+    <div class="row">
+      <button id="approve" class="primary" disabled>Approve</button>
+      <button id="deny" class="danger" disabled>Deny</button>
+      <button id="ask" disabled>Ask a question first</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What crosses the boundary</h2>
+    <p class="muted">Two counters. One tracks what stayed here; one tracks what
+      the model was told. Interact with the card above and watch them diverge.</p>
+    <div class="row">
+      <span class="chip" id="local">local events: 0</span>
+      <span class="chip info" id="sent">context updates: 0</span>
+    </div>
+    <pre id="ctx" style="font-size:12px;white-space:pre-wrap">Nothing published.</pre>
+  </div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce, confirmDialog, promptDialog } = View;
+
+let queued = null;
+let local = 0;
+let sent = 0;
+
+const bump = () => { local += 1; $("#local").textContent = `local events: ${local}`; };
+
+View.boot({ name: "approval-lab", version: "1.0.0" },
+  { tools: { listChanged: true } }, async (bridge) => {
+
+  addEventListener("pointermove", bump, { passive: true });
+  addEventListener("scroll", bump, { passive: true });
+
+  const publish = async (decision) => {
+    const payload = {
+      content: [{ type: "text", text:
+        `The user ${decision} the ${queued.title} request.` }],
+      structuredContent: { action: queued.id, decision },
+    };
+    await bridge.updateModelContext(payload);
+    sent += 1;
+    $("#sent").textContent = `context updates: ${sent}`;
+    $("#ctx").textContent = JSON.stringify(payload.structuredContent, null, 2);
+  };
+
+  const paint = () => {
+    $("#what").textContent = queued
+      ? queued.description : "Nothing queued.";
+    $("#provenance").replaceChildren(...(queued
+      ? Object.entries(queued.provenance).flatMap(([k, v]) =>
+          [h("dt", { class: "muted", text: k }), h("dd", { text: v })])
+      : []));
+    for (const id of ["#approve", "#deny", "#ask"]) $(id).disabled = !queued;
+  };
+  paint();
+
+  // An approval is a decision about something irreversible, so it shows the
+  // provenance of the request: who asked, on whose behalf, using which tool,
+  // with which arguments. A card that says "Allow?" and nothing else is not
+  // an approval, it is a dialog box with a lever attached.
+  bridge.registerTool({
+    name: "queue_action",
+    description: "Queue a sensitive action for human approval",
+    inputSchema: { type: "object" },
+    annotations: { readOnlyHint: false },
+  }, async (action) => {
+    queued = action;
+    paint();
+    announce(`Approval needed: ${action.title}`);
+    return { content: [{ type: "text", text: "Queued for approval." }] };
+  });
+
+  $("#approve").onclick = async () => {
+    const yes = await confirmDialog({
+      title: `Approve ${queued.title}?`,
+      body: queued.consequence,
+      confirm: "Approve",
+    });
+    if (!yes) return;
+    await publish("approved");
+    toast("Approved");
+    queued = null;
+    paint();
+  };
+
+  $("#deny").onclick = async () => {
+    await publish("denied");
+    toast("Denied");
+    queued = null;
+    paint();
+  };
+
+  // Elicitation from a view is not in the extension. What a view can do is
+  // ask its own question and put the answer into the conversation, which is
+  // a weaker guarantee: the host is not mediating it.
+  $("#ask").onclick = async () => {
+    const question = await promptDialog({
+      title: "Ask before deciding",
+      label: "What do you want to know?",
+      value: "Which invoices does this refund cover?",
+      confirm: "Ask",
+    });
+    if (!question) return;
+    await bridge.sendMessage(question);
+    toast("Asked in the conversation");
+  };
+});
+</script>
+</body>
+</html>

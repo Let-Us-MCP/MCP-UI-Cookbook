@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dashboard</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px }
+  .tile { border:1px solid var(--color-border-primary); border-radius:var(--border-radius-lg);
+          padding:10px; cursor:pointer; background:var(--color-background-primary) }
+  .tile:hover, .tile:focus-visible { border-color:var(--color-text-info) }
+  .tile .v { font-size:22px; font-weight:600; font-variant-numeric:tabular-nums }
+  .tile .d { font-size:11px; color:var(--color-text-secondary) }
+  svg.spark { width:100%; height:34px; display:block }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <strong>Service health</strong>
+    <span class="chip" id="fresh">never refreshed</span>
+    <span class="spacer"></span>
+    <button id="refresh">Refresh</button>
+    <button id="expand">Expand</button>
+  </div>
+
+  <div class="grid" id="tiles"></div>
+
+  <div id="drill" class="card" hidden>
+    <div class="row">
+      <h2 id="drill-title" style="margin:0"></h2>
+      <span class="spacer"></span>
+      <button id="close" class="quiet">Close</button>
+    </div>
+    <table><tbody id="drill-body"></tbody></table>
+  </div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce } = View;
+
+let metrics = [];
+let bridge, format;
+const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+
+function spark(series) {
+  const max = Math.max(...series, 1);
+  const points = series.map((v, i) =>
+    `${(i / (series.length - 1)) * 100},${34 - (v / max) * 30}`).join(" ");
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "spark");
+  svg.setAttribute("viewBox", "0 0 100 34");
+  svg.setAttribute("preserveAspectRatio", "none");
+  svg.setAttribute("aria-hidden", "true");
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  line.setAttribute("points", points);
+  line.setAttribute("fill", "none");
+  line.setAttribute("stroke", "var(--color-text-info)");
+  line.setAttribute("stroke-width", "1.6");
+  svg.append(line);
+  return svg;
+}
+
+function draw() {
+  $("#tiles").replaceChildren(...metrics.map((m) =>
+    h("div", { class: "tile", tabindex: "0", role: "button",
+               "aria-label": `${m.label}, ${m.value} ${m.unit}`,
+               onclick: () => drill(m),
+               onkeydown: (e) => { if (e.key === "Enter") drill(m); } },
+      h("div", { class: "d", text: m.label }),
+      h("div", { class: "v",
+                 text: `${format.number(m.value)} ${m.unit}`,
+                 style: `color:${m.state === "bad" ? "var(--color-text-danger)"
+                                : m.state === "warn" ? "var(--color-text-warning)"
+                                : "var(--color-text-primary)"}` }),
+      spark(m.series),
+      h("div", { class: "d", text: m.note }))));
+}
+
+function drill(metric) {
+  $("#drill").hidden = false;
+  $("#drill-title").textContent = metric.label;
+  $("#drill-body").replaceChildren(...metric.breakdown.map(([k, v]) =>
+    h("tr", {}, h("td", { text: k }), h("td", { class: "num",
+      text: format.number(v) }))));
+  announce(`${metric.label} details opened`);
+  // Opening a panel is a view state change, so the model is told what is on
+  // screen. It is not asked to do the opening.
+  bridge.updateModelContext({
+    content: [{ type: "text", text: `The user opened the ${metric.label} panel.` }],
+    structuredContent: { panel: metric.key, value: metric.value },
+  }).catch(() => {});
+}
+
+async function refresh() {
+  const result = await bridge.callServerTool("service_health", {});
+  metrics = result.structuredContent?.metrics ?? metrics;
+  draw();
+  $("#fresh").textContent = `refreshed ${format.time(new Date())}`;
+}
+
+View.boot({ name: "dashboard", version: "1.0.0" },
+  { availableDisplayModes: ["inline", "fullscreen"] }, async (instance) => {
+  bridge = instance;
+  format = View.formatters(bridge.hostContext);
+
+  bridge.on("toolresult", (result) => {
+    metrics = result.structuredContent?.metrics ?? metrics;
+    draw();
+  });
+
+  // Streaming values update in place. Rebuilding the tile on every tick would
+  // throw away focus, and a dashboard that steals focus every two seconds is
+  // unusable with a keyboard.
+  bridge.on("toolinput", () => {});
+  setInterval(() => {
+    if (document.hidden || !metrics.length) return;
+    const m = metrics[0];
+    m.series = [...m.series.slice(1), Math.max(1, m.series.at(-1)
+      + (Math.random() - 0.5) * 60)];
+    m.value = Math.round(m.series.at(-1));
+    const tile = $("#tiles").firstChild;
+    if (!tile) return;
+    tile.querySelector(".v").textContent = `${format.number(m.value)} ${m.unit}`;
+    tile.querySelector("svg")?.replaceWith(spark(m.series));
+  }, reduced.matches ? 4000 : 1400);
+
+  $("#refresh").onclick = () => refresh().then(() => toast("Refreshed"));
+  $("#close").onclick = () => { $("#drill").hidden = true; };
+  $("#expand").onclick = async () => {
+    const target = bridge.hostContext.displayMode === "fullscreen"
+      ? "inline" : "fullscreen";
+    const { mode } = await bridge.requestDisplayMode(target);
+    $("#expand").textContent = mode === "fullscreen" ? "Collapse" : "Expand";
+  };
+
+  await refresh();
+});
+</script>
+</body>
+</html>

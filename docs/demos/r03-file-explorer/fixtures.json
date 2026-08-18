@@ -1,0 +1,61 @@
+{
+  "recordedFrom": "apps/recipes/r03-file-explorer/server.js",
+  "serverInfo": {
+    "name": "cookbook-file-explorer",
+    "version": "1.0.0"
+  },
+  "results": {
+    "list_files": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Three top level entries: documents, images, notes.txt."
+        }
+      ],
+      "structuredContent": {
+        "tree": {
+          "id": "root",
+          "name": "/",
+          "children": [
+            {
+              "id": "docs",
+              "name": "documents",
+              "children": [
+                {
+                  "id": "q3",
+                  "name": "q3-review.md",
+                  "size": 8213,
+                  "modified": "2026-08-11"
+                },
+                {
+                  "id": "plan",
+                  "name": "plan.md",
+                  "size": 4102,
+                  "modified": "2026-08-17"
+                }
+              ]
+            },
+            {
+              "id": "img",
+              "name": "images",
+              "children": [
+                {
+                  "id": "cover",
+                  "name": "cover.png",
+                  "size": 402113,
+                  "modified": "2026-07-30"
+                }
+              ]
+            },
+            {
+              "id": "notes",
+              "name": "notes.txt",
+              "size": 611,
+              "modified": "2026-08-18"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

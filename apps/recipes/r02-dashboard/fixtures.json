@@ -1,0 +1,213 @@
+{
+  "recordedFrom": "apps/recipes/r02-dashboard/server.js",
+  "serverInfo": {
+    "name": "cookbook-dashboard",
+    "version": "1.0.0"
+  },
+  "results": {
+    "service_health": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Checkout p95 is 412ms and error rate is 143/h, both driven by billing 9.2.4. Queue depth and uptime are normal."
+        }
+      ],
+      "structuredContent": {
+        "metrics": [
+          {
+            "key": "p95",
+            "label": "Checkout p95",
+            "value": 412,
+            "unit": "ms",
+            "state": "warn",
+            "note": "up 18% since the 4.18.2 deploy",
+            "series": [
+              400,
+              432,
+              461,
+              486,
+              506,
+              460,
+              467,
+              467,
+              463,
+              456,
+              389,
+              382,
+              379,
+              380,
+              388,
+              342,
+              363,
+              389,
+              419,
+              451,
+              422,
+              451,
+              476,
+              495
+            ],
+            "breakdown": [
+              [
+                "p50",
+                120
+              ],
+              [
+                "p95",
+                412
+              ],
+              [
+                "p99",
+                1180
+              ],
+              [
+                "requests",
+                84210
+              ]
+            ]
+          },
+          {
+            "key": "errors",
+            "label": "Error rate",
+            "value": 143,
+            "unit": "/h",
+            "state": "bad",
+            "note": "billing 9.2.4 is the source",
+            "series": [
+              120,
+              141,
+              161,
+              178,
+              191,
+              160,
+              164,
+              165,
+              162,
+              158,
+              112,
+              108,
+              106,
+              107,
+              112,
+              82,
+              95,
+              113,
+              133,
+              154,
+              135,
+              154,
+              171,
+              183
+            ],
+            "breakdown": [
+              [
+                "billing",
+                143
+              ],
+              [
+                "checkout",
+                17
+              ],
+              [
+                "search",
+                0
+              ]
+            ]
+          },
+          {
+            "key": "queue",
+            "label": "Queue depth",
+            "value": 38,
+            "unit": "jobs",
+            "state": "ok",
+            "note": "steady",
+            "series": [
+              40,
+              46,
+              52,
+              57,
+              61,
+              52,
+              53,
+              53,
+              53,
+              51,
+              38,
+              36,
+              36,
+              36,
+              38,
+              28,
+              33,
+              38,
+              44,
+              50,
+              44,
+              50,
+              55,
+              59
+            ],
+            "breakdown": [
+              [
+                "ready",
+                30
+              ],
+              [
+                "retrying",
+                6
+              ],
+              [
+                "dead",
+                2
+              ]
+            ]
+          },
+          {
+            "key": "uptime",
+            "label": "Uptime",
+            "value": 99,
+            "unit": "%",
+            "state": "ok",
+            "note": "30 day window",
+            "series": [
+              99,
+              100,
+              100,
+              100,
+              101,
+              100,
+              100,
+              100,
+              100,
+              100,
+              99,
+              99,
+              99,
+              99,
+              99,
+              98,
+              98,
+              99,
+              99,
+              100,
+              99,
+              100,
+              100,
+              101
+            ],
+            "breakdown": [
+              [
+                "incidents",
+                2
+              ],
+              [
+                "minutes lost",
+                41
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

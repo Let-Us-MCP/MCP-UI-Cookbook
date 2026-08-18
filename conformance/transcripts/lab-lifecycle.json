@@ -1,0 +1,80 @@
+{
+  "demo": "lab-lifecycle",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "lifecycle-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {}
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 460
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 231,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/resource-teardown",
+      "id": 1,
+      "payload": {
+        "reason": "The user switched conversations"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 1,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 265,
+        "width": 836
+      }
+    }
+  ]
+}

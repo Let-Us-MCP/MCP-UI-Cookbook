@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The handshake</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="banner" id="who">Connecting.</div>
+
+  <h2>What this host admits to</h2>
+  <div id="caps" class="row"></div>
+
+  <div class="row">
+    <button id="link">Open a link</button>
+    <button id="log">Send a log line</button>
+    <button id="read">Read a server resource</button>
+  </div>
+
+  <pre id="out" class="card" style="white-space:pre-wrap;font-size:12px;margin:0">Nothing yet.</pre>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast } = View;
+
+// Every capability in this book has a defined behaviour when it is absent.
+// This is what checking looks like: a lookup in an object the host handed you
+// during initialization, before you offer the button that needs it.
+const KNOWN = [
+  ["openLinks", "Open external URLs"],
+  ["downloadFile", "Save files"],
+  ["serverTools", "Proxy tool calls"],
+  ["serverResources", "Proxy resource reads"],
+  ["logging", "Accept log lines"],
+  ["message", "Accept chat messages"],
+  ["updateModelContext", "Accept context updates"],
+  ["sampling", "Run the model for you"],
+];
+
+function show(value) {
+  $("#out").textContent = typeof value === "string"
+    ? value : JSON.stringify(value, null, 2);
+}
+
+View.boot({ name: "handshake-lab", version: "1.0.0" }, {}, async (bridge) => {
+  const { hostInfo, hostCapabilities, hostContext } = bridge;
+
+  $("#who").textContent =
+    `${hostInfo?.name ?? "unknown host"} ${hostInfo?.version ?? ""}, ` +
+    `speaking ${hostContext.platform ?? "an unstated platform"} in ` +
+    `${hostContext.locale ?? "an unstated locale"}.`;
+
+  $("#caps").replaceChildren(...KNOWN.map(([key, label]) =>
+    h("span", { class: `chip ${hostCapabilities[key] ? "good" : "bad"}`,
+                text: `${hostCapabilities[key] ? "yes" : "no"}: ${label}` })));
+
+  // A capability that is absent is not an error to report at the moment of
+  // use. It is a button that should never have been enabled.
+  $("#link").disabled = !hostCapabilities.openLinks;
+  $("#log").disabled = !hostCapabilities.logging;
+  $("#read").disabled = !hostCapabilities.serverResources;
+
+  $("#link").onclick = async () => {
+    try {
+      await bridge.openLink("https://modelcontextprotocol.io/");
+      show("The host accepted the link. Whether it opened it is its business.");
+    } catch (error) {
+      show(`Refused: ${error.message}`);
+    }
+  };
+
+  $("#log").onclick = () => {
+    bridge.log("info", { at: "handshake-lab", note: "the user pressed a button" });
+    toast("Log sent");
+  };
+
+  $("#read").onclick = async () => {
+    try {
+      show(await bridge.readServerResource("ui://cookbook/notes"));
+    } catch (error) {
+      show(`Refused: ${error.message}`);
+    }
+  };
+
+  show(JSON.stringify({ hostInfo, hostCapabilities }, null, 2));
+});
+</script>
+</body>
+</html>

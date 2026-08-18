@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Host environment and theming</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="card">
+    <h2 id="head">A card that belongs here</h2>
+    <p class="muted">Everything visible uses a host variable with a local
+      fallback. Change the theme from the strip below and nothing reloads.</p>
+    <div class="row">
+      <button class="primary">Primary</button>
+      <button>Secondary</button>
+      <button class="danger">Destructive</button>
+      <span class="chip good">success</span>
+      <span class="chip warn">warning</span>
+      <span class="chip bad">danger</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What the host told us</h2>
+    <table><tbody id="env"></tbody></table>
+  </div>
+
+  <div class="banner" id="safe">Safe area: none reported.</div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $ } = View;
+
+function rows(context) {
+  const insets = context.safeAreaInsets;
+  return [
+    ["theme", context.theme ?? "not stated"],
+    ["locale", context.locale ?? "not stated"],
+    ["timeZone", context.timeZone ?? "not stated"],
+    ["platform", context.platform ?? "not stated"],
+    ["userAgent", context.userAgent ?? "not stated"],
+    ["displayMode", context.displayMode ?? "not stated"],
+    ["deviceCapabilities", JSON.stringify(context.deviceCapabilities ?? {})],
+    ["style variables", String(Object.keys(context.styles?.variables ?? {}).length)],
+    ["fonts block", context.styles?.css?.fonts ? "sent" : "none"],
+    ["safeAreaInsets", insets ? JSON.stringify(insets) : "none"],
+  ];
+}
+
+View.boot({ name: "theme-lab", version: "1.0.0" }, {}, async (bridge) => {
+  const paint = () => {
+    const context = bridge.hostContext;
+    $("#env").replaceChildren(...rows(context).map(([k, v]) =>
+      h("tr", {}, h("td", { text: k }), h("td", { text: v }))));
+    const insets = context.safeAreaInsets;
+    $("#safe").textContent = insets
+      ? `Safe area: ${insets.top} top, ${insets.right} right, `
+        + `${insets.bottom} bottom, ${insets.left} left. The padding above `
+        + "and beside this text moved."
+      : "Safe area: none reported.";
+    const format = View.formatters(context);
+    $("#head").textContent =
+      `A card that belongs here (${format.date(new Date("2026-08-18T09:30:00Z"))})`;
+  };
+
+  // Theme changes arrive as a partial context, at any time, with no reload.
+  // A view that reads the theme once at startup is a view that goes wrong the
+  // first time somebody toggles dark mode.
+  bridge.on("hostcontextchanged", paint);
+  paint();
+});
+</script>
+</body>
+</html>

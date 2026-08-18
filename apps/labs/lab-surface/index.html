@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Surfaces and geometry</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="row">
+    <button id="add" class="primary">Add a row</button>
+    <button id="remove">Remove a row</button>
+    <button id="expand">Go fullscreen</button>
+    <button id="inline">Back to inline</button>
+    <span class="spacer"></span>
+    <button id="done" class="quiet">Done</button>
+  </div>
+
+  <div id="fit" class="banner">Waiting for the host context.</div>
+
+  <ul id="rows" class="stack" style="list-style:none;margin:0;padding:0"></ul>
+
+  <p class="muted" id="size">Reported size will appear here.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, announce, toast } = View;
+
+let count = 3;
+
+function draw() {
+  $("#rows").replaceChildren(...Array.from({ length: count }, (_, i) =>
+    h("li", { class: "card", text: `Row ${i + 1}` })));
+  $("#remove").disabled = count === 0;
+}
+
+// The host tells the view how much room it has, and each dimension is
+// independently fixed, flexible, or unbounded. A view that assumes "fixed"
+// scrolls inside a frame that was willing to grow; a view that assumes
+// "flexible" overflows one that was not.
+function describe(dimensions) {
+  if (!dimensions) return "Unbounded in both directions.";
+  const axis = (fixed, max, name) =>
+    fixed != null ? `${name} is fixed at ${fixed}px`
+    : max != null ? `${name} is flexible up to ${max}px`
+    : `${name} is unbounded`;
+  return [
+    axis(dimensions.width, dimensions.maxWidth, "Width"),
+    axis(dimensions.height, dimensions.maxHeight, "Height"),
+  ].join(". ") + ".";
+}
+
+View.boot({ name: "surface-lab", version: "1.0.0" },
+  { availableDisplayModes: ["inline", "fullscreen"] },
+  async (bridge) => {
+    const context = bridge.hostContext;
+    $("#fit").textContent = describe(context.containerDimensions);
+
+    // The size the view reports is the size of its content, which is not the
+    // size of the frame. Watching it here makes the difference visible.
+    const observer = new ResizeObserver(() => {
+      $("#size").textContent =
+        `Content is ${Math.ceil(document.body.scrollHeight)}px tall; ` +
+        `the frame follows within a moment.`;
+    });
+    observer.observe(document.body);
+
+    $("#add").onclick = () => { count += 1; draw(); announce(`${count} rows`); };
+    $("#remove").onclick = () => {
+      count = Math.max(0, count - 1); draw(); announce(`${count} rows`);
+    };
+
+    $("#expand").onclick = async () => {
+      const available = bridge.hostContext.availableDisplayModes ?? [];
+      if (!available.includes("fullscreen")) {
+        toast("This host has no fullscreen mode.");
+        return;
+      }
+      const { mode } = await bridge.requestDisplayMode("fullscreen");
+      // The answer is authoritative, not the request. A host is allowed to
+      // say no and return the mode you are still in.
+      toast(mode === "fullscreen" ? "Fullscreen granted" : `Host kept ${mode}`);
+    };
+
+    $("#inline").onclick = async () => {
+      const { mode } = await bridge.requestDisplayMode("inline");
+      toast(`Display mode is ${mode}`);
+    };
+
+    // Asking to be closed is a notification, not a request. The host may
+    // ignore it, and if it agrees it will send `ui/resource-teardown` and
+    // wait for the answer.
+    $("#done").onclick = () => bridge.requestTeardown();
+
+    bridge.on("teardown", async ({ reason }) => {
+      $("#fit").className = "banner warn";
+      $("#fit").textContent = `Host is tearing this view down: ${reason}`;
+      await new Promise((r) => setTimeout(r, 400));
+    });
+
+    bridge.on("hostcontextchanged", (patch) => {
+      if (patch.containerDimensions) {
+        $("#fit").textContent = describe(bridge.hostContext.containerDimensions);
+      }
+      if (patch.displayMode) toast(`Host moved us to ${patch.displayMode}`);
+    });
+
+    draw();
+  });
+</script>
+</body>
+</html>

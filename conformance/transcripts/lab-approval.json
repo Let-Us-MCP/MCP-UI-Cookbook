@@ -1,0 +1,117 @@
+{
+  "demo": "lab-approval",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "appInfo": {
+          "name": "approval-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "message": {
+            "text": {}
+          },
+          "updateModelContext": {
+            "structuredContent": {},
+            "text": {}
+          }
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 500
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 322,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 1,
+      "payload": {
+        "arguments": {
+          "consequence": "The money leaves today and cannot be recalled from here.",
+          "description": "Refund 1,240.00 to Meridian Systems against invoice 2026-0814.",
+          "id": "refund-8841",
+          "provenance": {
+            "amount": "1,240.00 USD",
+            "asked by": "the agent, in this conversation",
+            "on behalf of": "sam@meridian.example",
+            "prior approvals": "none for this customer",
+            "tool": "billing.refund"
+          },
+          "title": "refund"
+        },
+        "name": "queue_action"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "content": [
+          {
+            "text": "Queued for approval.",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 379,
+        "width": 836
+      }
+    }
+  ]
+}

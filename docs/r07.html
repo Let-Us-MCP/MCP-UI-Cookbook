@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipe 7. Workflow Builder &middot; The MCP UI Cookbook</title>
+<meta name="description" content="A node graph the agent can edit through tools, with validation that runs continuously and an undo stack that covers both parties.">
+<meta property="og:title" content="Recipe 7. Workflow Builder">
+<meta property="og:description" content="A node graph the agent can edit through tools, with validation that runs continuously and an undo stack that covers both parties.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html" class="current">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Recipe 7</p><h1>Workflow Builder</h1><p class="summary">A node graph the agent can edit through tools, with validation that runs continuously and an undo stack that covers both parties.</p><div class="cap recipe" id="r07"><div class="cap-head"><code class="cap-id">r07</code><span class="cap-tag core">Workflow Builder</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Build and edit a node graph.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch18.html#app.tools">app.tools</a></code><code><a href="ch17.html#agent.intent">agent.intent</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.zoompan">input.zoompan</a></code><code><a href="ch09.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch09.html#input.contextmenu">input.contextmenu</a></code><code><a href="ch15.html#history.transaction">history.transaction</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch18.html#ui.highlight">ui.highlight</a></code><code><a href="ch18.html#ui.navigate">ui.navigate</a></code><code><a href="ch18.html#app.tools">app.tools</a></code><code><a href="ch17.html#agent.intent">agent.intent</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch20.html#state.ownership">state.ownership</a></code></dd></dl></div>
+<p>The recipe where the agent is a first-class editor. Everything the mouse can do to this graph, a tool can do, and everything a tool does is one undoable transaction. The topology explorer some applications need is this same surface in read-only mode.</p>
+<div class="demo" data-demo="r07-workflow-builder" id="r07-workflow-builder"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-split">The split</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Normally local</th>
+<th>Worth crossing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drag nodes, pan, zoom</td>
+<td>“Build me a triage workflow”</td>
+</tr>
+<tr>
+<td>Connect two selected steps</td>
+<td>“What is wrong with this graph?”</td>
+</tr>
+<tr>
+<td>Add and delete steps</td>
+<td>“Add error handling to this”</td>
+</tr>
+<tr>
+<td>Undo</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>The second column is the interesting one. All three of those are the agent calling the same operations the mouse calls, which is why they are safe.</p>
+<h2 id="the-agents-vocabulary">The agent’s vocabulary</h2>
+<p>Four tools: <code>add_step</code>, <code>connect_steps</code>, <code>highlight_step</code>, and <code>get_workflow</code>. Three of them mutate and are annotated <code>readOnlyHint: false</code>; the fourth reads.</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>bridge.registerTool({
+  name: &quot;connect_steps&quot;,
+  description: &quot;Connect two steps by name&quot;,
+  inputSchema: { type: &quot;object&quot;, properties: { from: { type: &quot;string&quot; },
+    to: { type: &quot;string&quot; } }, required: [&quot;from&quot;, &quot;to&quot;] },
+  annotations: { readOnlyHint: false },
+}, async ({ from, to }) =&gt; {
+  const a = graph.nodes.find((n) =&gt; n.name === from);
+  const b = graph.nodes.find((n) =&gt; n.name === to);
+  if (!a || !b) {
+    return { isError: true, content: [{ type: &quot;text&quot;,
+      text: `No step called ${a ? to : from}.` }] };
+  }
+  connect(a.id, b.id);
+  return { content: [{ type: &quot;text&quot;, text: `Connected ${from} to ${to}.` }] };
+});</code></pre>
+<p>Two design decisions in that snippet. The tool takes names rather than internal ids, because names are what appear in the conversation. And it fails with a message naming the step that does not exist, so the agent can correct itself rather than guessing. Press “Agent: connect to a step that is not there” in the demonstration to see the failure path.</p>
+<h2 id="validation-as-a-continuous-state">Validation as a continuous state</h2>
+<p>The graph is validated on every change and the result is a chip: valid, or a count of problems. Nodes with problems get a red border. The initial graph loads with a disconnected Notify node, so the recipe starts invalid on purpose.</p>
+<p><code>get_workflow</code> returns the problems as structured data, which is what makes “what is wrong with this graph” answerable without the model reading pixels.</p>
+<h2 id="undo-covers-both-parties">Undo covers both parties</h2>
+<p>Every mutation goes through the same <code>apply()</code>, whether it came from a pointer or from a tool. The agent adds a step; one Cmd+Z removes it. Chapter 20 argues this is what makes agent editing acceptable, and this recipe is the clearest case: a graph an agent can restructure and a human cannot un-restructure is a graph nobody will let an agent near.</p>
+<h2 id="the-minimap">The minimap</h2>
+<p>Eleven lines of canvas drawing, showing node positions and the current viewport rectangle. It is the cheapest orientation aid available and the first thing users miss on a pannable surface.</p>
+<h2 id="host-dependencies">Host dependencies</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Needs</th>
+<th>Without it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Render, resize, theme</td>
+<td>Nothing works</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>input.zoompan</code></td>
+<td>Platform; always present</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tool.invoke</code></td>
+<td>No graph to load</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>app.tools</code></td>
+<td>The agent cannot edit; the mouse still can</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="failure-cases">Failure cases</h2>
+<p><strong>The agent names a step that does not exist.</strong> The tool returns <code>isError: true</code> with the missing name, and the graph is unchanged.</p>
+<p><strong>A node is dragged outside the world.</strong> The world is 1200 by 800 and the transform does not clamp, so a node can be dragged out of view. The minimap is how the user finds it again, which is a mitigation rather than a fix.</p>
+<h2 id="accessibility">Accessibility</h2>
+<p>Nodes are focusable and the selection is visible, but this recipe shares Recipe 6’s weakness: there is no keyboard route to draw a connection by position. What it has instead is the tool interface, which a user driving by voice or by assistant can use to do exactly what the mouse does. That is a real answer rather than an excuse, and it is the same mechanism Chapter 18 recommends for accessibility generally.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>load_workflow</code> returns four nodes and two edges.</li>
+<li>The validation chip reports two problems on load.</li>
+<li><code>connect_steps</code> with valid names adds an edge and clears one problem.</li>
+<li><code>connect_steps</code> with an invalid name returns <code>isError: true</code>.</li>
+<li>Undo removes an agent-created edge.</li>
+<li><code>get_workflow</code> returns the same problem count the chip shows.</li>
+<li>Dragging a node produces exactly one undo transaction.</li>
+</ol>
+
+<div class="pager"><a href="r06.html"><span class="dir">Previous</span>Recipe 6. Image Annotator</a><a href="r08.html" style="text-align:right"><span class="dir">Next</span>Recipe 8. Code and Diff Reviewer</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

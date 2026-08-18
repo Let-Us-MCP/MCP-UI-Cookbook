@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>23. Components II: Navigation, Data and Visualization &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.">
+<meta property="og:title" content="23. Components II: Navigation, Data and Visualization">
+<meta property="og:description" content="Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html" class="current">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 23</p><h1>Components II: Navigation, Data and Visualization</h1><p class="summary">Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.</p><p>The components in this chapter are the ones that carry data, and all three groups run into the same two constraints: there is no address bar, and there is very little room.</p>
+<h2 id="navigation">Navigation</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabs</td>
+<td><code>input.keyboard</code>, <code>surface.focus</code>, <code>ui.navigate</code></td>
+<td>Tabs</td>
+</tr>
+<tr>
+<td>Breadcrumbs</td>
+<td><code>input.keyboard</code></td>
+<td>Breadcrumb</td>
+</tr>
+<tr>
+<td>Tree</td>
+<td><code>input.keyboard</code>, <code>input.selection</code>, <code>input.contextmenu</code></td>
+<td>Tree View</td>
+</tr>
+<tr>
+<td>Accordion</td>
+<td><code>input.keyboard</code>, <code>surface.resize</code></td>
+<td>Accordion</td>
+</tr>
+<tr>
+<td>Sidebar</td>
+<td><code>input.keyboard</code>, <code>surface.viewport</code></td>
+<td>(layout)</td>
+</tr>
+<tr>
+<td>Toolbar</td>
+<td><code>input.keyboard</code>, <code>env.inputMode</code></td>
+<td>Toolbar</td>
+</tr>
+<tr>
+<td>Command palette</td>
+<td><code>input.shortcut</code>, <code>surface.focus</code>, <code>input.keyboard</code></td>
+<td>Combobox</td>
+</tr>
+<tr>
+<td>Split view</td>
+<td><code>input.pointer</code>, <code>surface.viewport</code></td>
+<td>(layout)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>There is no URL.</strong> Everything a URL normally does has to be done some other way. You cannot deep link into a view. The user cannot bookmark a state. The back button belongs to the host and does not know your tabs exist. Pressing it leaves the conversation, which is a considerably worse outcome than going back one tab.</p>
+<p>Three consequences. Navigation state has to be shallow, because there is no history to unwind. Every panel needs a visible way back, because the browser’s is not available. And navigation state is one of the few things worth publishing to the model, because “the user is looking at the line items panel” changes what a good answer looks like.</p>
+<p><strong>Tabs are the default and the tree is the exception.</strong> In four hundred pixels, a tab strip with more than four labels wraps or scrolls, and both look like a mistake. If you need more than four, you probably need a different structure rather than a scrolling tab strip.</p>
+<p><strong>A tree is one tab stop.</strong> <code>role="tree"</code> with roving tabindex, arrows to move and expand, Home and End, and typeahead if the tree is large. Recipe 3 builds one, and the roving tabindex is what keeps a hundred-file tree from being a hundred tab stops.</p>
+<p><strong>Toolbars overflow rather than wrap.</strong> A wrapped toolbar changes the height of the view on a resize, which triggers <code>surface.resize</code>, which changes the frame, which can change the wrap. Put the extras behind a menu.</p>
+<p><strong>A command palette is the best answer to a narrow surface</strong>, and it is also the component most likely to lose its shortcut to the host. Give it a visible entry point.</p>
+<h2 id="structured-data">Structured data</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List</td>
+<td><code>input.selection</code>, <code>input.keyboard</code></td>
+<td>Listbox</td>
+</tr>
+<tr>
+<td>Virtual list</td>
+<td><code>surface.scroll</code>, <code>input.selection</code></td>
+<td>Listbox</td>
+</tr>
+<tr>
+<td>Table</td>
+<td><code>input.selection</code>, <code>input.keyboard</code>, <code>clipboard.write</code></td>
+<td>Grid</td>
+</tr>
+<tr>
+<td>Editable grid</td>
+<td><code>input.selection</code>, <code>history.transaction</code>, <code>clipboard.write</code></td>
+<td>Grid</td>
+</tr>
+<tr>
+<td>Pagination</td>
+<td><code>input.keyboard</code></td>
+<td>(native)</td>
+</tr>
+<tr>
+<td>Comparison grid</td>
+<td><code>input.selection</code></td>
+<td>Grid</td>
+</tr>
+<tr>
+<td>Property list</td>
+<td><code>input.selection</code>, <code>clipboard.write</code></td>
+<td>(definition list)</td>
+</tr>
+</tbody>
+</table></div>
+<p>This is the group most MCP applications are made of, and the group with the most predictable failures.</p>
+<p><strong>Column budget.</strong> Four columns is comfortable at 380 pixels, six is the ceiling, and beyond that the answer is a property list per row rather than a wider table. Recipe 1 shows six and drops to a card layout under 480 pixels.</p>
+<p><strong>Sort, filter and page locally.</strong> Chapter 3. All three are answerable from data already in the frame.</p>
+<p><strong>Selection is the unit of conversation.</strong> Chapter 9 has the gesture model, Chapter 17 has what to do with it. A table without a selection model gives its users nothing precise to ask about.</p>
+<p><strong>Streaming updates must not rebuild the list.</strong> Appending a row is fine. Replacing the container’s children destroys selection, focus and scroll position at the same time, and the user notices all three. Recipe 9 appends and trims, never redraws, which is what makes selecting a log line survive a thousand lines arriving after it.</p>
+<p><strong>Virtualise past a few thousand rows</strong>, and be aware that virtualisation and <code>surface.resize</code> interact badly: a virtual list has a fixed height by design, so it wants a fixed container, which means telling the host a stable size and scrolling inside it.</p>
+<p><strong>Copy as the destination wants it.</strong> TSV for the clipboard, CSV for a file. Chapter 10.</p>
+<h2 id="visualization">Visualization</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chart</td>
+<td><code>surface.viewport</code>, <code>env.theme</code>, <code>input.pointer</code></td>
+<td>(image or table)</td>
+</tr>
+<tr>
+<td>Timeline</td>
+<td><code>input.zoompan</code>, <code>input.selection</code></td>
+<td>(image or table)</td>
+</tr>
+<tr>
+<td>Heatmap</td>
+<td><code>input.pointer</code>, <code>env.contrast</code></td>
+<td>(image or table)</td>
+</tr>
+<tr>
+<td>Progress visualization</td>
+<td><code>op.progress</code>, <code>env.reducedMotion</code></td>
+<td>Progressbar</td>
+</tr>
+<tr>
+<td>Status indicator</td>
+<td><code>env.contrast</code></td>
+<td>(status)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>You probably cannot load a charting library.</strong> The default CSP is <code>default-src 'none'</code> with self and inline for scripts. Loading a library from a CDN means your server declaring that origin in <code>resourceDomains</code>, and a host declining it leaves you with no chart at all. Bundling it into the resource means shipping a few hundred kilobytes of JavaScript in an HTML string on every <code>resources/read</code>.</p>
+<p>Inline SVG is the answer for most of what embedded applications actually need. A sparkline is nine lines. A bar chart is fifteen. Recipe 2’s sparklines are generated with <code>createElementNS</code> and no dependency at all, and Recipe 12 draws its media thumbnails the same way, which is also how the demonstrations avoid declaring any external origin.</p>
+<p><strong>Theme through variables, not through constants.</strong> A chart with <code>#0f5c8c</code> baked in is invisible in a dark theme. <code>stroke="var(--color-text-info)"</code> works inside SVG and follows the host.</p>
+<p><strong>Colour alone is never the encoding.</strong> Forced-colors mode replaces your palette. A status that is only a green dot becomes a dot. Pair every colour with a shape, a label, or text.</p>
+<p><strong>Charts need a text equivalent.</strong> A <code>&lt;table&gt;</code> behind a disclosure, or an <code>aria-label</code> that states the shape of the data, or figures in the caption. “Checkout p95, 412 milliseconds, up 18 percent since the 4.18.2 deploy” is worth more to every reader than the sparkline is, and Recipe 2 puts exactly that sentence under each tile.</p>
+<p><strong>Progress that never moves is worse than no progress.</strong> An indeterminate spinner with a phase name beats a determinate bar whose number is invented. Chapter 16.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>The URL bar and the CDN are the two things this chapter keeps running into, and they are the two things a page has that a view does not. Design navigation that does not need history, and visualisation that does not need a dependency, and most of the rest of your components will port over unchanged.</p>
+
+<div class="pager"><a href="ch22.html"><span class="dir">Previous</span>22. Components I: Overlays, Controls and Text</a><a href="ch24.html" style="text-align:right"><span class="dir">Next</span>24. Components III: Spatial, Media and Agent-Native</a></div>
+</main>
+</div>
+
+</body>
+</html>

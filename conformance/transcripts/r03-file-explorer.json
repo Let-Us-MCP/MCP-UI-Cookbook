@@ -1,0 +1,138 @@
+{
+  "demo": "r03-file-explorer",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "file-explorer",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "serverResources": {},
+          "serverTools": {}
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 480
+          },
+          "deviceCapabilities": {
+            "hover": true,
+            "touch": false
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 177,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "list_files"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Three top level entries: documents, images, notes.txt.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "tree": {
+            "children": [
+              {
+                "children": [
+                  {
+                    "id": "q3",
+                    "modified": "2026-08-11",
+                    "name": "q3-review.md",
+                    "size": 8213
+                  },
+                  {
+                    "id": "plan",
+                    "modified": "2026-08-17",
+                    "name": "plan.md",
+                    "size": 4102
+                  }
+                ],
+                "id": "docs",
+                "name": "documents"
+              },
+              {
+                "children": [
+                  {
+                    "id": "cover",
+                    "modified": "2026-07-30",
+                    "name": "cover.png",
+                    "size": 402113
+                  }
+                ],
+                "id": "img",
+                "name": "images"
+              },
+              {
+                "id": "notes",
+                "modified": "2026-08-18",
+                "name": "notes.txt",
+                "size": 611
+              }
+            ],
+            "id": "root",
+            "name": "/"
+          }
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 283,
+        "width": 836
+      }
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Data Explorer</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <input id="q" type="search" placeholder="Filter deployments" aria-label="Filter"
+           style="flex:1 1 180px">
+    <select id="env" aria-label="Environment">
+      <option value="">All environments</option>
+      <option>production</option><option>staging</option><option>canary</option>
+    </select>
+    <button id="copy" disabled>Copy</button>
+    <button id="export" disabled>Export CSV</button>
+    <button id="ask" class="primary" disabled>Ask about these</button>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th data-key="service" scope="col">Service <span class="sort"></span></th>
+        <th data-key="env" scope="col">Env</th>
+        <th data-key="version" scope="col">Version</th>
+        <th data-key="p95" scope="col" class="num">p95 ms</th>
+        <th data-key="errors" scope="col" class="num">Errors</th>
+        <th data-key="at" scope="col">Deployed</th>
+      </tr></thead>
+      <tbody id="body"></tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <button id="prev">Previous</button>
+    <span class="muted" id="page">page 1</span>
+    <button id="next">Next</button>
+    <span class="spacer"></span>
+    <span class="muted" id="count">0 rows</span>
+    <button id="reload" class="quiet">Reload from the server</button>
+  </div>
+
+  <div id="error" hidden class="banner bad"></div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, $$, toast, announce } = View;
+
+const PAGE = 6;
+let rows = [];
+let sort = { key: "at", dir: -1 };
+let page = 0;
+let selected = new Set();
+let bridge, format;
+
+const view = () => {
+  const query = $("#q").value.trim().toLowerCase();
+  const env = $("#env").value;
+  const filtered = rows.filter((r) =>
+    (!env || r.env === env) &&
+    (!query || `${r.service} ${r.version} ${r.env}`.toLowerCase().includes(query)));
+  const sorted = [...filtered].sort((a, b) => {
+    const [x, y] = [a[sort.key], b[sort.key]];
+    return (x > y ? 1 : x < y ? -1 : 0) * sort.dir;
+  });
+  return sorted;
+};
+
+function draw() {
+  const all = view();
+  const pages = Math.max(1, Math.ceil(all.length / PAGE));
+  page = Math.min(page, pages - 1);
+  const slice = all.slice(page * PAGE, page * PAGE + PAGE);
+
+  $("#body").replaceChildren(...(slice.length ? slice.map((r) =>
+    h("tr", { "aria-selected": selected.has(r.id) ? "true" : "false",
+              tabindex: "0",
+              onclick: (e) => toggle(r.id, e),
+              onkeydown: (e) => { if (e.key === " ") { e.preventDefault(); toggle(r.id, e); } } },
+      h("td", { text: r.service }),
+      h("td", {}, h("span", { class: `chip ${r.env === "production" ? "warn" : ""}`,
+                              text: r.env })),
+      h("td", { text: r.version }),
+      h("td", { class: "num", text: format.number(r.p95) }),
+      h("td", { class: "num", text: format.number(r.errors) }),
+      h("td", { text: format.date(r.at, { dateStyle: "medium", timeStyle: "short" }) })))
+    : [h("tr", {}, h("td", { colspan: "6", class: "muted",
+        text: "Nothing matches that filter." }))]));
+
+  for (const th of $$("thead th")) {
+    const span = th.querySelector(".sort");
+    th.setAttribute("aria-sort", th.dataset.key === sort.key
+      ? (sort.dir === 1 ? "ascending" : "descending") : "none");
+    if (span) span.textContent = "";
+    if (th.dataset.key === sort.key) th.append(sort.dir === 1 ? " ▲" : " ▼");
+  }
+
+  $("#page").textContent = `page ${page + 1} of ${pages}`;
+  $("#count").textContent = `${all.length} rows, ${selected.size} selected`;
+  $("#prev").disabled = page === 0;
+  $("#next").disabled = page >= pages - 1;
+  for (const id of ["#copy", "#export", "#ask"]) $(id).disabled = !selected.size;
+}
+
+function toggle(id, event) {
+  if (!(event.metaKey || event.ctrlKey)) {
+    const only = selected.size === 1 && selected.has(id);
+    selected.clear();
+    if (!only) selected.add(id);
+  } else {
+    selected.has(id) ? selected.delete(id) : selected.add(id);
+  }
+  draw();
+  publish();
+}
+
+// Sorting, filtering, paging and selecting never leave the frame. Only the
+// selection, once it exists, is worth telling the model about, and it is sent
+// as structured data rather than as a description of a table.
+function publish() {
+  if (!bridge.hostCapabilities.updateModelContext) return;
+  const picked = rows.filter((r) => selected.has(r.id));
+  if (!picked.length) return;
+  bridge.updateModelContext({
+    content: [{ type: "text", text:
+      `The user selected ${picked.length} deployment(s): `
+      + picked.map((r) => `${r.service}@${r.version} in ${r.env}`).join(", ") }],
+    structuredContent: { selected: picked },
+  });
+}
+
+async function load() {
+  $("#error").hidden = true;
+  try {
+    const result = await bridge.callServerTool("list_deployments", {});
+    if (result.isError) throw new Error(result.content?.[0]?.text ?? "failed");
+    rows = result.structuredContent?.deployments ?? [];
+    draw();
+    announce(`${rows.length} deployments loaded`);
+  } catch (error) {
+    $("#error").hidden = false;
+    $("#error").textContent = `${error.message} The table still shows the last `
+      + `result that worked, which beats an empty screen.`;
+  }
+}
+
+View.boot({ name: "data-explorer", version: "1.0.0" }, {}, async (instance) => {
+  bridge = instance;
+  format = View.formatters(bridge.hostContext);
+
+  bridge.on("toolresult", (result) => {
+    rows = result.structuredContent?.deployments ?? rows;
+    draw();
+  });
+  bridge.on("hostcontextchanged", () => {
+    format = View.formatters(bridge.hostContext);
+    draw();
+  });
+
+  for (const th of $$("thead th")) {
+    th.onclick = () => {
+      sort = { key: th.dataset.key,
+               dir: sort.key === th.dataset.key ? -sort.dir : 1 };
+      draw();
+    };
+  }
+  $("#q").oninput = () => { page = 0; draw(); };
+  $("#env").onchange = () => { page = 0; draw(); };
+  $("#prev").onclick = () => { page -= 1; draw(); };
+  $("#next").onclick = () => { page += 1; draw(); };
+  $("#reload").onclick = load;
+
+  const picked = () => rows.filter((r) => selected.has(r.id));
+  const csv = () => ["service,env,version,p95,errors,deployed",
+    ...picked().map((r) => [r.service, r.env, r.version, r.p95, r.errors,
+                            r.at].join(","))].join("\n");
+
+  $("#copy").onclick = async () => {
+    try { await navigator.clipboard.writeText(csv()); }
+    catch { /* fall through to the same message; the user copied either way */ }
+    toast(`${selected.size} rows copied`);
+  };
+
+  $("#export").onclick = async () => {
+    if (!bridge.hostCapabilities.downloadFile) {
+      toast("This host cannot save files. Copy instead.");
+      return;
+    }
+    await bridge.downloadFile([{ type: "resource", resource: {
+      uri: "file:///deployments.csv", mimeType: "text/csv", text: csv() } }]);
+    toast("Handed to the host");
+  };
+
+  $("#ask").onclick = async () => {
+    await bridge.sendMessage(
+      `Why is p95 high on these deployments?\n${csv()}`);
+    toast("Asked in the conversation");
+  };
+
+  await load();
+});
+</script>
+</body>
+</html>

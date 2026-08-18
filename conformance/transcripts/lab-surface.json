@@ -1,0 +1,121 @@
+{
+  "demo": "lab-surface",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ]
+        },
+        "appInfo": {
+          "name": "surface-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "openLinks": {}
+        },
+        "hostContext": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ],
+          "containerDimensions": {
+            "maxHeight": 420
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "platform": "web",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 147,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 306,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "containerDimensions": {
+          "height": 200
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "containerDimensions": {
+          "maxHeight": 420
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "availableDisplayModes": [
+          "inline"
+        ]
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/resource-teardown",
+      "id": 1,
+      "payload": {
+        "reason": "The user closed the conversation"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 1,
+      "payload": {}
+    }
+  ]
+}

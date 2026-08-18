@@ -1,0 +1,1837 @@
+{
+  "protocol": {
+    "core": "2026-07-28",
+    "apps": "io.modelcontextprotocol/ui",
+    "appsVersion": "2026-01-26",
+    "sdk": "1.7.5"
+  },
+  "grounds": {
+    "wire": "The MCP Apps extension defines a message for it.",
+    "core": "Core MCP defines it; the view inherits it.",
+    "platform": "The browser inside the sandbox provides it. No host round trip.",
+    "app": "The view implements it. Nobody else can.",
+    "gap": "No standard mechanism exists yet. The entry carries a workaround."
+  },
+  "levels": {
+    "1": {
+      "name": "Embedded",
+      "summary": "Render, size, theme, link out, and know what you are running inside."
+    },
+    "2": {
+      "name": "Interactive",
+      "summary": "Focus, keyboard, selection, clipboard, files, dialogs, and errors that recover."
+    },
+    "3": {
+      "name": "Native-Like",
+      "summary": "Display modes, spatial interaction, lifecycle, persistence, history, media."
+    },
+    "4": {
+      "name": "Agentic",
+      "summary": "Tools, streaming, context, approval, and shared ownership of state."
+    }
+  },
+  "capabilities": [
+    {
+      "id": "host.capabilities",
+      "level": 1,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/initialize"
+        },
+        {
+          "spec": "apps",
+          "anchor": "hostCapabilities"
+        },
+        {
+          "spec": "apps",
+          "anchor": "appCapabilities"
+        },
+        {
+          "spec": "apps",
+          "anchor": "ui/notifications/initialized"
+        }
+      ],
+      "chapter": "ch01",
+      "lab": "lab-handshake",
+      "summary": "Enumerate what this host supports before using any of it.",
+      "recipes": [
+        "r01"
+      ]
+    },
+    {
+      "id": "log.message",
+      "level": 1,
+      "tag": "extended",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "notifications/message"
+        },
+        {
+          "spec": "apps",
+          "anchor": "logging"
+        }
+      ],
+      "chapter": "ch02",
+      "lab": "lab-handshake",
+      "summary": "Send a log line to the host for debugging and telemetry.",
+      "recipes": []
+    },
+    {
+      "id": "resource.read",
+      "level": 2,
+      "tag": "extended",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "resources/read"
+        },
+        {
+          "spec": "apps",
+          "anchor": "serverResources"
+        }
+      ],
+      "chapter": "ch02",
+      "lab": "lab-handshake",
+      "summary": "Read a server resource through the host proxy.",
+      "recipes": [
+        "r03"
+      ]
+    },
+    {
+      "id": "surface.resize",
+      "level": 1,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/notifications/size-changed"
+        },
+        {
+          "spec": "apps",
+          "anchor": "containerDimensions"
+        }
+      ],
+      "chapter": "ch06",
+      "lab": "lab-surface",
+      "summary": "Report content size so the host can size the frame around it.",
+      "recipes": [
+        "r01",
+        "r02",
+        "r09"
+      ]
+    },
+    {
+      "id": "surface.viewport",
+      "level": 1,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "containerDimensions"
+        },
+        {
+          "spec": "apps",
+          "anchor": "safeAreaInsets"
+        },
+        {
+          "spec": "apps",
+          "anchor": "deviceCapabilities"
+        }
+      ],
+      "chapter": "ch06",
+      "lab": "lab-surface",
+      "summary": "Read the space actually available: fixed, flexible, or unbounded.",
+      "recipes": [
+        "r01",
+        "r02"
+      ]
+    },
+    {
+      "id": "surface.displayMode",
+      "level": 3,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/request-display-mode"
+        },
+        {
+          "spec": "apps",
+          "anchor": "availableDisplayModes"
+        },
+        {
+          "spec": "apps",
+          "anchor": "ui/notifications/host-context-changed"
+        }
+      ],
+      "chapter": "ch06",
+      "lab": "lab-surface",
+      "summary": "Move between inline, fullscreen, and picture-in-picture.",
+      "recipes": [
+        "r02",
+        "r06",
+        "r08",
+        "r12"
+      ]
+    },
+    {
+      "id": "surface.close",
+      "level": 2,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/notifications/request-teardown"
+        },
+        {
+          "spec": "apps",
+          "anchor": "ui/resource-teardown"
+        }
+      ],
+      "chapter": "ch06",
+      "lab": "lab-surface",
+      "summary": "Ask the host to dismiss this view.",
+      "recipes": [
+        "r04"
+      ]
+    },
+    {
+      "id": "surface.focus",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch07",
+      "lab": "lab-focus",
+      "summary": "Move, trap, and restore focus inside the view.",
+      "recipes": [
+        "r03",
+        "r13"
+      ]
+    },
+    {
+      "id": "surface.focusHandoff",
+      "level": 2,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch07",
+      "lab": "lab-focus",
+      "summary": "Hand focus across the host boundary in either direction.",
+      "recipes": []
+    },
+    {
+      "id": "surface.scroll",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch07",
+      "lab": "lab-focus",
+      "summary": "Scroll to a position or bring an element into view inside the frame.",
+      "recipes": [
+        "r08"
+      ]
+    },
+    {
+      "id": "surface.reveal",
+      "level": 2,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch07",
+      "lab": "lab-focus",
+      "summary": "Ask the host to scroll the conversation until this view is visible.",
+      "recipes": []
+    },
+    {
+      "id": "dialog.alert",
+      "level": 2,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch08",
+      "lab": "lab-dialogs",
+      "summary": "Block on an acknowledgement the user cannot miss.",
+      "recipes": []
+    },
+    {
+      "id": "dialog.confirm",
+      "level": 2,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch08",
+      "lab": "lab-dialogs",
+      "summary": "Take an explicit binary decision before acting.",
+      "recipes": [
+        "r03",
+        "r10",
+        "r13"
+      ]
+    },
+    {
+      "id": "dialog.prompt",
+      "level": 2,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch08",
+      "lab": "lab-dialogs",
+      "summary": "Collect one small value without leaving the surface.",
+      "recipes": []
+    },
+    {
+      "id": "notify.toast",
+      "level": 2,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch08",
+      "lab": "lab-dialogs",
+      "summary": "Say saved, copied, failed, and get out of the way.",
+      "recipes": [
+        "r03"
+      ]
+    },
+    {
+      "id": "notify.banner",
+      "level": 2,
+      "tag": "extended",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch08",
+      "lab": "lab-dialogs",
+      "summary": "Hold a persistent, non-modal status in view.",
+      "recipes": [
+        "r09",
+        "r10"
+      ]
+    },
+    {
+      "id": "notify.attention",
+      "level": 3,
+      "tag": "extended",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch08",
+      "lab": "lab-dialogs",
+      "summary": "Signal from a backgrounded view that a human is needed.",
+      "recipes": [
+        "r09",
+        "r11"
+      ]
+    },
+    {
+      "id": "input.pointer",
+      "level": 1,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Click, hover, drag, and capture across mouse, touch, and pen.",
+      "recipes": [
+        "r01",
+        "r06"
+      ]
+    },
+    {
+      "id": "input.keyboard",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Keys, modifiers, and the platform conventions users already have.",
+      "recipes": [
+        "r01",
+        "r05",
+        "r08"
+      ]
+    },
+    {
+      "id": "input.shortcut",
+      "level": 2,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Own an accelerator without fighting the host for it.",
+      "recipes": [
+        "r04",
+        "r05"
+      ]
+    },
+    {
+      "id": "input.longpress",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Touch equivalent of a right click.",
+      "recipes": [
+        "r03"
+      ]
+    },
+    {
+      "id": "input.contextmenu",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Contextual actions on right click or long press.",
+      "recipes": [
+        "r03",
+        "r07"
+      ]
+    },
+    {
+      "id": "input.selection",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Single, additive, range, and select-all over text and objects.",
+      "recipes": [
+        "r01",
+        "r03",
+        "r05",
+        "r07",
+        "r08",
+        "r09"
+      ]
+    },
+    {
+      "id": "input.dragdrop",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Drag and drop inside the view, with structured transfer data.",
+      "recipes": [
+        "r03",
+        "r06",
+        "r07"
+      ]
+    },
+    {
+      "id": "input.dragBoundary",
+      "level": 2,
+      "tag": "extended",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Drag something out of the view and into the host, or the reverse.",
+      "recipes": []
+    },
+    {
+      "id": "input.zoompan",
+      "level": 3,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch09",
+      "lab": "lab-input",
+      "summary": "Wheel and pinch zoom, pan, reset, fit to content.",
+      "recipes": [
+        "r06",
+        "r07",
+        "r12"
+      ]
+    },
+    {
+      "id": "clipboard.write",
+      "level": 2,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "clipboardWrite"
+        },
+        {
+          "spec": "apps",
+          "anchor": "permissions"
+        }
+      ],
+      "chapter": "ch10",
+      "lab": "lab-clipboard",
+      "summary": "Copy text or structured content, with a fallback when denied.",
+      "recipes": [
+        "r01",
+        "r03",
+        "r05",
+        "r08"
+      ]
+    },
+    {
+      "id": "clipboard.read",
+      "level": 2,
+      "tag": "extended",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch10",
+      "lab": "lab-clipboard",
+      "summary": "Read what the user has on the clipboard.",
+      "recipes": [
+        "r05"
+      ]
+    },
+    {
+      "id": "file.open",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch10",
+      "lab": "lab-clipboard",
+      "summary": "Open the system file picker and read what comes back.",
+      "recipes": [
+        "r03"
+      ]
+    },
+    {
+      "id": "file.dropzone",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch10",
+      "lab": "lab-clipboard",
+      "summary": "Accept dropped files with validation, preview, and progress.",
+      "recipes": [
+        "r03",
+        "r06"
+      ]
+    },
+    {
+      "id": "file.export",
+      "level": 2,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/download-file"
+        },
+        {
+          "spec": "apps",
+          "anchor": "downloadFile"
+        }
+      ],
+      "chapter": "ch10",
+      "lab": "lab-clipboard",
+      "summary": "Hand a generated artifact to the host to save.",
+      "recipes": [
+        "r01",
+        "r06",
+        "r12"
+      ]
+    },
+    {
+      "id": "file.save",
+      "level": 2,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/download-file"
+        },
+        {
+          "spec": "apps",
+          "anchor": "resource_link"
+        }
+      ],
+      "chapter": "ch10",
+      "lab": "lab-clipboard",
+      "summary": "Persist app-generated content through the host.",
+      "recipes": []
+    },
+    {
+      "id": "link.open",
+      "level": 1,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/open-link"
+        },
+        {
+          "spec": "apps",
+          "anchor": "openLinks"
+        }
+      ],
+      "chapter": "ch10",
+      "lab": "lab-clipboard",
+      "summary": "Delegate external navigation instead of attempting it.",
+      "recipes": [
+        "r08",
+        "r10"
+      ]
+    },
+    {
+      "id": "system.share",
+      "level": 3,
+      "tag": "extended",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch10",
+      "lab": null,
+      "summary": "Invoke the operating system share sheet.",
+      "recipes": [
+        "r12"
+      ]
+    },
+    {
+      "id": "system.print",
+      "level": 3,
+      "tag": "extended",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch10",
+      "lab": null,
+      "summary": "Request host-mediated printing.",
+      "recipes": []
+    },
+    {
+      "id": "picker.date",
+      "level": 2,
+      "tag": "extended",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch11",
+      "lab": "lab-pickers",
+      "summary": "Native date selection, localised by the host locale.",
+      "recipes": [
+        "r13"
+      ]
+    },
+    {
+      "id": "picker.time",
+      "level": 2,
+      "tag": "extended",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch11",
+      "lab": "lab-pickers",
+      "summary": "Native time selection in the host timezone.",
+      "recipes": [
+        "r13"
+      ]
+    },
+    {
+      "id": "picker.color",
+      "level": 2,
+      "tag": "extended",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch11",
+      "lab": "lab-pickers",
+      "summary": "Native colour selection.",
+      "recipes": [
+        "r06",
+        "r13"
+      ]
+    },
+    {
+      "id": "picker.resource",
+      "level": 3,
+      "tag": "extended",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "resources/read"
+        },
+        {
+          "spec": "apps",
+          "anchor": "serverResources"
+        }
+      ],
+      "chapter": "ch11",
+      "lab": "lab-pickers",
+      "summary": "Pick from resources the server exposes, through the host.",
+      "recipes": [
+        "r03"
+      ]
+    },
+    {
+      "id": "env.theme",
+      "level": 1,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "styles"
+        },
+        {
+          "spec": "apps",
+          "anchor": "--color-background-primary"
+        },
+        {
+          "spec": "apps",
+          "anchor": "light-dark"
+        }
+      ],
+      "chapter": "ch12",
+      "lab": "lab-theme",
+      "summary": "Take the host's tokens and follow them when they change.",
+      "recipes": [
+        "r01",
+        "r02",
+        "r08"
+      ]
+    },
+    {
+      "id": "env.locale",
+      "level": 1,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "locale"
+        }
+      ],
+      "chapter": "ch12",
+      "lab": "lab-theme",
+      "summary": "Format numbers, dates, and text for the user's region.",
+      "recipes": [
+        "r01"
+      ]
+    },
+    {
+      "id": "env.timezone",
+      "level": 1,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "timeZone"
+        }
+      ],
+      "chapter": "ch12",
+      "lab": "lab-theme",
+      "summary": "Render instants in the timezone the user is actually in.",
+      "recipes": []
+    },
+    {
+      "id": "env.platform",
+      "level": 2,
+      "tag": "extended",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "platform"
+        },
+        {
+          "spec": "apps",
+          "anchor": "userAgent"
+        }
+      ],
+      "chapter": "ch12",
+      "lab": "lab-theme",
+      "summary": "Coarse platform shape, used sparingly.",
+      "recipes": []
+    },
+    {
+      "id": "env.inputMode",
+      "level": 2,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "deviceCapabilities"
+        },
+        {
+          "spec": "apps",
+          "anchor": "touch"
+        },
+        {
+          "spec": "apps",
+          "anchor": "hover"
+        }
+      ],
+      "chapter": "ch12",
+      "lab": "lab-theme",
+      "summary": "Size targets for the modality actually in use.",
+      "recipes": [
+        "r13"
+      ]
+    },
+    {
+      "id": "env.safeArea",
+      "level": 2,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "safeAreaInsets"
+        }
+      ],
+      "chapter": "ch12",
+      "lab": "lab-theme",
+      "summary": "Keep content out of regions the host has spoken for.",
+      "recipes": []
+    },
+    {
+      "id": "env.fonts",
+      "level": 2,
+      "tag": "extended",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "fonts"
+        },
+        {
+          "spec": "apps",
+          "anchor": "--font-sans"
+        }
+      ],
+      "chapter": "ch12",
+      "lab": "lab-theme",
+      "summary": "Load the host's typeface without loading anything else.",
+      "recipes": [
+        "r13"
+      ]
+    },
+    {
+      "id": "env.reducedMotion",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch13",
+      "lab": "lab-a11y",
+      "summary": "Respect a stated preference for less movement.",
+      "recipes": [
+        "r02",
+        "r12",
+        "r13"
+      ]
+    },
+    {
+      "id": "env.contrast",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch13",
+      "lab": "lab-a11y",
+      "summary": "Survive forced colours and high contrast.",
+      "recipes": [
+        "r06",
+        "r13"
+      ]
+    },
+    {
+      "id": "env.textScale",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch13",
+      "lab": "lab-a11y",
+      "summary": "Stay usable when text is two sizes larger than you designed for.",
+      "recipes": [
+        "r13"
+      ]
+    },
+    {
+      "id": "a11y.announce",
+      "level": 2,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch13",
+      "lab": "lab-a11y",
+      "summary": "Tell assistive technology that something changed.",
+      "recipes": [
+        "r01",
+        "r05",
+        "r10",
+        "r13"
+      ]
+    },
+    {
+      "id": "lifecycle.visibility",
+      "level": 3,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch14",
+      "lab": "lab-lifecycle",
+      "summary": "Know when the view is on screen and when it is not.",
+      "recipes": [
+        "r02",
+        "r09",
+        "r12"
+      ]
+    },
+    {
+      "id": "lifecycle.suspend",
+      "level": 3,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch14",
+      "lab": "lab-lifecycle",
+      "summary": "Stop doing work nobody is looking at.",
+      "recipes": [
+        "r09",
+        "r12"
+      ]
+    },
+    {
+      "id": "lifecycle.connectivity",
+      "level": 3,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch14",
+      "lab": "lab-lifecycle",
+      "summary": "Show online, offline, and reconnecting honestly.",
+      "recipes": [
+        "r09"
+      ]
+    },
+    {
+      "id": "lifecycle.dirty",
+      "level": 2,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch14",
+      "lab": "lab-lifecycle",
+      "summary": "Track uncommitted local state and say so.",
+      "recipes": [
+        "r04",
+        "r13"
+      ]
+    },
+    {
+      "id": "lifecycle.beforeClose",
+      "level": 2,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/resource-teardown"
+        },
+        {
+          "spec": "apps",
+          "anchor": "reason"
+        }
+      ],
+      "chapter": "ch14",
+      "lab": "lab-lifecycle",
+      "summary": "Get one chance to finish before the frame goes away.",
+      "recipes": [
+        "r04"
+      ]
+    },
+    {
+      "id": "state.save",
+      "level": 3,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch15",
+      "lab": "lab-state",
+      "summary": "Persist view state keyed to the view's identity.",
+      "recipes": [
+        "r04",
+        "r05",
+        "r13"
+      ]
+    },
+    {
+      "id": "state.restore",
+      "level": 3,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch15",
+      "lab": "lab-state",
+      "summary": "Come back up where the user left off.",
+      "recipes": [
+        "r04"
+      ]
+    },
+    {
+      "id": "history.transaction",
+      "level": 3,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch15",
+      "lab": "lab-state",
+      "summary": "Group mutations into one undoable unit.",
+      "recipes": [
+        "r03",
+        "r04",
+        "r05",
+        "r07"
+      ]
+    },
+    {
+      "id": "history.undo",
+      "level": 3,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch15",
+      "lab": "lab-state",
+      "summary": "Revert the last transaction, including the agent's.",
+      "recipes": [
+        "r03",
+        "r04",
+        "r05",
+        "r06",
+        "r07"
+      ]
+    },
+    {
+      "id": "history.redo",
+      "level": 3,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch15",
+      "lab": "lab-state",
+      "summary": "Reapply what was reverted.",
+      "recipes": [
+        "r04"
+      ]
+    },
+    {
+      "id": "media.playback",
+      "level": 3,
+      "tag": "extended",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch16",
+      "lab": "lab-media",
+      "summary": "Play, pause, seek, rate, volume, captions.",
+      "recipes": [
+        "r12"
+      ]
+    },
+    {
+      "id": "media.fullscreen",
+      "level": 3,
+      "tag": "extended",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/request-display-mode"
+        },
+        {
+          "spec": "apps",
+          "anchor": "fullscreen"
+        }
+      ],
+      "chapter": "ch16",
+      "lab": "lab-media",
+      "summary": "Go immersive through the host, not through the Fullscreen API.",
+      "recipes": [
+        "r12"
+      ]
+    },
+    {
+      "id": "op.progress",
+      "level": 2,
+      "tag": "core",
+      "ground": "core",
+      "wire": [
+        {
+          "spec": "core",
+          "anchor": "notifications/progress"
+        },
+        {
+          "spec": "core",
+          "anchor": "progressToken"
+        }
+      ],
+      "chapter": "ch16",
+      "lab": "lab-media",
+      "summary": "Determinate and indeterminate progress with a phase name.",
+      "recipes": [
+        "r02",
+        "r11"
+      ]
+    },
+    {
+      "id": "op.cancel",
+      "level": 2,
+      "tag": "core",
+      "ground": "core",
+      "wire": [
+        {
+          "spec": "core",
+          "anchor": "notifications/cancelled"
+        },
+        {
+          "spec": "core",
+          "anchor": "requestId"
+        }
+      ],
+      "chapter": "ch16",
+      "lab": "lab-media",
+      "summary": "Interrupt work that is still running.",
+      "recipes": [
+        "r11"
+      ]
+    },
+    {
+      "id": "op.pause",
+      "level": 3,
+      "tag": "extended",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch16",
+      "lab": null,
+      "summary": "Suspend and continue long work.",
+      "recipes": []
+    },
+    {
+      "id": "op.retry",
+      "level": 2,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch16",
+      "lab": "lab-media",
+      "summary": "Retry without making the user rebuild the interaction.",
+      "recipes": [
+        "r02",
+        "r09",
+        "r11"
+      ]
+    },
+    {
+      "id": "op.error",
+      "level": 2,
+      "tag": "core",
+      "ground": "core",
+      "wire": [
+        {
+          "spec": "core",
+          "anchor": "isError"
+        },
+        {
+          "spec": "apps",
+          "anchor": "isError"
+        }
+      ],
+      "chapter": "ch16",
+      "lab": "lab-media",
+      "summary": "Structured errors: what failed, whether to retry, what to do.",
+      "recipes": [
+        "r01",
+        "r05",
+        "r07",
+        "r10",
+        "r11",
+        "r13"
+      ]
+    },
+    {
+      "id": "agent.escalate",
+      "level": 4,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/message"
+        },
+        {
+          "spec": "apps",
+          "anchor": "message"
+        }
+      ],
+      "chapter": "ch17",
+      "lab": "lab-agent",
+      "summary": "Put the current selection into the conversation as a request.",
+      "recipes": [
+        "r01",
+        "r08"
+      ]
+    },
+    {
+      "id": "agent.contextUpdate",
+      "level": 4,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/update-model-context"
+        },
+        {
+          "spec": "apps",
+          "anchor": "updateModelContext"
+        }
+      ],
+      "chapter": "ch17",
+      "lab": "lab-agent",
+      "summary": "Publish the part of view state the model should reason over.",
+      "recipes": [
+        "r01",
+        "r02",
+        "r08",
+        "r10"
+      ]
+    },
+    {
+      "id": "agent.intent",
+      "level": 4,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch17",
+      "lab": "lab-agent",
+      "summary": "Name a semantic action rather than describing it in prose.",
+      "recipes": [
+        "r07"
+      ]
+    },
+    {
+      "id": "agent.sampling",
+      "level": 4,
+      "tag": "extended",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "sampling/createMessage"
+        },
+        {
+          "spec": "apps",
+          "anchor": "sampling"
+        }
+      ],
+      "chapter": "ch17",
+      "lab": "lab-agent",
+      "summary": "Ask the host's model for a completion from inside the view.",
+      "recipes": [
+        "r04"
+      ]
+    },
+    {
+      "id": "app.tools",
+      "level": 4,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "appCapabilities"
+        },
+        {
+          "spec": "apps",
+          "anchor": "tools/list"
+        },
+        {
+          "spec": "apps",
+          "anchor": "notifications/tools/list_changed"
+        }
+      ],
+      "chapter": "ch18",
+      "lab": "lab-apptools",
+      "summary": "Expose the view's operations as tools the agent can call.",
+      "recipes": [
+        "r07",
+        "r11"
+      ]
+    },
+    {
+      "id": "ui.highlight",
+      "level": 4,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch18",
+      "lab": "lab-apptools",
+      "summary": "Let the agent point at a row, a node, or a hunk.",
+      "recipes": [
+        "r04",
+        "r07",
+        "r08"
+      ]
+    },
+    {
+      "id": "ui.navigate",
+      "level": 4,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch18",
+      "lab": "lab-apptools",
+      "summary": "Let the agent open the panel it is talking about.",
+      "recipes": [
+        "r02",
+        "r07"
+      ]
+    },
+    {
+      "id": "ui.prefill",
+      "level": 4,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch18",
+      "lab": "lab-apptools",
+      "summary": "Let the agent propose values, never submit them.",
+      "recipes": [
+        "r04"
+      ]
+    },
+    {
+      "id": "tool.invoke",
+      "level": 4,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "tools/call"
+        },
+        {
+          "spec": "apps",
+          "anchor": "serverTools"
+        },
+        {
+          "spec": "apps",
+          "anchor": "visibility"
+        }
+      ],
+      "chapter": "ch19",
+      "lab": "lab-tools",
+      "summary": "Call a server tool from a button, through the host.",
+      "recipes": [
+        "r01",
+        "r02",
+        "r11"
+      ]
+    },
+    {
+      "id": "tool.cancel",
+      "level": 4,
+      "tag": "core",
+      "ground": "core",
+      "wire": [
+        {
+          "spec": "core",
+          "anchor": "notifications/cancelled"
+        }
+      ],
+      "chapter": "ch19",
+      "lab": "lab-tools",
+      "summary": "Cancel a call the user has stopped caring about.",
+      "recipes": [
+        "r11"
+      ]
+    },
+    {
+      "id": "tool.partialInput",
+      "level": 4,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/notifications/tool-input-partial"
+        },
+        {
+          "spec": "apps",
+          "anchor": "ui/notifications/tool-input"
+        }
+      ],
+      "chapter": "ch19",
+      "lab": "lab-tools",
+      "summary": "Render something useful while arguments are still streaming.",
+      "recipes": [
+        "r11"
+      ]
+    },
+    {
+      "id": "tool.result",
+      "level": 4,
+      "tag": "core",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "apps",
+          "anchor": "ui/notifications/tool-result"
+        },
+        {
+          "spec": "apps",
+          "anchor": "ui/notifications/tool-cancelled"
+        }
+      ],
+      "chapter": "ch19",
+      "lab": "lab-tools",
+      "summary": "Take delivery of the result that this view was rendered for.",
+      "recipes": [
+        "r01",
+        "r02",
+        "r09"
+      ]
+    },
+    {
+      "id": "tool.partialOutput",
+      "level": 4,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch19",
+      "lab": "lab-tools",
+      "summary": "Update stable elements as results arrive, not after.",
+      "recipes": [
+        "r09",
+        "r11"
+      ]
+    },
+    {
+      "id": "state.ownership",
+      "level": 4,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch20",
+      "lab": "lab-ownership",
+      "summary": "Declare who owns each region when both parties can write.",
+      "recipes": [
+        "r04",
+        "r07"
+      ]
+    },
+    {
+      "id": "state.conflict",
+      "level": 4,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch20",
+      "lab": "lab-ownership",
+      "summary": "Decide what happens when they both do.",
+      "recipes": [
+        "r04"
+      ]
+    },
+    {
+      "id": "approval.request",
+      "level": 4,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch21",
+      "lab": "lab-approval",
+      "summary": "Require a human signature on a sensitive action.",
+      "recipes": [
+        "r10"
+      ]
+    },
+    {
+      "id": "elicit.request",
+      "level": 4,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch21",
+      "lab": "lab-approval",
+      "summary": "Ask the user a structured question mid-operation.",
+      "recipes": [
+        "r10"
+      ]
+    },
+    {
+      "id": "agent.boundary",
+      "level": 4,
+      "tag": "core",
+      "ground": "app",
+      "wire": [],
+      "chapter": "ch21",
+      "lab": "lab-approval",
+      "summary": "Keep hover, scroll, and sort out of the model's context.",
+      "recipes": [
+        "r10"
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "id": "r01",
+      "name": "Data Explorer",
+      "goal": "Explore structured tool output interactively.",
+      "capabilities": [
+        "surface.resize",
+        "surface.viewport",
+        "input.selection",
+        "input.keyboard",
+        "input.pointer",
+        "clipboard.write",
+        "file.export",
+        "env.theme",
+        "env.locale",
+        "agent.escalate",
+        "agent.contextUpdate",
+        "tool.invoke",
+        "tool.result",
+        "op.error",
+        "a11y.announce",
+        "host.capabilities"
+      ],
+      "delta": [
+        "surface.resize",
+        "surface.viewport",
+        "input.selection",
+        "input.keyboard",
+        "input.pointer",
+        "clipboard.write",
+        "file.export",
+        "env.theme",
+        "env.locale",
+        "agent.escalate",
+        "agent.contextUpdate",
+        "tool.invoke",
+        "tool.result",
+        "op.error",
+        "a11y.announce",
+        "host.capabilities"
+      ]
+    },
+    {
+      "id": "r02",
+      "name": "Dashboard",
+      "goal": "At-a-glance monitoring with drill-down.",
+      "capabilities": [
+        "surface.resize",
+        "surface.viewport",
+        "surface.displayMode",
+        "env.theme",
+        "env.reducedMotion",
+        "tool.invoke",
+        "tool.result",
+        "op.progress",
+        "op.retry",
+        "lifecycle.visibility",
+        "agent.contextUpdate",
+        "ui.navigate"
+      ],
+      "delta": [
+        "surface.displayMode",
+        "env.reducedMotion",
+        "op.progress",
+        "op.retry",
+        "lifecycle.visibility",
+        "ui.navigate"
+      ]
+    },
+    {
+      "id": "r03",
+      "name": "File Explorer",
+      "goal": "Hierarchical browse and manage.",
+      "capabilities": [
+        "input.contextmenu",
+        "input.dragdrop",
+        "input.longpress",
+        "input.selection",
+        "clipboard.write",
+        "dialog.confirm",
+        "file.open",
+        "file.dropzone",
+        "surface.focus",
+        "notify.toast",
+        "picker.resource",
+        "resource.read",
+        "history.undo",
+        "history.transaction"
+      ],
+      "delta": [
+        "input.contextmenu",
+        "input.dragdrop",
+        "input.longpress",
+        "dialog.confirm",
+        "file.open",
+        "file.dropzone",
+        "surface.focus",
+        "notify.toast",
+        "picker.resource",
+        "resource.read",
+        "history.undo",
+        "history.transaction"
+      ]
+    },
+    {
+      "id": "r04",
+      "name": "Document Editor",
+      "goal": "Authoring with agent-assisted rewriting.",
+      "capabilities": [
+        "history.transaction",
+        "history.undo",
+        "history.redo",
+        "state.save",
+        "state.restore",
+        "lifecycle.dirty",
+        "lifecycle.beforeClose",
+        "state.ownership",
+        "state.conflict",
+        "ui.prefill",
+        "ui.highlight",
+        "input.shortcut",
+        "agent.sampling",
+        "surface.close"
+      ],
+      "delta": [
+        "history.redo",
+        "state.save",
+        "state.restore",
+        "lifecycle.dirty",
+        "lifecycle.beforeClose",
+        "state.ownership",
+        "state.conflict",
+        "ui.prefill",
+        "ui.highlight",
+        "input.shortcut",
+        "agent.sampling",
+        "surface.close"
+      ]
+    },
+    {
+      "id": "r05",
+      "name": "Spreadsheet",
+      "goal": "Editable grid computation.",
+      "capabilities": [
+        "input.selection",
+        "input.keyboard",
+        "input.shortcut",
+        "clipboard.write",
+        "clipboard.read",
+        "history.transaction",
+        "history.undo",
+        "state.save",
+        "a11y.announce",
+        "op.error"
+      ],
+      "delta": [
+        "clipboard.read"
+      ]
+    },
+    {
+      "id": "r06",
+      "name": "Image Annotator",
+      "goal": "Label regions on an image.",
+      "capabilities": [
+        "input.zoompan",
+        "input.pointer",
+        "input.dragdrop",
+        "file.dropzone",
+        "file.export",
+        "surface.displayMode",
+        "env.contrast",
+        "history.undo",
+        "picker.color"
+      ],
+      "delta": [
+        "input.zoompan",
+        "env.contrast",
+        "picker.color"
+      ]
+    },
+    {
+      "id": "r07",
+      "name": "Workflow Builder",
+      "goal": "Build and edit a node graph.",
+      "capabilities": [
+        "input.zoompan",
+        "input.dragdrop",
+        "input.selection",
+        "input.contextmenu",
+        "history.transaction",
+        "history.undo",
+        "ui.highlight",
+        "ui.navigate",
+        "app.tools",
+        "agent.intent",
+        "op.error",
+        "state.ownership"
+      ],
+      "delta": [
+        "app.tools",
+        "agent.intent"
+      ]
+    },
+    {
+      "id": "r08",
+      "name": "Code and Diff Reviewer",
+      "goal": "Review changes with agent context.",
+      "capabilities": [
+        "input.selection",
+        "input.keyboard",
+        "clipboard.write",
+        "agent.escalate",
+        "agent.contextUpdate",
+        "ui.highlight",
+        "surface.displayMode",
+        "surface.scroll",
+        "env.theme",
+        "link.open"
+      ],
+      "delta": [
+        "surface.scroll",
+        "link.open"
+      ]
+    },
+    {
+      "id": "r09",
+      "name": "Monitoring Console",
+      "goal": "Live operational awareness.",
+      "capabilities": [
+        "tool.partialOutput",
+        "tool.result",
+        "lifecycle.connectivity",
+        "lifecycle.visibility",
+        "lifecycle.suspend",
+        "notify.attention",
+        "notify.banner",
+        "op.retry",
+        "input.selection",
+        "surface.resize"
+      ],
+      "delta": [
+        "tool.partialOutput",
+        "lifecycle.connectivity",
+        "lifecycle.suspend",
+        "notify.attention",
+        "notify.banner"
+      ]
+    },
+    {
+      "id": "r10",
+      "name": "Approval Center",
+      "goal": "Human review of queued sensitive actions.",
+      "capabilities": [
+        "approval.request",
+        "dialog.confirm",
+        "agent.contextUpdate",
+        "agent.boundary",
+        "op.error",
+        "notify.banner",
+        "a11y.announce",
+        "elicit.request",
+        "link.open"
+      ],
+      "delta": [
+        "approval.request",
+        "agent.boundary",
+        "elicit.request"
+      ]
+    },
+    {
+      "id": "r11",
+      "name": "Agent Control Center",
+      "goal": "Observe and steer running tasks.",
+      "capabilities": [
+        "tool.invoke",
+        "tool.cancel",
+        "tool.partialInput",
+        "tool.partialOutput",
+        "op.progress",
+        "op.cancel",
+        "op.retry",
+        "notify.attention",
+        "op.error",
+        "app.tools"
+      ],
+      "delta": [
+        "tool.cancel",
+        "tool.partialInput",
+        "op.cancel"
+      ]
+    },
+    {
+      "id": "r12",
+      "name": "Media Viewer",
+      "goal": "Inspect and present media.",
+      "capabilities": [
+        "media.playback",
+        "media.fullscreen",
+        "surface.displayMode",
+        "lifecycle.visibility",
+        "lifecycle.suspend",
+        "system.share",
+        "env.reducedMotion",
+        "input.zoompan",
+        "file.export"
+      ],
+      "delta": [
+        "media.playback",
+        "media.fullscreen",
+        "system.share"
+      ]
+    },
+    {
+      "id": "r13",
+      "name": "Settings and Preferences",
+      "goal": "Forms, done properly.",
+      "capabilities": [
+        "picker.date",
+        "picker.time",
+        "picker.color",
+        "env.textScale",
+        "env.contrast",
+        "env.reducedMotion",
+        "a11y.announce",
+        "surface.focus",
+        "lifecycle.dirty",
+        "dialog.confirm",
+        "op.error",
+        "state.save",
+        "env.inputMode",
+        "env.fonts"
+      ],
+      "delta": [
+        "picker.date",
+        "picker.time",
+        "env.textScale",
+        "env.inputMode",
+        "env.fonts"
+      ]
+    }
+  ]
+}

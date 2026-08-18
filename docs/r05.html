@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipe 5. Spreadsheet &middot; The MCP UI Cookbook</title>
+<meta name="description" content="A grid with a formula evaluator, range selection, and a clipboard format chosen for where the data is going.">
+<meta property="og:title" content="Recipe 5. Spreadsheet">
+<meta property="og:description" content="A grid with a formula evaluator, range selection, and a clipboard format chosen for where the data is going.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html" class="current">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Recipe 5</p><h1>Spreadsheet</h1><p class="summary">A grid with a formula evaluator, range selection, and a clipboard format chosen for where the data is going.</p><div class="cap recipe" id="r05"><div class="cap-head"><code class="cap-id">r05</code><span class="cap-tag core">Spreadsheet</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Editable grid computation.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch10.html#clipboard.read">clipboard.read</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch09.html#input.keyboard">input.keyboard</a></code><code><a href="ch09.html#input.shortcut">input.shortcut</a></code><code><a href="ch10.html#clipboard.write">clipboard.write</a></code><code><a href="ch10.html#clipboard.read">clipboard.read</a></code><code><a href="ch15.html#history.transaction">history.transaction</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch15.html#state.save">state.save</a></code><code><a href="ch13.html#a11y.announce">a11y.announce</a></code><code><a href="ch16.html#op.error">op.error</a></code></dd></dl></div>
+<p>The smallest program that needs a real dependency graph. A spreadsheet has cells that refer to other cells, which means it can have cycles, which means it needs an evaluator that detects them and an interface that reports them without losing the user’s text.</p>
+<div class="demo" data-demo="r05-spreadsheet" id="r05-spreadsheet"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-split">The split</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Normally local</th>
+<th>Worth crossing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Move, select ranges, type</td>
+<td>“What is driving the West number down?”</td>
+</tr>
+<tr>
+<td>Evaluate formulas</td>
+<td>“Add a column for margin”</td>
+</tr>
+<tr>
+<td>Copy a range</td>
+<td>“Check these prices against the catalogue”</td>
+</tr>
+<tr>
+<td>Undo</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Formula evaluation is emphatically local. A grid that asked a model to compute <code>=SUM(B2:B5)</code> would be slower, more expensive and occasionally wrong.</p>
+<h2 id="the-evaluator">The evaluator</h2>
+<p>Numbers, cell references, arithmetic and <code>SUM</code> over a range, in about twenty lines, with a <code>seen</code> set threaded through the recursion to catch cycles.</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>function evaluate(ref, seen = new Set()) {
+  const raw = cells.get(ref) ?? &quot;&quot;;
+  if (!String(raw).startsWith(&quot;=&quot;)) return Number(raw) || (raw === &quot;&quot; ? 0 : NaN);
+  if (seen.has(ref)) throw new Error(`Circular reference at ${ref}`);
+  seen.add(ref);
+  /* ... expand SUM, then references, then evaluate ... */
+}</code></pre>
+<p>The guard is a whitelist regular expression before the expression is evaluated, so a cell containing arbitrary text cannot become arbitrary code. That is not paranoia about the user; the cells can be populated from a tool result, which came from a server.</p>
+<h2 id="errors-that-keep-the-input">Errors that keep the input</h2>
+<p>A cycle shows <code>#CYCLE</code> in the grid and leaves the raw text in the cell and in the formula bar, with a banner explaining what happened. Clearing the user’s input because it was invalid is the failure mode that makes people distrust a grid.</p>
+<h2 id="range-selection-and-the-clipboard">Range selection and the clipboard</h2>
+<p>Anchor and head, shift to extend, arrows to move, and the selected range is highlighted rather than just the active cell. Copy produces tab-separated values with newlines, which is what every other spreadsheet reads.</p>
+<p>Chapter 10 has the general rule: CSV for a file, TSV for the clipboard. A range copied as prose is a range nobody can paste.</p>
+<h2 id="host-dependencies">Host dependencies</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Needs</th>
+<th>Without it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Render, resize, theme</td>
+<td>Nothing works</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>clipboard.write</code></td>
+<td>Falls back to <code>execCommand</code>; still works</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>clipboard.read</code></td>
+<td>Paste is unavailable; this is a gap, not a host choice</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tool.invoke</code></td>
+<td>No sheet to load</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="failure-cases">Failure cases</h2>
+<p><strong>Paste.</strong> There is no clipboard read anywhere, so importing a range from another spreadsheet means pasting into a focused cell and letting the browser deliver it, which works for one cell and not for a range. Chapter 10 has the gap; this recipe is where it costs the most.</p>
+<p><strong>A formula referring to an empty cell.</strong> Evaluates to zero rather than to an error, which is what every spreadsheet does and what users expect.</p>
+<h2 id="accessibility">Accessibility</h2>
+<p>Every cell is an <code>&lt;input&gt;</code> with an <code>aria-label</code> carrying its reference, so a screen reader user hears “B4, 1601” rather than “edit text”. Arrows move, shift extends, and the formula bar shows the raw content of the head cell. Changes announce the cell and its new value. The grid is not virtualised, which is a deliberate limit: six rows by four columns, because a virtualised grid with correct accessibility is a much larger piece of work than this recipe is trying to demonstrate.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>load_sheet</code> populates twenty cells including four formulas.</li>
+<li>Column D shows computed products, not formula text.</li>
+<li>Editing B2 changes D2 and B6 in the same frame.</li>
+<li>Entering a self-reference shows <code>#CYCLE</code> and keeps the typed text.</li>
+<li>Shift with arrows extends the highlighted range.</li>
+<li>Copy places tab-separated text on the clipboard.</li>
+<li>Undo restores the previous cell content.</li>
+</ol>
+
+<div class="pager"><a href="r04.html"><span class="dir">Previous</span>Recipe 4. Document Editor</a><a href="r06.html" style="text-align:right"><span class="dir">Next</span>Recipe 6. Image Annotator</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

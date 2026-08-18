@@ -1,0 +1,41 @@
+{
+  "recordedFrom": "apps/recipes/r11-agent-control/server.js",
+  "serverInfo": {
+    "name": "cookbook-agent-control",
+    "version": "1.0.0"
+  },
+  "results": {
+    "list_tasks": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Two shards are queued for reindexing."
+        }
+      ],
+      "structuredContent": {
+        "tasks": [
+          {
+            "name": "Reindex shard 1",
+            "state": "queued"
+          },
+          {
+            "name": "Reindex shard 2",
+            "state": "queued"
+          }
+        ]
+      }
+    },
+    "run_task": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Reindex shard 1 completed in 5 steps."
+        }
+      ],
+      "structuredContent": {
+        "name": "Reindex shard 1",
+        "steps": 5
+      }
+    }
+  }
+}

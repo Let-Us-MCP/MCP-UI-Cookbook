@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>14. Lifecycle and Connectivity &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.">
+<meta property="og:title" content="14. Lifecycle and Connectivity">
+<meta property="og:description" content="Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html" class="current">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 14</p><h1>Lifecycle and Connectivity</h1><p class="summary">Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.</p><p>A page has a lifecycle it can rely on. It loads, it runs, it gets <code>beforeunload</code>, it goes away. An embedded view has less than that. It appears when a tool is called, it may be hidden by a scroll it cannot observe, it may be destroyed because the user changed conversations, and the only guaranteed warning is a single request that a well behaved host waits for.</p>
+<p>This chapter is about that request and the four states around it.</p>
+<div class="demo" data-demo="lab-lifecycle" id="lab-lifecycle"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="visibility">Visibility</h2>
+<div class="cap" id="lifecycle.visibility"><div class="cap-head"><code class="cap-id">lifecycle.visibility</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Know when the view is on screen and when it is not.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p>The Page Visibility API works inside the sandbox: <code>document.hidden</code>, <code>document.visibilityState</code>, and the <code>visibilitychange</code> event all fire when the host’s tab or window is hidden.</p>
+<p><strong>What it does not cover</strong> is the case that actually happens. The host’s tab is visible; your frame has scrolled out of the conversation, or been collapsed into a summary. <code>document.hidden</code> stays false. Your polling continues, your animation continues, your sparkline repaints every 1.4 seconds for nobody.</p>
+<p>Press “Hide the frame” in the demonstration. The frame disappears, the transcript records nothing, and the poll counter inside keeps climbing.</p>
+<p><strong>Workaround.</strong> <code>IntersectionObserver</code> against the view’s own viewport does not help either, because the clipping is happening in a document you cannot see. What does help is being cheap by default: poll on demand rather than on a timer, coalesce updates, and let the server push through <code>ui/notifications/tool-result</code> instead of asking repeatedly.</p>
+<p><strong>What a mechanism would look like.</strong> The host already sends <code>ui/notifications/host-context-changed</code> for display mode. A <code>visibility</code> field in the same notification would cost nothing and would let a view suspend honestly. This is the third variation of the same missing signal, after <code>surface.reveal</code> and <code>notify.attention</code>, and they may all be one feature.</p>
+<h2 id="suspending">Suspending</h2>
+<div class="cap" id="lifecycle.suspend"><div class="cap-head"><code class="cap-id">lifecycle.suspend</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Stop doing work nobody is looking at.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p>Yours to build, and worth building even without a reliable signal.</p>
+<p><strong>Application behaviour.</strong> Keep a list of the things that consume resources while nobody is looking: timers, animations, observers, in-flight polling. Have one function that stops them and one that restarts them, and call the stop from <code>visibilitychange</code> and from <code>ui/resource-teardown</code>. Recipe 12’s player pauses on hide, which is both a resource decision and a courtesy: audio continuing from an invisible frame is genuinely alarming.</p>
+<p>The general principle is that a view should be able to do nothing. A view that requires a heartbeat to stay correct will be wrong every time it is backgrounded, and it will be wrong silently.</p>
+<h2 id="connectivity">Connectivity</h2>
+<div class="cap" id="lifecycle.connectivity"><div class="cap-head"><code class="cap-id">lifecycle.connectivity</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Show online, offline, and reconnecting honestly.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p><code>navigator.onLine</code> and the <code>online</code> and <code>offline</code> events work inside the frame. They tell you whether the <em>browser</em> thinks it has a network, which is weaker than it sounds and still worth using.</p>
+<p>What they cannot tell you is whether the host still has its connection to the server. That connection is the host’s, and there is no message reporting its state. Your evidence is indirect: a <code>tools/call</code> that fails, or one that never answers.</p>
+<p><strong>Application behaviour.</strong> Three states, honestly labelled. <em>Live</em> means something arrived recently. <em>Reconnecting</em> means a call failed and a retry is scheduled. <em>Offline</em> means the browser says so or retries have run out.</p>
+<p>The crucial part is what the data looks like in the last two states. Recipe 9 keeps the last lines it received and says so in a banner, because a monitoring console that clears its screen when the connection drops has destroyed the evidence at the exact moment somebody needs it. Stale data with a timestamp is more useful than no data, as long as the interface never lets the user mistake one for the other.</p>
+<h2 id="dirty-state">Dirty state</h2>
+<div class="cap" id="lifecycle.dirty"><div class="cap-head"><code class="cap-id">lifecycle.dirty</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Track uncommitted local state and say so.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p>Tracking uncommitted local state is entirely yours, and the interesting part is what you can do with the knowledge.</p>
+<p>Inside the view, a dirty flag drives the obvious things: enabling Save, disabling Discard, showing a marker. The chip in the demonstration goes from “saved” to “unsaved changes” on the first keystroke and back on save.</p>
+<p>Across the boundary, there is nothing. No message tells the host that this view has unsaved work, so the host cannot warn the user before switching conversations, and cannot include the view in its own “you have unsaved changes” logic if it has any.</p>
+<p><strong>Workaround.</strong> Autosave, so that dirty is a state that lasts seconds rather than minutes. Then the teardown handshake below is enough to close the gap.</p>
+<figure>
+<img src="figures/diag-lifecycle.png" alt="The lifecycle, as a sequence" />
+<figcaption aria-hidden="true">The lifecycle, as a sequence</figcaption>
+</figure>
+<h2 id="before-close">Before close</h2>
+<div class="cap" id="lifecycle.beforeClose"><div class="cap-head"><code class="cap-id">lifecycle.beforeClose</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Get one chance to finish before the frame goes away.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/resource-teardown</code><code>reason</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p>The one guarantee in the whole lifecycle, and the reason the previous entry’s gap is survivable.</p>
+<p>When a host tears down a view, it must send <code>ui/resource-teardown</code> first. That is a <em>request</em>, with an id and a reason, and the host should wait for the response before removing the frame. Between the request and your response is the only window in the entire protocol where a view can finish something.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r04-document-editor/index.html</code></p><pre class="js"><code>bridge.on(&quot;teardown&quot;, async ({ reason }) =&gt; {
+  $(&quot;#log&quot;).textContent = `Host is closing this view: ${reason}`;
+  if (dirty) {
+    $(&quot;#log&quot;).textContent += &quot; Flushing unsaved changes first.&quot;;
+    await save();
+  }
+});</code></pre>
+<p><strong>Rules for the window.</strong> Do the smallest possible thing. This is a flush, not a save dialog: you cannot ask the user a question, because the host is waiting and the user is already leaving. Bound it. A host that waits forever for a view that never answers is a host that will stop waiting, and different hosts will stop at different times. And answer even on failure, because an unanswered request is indistinguishable from a hung view.</p>
+<p><strong>Failure modes.</strong> A host that does not send the request at all takes your work with it, which is why autosave matters more here than in a page. A host that sends it and does not wait looks identical from the inside, and the only way to know is to measure. The demonstration’s teardown control reports how long the view took to answer, which is the same measurement a conformance test makes.</p>
+<h2 id="asking-to-be-closed">Asking to be closed</h2>
+<p>The other direction is <code>ui/notifications/request-teardown</code>, covered as <code>surface.close</code> in Chapter 6. It is worth restating the asymmetry here, because the pair is the whole lifecycle contract: the view <em>asks</em> with a notification that may be ignored, and the host <em>tells</em> with a request that must be answered. Neither side can force the other, and the protocol is deliberately arranged so that the party who owns the window has the last word.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Assume you will be destroyed at any moment with one request of warning, and that the warning may not come. Every design decision in this group follows from that: autosave rather than save, server state rather than view state, cheap by default rather than suspend on a signal you may not receive.</p>
+
+<div class="pager"><a href="ch13.html"><span class="dir">Previous</span>13. Accessibility</a><a href="ch15.html" style="text-align:right"><span class="dir">Next</span>15. Persistence and History</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

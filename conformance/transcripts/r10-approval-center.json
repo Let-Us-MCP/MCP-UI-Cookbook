@@ -1,0 +1,251 @@
+{
+  "demo": "r10-approval-center",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "appInfo": {
+          "name": "approval-center",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "message": {
+            "text": {}
+          },
+          "serverTools": {},
+          "updateModelContext": {
+            "structuredContent": {},
+            "text": {}
+          }
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 540
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "America/New_York"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 87,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "pending_approvals"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Two actions are waiting: a 1,240.00 USD refund and a staging key rotation.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "requests": [
+            {
+              "at": "2026-08-18T09:12:00Z",
+              "consequence": "The money leaves today and cannot be recalled from here.",
+              "description": "Refund invoice 2026-0814 to Meridian Systems in full.",
+              "id": "refund-8841",
+              "provenance": {
+                "arguments": "invoice=2026-0814 amount=1240.00 currency=USD",
+                "asked by": "the agent, in this conversation",
+                "on behalf of": "sam@meridian.example",
+                "prior approvals": "none for this customer",
+                "tool": "billing.refund"
+              },
+              "question": "Which invoices does this refund cover?",
+              "risk": "high",
+              "title": "Refund 1,240.00 USD"
+            },
+            {
+              "at": "2026-08-18T08:41:00Z",
+              "consequence": "Anything still using the old key stops working tomorrow.",
+              "description": "Issue a new staging key and revoke the current one in 24 hours.",
+              "id": "rotate-7",
+              "provenance": {
+                "arguments": "scope=staging grace=24h",
+                "asked by": "the agent, following a scheduled policy check",
+                "on behalf of": "platform-team",
+                "prior approvals": "3 in the last 90 days",
+                "tool": "identity.rotate_key"
+              },
+              "question": "What is still using the current staging key?",
+              "risk": "medium",
+              "title": "Rotate the staging API key"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 516,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 1,
+      "payload": {
+        "arguments": {
+          "at": "2026-08-18T09:41:00Z",
+          "consequence": "There is no restore path after the backup window closes.",
+          "description": "Permanently delete 4.1 million rows and their backups.",
+          "id": "delete-dataset-19",
+          "provenance": {
+            "arguments": "dataset=customers_2024 backups=true",
+            "asked by": "the agent, following a retention rule",
+            "on behalf of": "data-platform",
+            "prior approvals": "none",
+            "tool": "warehouse.drop_dataset"
+          },
+          "question": "Who asked for this dataset to be deleted?",
+          "risk": "high",
+          "title": "Delete dataset customers_2024"
+        },
+        "name": "queue_approval"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "content": [
+          {
+            "text": "Queued. A person has to decide.",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 735,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {
+          "title": "Delete dataset customers_2024"
+        },
+        "name": "approve"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Approval requires a person. This view does not accept approvals over the tool interface.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 3,
+      "payload": {
+        "arguments": {},
+        "name": "get_decisions"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 3,
+      "payload": {
+        "content": [
+          {
+            "text": "Nothing decided yet.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "decisions": [],
+          "pending": 3
+        }
+      }
+    }
+  ]
+}

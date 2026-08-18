@@ -1,0 +1,38 @@
+{
+  "recordedFrom": "apps/recipes/r13-settings/server.js",
+  "serverInfo": {
+    "name": "cookbook-settings",
+    "version": "1.0.0"
+  },
+  "results": {
+    "load_preferences": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Digest at 08:30, quiet hours 21:00 to 07:00."
+        }
+      ],
+      "structuredContent": {
+        "preferences": {
+          "digest": "08:30",
+          "from": "21:00",
+          "until": "07:00",
+          "email": "sam@meridian.example",
+          "accent": "#0f5c8c",
+          "density": "comfortable",
+          "renewal": "2026-09-14",
+          "motion": false
+        }
+      }
+    },
+    "save_rejected": {
+      "isError": true,
+      "content": [
+        {
+          "type": "text",
+          "text": "The server rejected the address. Nothing was saved."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16. Media, Progress, Cancellation and Errors &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Playback the platform gives you, immersion the host gives you, and four capabilities about work that takes long enough for somebody to change their mind.">
+<meta property="og:title" content="16. Media, Progress, Cancellation and Errors">
+<meta property="og:description" content="Playback the platform gives you, immersion the host gives you, and four capabilities about work that takes long enough for somebody to change their mind.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html" class="current">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 16</p><h1>Media, Progress, Cancellation and Errors</h1><p class="summary">Playback the platform gives you, immersion the host gives you, and four capabilities about work that takes long enough for somebody to change their mind.</p><p>Two groups in one chapter, joined by a theme: things that take time. A video takes time and the platform handles almost all of it. A tool call takes time and the protocol handles some of it. What both share is that the user is waiting, may stop waiting, and deserves to know what happened either way.</p>
+<div class="demo" data-demo="lab-media" id="lab-media"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="playback">Playback</h2>
+<div class="cap" id="media.playback"><div class="cap-head"><code class="cap-id">media.playback</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Play, pause, seek, rate, volume, captions.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p><code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code> work inside the sandbox. Controls, seeking, playback rate, volume, and caption tracks through <code>&lt;track&gt;</code> are all platform behaviour with no host involvement.</p>
+<p>Three embedded-specific notes.</p>
+<p><strong>Media has to come from somewhere.</strong> The restrictive default CSP is <code>media-src 'self' data:</code>, so a view loading video from a CDN must declare that origin in <code>resourceDomains</code>, and a host may decline it. Data URIs work and are impractical past a few hundred kilobytes.</p>
+<p><strong>Autoplay will not work, and should not.</strong> Autoplay policies require a user gesture or a muted element, and a view that starts playing sound inside somebody’s conversation without being asked is an actively bad citizen. Start paused, always.</p>
+<p><strong>Custom transports need the keyboard.</strong> If you replace the native controls, you inherit the accessibility contract: Space to play and pause, arrows to seek, a labelled slider with a real <code>aria-valuetext</code>, and a caption toggle with <code>aria-pressed</code>. Recipe 12 does this, and the honest note is that the native controls do it better with less code, so replace them only when you have a reason.</p>
+<h2 id="immersion">Immersion</h2>
+<div class="cap" id="media.fullscreen"><div class="cap-head"><code class="cap-id">media.fullscreen</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Go immersive through the host, not through the Fullscreen API.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/request-display-mode</code><code>fullscreen</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>Here is a case where the obvious API is the wrong one.</p>
+<p><code>Element.requestFullscreen()</code> requires the <code>fullscreen</code> permission policy on the frame, and <code>fullscreen</code> is not in the extension’s permission set. It is not <code>camera</code>, <code>microphone</code>, <code>geolocation</code> or <code>clipboardWrite</code>, so a host has no defined way to grant it.</p>
+<p>The supported route is <code>ui/request-display-mode</code> with <code>"fullscreen"</code>, which is the same mechanism Chapter 6 describes. The host takes over its own window and tells you the resulting mode. That is better in an embedded context: the host knows what “fullscreen” means in its own chrome, and your view stays a view.</p>
+<p><strong>Application behaviour.</strong> Declare <code>fullscreen</code> in <code>appCapabilities.availableDisplayModes</code>, check the host’s list before asking, and re-layout on the mode you actually get. A player at 200 pixels tall and one at 800 need different control sizes, and the host tells you which you are in through <code>ui/notifications/host-context-changed</code>.</p>
+<h2 id="progress">Progress</h2>
+<div class="cap" id="op.progress"><div class="cap-head"><code class="cap-id">op.progress</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground core">Core MCP</span></div><p class="cap-summary">Determinate and indeterminate progress with a phase name.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>notifications/progress</code><code>progressToken</code></dd><dt>Ground</dt><dd>Core MCP defines it; the view inherits it.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>Core MCP defines <code>notifications/progress</code>, carrying a <code>progressToken</code>, a <code>progress</code> number, an optional <code>total</code>, and an optional <code>message</code>. The token ties it to the request it is about.</p>
+<p><strong>The catch.</strong> The extension’s list of messages a view may receive does not name <code>notifications/progress</code>. In practice hosts that proxy <code>tools/call</code> can forward it, and the demonstration’s fixture host does, but you cannot rely on it. Treat progress as an enhancement, not as the basis of your interface.</p>
+<p><strong>Application behaviour.</strong> Determinate when you have a <code>total</code>, indeterminate when you do not, and a phase name in both cases. “Building the index” is worth more than a percentage, because it tells the user whether the thing that is slow is the thing they expected to be slow. The demonstration shows four named phases moving a bar, and the phase text is what makes the wait legible.</p>
+<p><strong>Accessibility.</strong> <code>role="progressbar"</code> with <code>aria-valuenow</code>, or a live region that announces phase changes only. Not both, and not every tick. Chapter 13 has the reasoning.</p>
+<h2 id="cancellation">Cancellation</h2>
+<div class="cap" id="op.cancel"><div class="cap-head"><code class="cap-id">op.cancel</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground core">Core MCP</span></div><p class="cap-summary">Interrupt work that is still running.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>notifications/cancelled</code><code>requestId</code></dd><dt>Ground</dt><dd>Core MCP defines it; the view inherits it.</dd><dt>Recipes</dt><dd><a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>Core MCP again: <code>notifications/cancelled</code> with the <code>requestId</code> of the request you are abandoning and an optional reason. The SDK sends it when you abort the <code>AbortSignal</code> you passed to a request.</p>
+<p><strong>The part people get wrong is the interface, not the message.</strong> Cancelling is easy. Returning the view to a state that matches reality is not.</p>
+<p>If a tool call was cancelled after three of five steps, the correct interface does not show a progress bar at zero and does not show one at sixty percent either. It says the operation stopped after three steps, and it says whether those three steps changed anything.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r11-agent-control/index.html</code></p><pre class="js"><code>function cancel(task) {
+  task.controller?.abort();
+  task.state = &quot;cancelled&quot;;
+  task.steps.push(&quot;cancelled by the user&quot;);
+  task.error = `Stopped after ${task.done} of ${task.total} steps. `
+    + &quot;Completed steps were not rolled back.&quot;;
+  draw();
+  bridge.notify(&quot;notifications/cancelled&quot;,
+    { requestId: task.requestId, reason: &quot;The user cancelled&quot; });
+}</code></pre>
+<p><strong>The other direction.</strong> The host can cancel you, through <code>ui/notifications/tool-cancelled</code> with a reason. That happens when the user asks the agent something else, when a classifier intervenes, or when sampling fails. Your view must handle it, and the right handling is almost always to keep the last good state and explain, rather than to blank the view.</p>
+<div class="cap" id="op.pause"><div class="cap-head"><code class="cap-id">op.pause</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Suspend and continue long work.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd>no live demo</dd></dl></div>
+<p>Extended, yours to build, and rarer than it looks. Most long operations cannot be paused, only cancelled and restarted. Offer pause only when the underlying work genuinely supports resumption, because a pause button that quietly means cancel is worse than no pause button.</p>
+<h2 id="retry">Retry</h2>
+<div class="cap" id="op.retry"><div class="cap-head"><code class="cap-id">op.retry</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Retry without making the user rebuild the interaction.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>The measure of a retry is whether the user has to rebuild the interaction.</p>
+<p>A retry button next to the failure, which repeats the same call with the same arguments and the same form still filled in, costs nothing and saves the user’s work. A failure that clears the form and returns the user to the start is the same failure plus a punishment.</p>
+<p><strong>Application behaviour.</strong> Keep the arguments. Keep the last good data on screen. Make the retry idempotent, or make it obvious that it is not. For automatic retries, back off exponentially and cap it, and stop after a small number rather than hammering a service that has told you it is unwell.</p>
+<h2 id="errors">Errors</h2>
+<div class="cap" id="op.error"><div class="cap-head"><code class="cap-id">op.error</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground core">Core MCP</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Structured errors: what failed, whether to retry, what to do.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>isError</code><code>isError</code></dd><dt>Ground</dt><dd>Core MCP defines it; the view inherits it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r05.html">Spreadsheet</a>, <a href="r07.html">Workflow Builder</a>, <a href="r10.html">Approval Center</a>, <a href="r11.html">Agent Control Center</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>A tool result can fail in two different ways, and the difference is worth knowing. A JSON-RPC error means the call did not happen: unknown tool, bad arguments, host refused. A result with <code>isError: true</code> means the tool ran and failed, and its <code>content</code> is a message intended to be read.</p>
+<p><strong>A structured error carries three facts.</strong> What failed, whether retrying could help, and what the recovery action is. The fixture in the demonstration returns this:</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-media/demo.js</code></p><pre class="js"><code>return { isError: true, content: [{ type: &quot;text&quot;,
+  text: &quot;The index volume is full, so nothing was written. &quot;
+      + &quot;Free space and retry.&quot; }] };</code></pre>
+<p>Three facts in nineteen words: what happened, what the consequence was (nothing was written, so no partial state to worry about), and what to do. Compare it with “Error: operation failed”, which has none of them and is what most tools return.</p>
+<p><strong>Show it where the action was.</strong> An error about an export belongs next to the export button, not in a toast that vanishes and not in a banner at the top of a view the user has scrolled past.</p>
+<p><strong>Keep the last good state.</strong> Recipe 1’s table keeps its rows when a reload fails and says the data is from the previous successful call. An empty table with an error above it has thrown away information the user still needed.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Everything in the second half of this chapter is about the same thing: the user is waiting, and the interface owes them an accurate account. Progress says how far. Cancellation says where it stopped. Errors say what happened and what to do. Retry says try again without starting over. Applications that do all four feel reliable even when the things behind them are not, and applications that do none of them feel broken even when everything worked.</p>
+
+<div class="pager"><a href="ch15.html"><span class="dir">Previous</span>15. Persistence and History</a><a href="ch17.html" style="text-align:right"><span class="dir">Next</span>17. UI to Agent</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>26. The Verification Layers &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.">
+<meta property="og:title" content="26. The Verification Layers">
+<meta property="og:description" content="Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html" class="current">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 26</p><h1>The Verification Layers</h1><p class="summary">Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.</p><p>Verification is layered because the failures are layered. A malformed message and an inaccessible combobox and a host that ignores display mode requests are three different problems, and no single check finds all three.</p>
+<p>This chapter describes six layers and says, for each, what this repository runs today and what it does not. That second half matters: a book that described an aspirational test pyramid and shipped none of it would be exactly the thing Chapter 25 is arguing against.</p>
+<h2 id="layer-0-schemas">Layer 0: Schemas</h2>
+<p>Capability manifests and every bridge message validate against JSON Schemas derived from the extension specification. Nothing untyped ships.</p>
+<p><strong>What runs here.</strong> The registry is generated from a single Python source and every downstream artifact reads the generated JSON, so an identifier that exists in one place and not another is impossible by construction rather than by discipline. <code>tools/check_claims.py</code> goes further and greps the pinned specification text for every message name the registry claims exists: sixty-eight claims, checked on every build.</p>
+<p>That check has already earned itself. It reports which anchors exist in the current draft but not in the last dated release, and the answer is eight: <code>ui/download-file</code>, <code>downloadFile</code>, <code>ui/notifications/request-teardown</code>, <code>updateModelContext</code>, <code>sampling/createMessage</code>, <code>notifications/tools/list_changed</code>, <code>resource_link</code> and <code>isError</code>. A book that did not check would have described all eight as though they were settled.</p>
+<p><strong>What does not run.</strong> Full JSON Schema validation of every message against the SDK’s generated schema. The bridge here validates shape by construction rather than against a schema document.</p>
+<h2 id="layer-1-protocol-transcripts">Layer 1: Protocol transcripts</h2>
+<p>Because every message is JSON-RPC over <code>postMessage</code>, a scenario can be replayed and its message log diffed. A transcript diff in a pull request is a protocol change somebody has to explain.</p>
+<p><strong>What runs here.</strong> <code>tools/check_demos.mjs</code> drives all thirty demonstrations in headless Chrome over the DevTools Protocol, waits for the handshake, clicks every host control in order, and records the normalised message log to <code>conformance/transcripts/</code>. Timings and request ids are stripped, object keys are sorted, and the result is compared byte for byte with the committed file.</p>
+<p>A missing handshake is a hard failure, for the reason Chapter 25 gives. So is any console error that is not a favicon.</p>
+<h2 id="layer-2-capability-harness">Layer 2: Capability harness</h2>
+<p>One minimal application per capability group, driven in a reference host, with assertions on both behaviour and transcript.</p>
+<p><strong>What runs here.</strong> The seventeen labs are that harness. Each exercises one chapter’s capabilities, each has a fixture host with controls for the things only a host can do, and each has a recorded transcript.</p>
+<p><strong>What does not.</strong> They run against the emulator in this repository, not against the <code>basic-host</code> that ships with the official SDK. Running the same labs against that host is the obvious next step and would convert a set of assertions about this book’s host into assertions about a reference one.</p>
+<h2 id="layer-3-component-checks">Layer 3: Component checks</h2>
+<p>Part IV components in isolation, with interaction tests, automated accessibility audits, and keyboard checklists transcribed from the ARIA Authoring Practices Guide into executable assertions.</p>
+<p><strong>What does not run.</strong> This layer is not implemented. The components exist as a shared stylesheet and helper file rather than as a component library with stories, and no <code>axe-core</code> run is wired into the build. The accessibility claims in this book come from the checklist in Chapter 13 applied by hand, which is weaker than an automated audit for the half of the list a machine can check and stronger for the half it cannot.</p>
+<p>Saying so is more useful than a passing badge would be.</p>
+<h2 id="layer-4-recipe-integration">Layer 4: Recipe integration</h2>
+<p>Each recipe end to end against a scripted mock agent: recorded tool results, deterministic streaming, and fault injection.</p>
+<p><strong>What runs here.</strong> All thirteen recipes are driven by the same harness as the labs, with fixtures recorded from their real servers by <code>tools/record_fixtures.mjs</code>. The fault injection is real: controls that break the server, withdraw capabilities, cancel mid-flight, and tear the view down are part of every recipe’s demonstration and are exercised by the harness.</p>
+<p><strong>The limitation, stated plainly.</strong> The harness cannot click inside the frame, because the frame has an opaque origin and no DOM access is possible from outside. So recipes are driven from the host side and through the tools they register. Recipes 4, 7, 10 and the ownership lab are driven deeply this way. Recipes with no registered tools are checked for their handshake, their initial render and their host-side flows, and their internal interactions are verified by hand.</p>
+<p>That limitation is worth noticing for a second reason: it is the same argument Chapter 18 makes for registering tools in the first place. A view that exposes its operations is a view an agent can drive, an accessibility tool can drive, and a test can drive.</p>
+<h2 id="layer-5-cross-host-conformance">Layer 5: Cross-host conformance</h2>
+<p>The same suite against several hosts, with results published per host and per capability, in the manner of the public web platform test dashboards.</p>
+<p><strong>What does not run.</strong> Nothing. This book runs against one emulator. The <code>basic-host</code> in the extension SDK, the MCP-UI client, and the production hosts that implement the standard are all candidates, and the checklists in Appendix C are written so that they could be run against any of them.</p>
+<p>The reason this matters more than the missing Layer 3 is that cross-host results are the only evidence that would answer the completeness test in Chapter 25. One host running thirteen recipes proves the recipes work. Several hosts running them unmodified proves the capability model is general, which is the claim the whole book is making.</p>
+<h2 id="the-layer-that-is-not-on-the-list">The layer that is not on the list</h2>
+<p>Human usability sessions. None were run for this edition, and none of the design claims here are backed by watching somebody use these applications. The recipes are built to a set of principles with arguments behind them, and the arguments could be wrong in ways no automated check would detect.</p>
+<p>That is the largest single gap in this book’s evidence, and it is a bigger one than Layers 3 and 5 combined.</p>
+
+<div class="pager"><a href="ch25.html"><span class="dir">Previous</span>25. Why Recipes Are the Test Suite</a><a href="ch27.html" style="text-align:right"><span class="dir">Next</span>27. The Coverage Matrix and the Checklists</a></div>
+</main>
+</div>
+
+</body>
+</html>

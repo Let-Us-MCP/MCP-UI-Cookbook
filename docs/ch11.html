@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11. Pickers and Dropzones &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.">
+<meta property="og:title" content="11. Pickers and Dropzones">
+<meta property="og:description" content="Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html" class="current">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 11</p><h1>Pickers and Dropzones</h1><p class="summary">Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.</p><p>The shortest chapter in Part II, and the one with the highest ratio of “already solved” to “your problem”. Three of its four capabilities are HTML input types that have had a decade of platform work behind them, and the main advice is to use them.</p>
+<div class="demo" data-demo="lab-pickers" id="lab-pickers"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="use-the-native-ones">Use the native ones</h2>
+<div class="cap" id="picker.date"><div class="cap-head"><code class="cap-id">picker.date</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native date selection, localised by the host locale.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
+<div class="cap" id="picker.time"><div class="cap-head"><code class="cap-id">picker.time</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native time selection in the host timezone.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
+<div class="cap" id="picker.color"><div class="cap-head"><code class="cap-id">picker.color</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native colour selection.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r06.html">Image Annotator</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
+<p><code>&lt;input type="date"&gt;</code>, <code>type="time"</code>, and <code>type="color"</code> work inside the sandbox with no permission and no message. They come with keyboard support, screen reader support, the platform’s own calendar and colour panel, and localisation for every region the browser knows about, which is more than your component library knows about.</p>
+<p>The argument for replacing them is usually visual: they do not match the design. That is true, and the cost of replacing them is a component that has to reimplement date arithmetic, week-start conventions, month names in the user’s language, and a keyboard model, and that will still be wrong for the calendar systems you have not heard of. In a four hundred pixel card next to somebody’s conversation, the trade is not close.</p>
+<p><strong>The one thing you have to add.</strong> The picker collects a value; you have to <em>display</em> values in the user’s terms, and the browser’s idea of “the user” is the machine, not the person the host is serving. Formatting comes from <code>hostContext.locale</code> and <code>hostContext.timeZone</code>, through <code>Intl</code>.</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>function formatters(hostContext) {
+  const locale = hostContext?.locale || undefined;
+  const timeZone = hostContext?.timeZone || undefined;
+  return {
+    number: (n, options) =&gt; new Intl.NumberFormat(locale, options).format(n),
+    date: (value, options = { dateStyle: &quot;medium&quot; }) =&gt;
+      new Intl.DateTimeFormat(locale, { ...options, timeZone })
+        .format(value instanceof Date ? value : new Date(value)),
+    time: (value) =&gt; new Intl.DateTimeFormat(locale, {
+      timeStyle: &quot;medium&quot;, timeZone })
+      .format(value instanceof Date ? value : new Date(value)),
+  };
+}</code></pre>
+<p>Press “Switch to ja-JP / Tokyo” in the demonstration. The pickers keep their ISO values, which is correct, and everything the view renders changes, which is also correct. A view that formats with the default locale looks right on the developer’s machine and wrong for most of its users.</p>
+<p><strong>Accessibility.</strong> Native inputs come with the platform’s accessibility already wired. What they still need from you is a real <code>&lt;label&gt;</code> associated with the input, a hint about the expected format when there is one, and enough contrast on the border that the field is visible in a high contrast theme.</p>
+<h2 id="picking-something-the-server-owns">Picking something the server owns</h2>
+<div class="cap" id="picker.resource"><div class="cap-head"><code class="cap-id">picker.resource</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Pick from resources the server exposes, through the host.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>resources/read</code><code>serverResources</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
+<p>The fourth is different in kind. A file picker reaches the user’s machine. A resource picker reaches the <em>server’s</em> namespace, and the view has no connection to the server. Everything goes through the host.</p>
+<p><code>resources/read</code> is available to the view when <code>hostCapabilities.serverResources</code> is present. Give it a <code>ui://</code> or other URI and the host proxies the read to the server and returns the contents.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-pickers/index.html</code></p><pre class="js"><code>$(&quot;#load&quot;).onclick = async () =&gt; {
+  try {
+    const result = await bridge.readServerResource($(&quot;#uri&quot;).value);
+    $(&quot;#out&quot;).textContent = result.contents?.[0]?.text ?? JSON.stringify(result);
+  } catch (error) {
+    $(&quot;#out&quot;).textContent = `Refused: ${error.message}`;
+  }
+};</code></pre>
+<p><strong>The awkward part.</strong> There is no resource <em>listing</em> in the view’s subset of the protocol as it stands, only <code>resources/read</code>. So a picker has to learn its options some other way: from the tool result that rendered the view, from a server tool that returns a list, or from a hard-coded namespace the server documents. In the demonstration the list is provided by the host fixture, and the “missing” entry is there so you can watch a refused read.</p>
+<p>That is a small design wart rather than a gap, because a server tool returning a list is a perfectly good answer, and it is the answer that also gets you filtering and pagination.</p>
+<p><strong>Security.</strong> This is the good path for reading server-side data, and it is worth choosing over a <code>fetch</code> to your own API even when you could declare the origin in <code>connectDomains</code>. A read through the host is visible to the host, subject to the host’s policy, and appears in the transcript. A direct fetch is a hole you asked the host to open and then used unobserved.</p>
+<p><strong>Failure modes.</strong> Unsupported when <code>serverResources</code> is absent: the picker should not appear, and whatever it was going to configure needs a different route. Denied and failed both come back as JSON-RPC errors, and the error message is the host’s, so display it rather than replacing it with your own guess.</p>
+<h2 id="dropzones">Dropzones</h2>
+<div class="cap" id="file.dropzone"><div class="cap-head"><code class="cap-id">file.dropzone</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Accept dropped files with validation, preview, and progress.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r06.html">Image Annotator</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p>Covered in Chapter 10, listed here because a dropzone and a picker are two routes to the same thing and an application that offers one should usually offer both. The picker is discoverable, the dropzone is fast, and users split roughly evenly between them.</p>
+<p>The one addition specific to this chapter: a dropzone that accepts a <em>type</em> of file should say so in its resting state, not only in its error state. “Drop a JSON annotation file” tells somebody what to look for. “Drop files here” followed by “wrong file type” tells them what they did wrong.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Two rules. Use the platform’s inputs, because they are better than the ones you would write and they are free. And format every value you display through the host’s locale and timezone rather than the browser’s, because in this environment the browser is not where the user is.</p>
+
+<div class="pager"><a href="ch10.html"><span class="dir">Previous</span>10. Clipboard, Files and System Integration</a><a href="ch12.html" style="text-align:right"><span class="dir">Next</span>12. Host Environment and Theming</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

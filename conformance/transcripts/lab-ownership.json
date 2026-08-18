@@ -1,0 +1,192 @@
+{
+  "demo": "lab-ownership",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "appInfo": {
+          "name": "ownership-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "message": {
+            "text": {}
+          }
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 480
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 455,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 1,
+      "payload": {
+        "arguments": {
+          "text": "Renewal slipped to the 21st after the vendor patch was delayed."
+        },
+        "name": "rewrite_summary"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "content": [
+          {
+            "text": "Offered to the user for review.",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 487,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {
+          "score": 0.62
+        },
+        "name": "set_risk"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Risk is now 0.62.",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 3,
+      "payload": {
+        "arguments": {},
+        "name": "read_note"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 3,
+      "payload": {
+        "content": [
+          {
+            "text": "Call Priya before sending.",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 4,
+      "payload": {
+        "arguments": {
+          "text": "Sent."
+        },
+        "name": "write_note"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 4,
+      "payload": {
+        "content": [
+          {
+            "text": "The internal note is user owned. Propose a change in the conversation instead of writing it.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    }
+  ]
+}

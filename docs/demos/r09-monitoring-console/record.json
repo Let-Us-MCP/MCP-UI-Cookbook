@@ -1,0 +1,1 @@
+{ "calls": [ { "tool": "tail_logs", "arguments": {} } ] }

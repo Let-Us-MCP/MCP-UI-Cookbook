@@ -1,0 +1,208 @@
+{
+  "demo": "r12-media-viewer",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen",
+            "pip"
+          ]
+        },
+        "appInfo": {
+          "name": "media-viewer",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "openLinks": {},
+          "serverTools": {}
+        },
+        "hostContext": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ],
+          "containerDimensions": {
+            "maxHeight": 500
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 301,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "list_clips"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Three clips totalling five minutes, each with captions.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "clips": [
+            {
+              "captions": [
+                {
+                  "at": 0,
+                  "text": "The line runs at 40 units a minute."
+                },
+                {
+                  "at": 20,
+                  "text": "Station three is the constraint."
+                }
+              ],
+              "colour": "#1d2a35",
+              "id": "c1",
+              "seconds": 96,
+              "shapes": [
+                [
+                  0.3,
+                  0.4,
+                  0.16,
+                  "#4d7ea8"
+                ],
+                [
+                  0.62,
+                  0.55,
+                  0.1,
+                  "#a8894d"
+                ]
+              ],
+              "title": "Assembly line, wide"
+            },
+            {
+              "captions": [
+                {
+                  "at": 0,
+                  "text": "The gripper misses one in twelve."
+                }
+              ],
+              "colour": "#2a2119",
+              "id": "c2",
+              "seconds": 62,
+              "shapes": [
+                [
+                  0.5,
+                  0.5,
+                  0.22,
+                  "#a8624d"
+                ],
+                [
+                  0.2,
+                  0.3,
+                  0.08,
+                  "#d8c4a0"
+                ]
+              ],
+              "title": "Station three, close"
+            },
+            {
+              "captions": [
+                {
+                  "at": 0,
+                  "text": "Throughput holds without an operator."
+                }
+              ],
+              "colour": "#151a22",
+              "id": "c3",
+              "seconds": 140,
+              "shapes": [
+                [
+                  0.7,
+                  0.35,
+                  0.13,
+                  "#3f5f7a"
+                ],
+                [
+                  0.35,
+                  0.6,
+                  0.18,
+                  "#26323d"
+                ]
+              ],
+              "title": "Night shift, wide"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 347,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "availableDisplayModes": [
+          "inline",
+          "fullscreen",
+          "pip"
+        ]
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "availableDisplayModes": [
+          "inline"
+        ]
+      }
+    }
+  ]
+}

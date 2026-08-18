@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Spreadsheet</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  table.sheet { border-collapse:collapse; font-variant-numeric:tabular-nums }
+  table.sheet th, table.sheet td { border:1px solid var(--color-border-primary);
+    padding:0; min-width:78px; height:26px }
+  table.sheet th { background:var(--color-background-secondary); text-align:center;
+    font-size:11px; min-width:34px; position:static }
+  table.sheet td input { border:0; background:none; width:100%; height:100%;
+    padding:2px 6px; border-radius:0; text-align:right }
+  table.sheet td.in-range { background:var(--color-background-info) }
+  table.sheet td.anchor input { outline:2px solid var(--color-ring-primary);
+    outline-offset:-2px }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <span class="chip" id="cell">A1</span>
+    <input id="formula" style="flex:1" aria-label="Formula bar">
+    <button id="undo" disabled>Undo</button>
+    <button id="copy">Copy</button>
+  </div>
+
+  <div class="scroll"><table class="sheet"><thead id="head"></thead>
+    <tbody id="body"></tbody></table></div>
+
+  <p class="muted" id="hint">Arrows move. Shift extends. Type to replace.
+    Formulas start with = and understand SUM over a range.</p>
+  <div id="error" class="banner bad" hidden></div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, $$, toast, announce } = View;
+
+const COLS = ["A", "B", "C", "D"];
+const ROWS = 6;
+const cells = new Map();
+const past = [];
+let anchor = { c: 0, r: 0 };
+let head = { c: 0, r: 0 };
+
+const key = (c, r) => `${COLS[c]}${r + 1}`;
+const inRange = (c, r) =>
+  c >= Math.min(anchor.c, head.c) && c <= Math.max(anchor.c, head.c)
+  && r >= Math.min(anchor.r, head.r) && r <= Math.max(anchor.r, head.r);
+
+// A spreadsheet is the smallest program that needs a real evaluator. This one
+// handles numbers, cell references and SUM, which is enough to have a
+// dependency graph and therefore enough to have cycles.
+function evaluate(ref, seen = new Set()) {
+  const raw = cells.get(ref) ?? "";
+  if (!String(raw).startsWith("=")) return Number(raw) || (raw === "" ? 0 : NaN);
+  if (seen.has(ref)) throw new Error(`Circular reference at ${ref}`);
+  seen.add(ref);
+  let body = String(raw).slice(1).toUpperCase();
+  body = body.replace(/SUM\(([A-D])(\d+):([A-D])(\d+)\)/g, (_, c1, r1, c2, r2) => {
+    let total = 0;
+    for (let c = COLS.indexOf(c1); c <= COLS.indexOf(c2); c += 1) {
+      for (let r = Number(r1) - 1; r <= Number(r2) - 1; r += 1) {
+        total += evaluate(key(c, r), new Set(seen)) || 0;
+      }
+    }
+    return String(total);
+  });
+  body = body.replace(/([A-D]\d+)/g, (m) => String(evaluate(m, new Set(seen)) || 0));
+  if (!/^[-+*/(). \d]+$/.test(body)) throw new Error(`Cannot evaluate ${raw}`);
+  return Function(`"use strict";return (${body})`)();
+}
+
+function draw() {
+  $("#head").replaceChildren(h("tr", {}, h("th", {}),
+    ...COLS.map((c) => h("th", { text: c }))));
+  $("#body").replaceChildren(...Array.from({ length: ROWS }, (_, r) =>
+    h("tr", {}, h("th", { text: String(r + 1) }),
+      ...COLS.map((_, c) => {
+        const ref = key(c, r);
+        let shown = "";
+        try {
+          const value = cells.has(ref) ? evaluate(ref) : "";
+          shown = value === "" ? "" : (Number.isNaN(value) ? "#VALUE" : value);
+        } catch (error) {
+          shown = "#CYCLE";
+        }
+        const input = h("input", { value: String(shown), "aria-label": ref,
+          onfocus: () => { anchor = head = { c, r }; sync(); },
+          onchange: (e) => commit(ref, e.target.value) });
+        return h("td", { class: `${inRange(c, r) ? "in-range" : ""} `
+          + `${c === head.c && r === head.r ? "anchor" : ""}` }, input);
+      }))));
+  $("#undo").disabled = !past.length;
+}
+
+function sync() {
+  const ref = key(head.c, head.r);
+  $("#cell").textContent = ref;
+  $("#formula").value = cells.get(ref) ?? "";
+  draw();
+}
+
+function commit(ref, value) {
+  const before = cells.get(ref);
+  past.push({ ref, before });
+  cells.set(ref, value);
+  try {
+    evaluate(ref);
+    $("#error").hidden = true;
+  } catch (error) {
+    $("#error").hidden = false;
+    $("#error").textContent = `${error.message}. The cell keeps your text; `
+      + "the grid shows #CYCLE until you fix it.";
+  }
+  sync();
+  announce(`${ref} is now ${value}`);
+}
+
+View.boot({ name: "spreadsheet", version: "1.0.0" }, {}, async (bridge) => {
+  const result = await bridge.callServerTool("load_sheet", {});
+  for (const [ref, value] of Object.entries(result.structuredContent?.cells ?? {})) {
+    cells.set(ref, value);
+  }
+  sync();
+
+  $("#formula").onchange = () => commit(key(head.c, head.r), $("#formula").value);
+
+  $("#undo").onclick = () => {
+    const entry = past.pop();
+    if (!entry) return;
+    entry.before === undefined ? cells.delete(entry.ref)
+                               : cells.set(entry.ref, entry.before);
+    sync();
+    toast(`Undid ${entry.ref}`);
+  };
+
+  addEventListener("keydown", (event) => {
+    const move = { ArrowLeft: [-1, 0], ArrowRight: [1, 0],
+                   ArrowUp: [0, -1], ArrowDown: [0, 1] }[event.key];
+    if (move) {
+      event.preventDefault();
+      head = { c: Math.max(0, Math.min(COLS.length - 1, head.c + move[0])),
+               r: Math.max(0, Math.min(ROWS - 1, head.r + move[1])) };
+      if (!event.shiftKey) anchor = head;
+      sync();
+      $$(`input[aria-label="${key(head.c, head.r)}"]`)[0]?.focus();
+      return;
+    }
+    if ((event.metaKey || event.ctrlKey) && event.key === "z") {
+      event.preventDefault();
+      $("#undo").click();
+    }
+    if ((event.metaKey || event.ctrlKey) && event.key === "c") copy();
+  });
+
+  // Copying a range as tab separated text is what every other spreadsheet
+  // puts on the clipboard, which is what makes paste into one of them work.
+  const copy = async () => {
+    const lines = [];
+    for (let r = Math.min(anchor.r, head.r); r <= Math.max(anchor.r, head.r); r += 1) {
+      const row = [];
+      for (let c = Math.min(anchor.c, head.c); c <= Math.max(anchor.c, head.c); c += 1) {
+        let value = "";
+        try { value = cells.has(key(c, r)) ? evaluate(key(c, r)) : ""; } catch { value = "#CYCLE"; }
+        row.push(value);
+      }
+      lines.push(row.join("\t"));
+    }
+    try { await navigator.clipboard.writeText(lines.join("\n")); } catch { /* fallback below */ }
+    toast(`${lines.length} row(s) copied as TSV`);
+  };
+  $("#copy").onclick = copy;
+});
+</script>
+</body>
+</html>

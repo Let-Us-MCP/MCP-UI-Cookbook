@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Focus and scroll</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <button id="jump" class="primary">Scroll to item 40</button>
+    <button id="trap">Open a trapping dialog</button>
+    <button id="restore">Restore focus</button>
+    <span class="spacer"></span>
+    <span class="chip" id="where">focus: nothing</span>
+  </div>
+
+  <div class="banner warn">
+    Nothing here crosses the frame boundary. The host cannot move focus into
+    this view, and this view cannot take focus from the host. Both directions
+    are gaps, and both are listed in Appendix B.
+  </div>
+
+  <div class="scroll" id="list" tabindex="0" aria-label="Fifty items"></div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, $$, confirmDialog, announce } = View;
+
+let lastFocus = null;
+
+View.boot({ name: "focus-lab", version: "1.0.0" }, {}, async (bridge) => {
+  $("#list").replaceChildren(...Array.from({ length: 50 }, (_, i) =>
+    h("div", { class: "row", style: "padding:4px 8px" },
+      h("button", { class: "quiet", text: `Item ${i + 1}`,
+                    id: `item-${i + 1}` }))));
+
+  // Focus is observable inside the frame and invisible outside it. A view
+  // that wants to restore focus after an overlay has to remember it itself,
+  // because the host has no idea any of this happened.
+  document.addEventListener("focusin", (event) => {
+    lastFocus = event.target;
+    $("#where").textContent = `focus: ${event.target.id || event.target.tagName}`;
+  });
+
+  $("#jump").onclick = () => {
+    const target = $("#item-40");
+    // scrollIntoView moves the scroll container inside the frame. If the
+    // frame itself is below the fold in the host's conversation, the user
+    // still sees nothing, and there is no message to fix that.
+    target.scrollIntoView({ block: "center", behavior: "smooth" });
+    target.focus();
+    announce("Item 40 is in view");
+  };
+
+  $("#trap").onclick = async () => {
+    const previous = lastFocus;
+    const yes = await confirmDialog({
+      title: "Focus is trapped in here",
+      body: "Tab cycles inside the dialog. Escape closes it. When it closes, "
+          + "focus goes back to whatever had it before, because this view "
+          + "wrote that down.",
+      confirm: "Understood",
+    });
+    if (previous) previous.focus();
+    announce(yes ? "Dialog confirmed" : "Dialog dismissed");
+  };
+
+  $("#restore").onclick = () => {
+    ($("#item-1")).focus();
+  };
+});
+</script>
+</body>
+</html>

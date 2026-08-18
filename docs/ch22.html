@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>22. Components I: Overlays, Controls and Text &middot; The MCP UI Cookbook</title>
+<meta name="description" content="What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.">
+<meta property="og:title" content="22. Components I: Overlays, Controls and Text">
+<meta property="og:description" content="What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html" class="current">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 22</p><h1>Components I: Overlays, Controls and Text</h1><p class="summary">What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.</p><p>Part IV is the middle layer. Capabilities are too small to build with; applications are too large to reuse. Components are the pieces with names a designer already uses, and every entry here answers three questions: which capabilities it composes, which Authoring Practices Guide pattern governs its keyboard behaviour, and what changes because it is inside somebody else’s window.</p>
+<p>That third question is the only reason these chapters exist. There are excellent references for building a combobox. There are none for building one that is four hundred pixels wide, inside an opaque origin, next to a model that may fill it in.</p>
+<p>The component library the recipes are built from is one CSS file and one helper file, <code>apps/lib/view.css</code> and <code>apps/lib/view.js</code>, about five hundred lines together. Thirteen applications share it, which is why they look like they came from the same place.</p>
+<h2 id="overlays">Overlays</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alert</td>
+<td><code>dialog.alert</code>, <code>surface.focus</code></td>
+<td>Alert Dialog</td>
+</tr>
+<tr>
+<td>Confirmation</td>
+<td><code>dialog.confirm</code>, <code>surface.focus</code>, <code>input.keyboard</code></td>
+<td>Alert Dialog</td>
+</tr>
+<tr>
+<td>Modal</td>
+<td><code>surface.displayMode</code>, <code>surface.focus</code>, <code>input.keyboard</code></td>
+<td>Dialog (Modal)</td>
+</tr>
+<tr>
+<td>Sheet, drawer</td>
+<td><code>surface.focus</code>, <code>input.pointer</code>, <code>env.reducedMotion</code></td>
+<td>Dialog (Modal)</td>
+</tr>
+<tr>
+<td>Popover</td>
+<td><code>surface.focus</code>, <code>input.keyboard</code></td>
+<td>Disclosure</td>
+</tr>
+<tr>
+<td>Tooltip</td>
+<td><code>input.pointer</code>, <code>env.inputMode</code></td>
+<td>Tooltip</td>
+</tr>
+<tr>
+<td>Context menu</td>
+<td><code>input.contextmenu</code>, <code>input.longpress</code>, <code>surface.focus</code></td>
+<td>Menu</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Use <code>&lt;dialog&gt;</code> and <code>showModal()</code>.</strong> It gives you the focus trap, the inert background, the Escape handling and the <code>aria-modal</code> semantics. A hand-rolled overlay gives you none of them, and in a frame a keyboard user cannot escape from, the difference is not cosmetic.</p>
+<p><strong>Everything is clipped by the frame.</strong> A popover that would overflow the viewport in a page just overflows; here it is cut off by the iframe’s edge and there is no way to render outside it. Position with the frame’s bounds, not the screen’s, and prefer flipping to a different side over letting the content extend past the boundary. A dropdown that opens downward at the bottom of the frame is a dropdown nobody can read.</p>
+<p><strong>Tooltips need a second route.</strong> They are hover-only by construction, and <code>hostContext.deviceCapabilities.hover</code> tells you when hover does not exist. On a touch device, move the content into the label, a popover triggered by tap, or a description that is always visible.</p>
+<p><strong>Context menus need a keyboard route.</strong> Shift+F10, a visible button, or both. Chapter 9 has the details.</p>
+<h2 id="controls">Controls</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Button</td>
+<td><code>input.pointer</code>, <code>input.keyboard</code></td>
+<td>Button</td>
+</tr>
+<tr>
+<td>Checkbox, radio</td>
+<td><code>input.keyboard</code>, <code>input.selection</code></td>
+<td>Checkbox, Radio Group</td>
+</tr>
+<tr>
+<td>Toggle</td>
+<td><code>input.keyboard</code></td>
+<td>Switch</td>
+</tr>
+<tr>
+<td>Slider</td>
+<td><code>input.pointer</code>, <code>input.keyboard</code></td>
+<td>Slider</td>
+</tr>
+<tr>
+<td>Stepper</td>
+<td><code>input.keyboard</code></td>
+<td>Spinbutton</td>
+</tr>
+<tr>
+<td>Segmented control</td>
+<td><code>input.keyboard</code>, <code>input.selection</code></td>
+<td>Radio Group</td>
+</tr>
+<tr>
+<td>Filter chip</td>
+<td><code>input.selection</code>, <code>input.keyboard</code></td>
+<td>Checkbox</td>
+</tr>
+<tr>
+<td>Dropdown</td>
+<td><code>input.keyboard</code>, <code>surface.focus</code></td>
+<td>Listbox</td>
+</tr>
+<tr>
+<td>Combobox</td>
+<td><code>input.keyboard</code>, <code>input.selection</code>, <code>surface.focus</code></td>
+<td>Combobox</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Start from the native element.</strong> <code>&lt;button&gt;</code>, <code>&lt;input type="checkbox"&gt;</code>, <code>&lt;input type="range"&gt;</code>, <code>&lt;select&gt;</code> all work, all come with keyboard and screen reader support, and all are one CSS file away from matching your design. The recipes use native elements everywhere except the combobox, which does not exist natively.</p>
+<p><strong>Target size is a host-dependent decision.</strong> Forty-four pixels on touch, smaller with a pointer, and <code>deviceCapabilities</code> is where you find out which. A toolbar designed at 28 pixels is unusable on a phone, and you cannot detect a phone by width when the same width is a side panel on a desktop.</p>
+<p><strong>Disabled controls carry an obligation.</strong> A disabled button is a promise that something could enable it, and the user is entitled to know what. If the reason is a missing host capability, do not disable, omit: Chapter 1’s argument. If the reason is state, say so.</p>
+<p><strong>The combobox is the one worth buying rather than building.</strong> It is the most complex pattern in the APG, it involves a listbox that must be positioned within the frame, and getting the <code>aria-activedescendant</code> and expanded state right takes longer than any other component here. If a plain <code>&lt;select&gt;</code> or a text input with a datalist will do, take it.</p>
+<h2 id="text-input">Text input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text field</td>
+<td><code>input.keyboard</code>, <code>surface.focus</code></td>
+<td>(native)</td>
+</tr>
+<tr>
+<td>Search field</td>
+<td><code>input.keyboard</code>, <code>input.shortcut</code></td>
+<td>(native)</td>
+</tr>
+<tr>
+<td>Multiline editor</td>
+<td><code>input.keyboard</code>, <code>history.transaction</code></td>
+<td>(native)</td>
+</tr>
+<tr>
+<td>Autocomplete</td>
+<td><code>input.keyboard</code>, <code>input.selection</code></td>
+<td>Combobox</td>
+</tr>
+<tr>
+<td>Token input</td>
+<td><code>input.keyboard</code>, <code>input.selection</code>, <code>clipboard.write</code></td>
+<td>Combobox</td>
+</tr>
+<tr>
+<td>Rich text editor</td>
+<td><code>history.transaction</code>, <code>input.selection</code>, <code>ui.prefill</code></td>
+<td>(none)</td>
+</tr>
+<tr>
+<td>Code editor</td>
+<td><code>input.keyboard</code>, <code>clipboard.write</code>, <code>input.selection</code></td>
+<td>(none)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Validate on blur and on submit, never on keystroke.</strong> Telling somebody their email is invalid while they are typing the at sign is the fastest way to make a form feel hostile. Recipe 13 tracks a <code>touched</code> flag per field and only shows an error after the field has been left once.</p>
+<p><strong>Undo grouping is per pause, not per keystroke.</strong> Chapter 15. In a rich text editor this is the difference between an undo stack somebody can use and one that steps back a character at a time.</p>
+<p><strong>Search fields want a shortcut and cannot safely have one.</strong> Cmd/Ctrl+F is the convention and the host may own it. Bind it, expect to lose it sometimes, and always provide the visible field.</p>
+<p><strong>Rich text is where the agent shows up.</strong> A text field can be prefilled and the user sees the value change. A document cannot: the agent’s rewrite has to appear as a proposal, with the original still visible, and accepting it has to be one undo transaction. Recipe 4 is the worked example, and the proposal card is a component in its own right that Chapter 24 lists.</p>
+<p><strong>Code editors are a decision about weight.</strong> A real editor is a large dependency inside a frame with a restrictive CSP and no CDN unless the server declares one. A <code>&lt;pre&gt;</code> with syntax highlighting done server-side covers reading, which is most of what a review interface does. Recipe 8 renders a diff with no editor at all.</p>
+<h2 id="the-embedded-rule-that-applies-to-all-of-them">The embedded rule that applies to all of them</h2>
+<p>Every component in this chapter is smaller than the version you have built before, because the frame is smaller. A toolbar with nine buttons becomes a toolbar with four and an overflow menu. A form with three columns becomes one column. A modal that would be 600 pixels wide has to work at 380.</p>
+<p>The useful discipline is to design at the narrowest width you will accept, and to let <code>surface.resize</code> report the height rather than trying to fit a fixed one. Everything in this book is built at 380 pixels first, and the recipes look the same at 900 because the layout only ever had one column to lose.</p>
+
+<div class="pager"><a href="ch21.html"><span class="dir">Previous</span>21. Approval, Elicitation and the Context Boundary</a><a href="ch23.html" style="text-align:right"><span class="dir">Next</span>23. Components II: Navigation, Data and Visualization</a></div>
+</main>
+</div>
+
+</body>
+</html>

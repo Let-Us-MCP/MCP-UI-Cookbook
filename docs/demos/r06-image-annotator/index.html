@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Image Annotator</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  #stage { position:relative; overflow:hidden; border-radius:var(--border-radius-md);
+    border:1px solid var(--color-border-primary); height:260px; touch-action:none;
+    background:var(--color-background-secondary); cursor:crosshair }
+  #canvas { position:absolute; transform-origin:0 0 }
+  .box { position:absolute; border:2px solid var(--color-text-info);
+    background:color-mix(in srgb, var(--color-text-info) 14%, transparent) }
+  .box span { position:absolute; top:-18px; left:0; font-size:10px;
+    background:var(--color-text-info); color:var(--color-text-inverse);
+    padding:0 4px; border-radius:3px; white-space:nowrap }
+  .box.sel { border-style:dashed }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <input id="label" value="defect" aria-label="Label" style="width:110px">
+    <input id="colour" type="color" value="#0f5c8c" aria-label="Colour">
+    <button id="fit">Fit</button>
+    <button id="undo" disabled>Undo</button>
+    <button id="export">Export</button>
+    <span class="spacer"></span>
+    <span class="chip" id="zoom">100%</span>
+  </div>
+
+  <div id="stage">
+    <div id="canvas">
+      <svg id="art" width="480" height="300" viewBox="0 0 480 300"
+           role="img" aria-label="Sample plate with three surface marks"></svg>
+    </div>
+  </div>
+
+  <p class="muted" id="hint">Drag on the plate to draw a box. Wheel to zoom,
+    space-drag to pan. Drop a JSON file of boxes to load one.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce } = View;
+
+let boxes = [];
+const past = [];
+let scale = 1, panX = 0, panY = 0;
+let bridge;
+
+// A drawn image rather than a downloaded one: the view declares no external
+// origins, so its content security policy stays empty and honest.
+function plate() {
+  const ns = "http://www.w3.org/2000/svg";
+  const art = $("#art");
+  const rect = (x, y, w, h, fill) => {
+    const n = document.createElementNS(ns, "rect");
+    Object.entries({ x, y, width: w, height: h, fill, rx: 4 })
+      .forEach(([k, v]) => n.setAttribute(k, v));
+    return n;
+  };
+  art.replaceChildren(
+    rect(0, 0, 480, 300, "#8a939c"),
+    rect(20, 20, 440, 260, "#a8b2bb"),
+    rect(120, 70, 46, 30, "#5c6670"),
+    rect(300, 180, 70, 22, "#5c6670"),
+    rect(210, 120, 24, 24, "#49525b"));
+}
+
+function apply(entry) {
+  entry.forward();
+  past.push(entry);
+  draw();
+  announce(entry.label);
+}
+
+function draw() {
+  $("#canvas").style.transform =
+    `translate(${panX}px, ${panY}px) scale(${scale})`;
+  $("#zoom").textContent = `${Math.round(scale * 100)}%`;
+  for (const node of [...$("#canvas").querySelectorAll(".box")]) node.remove();
+  for (const box of boxes) {
+    $("#canvas").append(h("div", { class: "box",
+      style: `left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px;`
+           + `border-color:${box.colour};` },
+      h("span", { text: box.label, style: `background:${box.colour}` })));
+  }
+  $("#undo").disabled = !past.length;
+}
+
+View.boot({ name: "image-annotator", version: "1.0.0" },
+  { availableDisplayModes: ["inline", "fullscreen"] }, async (instance) => {
+  bridge = instance;
+  plate();
+
+  const loaded = await bridge.callServerTool("load_annotations", {});
+  boxes = loaded.structuredContent?.boxes ?? [];
+  draw();
+
+  const stage = $("#stage");
+  const toCanvas = (event) => {
+    const rect = stage.getBoundingClientRect();
+    return { x: (event.clientX - rect.left - panX) / scale,
+             y: (event.clientY - rect.top - panY) / scale };
+  };
+
+  let start = null, ghost = null, panning = false, panFrom = null;
+
+  addEventListener("keydown", (e) => { if (e.code === "Space") panning = true; });
+  addEventListener("keyup", (e) => { if (e.code === "Space") panning = false; });
+
+  stage.addEventListener("pointerdown", (event) => {
+    stage.setPointerCapture(event.pointerId);
+    if (panning) { panFrom = { x: event.clientX - panX, y: event.clientY - panY }; return; }
+    start = toCanvas(event);
+    ghost = h("div", { class: "box sel", style: `left:${start.x}px;top:${start.y}px` });
+    $("#canvas").append(ghost);
+  });
+
+  stage.addEventListener("pointermove", (event) => {
+    if (panFrom) {
+      panX = event.clientX - panFrom.x;
+      panY = event.clientY - panFrom.y;
+      draw();
+      return;
+    }
+    if (!start || !ghost) return;
+    const at = toCanvas(event);
+    Object.assign(ghost.style, {
+      left: `${Math.min(start.x, at.x)}px`, top: `${Math.min(start.y, at.y)}px`,
+      width: `${Math.abs(at.x - start.x)}px`, height: `${Math.abs(at.y - start.y)}px` });
+  });
+
+  stage.addEventListener("pointerup", (event) => {
+    stage.releasePointerCapture(event.pointerId);
+    if (panFrom) { panFrom = null; return; }
+    if (!start || !ghost) return;
+    const at = toCanvas(event);
+    const box = { x: Math.min(start.x, at.x), y: Math.min(start.y, at.y),
+                  w: Math.abs(at.x - start.x), h: Math.abs(at.y - start.y),
+                  label: $("#label").value || "region",
+                  colour: $("#colour").value };
+    ghost.remove();
+    ghost = null;
+    start = null;
+    if (box.w < 6 || box.h < 6) return;
+    apply({ label: `add ${box.label}`, forward: () => boxes.push(box),
+            back: () => boxes.pop() });
+  });
+
+  stage.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    const before = scale;
+    scale = Math.min(6, Math.max(0.4, scale * (event.deltaY < 0 ? 1.12 : 0.89)));
+    // Zoom about the pointer, not about the origin. Zooming about the origin
+    // is the difference between a canvas that feels right and one that fights.
+    const rect = stage.getBoundingClientRect();
+    const px = event.clientX - rect.left, py = event.clientY - rect.top;
+    panX = px - ((px - panX) / before) * scale;
+    panY = py - ((py - panY) / before) * scale;
+    draw();
+  }, { passive: false });
+
+  $("#fit").onclick = () => {
+    scale = Math.min(stage.clientWidth / 480, stage.clientHeight / 300);
+    panX = panY = 0;
+    draw();
+  };
+  $("#fit").click();
+
+  $("#undo").onclick = () => {
+    const entry = past.pop();
+    if (!entry) return;
+    entry.back();
+    draw();
+  };
+
+  $("#export").onclick = async () => {
+    const payload = JSON.stringify({ boxes }, null, 2);
+    if (!bridge.hostCapabilities.downloadFile) {
+      await navigator.clipboard.writeText(payload).catch(() => {});
+      toast("No download capability, so the JSON went to the clipboard");
+      return;
+    }
+    await bridge.downloadFile([{ type: "resource", resource: {
+      uri: "file:///annotations.json", mimeType: "application/json",
+      text: payload } }]);
+    toast("Handed to the host");
+  };
+
+  stage.addEventListener("dragover", (e) => e.preventDefault());
+  stage.addEventListener("drop", async (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (!file) return;
+    if (!/json/.test(file.type)) { toast("Only JSON annotation files"); return; }
+    const text = await file.text();
+    try {
+      const loadedBoxes = JSON.parse(text).boxes ?? [];
+      const before = boxes;
+      apply({ label: `load ${file.name}`, forward: () => { boxes = loadedBoxes; },
+              back: () => { boxes = before; } });
+    } catch { toast("That file is not annotation JSON"); }
+  });
+});
+</script>
+</body>
+</html>

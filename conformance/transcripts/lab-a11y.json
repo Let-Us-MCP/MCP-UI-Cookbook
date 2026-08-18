@@ -1,0 +1,83 @@
+{
+  "demo": "lab-a11y",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "a11y-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {}
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 440
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 277,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "styles": {
+          "variables": {
+            "--color-background-primary": "#101418",
+            "--color-background-secondary": "#1a2029",
+            "--color-text-primary": "#e8edf2"
+          }
+        },
+        "theme": "dark"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "styles": {
+          "variables": {}
+        },
+        "theme": "light"
+      }
+    }
+  ]
+}

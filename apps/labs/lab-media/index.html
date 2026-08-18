@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Progress, cancellation, errors</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="card">
+    <h2>A long operation</h2>
+    <div class="row">
+      <button id="run" class="primary">Reindex the archive</button>
+      <button id="cancel" disabled>Cancel</button>
+      <button id="retry" hidden>Retry</button>
+      <button id="full">Fullscreen</button>
+    </div>
+    <div class="bar" style="margin-top:10px"><span id="fill" style="width:0"></span></div>
+    <p class="muted" id="phase">Idle.</p>
+    <div id="error" hidden class="banner bad"></div>
+  </div>
+
+  <div class="card">
+    <h2>A media transport</h2>
+    <div class="row">
+      <button id="play">Play</button>
+      <input id="seek" type="range" min="0" max="100" value="0" style="flex:1">
+      <span class="muted" id="clock">0:00 / 3:20</span>
+    </div>
+    <p class="muted">Playback is the platform's. Going immersive is the host's,
+      through a display mode, not through the Fullscreen API.</p>
+  </div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { $, toast } = View;
+
+let job = null;
+
+View.boot({ name: "media-lab", version: "1.0.0" },
+  { availableDisplayModes: ["inline", "fullscreen"] }, async (bridge) => {
+
+  const setPhase = (text) => { $("#phase").textContent = text; };
+
+  const start = async () => {
+    $("#run").disabled = true;
+    $("#cancel").disabled = false;
+    $("#retry").hidden = true;
+    $("#error").hidden = true;
+    setPhase("Contacting the server.");
+
+    const controller = new AbortController();
+    job = controller;
+
+    try {
+      // A tool call is a request with an id, so cancelling it is a core MCP
+      // notification carrying that id, not a bespoke message. The view's job
+      // is to keep the optimistic UI honest when the answer never comes.
+      const result = await bridge.callServerTool("reindex", { scope: "archive" });
+      if (controller.signal.aborted) return;
+      if (result.isError) throw new Error(result.content?.[0]?.text ?? "failed");
+      setPhase(result.content?.[0]?.text ?? "Finished.");
+      $("#fill").style.width = "100%";
+      toast("Reindex finished");
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      $("#error").hidden = false;
+      // A structured error says what failed, whether retrying helps, and what
+      // the recovery action is. "Something went wrong" says none of those.
+      $("#error").textContent = `${error.message} The archive was not modified.`;
+      $("#retry").hidden = false;
+      setPhase("Failed.");
+    } finally {
+      $("#run").disabled = false;
+      $("#cancel").disabled = true;
+      job = null;
+    }
+  };
+
+  $("#run").onclick = start;
+  $("#retry").onclick = start;
+
+  $("#cancel").onclick = () => {
+    job?.abort();
+    bridge.notify("notifications/cancelled",
+      { requestId: bridge._id, reason: "The user pressed cancel" });
+    setPhase("Cancelled. Nothing was written.");
+    $("#fill").style.width = "0";
+    $("#run").disabled = false;
+    $("#cancel").disabled = true;
+    job = null;
+  };
+
+  bridge.on("progress", () => {});
+
+  $("#full").onclick = async () => {
+    const { mode } = await bridge.requestDisplayMode(
+      bridge.hostContext.displayMode === "fullscreen" ? "inline" : "fullscreen");
+    toast(`Display mode is ${mode}`);
+  };
+
+  // A transport with no media behind it, because a book that ships a video
+  // file to prove <video> works is a book that ships a video file.
+  let playing = false, at = 0;
+  const total = 200;
+  const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  setInterval(() => {
+    if (!playing) return;
+    at = Math.min(total, at + 1);
+    $("#seek").value = String((at / total) * 100);
+    $("#clock").textContent = `${clock(at)} / ${clock(total)}`;
+    if (at === total) { playing = false; $("#play").textContent = "Play"; }
+  }, 250);
+  $("#play").onclick = () => {
+    playing = !playing;
+    $("#play").textContent = playing ? "Pause" : "Play";
+  };
+  $("#seek").oninput = () => {
+    at = (Number($("#seek").value) / 100) * total;
+    $("#clock").textContent = `${clock(at)} / ${clock(total)}`;
+  };
+
+  // Progress arrives as a core MCP notification against the request that is
+  // running. The host has to forward it; not every host does.
+  bridge.on("hostcontextchanged", () => {});
+  addEventListener("message", (event) => {
+    const message = event.data;
+    if (message?.method !== "notifications/progress") return;
+    const { progress, total: outOf, message: text } = message.params ?? {};
+    if (outOf) $("#fill").style.width = `${(progress / outOf) * 100}%`;
+    if (text) setPhase(text);
+  });
+});
+</script>
+</body>
+</html>

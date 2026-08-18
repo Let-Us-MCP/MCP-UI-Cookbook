@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>20. State Ownership and Concurrency &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.">
+<meta property="og:title" content="20. State Ownership and Concurrency">
+<meta property="og:description" content="Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html" class="current">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 20</p><h1>State Ownership and Concurrency</h1><p class="summary">Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.</p><p>Every collaborative editor ever built has had to answer this question, and the answers are well known: locks, operational transforms, conflict-free replicated data types, last-writer-wins with a notice. What is different here is the shape of the second party.</p>
+<p>The agent is not another user. It is fast, it works in bursts, it cannot see the screen, it does not know the human is mid-sentence, and it will happily rewrite a paragraph half a second after the human started typing in it. It also cannot be asked to wait, because it is not present in the way another person would be.</p>
+<p>So this chapter is not about merge algorithms. It is about deciding, in advance, which regions of your state each party owns, and what happens at the boundary.</p>
+<div class="demo" data-demo="lab-ownership" id="lab-ownership"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-ownership-map">The ownership map</h2>
+<div class="cap" id="state.ownership"><div class="cap-head"><code class="cap-id">state.ownership</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Declare who owns each region when both parties can write.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-ownership">lab-ownership</a></dd></dl></div>
+<p>Every region of application state gets one of three labels.</p>
+<p><strong>User-owned.</strong> The agent may read it and may propose changes to it in conversation. It may not write it. Personal notes, drafts the user has not shared, anything where the point is that a person said it.</p>
+<p><strong>Agent-owned.</strong> The agent computes it and the view displays it. The user does not edit it directly; if they disagree, they change the inputs. Risk scores, classifications, generated summaries that are labelled as generated.</p>
+<p><strong>Shared.</strong> Both may write, and therefore a conflict policy is required. This is where all the difficulty lives, and the useful discipline is to keep the shared set small.</p>
+<p>The demonstration has one region of each, and the labels are visible in the interface. That visibility is not decoration: a user who can see that the risk score is the agent’s and the note is theirs can predict what will change under them.</p>
+<p><strong>Write the map down before the code.</strong> It takes ten minutes and it converts an argument about merge semantics into a list of decisions. Recipe 4 declares its map in the recipe entry, and the map is what determined which tools the view registers.</p>
+<figure>
+<img src="figures/diag-ownership.png" alt="Three regions, three owners, one conflict policy each" />
+<figcaption aria-hidden="true">Three regions, three owners, one conflict policy each</figcaption>
+</figure>
+<h2 id="conflict-policy">Conflict policy</h2>
+<div class="cap" id="state.conflict"><div class="cap-head"><code class="cap-id">state.conflict</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Decide what happens when they both do.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-ownership">lab-ownership</a></dd></dl></div>
+<p>For each shared region, pick one and say so in the interface.</p>
+<p><strong>Reject.</strong> The write fails and the writer is told. Appropriate when the region is small and the loss is cheap. The tool returns <code>isError: true</code> with an explanation, which the agent can relay.</p>
+<p><strong>Last writer wins.</strong> The later write applies. Simple, and dangerous exactly when the human is the earlier writer, because they lose work they can see on screen. Acceptable only with a visible notice and an undo.</p>
+<p><strong>Merge.</strong> For structured state where writes touch different fields, apply both. Requires that your state actually be structured rather than a blob of HTML, which is a good reason to structure it.</p>
+<p><strong>Ask.</strong> Hold the write, show both versions, let the human choose. The heaviest and the safest, and the right default when the human is actively editing.</p>
+<p>The demonstration implements the last one with a rule that costs eight lines: while the human has typed within the last 1.5 seconds, hold the agent’s write and offer it when they stop.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-ownership/index.html</code></p><pre class="js"><code>bridge.registerTool({
+  name: &quot;rewrite_summary&quot;,
+  description: &quot;Replace the shared summary text&quot;,
+  inputSchema: { type: &quot;object&quot;, properties: { text: { type: &quot;string&quot; } },
+                 required: [&quot;text&quot;] },
+  annotations: { readOnlyHint: false },
+}, async ({ text }) =&gt; {
+  if (userTyping) {
+    pending = text;
+    setOwner(&quot;Agent write held: the human is typing.&quot;, &quot;warn&quot;);
+    return { content: [{ type: &quot;text&quot;,
+      text: &quot;Held. The user is editing; the change will be offered to them.&quot; }] };
+  }
+  offer(text);
+  return { content: [{ type: &quot;text&quot;, text: &quot;Offered to the user for review.&quot; }] };
+});</code></pre>
+<p>Two things to notice. The tool tells the agent what actually happened, so it does not report to the user that the summary has been rewritten when it has not. And “held” and “offered” are different outcomes with different words, because an agent that reads “held” can decide to wait and try again.</p>
+<h2 id="refusing-a-write">Refusing a write</h2>
+<p>The user-owned region needs a tool too, and the tool’s job is to say no usefully.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-ownership/index.html</code></p><pre class="js"><code>bridge.registerTool({
+  name: &quot;write_note&quot;,
+  description: &quot;Attempt to write the user-owned note&quot;,
+  inputSchema: { type: &quot;object&quot;, properties: { text: { type: &quot;string&quot; } },
+                 required: [&quot;text&quot;] },
+  annotations: { readOnlyHint: false },
+}, async () =&gt; ({
+  isError: true,
+  content: [{ type: &quot;text&quot;,
+    text: &quot;The internal note is user owned. Propose a change in the &quot;
+        + &quot;conversation instead of writing it.&quot; }],
+}));</code></pre>
+<p>The alternative, not registering the tool at all, is worse. A model that cannot find a way to write the note will try adjacent tools, or will tell the user it has updated the note when it has not. An explicit refusal that names the correct route is a better interface for a model in exactly the way it is for a person.</p>
+<h2 id="optimistic-ui-and-rollback">Optimistic UI and rollback</h2>
+<p>The other concurrency problem is with the server rather than with the agent.</p>
+<p>A view that applies a change locally and then calls a tool has committed to an outcome it does not have yet. When the call fails, or is cancelled, or the frame is torn down mid-flight, the interface is showing something that never happened.</p>
+<p><strong>The rule.</strong> Optimistic updates need a compensating action recorded at the same moment they are applied, which is the same transaction shape as Chapter 15’s undo. On failure, apply the compensation and say why. On cancellation, apply the compensation only for steps that did not complete, and say how far it got: Recipe 11 reports “stopped after three of five steps, completed steps were not rolled back”, which is unglamorous and true.</p>
+<p><strong>The unrecoverable case.</strong> If the frame is torn down while a write is in flight, nobody rolls anything back. The server may have applied it. This is why writes that matter should be idempotent and keyed, so the next render can ask what actually happened rather than assuming.</p>
+<h2 id="making-the-agents-changes-undoable">Making the agent’s changes undoable</h2>
+<p>The single most important thing in this chapter, and it belongs to Chapter 15 mechanically.</p>
+<p>Every agent write goes onto the same undo stack as the user’s own edits, as one transaction, with a label that names the agent. One Cmd+Z restores the human’s words. Recipe 4 does this for accepted rewrites, and the whole safety argument for agent-assisted editing rests on it: a change you can take back in one keystroke is a change you can afford to let a model make.</p>
+<p>An agent whose changes are outside the undo stack is an agent whose changes are permanent, and users respond to permanent changes by not using the feature.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Three labels, four policies, and a decision made before the code rather than after the bug report. Keep the shared set small, hold agent writes while a human is typing, tell the agent what actually happened, and put everything the agent does on the undo stack. That is the entire chapter, and every part of it is cheaper to build than the merge algorithm you were considering.</p>
+
+<div class="pager"><a href="ch19.html"><span class="dir">Previous</span>19. Tool Invocation and Streaming</a><a href="ch21.html" style="text-align:right"><span class="dir">Next</span>21. Approval, Elicitation and the Context Boundary</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

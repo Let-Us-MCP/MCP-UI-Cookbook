@@ -1,0 +1,76 @@
+{
+  "demo": "lab-pickers",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "pickers-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "serverResources": {}
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 400
+          },
+          "displayMode": "inline",
+          "locale": "de-DE",
+          "theme": "light",
+          "timeZone": "Europe/Berlin"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 284,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "locale": "en-US",
+        "timeZone": "America/Los_Angeles"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "locale": "ja-JP",
+        "timeZone": "Asia/Tokyo"
+      }
+    }
+  ]
+}

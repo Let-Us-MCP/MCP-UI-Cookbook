@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12. Host Environment and Theming &middot; The MCP UI Cookbook</title>
+<meta name="description" content="A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.">
+<meta property="og:title" content="12. Host Environment and Theming">
+<meta property="og:description" content="A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html" class="current">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 12</p><h1>Host Environment and Theming</h1><p class="summary">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</p><p>A view that looks like it came from somewhere else is a view users treat as an advertisement. Belonging is the job, and the extension’s answer is deliberately modest: the host sends a set of CSS custom properties, the view uses them with its own fallbacks, and nobody ships a component library.</p>
+<p>Seven capabilities describe what the host tells you about the environment. All seven arrive in <code>hostContext</code>, all seven can change through <code>ui/notifications/host-context-changed</code>, and the single most common bug in this group is reading them once.</p>
+<div class="demo" data-demo="lab-theme" id="lab-theme"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-contract-in-three-layers">The contract, in three layers</h2>
+<p>The theming story is layered, and it helps to see which layer each decision belongs to.</p>
+<p><strong>The wire format</strong> is CSS custom properties in <code>hostContext.styles.variables</code>, with an optional block of <code>@font-face</code> or <code>@import</code> rules in <code>styles.css.fonts</code>. The specification standardises the <em>names</em>: background, text, border and ring colours in a fixed set of semantic slots, font families and weights, a type scale, border radii, and four shadow levels.</p>
+<p><strong>The semantics</strong> are roles, not palettes. There is no “blue”. There is <code>--color-background-primary</code> and <code>--color-text-primary</code>, and the pairing is what makes contrast work. A view that uses <code>--color-text-danger</code> on <code>--color-background-danger</code> is legible in every theme; one that uses a red it picked itself on a background the host chose is legible in the theme it was built in.</p>
+<p><strong>The adaptation</strong> is dark mode, contrast, motion and text scale, and only the first of those is on the wire. Chapter 13 covers the others, which are media queries.</p>
+<p>Spacing is deliberately absent from the variable set, and the reason is worth repeating: layouts break when spacing varies from what they were designed against. A host can change your colours safely and cannot change your rhythm safely.</p>
+<h2 id="theme">Theme</h2>
+<div class="cap" id="env.theme"><div class="cap-head"><code class="cap-id">env.theme</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Take the host&#x27;s tokens and follow them when they change.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>styles</code><code>--color-background-primary</code><code>light-dark</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
+<p><strong>Application behaviour.</strong> Apply the variables to the document root, and define a fallback for every one you use. The specification is explicit that hosts may send all, some, or none, and warns that partial sets cause clashes because views fall back per variable rather than wholesale.</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>:root {
+  color-scheme: light dark;
+  --color-background-primary: light-dark(#ffffff, #16181d);
+  --color-text-primary: light-dark(#15181d, #e7eaee);
+  --color-text-info: light-dark(#0f5c8c, #63aedc);
+  --border-radius-md: 8px;
+}</code></pre>
+<p><code>light-dark()</code> with <code>color-scheme: light dark</code> is the compact way to write a fallback that is already theme-aware, so a view with no host variables at all still respects the operating system. The host’s values, when they arrive, override it.</p>
+<p><strong>Removing is as important as setting.</strong> When the host stops sending a variable, the view is supposed to fall back to its own value, which it cannot do while last theme’s override is still on the root element. The bridge here tracks what it applied and removes what is no longer sent.</p>
+<p class="provenance extracted">Extracted from from <code>emulator/app-bridge.js</code></p><pre class="js"><code>for (const name of appliedVariables) {
+  if (variables[name] == null) root.style.removeProperty(name);
+}
+appliedVariables = [];
+for (const [name, value] of Object.entries(variables)) {
+  if (value != null) {
+    root.style.setProperty(name, value);
+    appliedVariables.push(name);
+  }
+}</code></pre>
+<p>Press “Send only half the variables” in the demonstration to see why this matters: with half a dark palette applied over a light fallback, the result is unreadable, and that is exactly the clash the specification warns about. The mitigation on the view side is to use <em>pairs</em> consistently, so that a missing background and a present foreground are both wrong together rather than separately.</p>
+<p><strong>Failure modes.</strong> No styles at all is the common case and must look deliberate. Partial styles is the dangerous case. A theme that changes while a menu is open is the fiddly case: re-render or re-read on <code>hostcontextchanged</code> rather than caching computed colours in JavaScript.</p>
+<div class="cap" id="env.fonts"><div class="cap-head"><code class="cap-id">env.fonts</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Load the host&#x27;s typeface without loading anything else.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>fonts</code><code>--font-sans</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
+<p>Fonts arrive as a CSS block to inject, and <code>--font-sans</code> names the family. Inject the block into a <code>&lt;style&gt;</code> element in the head and let the variable do the rest. If the host sends the variable and not the block, or the block fails to load, your fallback stack is what people see, so make it a real stack and not a single exotic name.</p>
+<figure>
+<img src="figures/xkcd-belonging.png" alt="A view that ignores the host’s tokens reads as an advertisement" />
+<figcaption aria-hidden="true">A view that ignores the host’s tokens reads as an advertisement</figcaption>
+</figure>
+<h2 id="locale-and-time">Locale and time</h2>
+<div class="cap" id="env.locale"><div class="cap-head"><code class="cap-id">env.locale</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Format numbers, dates, and text for the user&#x27;s region.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>locale</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
+<div class="cap" id="env.timezone"><div class="cap-head"><code class="cap-id">env.timezone</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Render instants in the timezone the user is actually in.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>timeZone</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
+<p>Two strings, and between them they decide whether numbers, dates, currencies, plurals and sort order look right.</p>
+<p>The rule is that <code>hostContext.locale</code> and <code>hostContext.timeZone</code> are the only correct sources. Not <code>navigator.language</code>, which is the browser’s. Not the system timezone, which is the machine’s. A host serving a user in Tokyo from a server in Virginia will send <code>ja-JP</code> and <code>Asia/Tokyo</code>, and a view that reads the machine will render Virginia’s answer.</p>
+<p><strong>A concrete failure.</strong> A deployment list showing “Aug 18, 2026, 4:21 AM” because the view formatted a UTC instant with the machine’s offset, while the user is in Tokyo and the deploy happened at lunchtime. Nothing errors. Everybody’s timeline is wrong by nine hours.</p>
+<figure>
+<img src="figures/xkcd-timezone.png" alt="Whose clock is it" />
+<figcaption aria-hidden="true">Whose clock is it</figcaption>
+</figure>
+<h2 id="platform-and-modality">Platform and modality</h2>
+<div class="cap" id="env.platform"><div class="cap-head"><code class="cap-id">env.platform</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Coarse platform shape, used sparingly.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>platform</code><code>userAgent</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
+<div class="cap" id="env.inputMode"><div class="cap-head"><code class="cap-id">env.inputMode</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Size targets for the modality actually in use.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>deviceCapabilities</code><code>touch</code><code>hover</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
+<p><code>platform</code> is <code>web</code>, <code>desktop</code> or <code>mobile</code>, and <code>userAgent</code> names the host. Both are Extended, both are coarse, and both should be used sparingly. Reach for a media query or a capability check first; branch on the host name only when you are working around a known bug in a specific host, and comment it with the bug.</p>
+<p><code>deviceCapabilities</code> carries <code>touch</code> and <code>hover</code>, and this pair is worth acting on. Touch without hover means every hover-revealed control is unreachable and every target needs to be 44 pixels. Hover means tooltips work and a compact toolbar is fine. Both can be true on a laptop with a touchscreen, so treat them as independent facts rather than as a device category.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-input/index.html</code></p><pre class="js"><code>function describeModality(device = {}) {
+  const parts = [device.touch &amp;&amp; &quot;touch&quot;, device.hover &amp;&amp; &quot;hover&quot;].filter(Boolean);
+  $(&quot;#mode&quot;).textContent = `modality: ${parts.join(&quot; + &quot;) || &quot;unstated&quot;}`;
+}
+bridge.on(&quot;hostcontextchanged&quot;, (patch) =&gt; {
+  if (patch.deviceCapabilities) describeModality(patch.deviceCapabilities);
+});</code></pre>
+<h2 id="safe-area">Safe area</h2>
+<div class="cap" id="env.safeArea"><div class="cap-head"><code class="cap-id">env.safeArea</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Keep content out of regions the host has spoken for.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>safeAreaInsets</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
+<p><code>safeAreaInsets</code> is four numbers in pixels. In a native application these would come from <code>env(safe-area-inset-*)</code>, but a view inside somebody else’s window cannot read that, because the notch is not on its viewport. So the host sends them.</p>
+<p><strong>Application behaviour.</strong> Turn them into custom properties and add them to your outermost padding. The view stylesheet in this repository does exactly that, which is why pressing “Add a notch” in the demonstration visibly moves the content in from every edge.</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>body {
+  padding-top: calc(12px + var(--safe-top, 0px));
+  padding-right: calc(12px + var(--safe-right, 0px));
+  padding-bottom: calc(12px + var(--safe-bottom, 0px));
+  padding-left: calc(12px + var(--safe-left, 0px));
+}</code></pre>
+<p>The controls most affected are the ones pinned to an edge: a bottom toolbar, a floating action button, a toast stack. Everything in the middle of the view is fine, which is why this bug survives testing on a desktop and appears on the first phone.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Read the environment in a function, not in a constant. Define a fallback for every variable you use. Format through the host’s locale and timezone. Those three habits cover almost everything in this chapter, and the demonstration above will break a view that lacks any of them within three button presses.</p>
+
+<div class="pager"><a href="ch11.html"><span class="dir">Previous</span>11. Pickers and Dropzones</a><a href="ch13.html" style="text-align:right"><span class="dir">Next</span>13. Accessibility</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Monitoring Console</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  #log { font-family:var(--font-mono); font-size:11.5px; max-height:190px;
+    overflow:auto; border:1px solid var(--color-border-primary);
+    border-radius:var(--border-radius-md) }
+  #log div { padding:2px 8px; border-bottom:1px solid var(--color-border-secondary) }
+  #log div.err { color:var(--color-text-danger) }
+  #log div.warn { color:var(--color-text-warning) }
+  #log div[aria-selected="true"] { background:var(--color-background-info) }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <span class="chip" id="conn">connecting</span>
+    <span class="chip" id="rate">0 lines/s</span>
+    <span class="spacer"></span>
+    <label class="row"><input type="checkbox" id="follow" checked> Follow</label>
+    <button id="retry" hidden>Reconnect</button>
+  </div>
+
+  <div id="banner" class="banner warn" hidden></div>
+
+  <div id="log" role="log" aria-label="Live log"></div>
+
+  <p class="muted" id="hint">Selection survives new lines. Following stops when
+    you scroll up, which is the behaviour every terminal has taught people.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce } = View;
+
+let lines = 0, since = performance.now(), recent = 0;
+let selectedId = null;
+let suspended = false;
+let bridge;
+
+function append(entry) {
+  const node = h("div", { class: entry.level, "data-id": entry.id,
+    "aria-selected": entry.id === selectedId ? "true" : "false",
+    text: `${entry.at}  ${entry.service.padEnd(14)}  ${entry.text}`,
+    onclick: () => {
+      // Selecting a line must survive the next thousand lines arriving. The
+      // usual bug is rebuilding the list on every batch, which drops the
+      // selection and the scroll position together.
+      selectedId = entry.id;
+      for (const n of $("#log").children) {
+        n.setAttribute("aria-selected", n.dataset.id === entry.id ? "true" : "false");
+      }
+    } });
+  $("#log").append(node);
+  while ($("#log").children.length > 220) $("#log").firstChild.remove();
+  if ($("#follow").checked) $("#log").scrollTop = $("#log").scrollHeight;
+  lines += 1;
+  recent += 1;
+  if (entry.level === "err") attention(entry);
+}
+
+// A backgrounded view has no way to raise a badge. There is no message for it,
+// so the honest fallback is to make the state obvious the moment the view is
+// looked at again, and to say so in the model's context.
+function attention(entry) {
+  if (!document.hidden) return;
+  $("#banner").hidden = false;
+  $("#banner").className = "banner bad";
+  $("#banner").textContent =
+    `${entry.service} failed while you were away: ${entry.text}`;
+  bridge?.updateModelContext({
+    content: [{ type: "text", text: `The console saw an error from ${entry.service}.` }],
+    structuredContent: { alert: entry },
+  }).catch(() => {});
+}
+
+View.boot({ name: "monitoring-console", version: "1.0.0" }, {}, async (instance) => {
+  bridge = instance;
+
+  const setConn = (state) => {
+    $("#conn").textContent = state;
+    $("#conn").className = `chip ${state === "live" ? "good"
+      : state === "offline" ? "bad" : "warn"}`;
+    $("#retry").hidden = state !== "offline";
+  };
+  setConn("connecting");
+
+  bridge.on("toolresult", (result) => {
+    for (const entry of result.structuredContent?.lines ?? []) append(entry);
+    setConn("live");
+  });
+
+  const first = await bridge.callServerTool("tail_logs", {});
+  for (const entry of first.structuredContent?.lines ?? []) append(entry);
+  setConn("live");
+
+  setInterval(() => {
+    const seconds = (performance.now() - since) / 1000;
+    $("#rate").textContent = `${(recent / seconds).toFixed(1)} lines/s`;
+    recent = 0;
+    since = performance.now();
+  }, 1000);
+
+  // Work that nobody is watching is work that should not be running. The
+  // console keeps the connection but stops rendering while hidden.
+  document.addEventListener("visibilitychange", () => {
+    suspended = document.hidden;
+    if (!suspended) {
+      announce("Console resumed");
+      $("#banner").hidden = $("#banner").className.includes("bad") ? false : true;
+    }
+  });
+
+  addEventListener("offline", () => {
+    setConn("offline");
+    $("#banner").hidden = false;
+    $("#banner").className = "banner warn";
+    $("#banner").textContent = "The browser reports no network. The lines below "
+      + "are the last ones that arrived, not the current state.";
+  });
+  addEventListener("online", () => { setConn("live"); $("#banner").hidden = true; });
+
+  $("#retry").onclick = async () => {
+    setConn("connecting");
+    const result = await bridge.callServerTool("tail_logs", {});
+    for (const entry of result.structuredContent?.lines ?? []) append(entry);
+    setConn("live");
+    toast("Reconnected");
+  };
+
+  $("#log").addEventListener("scroll", () => {
+    const atBottom = $("#log").scrollTop + $("#log").clientHeight
+      >= $("#log").scrollHeight - 4;
+    if (!atBottom) $("#follow").checked = false;
+  });
+});
+</script>
+</body>
+</html>

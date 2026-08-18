@@ -1,0 +1,294 @@
+{
+  "demo": "lab-apptools",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "appInfo": {
+          "name": "invoice-view",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "message": {
+            "text": {}
+          }
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 440
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 212,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 264,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/list",
+      "id": 1,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "tools": [
+          {
+            "annotations": {
+              "readOnlyHint": false
+            },
+            "description": "Switch the invoice view to a named panel",
+            "inputSchema": {
+              "properties": {
+                "panel": {
+                  "enum": [
+                    "summary",
+                    "items"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "panel"
+              ],
+              "type": "object"
+            },
+            "name": "show_panel"
+          },
+          {
+            "annotations": {
+              "readOnlyHint": true
+            },
+            "description": "Draw the user's attention to one line item by index",
+            "inputSchema": {
+              "properties": {
+                "index": {
+                  "maximum": 3,
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "index"
+              ],
+              "type": "object"
+            },
+            "name": "highlight_line_item"
+          },
+          {
+            "annotations": {
+              "readOnlyHint": false
+            },
+            "description": "Propose wording for the adjustment reason, for human review",
+            "inputSchema": {
+              "properties": {
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "text"
+              ],
+              "type": "object"
+            },
+            "name": "propose_reason"
+          },
+          {
+            "annotations": {
+              "readOnlyHint": true
+            },
+            "description": "Read the view's current state",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "get_state"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {
+          "panel": "items"
+        },
+        "name": "show_panel"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Showing items.",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 359,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 3,
+      "payload": {
+        "arguments": {
+          "index": 3
+        },
+        "name": "highlight_line_item"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 3,
+      "payload": {
+        "content": [
+          {
+            "text": "Highlighted Overage, March.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "amount": 312,
+          "item": "Overage, March"
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 4,
+      "payload": {
+        "arguments": {
+          "text": "March overage credited: the customer was billed for 312 units consumed during the incident window."
+        },
+        "name": "propose_reason"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 4,
+      "payload": {
+        "content": [
+          {
+            "text": "Proposed. The user has not submitted it.",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 5,
+      "payload": {
+        "arguments": {},
+        "name": "get_state"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 5,
+      "payload": {
+        "content": [
+          {
+            "text": "Panel b, reason drafted.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "panel": "items",
+          "reason": "March overage credited: the customer was billed for 312 units consumed during the incident window.",
+          "submitted": false
+        }
+      }
+    }
+  ]
+}

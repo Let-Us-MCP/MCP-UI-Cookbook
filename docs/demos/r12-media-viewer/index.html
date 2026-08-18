@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Media Viewer</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  #frame { position:relative; border-radius:var(--border-radius-md); overflow:hidden;
+    background:#0d1116; height:200px; display:grid; place-items:center }
+  #frame svg { width:100%; height:100%; display:block }
+  .strip { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px }
+  .strip button { padding:0; border-radius:6px; overflow:hidden; width:74px; flex:0 0 auto }
+  .strip button[aria-current="true"] { outline:2px solid var(--color-ring-primary) }
+  .strip svg { width:74px; height:44px; display:block }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div id="frame" role="img" aria-label="Player surface"></div>
+
+  <div class="row">
+    <button id="play" aria-label="Play">Play</button>
+    <input id="seek" type="range" min="0" max="100" value="0" style="flex:1"
+           aria-label="Seek">
+    <span class="muted" id="clock">0:00 / 0:00</span>
+    <button id="cc" aria-pressed="false">CC</button>
+    <button id="full">Fullscreen</button>
+    <button id="share">Share</button>
+  </div>
+
+  <p class="muted" id="caption" hidden></p>
+  <div class="strip" id="strip" role="tablist" aria-label="Clips"></div>
+  <p class="muted" id="note"></p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce } = View;
+
+let clips = [], current = 0, playing = false, at = 0, captions = false;
+let bridge;
+
+function art(clip, w = 480, h = 270) {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  const bg = document.createElementNS(ns, "rect");
+  bg.setAttribute("width", w); bg.setAttribute("height", h);
+  bg.setAttribute("fill", clip.colour);
+  svg.append(bg);
+  clip.shapes.forEach(([x, y, r, fill]) => {
+    const c = document.createElementNS(ns, "circle");
+    c.setAttribute("cx", x * w); c.setAttribute("cy", y * h);
+    c.setAttribute("r", r * w); c.setAttribute("fill", fill);
+    c.setAttribute("opacity", "0.75");
+    svg.append(c);
+  });
+  return svg;
+}
+
+const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+function draw() {
+  const clip = clips[current];
+  if (!clip) return;
+  $("#frame").replaceChildren(art(clip));
+  $("#frame").setAttribute("aria-label", clip.title);
+  $("#clock").textContent = `${clock(at)} / ${clock(clip.seconds)}`;
+  $("#seek").max = String(clip.seconds);
+  $("#seek").value = String(at);
+  $("#strip").replaceChildren(...clips.map((c, i) =>
+    h("button", { role: "tab", "aria-current": i === current ? "true" : "false",
+      "aria-label": c.title, onclick: () => { current = i; at = 0; draw(); } },
+      art(c, 148, 88))));
+  const line = clip.captions.findLast((c) => c.at <= at);
+  $("#caption").hidden = !captions || !line;
+  if (line) $("#caption").textContent = line.text;
+}
+
+View.boot({ name: "media-viewer", version: "1.0.0" },
+  { availableDisplayModes: ["inline", "fullscreen", "pip"] }, async (instance) => {
+  bridge = instance;
+  const result = await bridge.callServerTool("list_clips", {});
+  clips = result.structuredContent?.clips ?? [];
+  draw();
+
+  setInterval(() => {
+    // A player that keeps running in a hidden frame is a player that drains a
+    // battery for nobody. Pausing on hide is the whole of lifecycle.suspend
+    // for this recipe.
+    if (document.hidden && playing) {
+      playing = false;
+      $("#play").textContent = "Play";
+      $("#note").textContent = "Paused because the view was hidden.";
+      return;
+    }
+    if (!playing) return;
+    at = Math.min(clips[current].seconds, at + 0.25);
+    draw();
+    if (at >= clips[current].seconds) { playing = false; $("#play").textContent = "Play"; }
+  }, 250);
+
+  $("#play").onclick = () => {
+    playing = !playing;
+    $("#play").textContent = playing ? "Pause" : "Play";
+    $("#play").setAttribute("aria-label", playing ? "Pause" : "Play");
+    announce(playing ? "Playing" : "Paused");
+  };
+  $("#seek").oninput = () => { at = Number($("#seek").value); draw(); };
+  $("#cc").onclick = () => {
+    captions = !captions;
+    $("#cc").setAttribute("aria-pressed", String(captions));
+    draw();
+  };
+
+  $("#full").onclick = async () => {
+    // Element.requestFullscreen needs the fullscreen permission on the frame,
+    // which the extension's permission set does not include. The display mode
+    // request is the supported path and the host answers it authoritatively.
+    const target = bridge.hostContext.displayMode === "fullscreen"
+      ? "inline" : "fullscreen";
+    const { mode } = await bridge.requestDisplayMode(target);
+    $("#full").textContent = mode === "fullscreen" ? "Exit fullscreen" : "Fullscreen";
+    $("#note").textContent = mode === target
+      ? `Host granted ${mode}.` : `Host refused and kept ${mode}.`;
+  };
+
+  $("#share").onclick = async () => {
+    // There is no share capability in the extension and no web-share
+    // permission in its permission set. The honest fallback is a link the
+    // host can open, or text on the clipboard.
+    if (bridge.hostCapabilities.openLinks) {
+      await bridge.openLink(`https://example.invalid/clips/${clips[current].id}`);
+      $("#note").textContent = "No share capability exists, so the view asked "
+        + "the host to open the clip's link instead.";
+      return;
+    }
+    await navigator.clipboard.writeText(
+      `https://example.invalid/clips/${clips[current].id}`).catch(() => {});
+    toast("Link copied");
+  };
+
+  bridge.on("hostcontextchanged", (patch) => {
+    if (patch.displayMode) {
+      $("#frame").style.height = patch.displayMode === "fullscreen" ? "320px" : "200px";
+      draw();
+    }
+  });
+});
+</script>
+</body>
+</html>

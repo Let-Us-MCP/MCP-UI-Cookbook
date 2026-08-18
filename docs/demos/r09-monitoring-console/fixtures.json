@@ -1,0 +1,189 @@
+{
+  "recordedFrom": "apps/recipes/r09-monitoring-console/server.js",
+  "serverInfo": {
+    "name": "cookbook-monitoring-console",
+    "version": "1.0.0"
+  },
+  "results": {
+    "tail_logs": {
+      "content": [
+        {
+          "type": "text",
+          "text": "24 recent lines across four services, including one connection reset from billing."
+        }
+      ],
+      "structuredContent": {
+        "lines": [
+          {
+            "id": "l0-0",
+            "at": "09:30:00",
+            "service": "checkout",
+            "level": "info",
+            "text": "handled request in 41ms"
+          },
+          {
+            "id": "l0-1",
+            "at": "09:30:07",
+            "service": "billing",
+            "level": "info",
+            "text": "cache hit ratio 0.94"
+          },
+          {
+            "id": "l0-2",
+            "at": "09:30:14",
+            "service": "search",
+            "level": "warn",
+            "text": "retrying upstream after 503"
+          },
+          {
+            "id": "l0-3",
+            "at": "09:30:21",
+            "service": "notifications",
+            "level": "err",
+            "text": "connection reset by peer"
+          },
+          {
+            "id": "l0-4",
+            "at": "09:30:28",
+            "service": "checkout",
+            "level": "info",
+            "text": "flushed 128 events"
+          },
+          {
+            "id": "l0-5",
+            "at": "09:30:35",
+            "service": "billing",
+            "level": "info",
+            "text": "handled request in 41ms"
+          },
+          {
+            "id": "l0-6",
+            "at": "09:30:42",
+            "service": "search",
+            "level": "info",
+            "text": "cache hit ratio 0.94"
+          },
+          {
+            "id": "l0-7",
+            "at": "09:30:49",
+            "service": "notifications",
+            "level": "warn",
+            "text": "retrying upstream after 503"
+          },
+          {
+            "id": "l0-8",
+            "at": "09:30:56",
+            "service": "checkout",
+            "level": "err",
+            "text": "connection reset by peer"
+          },
+          {
+            "id": "l0-9",
+            "at": "09:30:03",
+            "service": "billing",
+            "level": "info",
+            "text": "flushed 128 events"
+          },
+          {
+            "id": "l0-10",
+            "at": "09:30:10",
+            "service": "search",
+            "level": "info",
+            "text": "handled request in 41ms"
+          },
+          {
+            "id": "l0-11",
+            "at": "09:30:17",
+            "service": "notifications",
+            "level": "info",
+            "text": "cache hit ratio 0.94"
+          },
+          {
+            "id": "l0-12",
+            "at": "09:30:24",
+            "service": "checkout",
+            "level": "warn",
+            "text": "retrying upstream after 503"
+          },
+          {
+            "id": "l0-13",
+            "at": "09:30:31",
+            "service": "billing",
+            "level": "err",
+            "text": "connection reset by peer"
+          },
+          {
+            "id": "l0-14",
+            "at": "09:30:38",
+            "service": "search",
+            "level": "info",
+            "text": "flushed 128 events"
+          },
+          {
+            "id": "l0-15",
+            "at": "09:30:45",
+            "service": "notifications",
+            "level": "info",
+            "text": "handled request in 41ms"
+          },
+          {
+            "id": "l0-16",
+            "at": "09:30:52",
+            "service": "checkout",
+            "level": "info",
+            "text": "cache hit ratio 0.94"
+          },
+          {
+            "id": "l0-17",
+            "at": "09:30:59",
+            "service": "billing",
+            "level": "warn",
+            "text": "retrying upstream after 503"
+          },
+          {
+            "id": "l0-18",
+            "at": "09:30:06",
+            "service": "search",
+            "level": "err",
+            "text": "connection reset by peer"
+          },
+          {
+            "id": "l0-19",
+            "at": "09:30:13",
+            "service": "notifications",
+            "level": "info",
+            "text": "flushed 128 events"
+          },
+          {
+            "id": "l0-20",
+            "at": "09:30:20",
+            "service": "checkout",
+            "level": "info",
+            "text": "handled request in 41ms"
+          },
+          {
+            "id": "l0-21",
+            "at": "09:30:27",
+            "service": "billing",
+            "level": "info",
+            "text": "cache hit ratio 0.94"
+          },
+          {
+            "id": "l0-22",
+            "at": "09:30:34",
+            "service": "search",
+            "level": "warn",
+            "text": "retrying upstream after 503"
+          },
+          {
+            "id": "l0-23",
+            "at": "09:30:41",
+            "service": "notifications",
+            "level": "err",
+            "text": "connection reset by peer"
+          }
+        ]
+      }
+    }
+  }
+}

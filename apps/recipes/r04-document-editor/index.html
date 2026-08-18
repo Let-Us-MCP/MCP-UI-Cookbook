@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Document Editor</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  #doc { min-height:150px; padding:12px; border:1px solid var(--color-border-primary);
+         border-radius:var(--border-radius-md); background:var(--color-background-primary);
+         line-height:1.55; outline:none }
+  #doc:focus-visible { outline:2px solid var(--color-ring-primary); outline-offset:1px }
+  .mark { background:var(--color-background-warning); border-radius:3px }
+  .proposal { border-left:3px solid var(--color-text-warning);
+              background:var(--color-background-warning); padding:8px 10px;
+              border-radius:0 6px 6px 0 }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <button id="bold"><strong>B</strong></button>
+    <button id="italic"><em>I</em></button>
+    <button id="undo" disabled>Undo</button>
+    <button id="redo" disabled>Redo</button>
+    <span class="spacer"></span>
+    <span class="chip" id="state">saved</span>
+    <button id="close" class="quiet">Done</button>
+  </div>
+
+  <div id="doc" contenteditable="true" role="textbox" aria-multiline="true"
+       aria-label="Document body"></div>
+
+  <div id="proposal" class="proposal" hidden>
+    <p style="margin:0 0 8px"><strong>The agent proposes a rewrite.</strong>
+      <span id="ptext"></span></p>
+    <div class="row">
+      <button id="accept" class="primary">Accept</button>
+      <button id="decline">Decline</button>
+    </div>
+  </div>
+
+  <p class="muted" id="log">Autosave writes through a server tool, because
+    there is no message for saving view state.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { $, toast, announce } = View;
+
+let bridge;
+let dirty = false;
+let saving = false;
+const past = [];
+const future = [];
+let last = "";
+
+function snapshot(label) {
+  const before = last;
+  const after = $("#doc").innerHTML;
+  if (before === after) return;
+  past.push({ label, before, after });
+  future.length = 0;
+  last = after;
+  buttons();
+}
+
+function buttons() {
+  $("#undo").disabled = !past.length;
+  $("#redo").disabled = !future.length;
+}
+
+function setDirty(value) {
+  dirty = value;
+  $("#state").textContent = saving ? "saving" : value ? "unsaved" : "saved";
+  $("#state").className = `chip ${value ? "warn" : "good"}`;
+}
+
+function undo() {
+  const entry = past.pop();
+  if (!entry) return;
+  future.push(entry);
+  $("#doc").innerHTML = entry.before;
+  last = entry.before;
+  buttons();
+  setDirty(true);
+  announce(`Undid ${entry.label}`);
+}
+
+function redo() {
+  const entry = future.pop();
+  if (!entry) return;
+  past.push(entry);
+  $("#doc").innerHTML = entry.after;
+  last = entry.after;
+  buttons();
+  setDirty(true);
+}
+
+async function save() {
+  if (!dirty || saving) return;
+  saving = true;
+  setDirty(true);
+  const result = await bridge.callServerTool("save_document",
+    { html: $("#doc").innerHTML });
+  saving = false;
+  setDirty(false);
+  $("#log").textContent = result.content?.[0]?.text ?? "Saved.";
+}
+
+View.boot({ name: "document-editor", version: "1.0.0" },
+  { tools: { listChanged: true } }, async (instance) => {
+  bridge = instance;
+
+  const loaded = await bridge.callServerTool("load_document", {});
+  $("#doc").innerHTML = loaded.structuredContent?.html
+    ?? "<p>Start typing.</p>";
+  last = $("#doc").innerHTML;
+  setDirty(false);
+
+  let idle;
+  $("#doc").addEventListener("input", () => {
+    setDirty(true);
+    clearTimeout(idle);
+    // One transaction per pause, not one per keystroke. Undo that steps back
+    // a character at a time is undo nobody uses.
+    idle = setTimeout(() => { snapshot("typing"); save(); }, 900);
+  });
+
+  const command = (name) => {
+    document.execCommand(name);
+    snapshot(name);
+    setDirty(true);
+    $("#doc").focus();
+  };
+  $("#bold").onclick = () => command("bold");
+  $("#italic").onclick = () => command("italic");
+  $("#undo").onclick = undo;
+  $("#redo").onclick = redo;
+
+  addEventListener("keydown", (event) => {
+    if (!(event.metaKey || event.ctrlKey)) return;
+    if (event.key === "z" && !event.shiftKey) { event.preventDefault(); undo(); }
+    else if (event.key === "z" && event.shiftKey) { event.preventDefault(); redo(); }
+    else if (event.key === "s") { event.preventDefault(); save(); toast("Saved"); }
+    else if (event.key === "b") { event.preventDefault(); command("bold"); }
+  });
+
+  $("#close").onclick = () => bridge.requestTeardown();
+
+  // The teardown handshake is the only place the protocol lets a view finish
+  // something before it disappears. Everything unsaved goes here.
+  bridge.on("teardown", async ({ reason }) => {
+    $("#log").textContent = `Host is closing this view: ${reason}`;
+    if (dirty) {
+      $("#log").textContent += " Flushing unsaved changes first.";
+      await save();
+    }
+  });
+
+  // The agent proposes; the human decides. Prefill never submits, and a
+  // rewrite is shown as a proposal rather than applied to the document.
+  let proposed = null;
+  bridge.registerTool({
+    name: "propose_rewrite",
+    description: "Propose replacement HTML for the document, for human review",
+    inputSchema: { type: "object", properties: { html: { type: "string" },
+      rationale: { type: "string" } }, required: ["html"] },
+    annotations: { readOnlyHint: false },
+  }, async ({ html, rationale }) => {
+    proposed = html;
+    $("#ptext").textContent = rationale ?? "";
+    $("#proposal").hidden = false;
+    announce("The agent proposed a rewrite");
+    return { content: [{ type: "text",
+      text: "Shown to the user. Not applied." }] };
+  });
+
+  bridge.registerTool({
+    name: "highlight_phrase",
+    description: "Highlight a phrase in the document",
+    inputSchema: { type: "object", properties: { text: { type: "string" } },
+      required: ["text"] },
+    annotations: { readOnlyHint: true },
+  }, async ({ text }) => {
+    const html = $("#doc").innerHTML;
+    if (!html.includes(text)) {
+      return { isError: true,
+               content: [{ type: "text", text: "That phrase is not here." }] };
+    }
+    $("#doc").innerHTML = html.replace(text, `<span class="mark">${text}</span>`);
+    last = $("#doc").innerHTML;
+    return { content: [{ type: "text", text: `Highlighted "${text}".` }] };
+  });
+
+  bridge.registerTool({
+    name: "get_document",
+    description: "Read the current document",
+    inputSchema: { type: "object" },
+    annotations: { readOnlyHint: true },
+  }, async () => ({
+    content: [{ type: "text", text: $("#doc").innerText }],
+    structuredContent: { html: $("#doc").innerHTML, dirty },
+  }));
+
+  $("#accept").onclick = () => {
+    snapshot("accept the agent's rewrite");
+    $("#doc").innerHTML = proposed;
+    last = proposed;
+    $("#proposal").hidden = true;
+    setDirty(true);
+    save();
+    // Accepting is one transaction, so one Undo puts the human's words back.
+    toast("Applied. Undo reverts it in one step.");
+  };
+  $("#decline").onclick = () => {
+    $("#proposal").hidden = true;
+    toast("Declined");
+  };
+});
+</script>
+</body>
+</html>

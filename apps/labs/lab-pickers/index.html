@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pickers</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="row">
+    <label class="stack">Date<input type="date" id="date" value="2026-08-18"></label>
+    <label class="stack">Time<input type="time" id="time" value="09:30"></label>
+    <label class="stack">Colour<input type="color" id="color" value="#0f5c8c"></label>
+  </div>
+
+  <p class="muted" id="read">Pick something.</p>
+
+  <div class="card">
+    <h2>Resources on the server</h2>
+    <p class="muted">A resource picker is not a file picker. These come back
+      through the host, which is the only party holding the connection.</p>
+    <div class="row">
+      <select id="uri"></select>
+      <button id="load" class="primary">Read it</button>
+    </div>
+    <pre id="out" style="white-space:pre-wrap;font-size:12px">Nothing loaded.</pre>
+  </div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $ } = View;
+
+View.boot({ name: "pickers-lab", version: "1.0.0" }, {}, async (bridge) => {
+  const format = View.formatters(bridge.hostContext);
+
+  // The native pickers are localised by the browser, but the value you show
+  // back has to be localised by you, in the host's locale and timezone. The
+  // browser's idea of both is the machine's, not the user's.
+  const describe = () => {
+    const date = $("#date").value, time = $("#time").value;
+    if (!date) { $("#read").textContent = "Pick something."; return; }
+    const instant = new Date(`${date}T${time || "00:00"}:00Z`);
+    $("#read").textContent =
+      `${format.date(instant, { dateStyle: "full" })} at ${format.time(instant)} `
+      + `in ${bridge.hostContext.timeZone ?? "the machine timezone"}, `
+      + `swatch ${$("#color").value}.`;
+    document.documentElement.style.setProperty("--color-text-info", $("#color").value);
+  };
+  for (const id of ["#date", "#time", "#color"]) $(id).oninput = describe;
+  describe();
+
+  const uris = Object.keys(bridge.hostCapabilities.serverResources
+    ? { "ui://cookbook/regions": 1, "ui://cookbook/notes": 1,
+        "ui://cookbook/missing": 1 } : {});
+  $("#uri").replaceChildren(...uris.map((uri) => h("option", { text: uri })));
+  $("#load").disabled = !uris.length;
+  if (!uris.length) $("#out").textContent = "This host does not proxy resources.";
+
+  $("#load").onclick = async () => {
+    try {
+      const result = await bridge.readServerResource($("#uri").value);
+      $("#out").textContent = result.contents?.[0]?.text ?? JSON.stringify(result);
+    } catch (error) {
+      $("#out").textContent = `Refused: ${error.message}`;
+    }
+  };
+});
+</script>
+</body>
+</html>

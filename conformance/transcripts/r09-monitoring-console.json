@@ -1,0 +1,577 @@
+{
+  "demo": "r09-monitoring-console",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "monitoring-console",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "serverTools": {},
+          "updateModelContext": {
+            "structuredContent": {},
+            "text": {}
+          }
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 460
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 116,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "tail_logs"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "24 recent lines across four services, including one connection reset from billing.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "lines": [
+            {
+              "at": "09:30:00",
+              "id": "l0-0",
+              "level": "info",
+              "service": "checkout",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:07",
+              "id": "l0-1",
+              "level": "info",
+              "service": "billing",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:14",
+              "id": "l0-2",
+              "level": "warn",
+              "service": "search",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:21",
+              "id": "l0-3",
+              "level": "err",
+              "service": "notifications",
+              "text": "connection reset by peer"
+            },
+            {
+              "at": "09:30:28",
+              "id": "l0-4",
+              "level": "info",
+              "service": "checkout",
+              "text": "flushed 128 events"
+            },
+            {
+              "at": "09:30:35",
+              "id": "l0-5",
+              "level": "info",
+              "service": "billing",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:42",
+              "id": "l0-6",
+              "level": "info",
+              "service": "search",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:49",
+              "id": "l0-7",
+              "level": "warn",
+              "service": "notifications",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:56",
+              "id": "l0-8",
+              "level": "err",
+              "service": "checkout",
+              "text": "connection reset by peer"
+            },
+            {
+              "at": "09:30:03",
+              "id": "l0-9",
+              "level": "info",
+              "service": "billing",
+              "text": "flushed 128 events"
+            },
+            {
+              "at": "09:30:10",
+              "id": "l0-10",
+              "level": "info",
+              "service": "search",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:17",
+              "id": "l0-11",
+              "level": "info",
+              "service": "notifications",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:24",
+              "id": "l0-12",
+              "level": "warn",
+              "service": "checkout",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:31",
+              "id": "l0-13",
+              "level": "err",
+              "service": "billing",
+              "text": "connection reset by peer"
+            },
+            {
+              "at": "09:30:38",
+              "id": "l0-14",
+              "level": "info",
+              "service": "search",
+              "text": "flushed 128 events"
+            },
+            {
+              "at": "09:30:45",
+              "id": "l0-15",
+              "level": "info",
+              "service": "notifications",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:52",
+              "id": "l0-16",
+              "level": "info",
+              "service": "checkout",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:59",
+              "id": "l0-17",
+              "level": "warn",
+              "service": "billing",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:06",
+              "id": "l0-18",
+              "level": "err",
+              "service": "search",
+              "text": "connection reset by peer"
+            },
+            {
+              "at": "09:30:13",
+              "id": "l0-19",
+              "level": "info",
+              "service": "notifications",
+              "text": "flushed 128 events"
+            },
+            {
+              "at": "09:30:20",
+              "id": "l0-20",
+              "level": "info",
+              "service": "checkout",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:27",
+              "id": "l0-21",
+              "level": "info",
+              "service": "billing",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:34",
+              "id": "l0-22",
+              "level": "warn",
+              "service": "search",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:41",
+              "id": "l0-23",
+              "level": "err",
+              "service": "notifications",
+              "text": "connection reset by peer"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 304,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "5 more lines.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "lines": [
+            {
+              "at": "09:30:03",
+              "id": "s105-0",
+              "level": "info",
+              "service": "billing",
+              "text": "flushed 128 events"
+            },
+            {
+              "at": "09:30:10",
+              "id": "s105-1",
+              "level": "info",
+              "service": "search",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:17",
+              "id": "s105-2",
+              "level": "info",
+              "service": "notifications",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:24",
+              "id": "s105-3",
+              "level": "warn",
+              "service": "checkout",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:31",
+              "id": "s105-4",
+              "level": "err",
+              "service": "billing",
+              "text": "connection reset by peer"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "5 more lines.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "lines": [
+            {
+              "at": "09:30:38",
+              "id": "s110-0",
+              "level": "info",
+              "service": "search",
+              "text": "flushed 128 events"
+            },
+            {
+              "at": "09:30:45",
+              "id": "s110-1",
+              "level": "info",
+              "service": "notifications",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:52",
+              "id": "s110-2",
+              "level": "info",
+              "service": "checkout",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:59",
+              "id": "s110-3",
+              "level": "warn",
+              "service": "billing",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:06",
+              "id": "s110-4",
+              "level": "err",
+              "service": "search",
+              "text": "connection reset by peer"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "5 more lines.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "lines": [
+            {
+              "at": "09:30:13",
+              "id": "s115-0",
+              "level": "info",
+              "service": "notifications",
+              "text": "flushed 128 events"
+            },
+            {
+              "at": "09:30:20",
+              "id": "s115-1",
+              "level": "info",
+              "service": "checkout",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:27",
+              "id": "s115-2",
+              "level": "info",
+              "service": "billing",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:34",
+              "id": "s115-3",
+              "level": "warn",
+              "service": "search",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:41",
+              "id": "s115-4",
+              "level": "err",
+              "service": "notifications",
+              "text": "connection reset by peer"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "5 more lines.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "lines": [
+            {
+              "at": "09:30:00",
+              "id": "s120-0",
+              "level": "info",
+              "service": "checkout",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:07",
+              "id": "s120-1",
+              "level": "info",
+              "service": "billing",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:14",
+              "id": "s120-2",
+              "level": "warn",
+              "service": "search",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:21",
+              "id": "s120-3",
+              "level": "err",
+              "service": "notifications",
+              "text": "connection reset by peer"
+            },
+            {
+              "at": "09:30:28",
+              "id": "s120-4",
+              "level": "info",
+              "service": "checkout",
+              "text": "flushed 128 events"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "5 more lines.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "lines": [
+            {
+              "at": "09:30:35",
+              "id": "s125-0",
+              "level": "info",
+              "service": "billing",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:42",
+              "id": "s125-1",
+              "level": "info",
+              "service": "search",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:49",
+              "id": "s125-2",
+              "level": "warn",
+              "service": "notifications",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:56",
+              "id": "s125-3",
+              "level": "err",
+              "service": "checkout",
+              "text": "connection reset by peer"
+            },
+            {
+              "at": "09:30:03",
+              "id": "s125-4",
+              "level": "info",
+              "service": "billing",
+              "text": "flushed 128 events"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-result",
+      "id": null,
+      "payload": {
+        "content": [
+          {
+            "text": "5 more lines.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "lines": [
+            {
+              "at": "09:30:10",
+              "id": "s130-0",
+              "level": "info",
+              "service": "search",
+              "text": "handled request in 41ms"
+            },
+            {
+              "at": "09:30:17",
+              "id": "s130-1",
+              "level": "info",
+              "service": "notifications",
+              "text": "cache hit ratio 0.94"
+            },
+            {
+              "at": "09:30:24",
+              "id": "s130-2",
+              "level": "warn",
+              "service": "checkout",
+              "text": "retrying upstream after 503"
+            },
+            {
+              "at": "09:30:31",
+              "id": "s130-3",
+              "level": "err",
+              "service": "billing",
+              "text": "connection reset by peer"
+            },
+            {
+              "at": "09:30:38",
+              "id": "s130-4",
+              "level": "info",
+              "service": "search",
+              "text": "flushed 128 events"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

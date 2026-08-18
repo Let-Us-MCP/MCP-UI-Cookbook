@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What This Book Is &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Two audiences, one artifact, and a promise that everything here runs.">
+<meta property="og:title" content="What This Book Is">
+<meta property="og:description" content="Two audiences, one artifact, and a promise that everything here runs.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html" class="current">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<h1>What This Book Is</h1><p class="summary">Two audiences, one artifact, and a promise that everything here runs.</p><p>There are two ways to write about a protocol. You can explain the messages, which produces a document that is correct and that nobody can build from. Or you can show a working application, which produces a tutorial that is useful once and then goes out of date. This book tries a third thing. It takes the surface an MCP application actually has, cuts it into the smallest pieces that are independently useful, gives each piece a name, and then builds thirteen recognisable applications out of nothing but those pieces. If the pieces are sufficient, the applications work. If a piece is missing, an application fails in a specific place, and that failure is worth more than another paragraph of prose.</p>
+<p>The pieces are called atomic capabilities and they are the unit of this book. <code>surface.resize</code> is one. So is <code>clipboard.write</code>, and <code>tool.invoke</code>, and <code>history.undo</code>. Each gets an entry that says what the user sees, what the application does, what the host is responsible for, what happens when the capability is absent or denied, and how you would test that any of it is true. Above them sit components, which are capabilities composed into things with names people already know: a combobox, a modal, an editable grid. Above those sit recipes, which are whole applications. And underneath all of it sits a conformance suite, because a book about what hosts should support is worth very little without a way to find out what they do support.</p>
+<h2 id="who-this-is-for">Who this is for</h2>
+<p><strong>Application authors</strong> get a catalogue. When you need a context menu inside a sandboxed iframe that the host has never heard of, there is an entry that says whether that is a protocol feature, a browser feature, or something you are about to write yourself, and what the fallback looks like when it is denied. When you need to know whether sorting a table should involve the model, there is a principle with a name and thirteen worked examples of applying it.</p>
+<p><strong>Host implementers</strong> get a specification of expectations and a way to check them. The capabilities are sorted into four cumulative conformance levels. A host that claims Level 2 is claiming that a specific list of observable behaviours works, and the list is phrased so that each item can be asserted by a test rather than argued about in an issue thread.</p>
+<p>Both audiences get the same artifact, because the disagreements between them are the interesting part. Most of what makes an MCP application feel wrong is not a bug in either half. It is a capability that one side assumed and the other never promised.</p>
+<h2 id="what-is-actually-normative">What is actually normative</h2>
+<p>The normative foundation is the Model Context Protocol specification and the MCP Apps extension, <code>io.modelcontextprotocol/ui</code>, which standardises UI resources under the <code>ui://</code> scheme, links tools to them through <code>_meta.ui.resourceUri</code>, mandates sandboxed iframe rendering, and defines a bidirectional JSON-RPC channel over <code>postMessage</code>. That extension consolidates patterns worked out first by MCP-UI and by OpenAI’s Apps SDK. This book does not restate those documents and does not compete with them.</p>
+<p>What it adds is organisation and honesty about coverage. Every capability entry in Parts II and III carries a label saying where its behaviour comes from. Some are messages the extension defines, and the entry cites them by name. Some come from core MCP. A large number are simply the browser doing its job inside the sandbox, with no host involvement at all, and saying so plainly saves you from looking for a protocol feature that does not need to exist. Some you write yourself. And some have no mechanism anywhere, which is the label that matters most: an application that needs one of those is an application that is about to invent a private convention with one host.</p>
+<p>The labels are not editorial judgement. They are generated from a machine readable registry, and a build step greps the specification text for every message name the registry claims exists. If the extension renames something, the build fails before the sentence describing it can go stale.</p>
+<h2 id="what-runs">What runs</h2>
+<p>Every demonstration in this book is a live application. The frame you can click in is a real MCP application in a real sandboxed iframe, driven by a host emulator that implements the host half of the bridge, and the panel underneath it is the actual JSON-RPC traffic between them, printed as it happens. The source shown in the code tab is the same file the frame is running, fetched from the same directory, not a paraphrase of it.</p>
+<p>That arrangement is possible because of what an MCP application physically is. It is HTML in a sandboxed iframe that talks JSON-RPC over <code>postMessage</code>. It needs no model and no server to render, only something willing to answer the host side of the conversation. So the application half runs on a static site next to its own source, and the transcript pane doubles as the verification artifact that Part VI is built on.</p>
+<h2 id="how-to-read-it">How to read it</h2>
+<p>Parts I through III work bottom up, from the runtime to the primitives. Parts IV and V work top down, from applications back to the pieces they need. Part VI closes the loop by defining how every claim here is checked. You do not have to read it in that order. The capability index in Appendix A is the fastest way in if you arrived with a specific problem, and the recipes in Part V are the fastest way in if you arrived with an application to build.</p>
+<p>One caution before you start. This book is opinionated about a boundary that the specification deliberately leaves open: which interactions belong to the model and which belong to the interface. Chapter 3 argues that sorting a column, opening a menu, and dragging a node should never involve a language model, and the rest of the book follows from that. If you disagree, the capability entries are still accurate. The recipes will just look overbuilt.</p>
+
+<div class="pager"><span></span><a href="how-to-read.html" style="text-align:right"><span class="dir">Next</span>How to Read This Book</a></div>
+</main>
+</div>
+
+</body>
+</html>

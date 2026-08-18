@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19. Tool Invocation and Streaming &middot; The MCP UI Cookbook</title>
+<meta name="description" content="The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.">
+<meta property="og:title" content="19. Tool Invocation and Streaming">
+<meta property="og:description" content="The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html" class="current">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 19</p><h1>Tool Invocation and Streaming</h1><p class="summary">The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.</p><p>A view is rendered because a tool was called. Then it has to keep working, and the mechanism is that it can call tools itself, through the host, with no model between the click and the call.</p>
+<p>That last clause is the point of this chapter. <code>tools/call</code> from a view is not “asking the agent to do something”. It is a direct line: view, host, server, view. Nothing is sampled, nothing enters the conversation, and the result comes back as data.</p>
+<div class="demo" data-demo="lab-tools" id="lab-tools"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="calling-a-tool">Calling a tool</h2>
+<div class="cap" id="tool.invoke"><div class="cap-head"><code class="cap-id">tool.invoke</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Call a server tool from a button, through the host.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>tools/call</code><code>serverTools</code><code>visibility</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p>The view sends <code>tools/call</code> and the host proxies it to the server, if <code>hostCapabilities.serverTools</code> is present. The result is a standard <code>CallToolResult</code>.</p>
+<p><strong>Tool visibility is the design decision here.</strong> A tool’s <code>_meta.ui.visibility</code> array controls who can call it. <code>["model", "app"]</code> is the default and means both. <code>["app"]</code> means the view only: the host must not show it in the agent’s tool list, and cross-server calls are blocked.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r13-settings/server.js</code></p><pre class="js"><code>save_preferences: {
+  description: &quot;Persist preferences. Called by the view.&quot;,
+  inputSchema: { type: &quot;object&quot; },
+  visibility: [&quot;app&quot;],
+  run: (values) =&gt; {</code></pre>
+<p>Use <code>["app"]</code> for anything that exists to serve the interface: refresh, save, validate, load a page of results. Two benefits, and both are larger than they sound. The model’s tool list stays short, which measurably improves its choice among the tools that remain. And a save that the model cannot call is a save that the model cannot decide to call.</p>
+<p><strong>Application behaviour.</strong> Check the capability at initialisation; a view whose refresh button cannot work should not have one. Disable the control while a call is in flight, or make it idempotent, because users press buttons twice. Keep the last good data on screen while the new call runs.</p>
+<p><strong>Failure modes.</strong> Unsupported means no <code>serverTools</code>, and the view is reduced to whatever arrived in its initial tool result. That is a real Level 1 host and every recipe here still renders under it. Denied is a JSON-RPC error from the host. Failed is a result with <code>isError: true</code>, which means the tool ran and did not work, and its text is meant to be read by a person.</p>
+<h2 id="arguments-that-are-still-arriving">Arguments that are still arriving</h2>
+<div class="cap" id="tool.partialInput"><div class="cap-head"><code class="cap-id">tool.partialInput</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Render something useful while arguments are still streaming.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/tool-input-partial</code><code>ui/notifications/tool-input</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p>The host sends <code>ui/notifications/tool-input-partial</code> zero or more times while the model is still writing the arguments, then exactly one <code>ui/notifications/tool-input</code> with the complete set.</p>
+<p>The partial arguments are best-effort recovered JSON: the host closes unclosed brackets and braces to produce a valid object. So fields appear, change, and occasionally disappear between notifications.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-tools/index.html</code></p><pre class="js"><code>bridge.on(&quot;toolinputpartial&quot;, ({ arguments: args }) =&gt; {
+  $(&quot;#title&quot;).textContent = args?.region
+    ? `Weather in ${args.region}` : &quot;Weather in&quot;;
+  $(&quot;#args&quot;).textContent = &quot;Arguments still arriving: &quot;
+    + JSON.stringify(args ?? {});
+});
+
+bridge.on(&quot;toolinput&quot;, ({ arguments: args }) =&gt; {
+  $(&quot;#title&quot;).textContent = `Weather in ${args?.region ?? &quot;nowhere&quot;}`;
+});</code></pre>
+<p><strong>What this is worth.</strong> It is the difference between an application that feels instant and a spinner that lasts as long as the model takes to write a JSON object. Press “Stream the tool input” in the demonstration and watch the title fill in as <code>"Nor"</code> becomes <code>"Nordics"</code>.</p>
+<p><strong>The rules.</strong> Never act on partial arguments. Never fire a request, never write anything, never treat a field as final. Render a skeleton and fill it in. Handle fields appearing and changing between notifications without throwing. The whole thing is optional in both directions: a host may send none, and a view may ignore all of them, and both are conformant.</p>
+<h2 id="the-result">The result</h2>
+<div class="cap" id="tool.result"><div class="cap-head"><code class="cap-id">tool.result</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Take delivery of the result that this view was rendered for.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/tool-result</code><code>ui/notifications/tool-cancelled</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p><code>ui/notifications/tool-result</code> carries the standard <code>CallToolResult</code> for the call that rendered this view. <code>ui/notifications/tool-cancelled</code> arrives instead, with a reason, if it did not complete.</p>
+<p><strong>The two channels, again.</strong> <code>content</code> is what the model reads; <code>structuredContent</code> is what your view reads and never reaches the model. Chapter 2 made the case; here is the concrete version from a working server:</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r01-data-explorer/server.js</code></p><pre class="js"><code>return {
+  content: [{ type: &quot;text&quot;, text: summarise(rows) }],
+  structuredContent: { deployments: rows },
+};</code></pre>
+<p><code>summarise(rows)</code> produces “8 deployments. Worst p95 is 1290ms on billing.” The eight full records go in <code>structuredContent</code>. The model gets a sentence it can reason with; the view gets the data it can render; nobody pays for eight rows of JSON in the context window.</p>
+<p><strong>Cancellation is not an error.</strong> Keep the last good state, say what happened, and do not blank the view. The demonstration’s cancellation control leaves the table populated and explains that the call was stopped.</p>
+<div class="cap" id="tool.cancel"><div class="cap-head"><code class="cap-id">tool.cancel</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground core">Core MCP</span></div><p class="cap-summary">Cancel a call the user has stopped caring about.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>notifications/cancelled</code></dd><dt>Ground</dt><dd>Core MCP defines it; the view inherits it.</dd><dt>Recipes</dt><dd><a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p>Cancelling a call the user has stopped caring about is core MCP’s <code>notifications/cancelled</code>, carrying the id of the request being abandoned. The view sends it, the host relays it, and the server stops if it can. Chapter 16 covers what the interface has to do afterwards, which is the harder half: a cancelled call leaves the view holding an optimistic state that never became true, and rolling it back honestly means saying how far the work actually got.</p>
+<figure>
+<img src="figures/diag-streaming.png" alt="Input streams to the view. Output does not." />
+<figcaption aria-hidden="true">Input streams to the view. Output does not.</figcaption>
+</figure>
+<h2 id="streaming-output">Streaming output</h2>
+<div class="cap" id="tool.partialOutput"><div class="cap-head"><code class="cap-id">tool.partialOutput</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Update stable elements as results arrive, not after.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p>The gap, and the most consequential one in Part III.</p>
+<p>A tool result arrives once, when the tool finishes. There is no <code>ui/notifications/tool-result-partial</code>. Input streams; output does not.</p>
+<p>For anything that produces results progressively, a log tail, a long generation, a scan over many objects, the view has three options and none of them is good.</p>
+<p><strong>Poll.</strong> Call an app-visible tool on a timer. Simple, works everywhere, wastes a call whenever nothing changed, and the interval is a guess.</p>
+<p><strong>Push through repeated results.</strong> A host that re-sends <code>ui/notifications/tool-result</code> as new data arrives gives you a stream, which is what Recipe 9’s demonstration does. Nothing forbids it, and nothing requires it, so it is not something you can build on across hosts.</p>
+<p><strong>Chunk into many calls.</strong> Ask for a page at a time. This turns a stream into pagination, which changes the interface and is sometimes fine.</p>
+<p><code>notifications/progress</code> helps a little, because it carries a message string, but it is a progress report rather than a result channel and the extension does not list it among the notifications a view receives.</p>
+<p><strong>What a mechanism would look like.</strong> A <code>ui/notifications/tool-result-partial</code> mirroring the input side, with the same “never rely on it, always get a final one” contract. The asymmetry between input and output streaming is hard to justify from the view’s point of view: the model streams its arguments <em>to</em> you and the server cannot stream its results <em>to</em> you.</p>
+<p><strong>Design around it.</strong> Update stable elements in place rather than rebuilding. Recipe 9 appends rows and never redraws the list, so selection and scroll survive. Whatever your streaming mechanism turns out to be, that discipline is what keeps it usable, and it is the discipline the conformance checks assert.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p><code>tool.invoke</code> is the workhorse of Part III and the one most applications under-use, because it is easy to think of every server round trip as a conversation. It is not. A refresh button that calls an app-only tool is cheaper, faster, more reliable and more testable than anything routed through a model, and it is the mechanism that lets a view be an application rather than a rendering of one turn.</p>
+
+<div class="pager"><a href="ch18.html"><span class="dir">Previous</span>18. Agent to UI</a><a href="ch20.html" style="text-align:right"><span class="dir">Next</span>20. State Ownership and Concurrency</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

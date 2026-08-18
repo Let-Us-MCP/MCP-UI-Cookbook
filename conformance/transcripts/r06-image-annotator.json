@@ -1,0 +1,214 @@
+{
+  "demo": "r06-image-annotator",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ]
+        },
+        "appInfo": {
+          "name": "image-annotator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "downloadFile": {},
+          "logging": {},
+          "serverTools": {}
+        },
+        "hostContext": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ],
+          "containerDimensions": {
+            "maxHeight": 500
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 384,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "load_annotations"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Two saved regions: a scratch and a burr.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "boxes": [
+            {
+              "colour": "#b4531a",
+              "h": 46,
+              "label": "scratch",
+              "w": 62,
+              "x": 112,
+              "y": 62
+            },
+            {
+              "colour": "#9b2226",
+              "h": 38,
+              "label": "burr",
+              "w": 86,
+              "x": 292,
+              "y": 172
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ]
+        },
+        "appInfo": {
+          "name": "image-annotator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "serverTools": {}
+        },
+        "hostContext": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ],
+          "containerDimensions": {
+            "maxHeight": 500
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 384,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "load_annotations"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Two saved regions: a scratch and a burr.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "boxes": [
+            {
+              "colour": "#b4531a",
+              "h": 46,
+              "label": "scratch",
+              "w": 62,
+              "x": 112,
+              "y": 62
+            },
+            {
+              "colour": "#9b2226",
+              "h": 38,
+              "label": "burr",
+              "w": 86,
+              "x": 292,
+              "y": 172
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

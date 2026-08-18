@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipe 8. Code and Diff Reviewer &middot; The MCP UI Cookbook</title>
+<meta name="description" content="A unified diff where a range of lines is the unit of conversation, and where the model is asked about exactly what the reviewer selected.">
+<meta property="og:title" content="Recipe 8. Code and Diff Reviewer">
+<meta property="og:description" content="A unified diff where a range of lines is the unit of conversation, and where the model is asked about exactly what the reviewer selected.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html" class="current">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Recipe 8</p><h1>Code and Diff Reviewer</h1><p class="summary">A unified diff where a range of lines is the unit of conversation, and where the model is asked about exactly what the reviewer selected.</p><div class="cap recipe" id="r08"><div class="cap-head"><code class="cap-id">r08</code><span class="cap-tag core">Code and Diff Reviewer</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Review changes with agent context.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch07.html#surface.scroll">surface.scroll</a></code><code><a href="ch10.html#link.open">link.open</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch09.html#input.keyboard">input.keyboard</a></code><code><a href="ch10.html#clipboard.write">clipboard.write</a></code><code><a href="ch17.html#agent.escalate">agent.escalate</a></code><code><a href="ch17.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch18.html#ui.highlight">ui.highlight</a></code><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch07.html#surface.scroll">surface.scroll</a></code><code><a href="ch12.html#env.theme">env.theme</a></code><code><a href="ch10.html#link.open">link.open</a></code></dd></dl></div>
+<p>The recipe that makes the strongest case for structured escalation. A reviewer looking at a diff has a precise question about a precise range, and the difference between sending that range and sending a description of it is the difference between a useful answer and a plausible one.</p>
+<div class="demo" data-demo="r08-diff-reviewer" id="r08-diff-reviewer"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-split">The split</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Normally local</th>
+<th>Worth crossing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Select a line, extend a range</td>
+<td>“Explain this change”</td>
+</tr>
+<tr>
+<td>Add a comment</td>
+<td>“Is this backoff correct?”</td>
+</tr>
+<tr>
+<td>Scroll, navigate hunks</td>
+<td>“What else depends on this constant?”</td>
+</tr>
+<tr>
+<td>Copy the hunk</td>
+<td>“Open the file on the server”</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="selection-as-the-unit">Selection as the unit</h2>
+<p>Click sets the anchor, shift-click extends, arrows move and shift-arrows extend. The selected range is published as structured content, with line numbers and kinds:</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="json"><code>{ &quot;file&quot;: &quot;src/transport/retry.ts&quot;,
+  &quot;lines&quot;: [ { &quot;no&quot;: 44, &quot;kind&quot;: &quot;del&quot;, &quot;text&quot;: &quot;  return base * 2 ** attempt + jitter;&quot; },
+             { &quot;no&quot;: 44, &quot;kind&quot;: &quot;add&quot;, &quot;text&quot;: &quot;  const capped = Math.min(base * 2 ** attempt, 30_000);&quot; } ] }</code></pre>
+<p>The model receives line numbers, the file path, and whether each line was added or removed. Compare that with a screenshot, or with “the user is looking at the retry file”, and the difference in what can be answered is large.</p>
+<h2 id="escalation-carries-the-range">Escalation carries the range</h2>
+<p>“Explain this change” sends the selected lines with their diff markers as a <code>ui/message</code>. Not the whole file, not the whole hunk, and not a summary: the lines the reviewer pointed at.</p>
+<h2 id="comments-are-local">Comments are local</h2>
+<p>A comment is attached to a line and rendered under it, and it never leaves the view unless the reviewer escalates. That is the right default: a review comment is a note to a colleague, not a prompt.</p>
+<h2 id="host-dependencies">Host dependencies</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Needs</th>
+<th>Without it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Render, resize, theme</td>
+<td>Nothing works</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>link.open</code></td>
+<td>The source button is omitted</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>surface.displayMode</code></td>
+<td>Reviewing happens at inline width</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>agent.escalate</code></td>
+<td>The explain button is omitted; copy remains</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>agent.contextUpdate</code></td>
+<td>The model does not learn the selection</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tool.invoke</code></td>
+<td>No diff to review</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="failure-cases">Failure cases</h2>
+<p><strong>The host refuses to open links.</strong> Press “Refuse to open links”. The button reports the refusal rather than failing silently, which is the right response for a capability that was present at initialisation and declined at use.</p>
+<p><strong>A very wide line.</strong> The diff pane scrolls horizontally rather than wrapping, because a wrapped diff line breaks the alignment between the number gutter and the content. In a four hundred pixel frame this means horizontal scrolling, which is the least bad option.</p>
+<h2 id="accessibility">Accessibility</h2>
+<p>The diff is a labelled group with keyboard navigation by arrow keys, and shift extends. Each line’s kind is carried by a <code>+</code> or <code>-</code> character in the text rather than by colour alone, so it survives forced colours. Comments are announced when added. The selection count and range are available to a screen reader through the live region.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>load_diff</code> returns eight lines and the stat chip reads <code>+3 -2</code>.</li>
+<li>Clicking a line sends exactly one <code>ui/update-model-context</code>.</li>
+<li>Shift-clicking extends the published range rather than replacing it.</li>
+<li>Explain sends <code>ui/message</code> containing the selected lines with markers.</li>
+<li>With <code>openLinks</code> withdrawn, <code>ui/open-link</code> is not sent and the refusal is reported.</li>
+</ol>
+
+<div class="pager"><a href="r07.html"><span class="dir">Previous</span>Recipe 7. Workflow Builder</a><a href="r09.html" style="text-align:right"><span class="dir">Next</span>Recipe 9. Monitoring Console</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

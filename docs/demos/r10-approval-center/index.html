@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Approval Center</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  .req { border:1px solid var(--color-border-primary); border-left:4px solid var(--color-text-warning);
+    border-radius:0 var(--border-radius-md) var(--border-radius-md) 0; padding:10px 12px }
+  .req.high { border-left-color:var(--color-text-danger) }
+  .req dl { display:grid; grid-template-columns:max-content 1fr; gap:1px 12px;
+    margin:8px 0; font-size:12px }
+  .req dt { color:var(--color-text-secondary) }
+  .req dd { margin:0 }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <strong>Waiting for a person</strong>
+    <span class="chip" id="count">0</span>
+    <span class="spacer"></span>
+    <button id="audit" class="quiet">Show the audit trail</button>
+  </div>
+
+  <div id="queue" class="stack"></div>
+
+  <div id="trail" class="card" hidden>
+    <h2>Audit</h2>
+    <table><tbody id="trail-body"></tbody></table>
+  </div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce, confirmDialog } = View;
+
+let queue = [];
+const trail = [];
+let bridge, format;
+
+function draw() {
+  $("#count").textContent = String(queue.length);
+  $("#queue").replaceChildren(...(queue.length ? queue.map((req) =>
+    h("div", { class: `req ${req.risk === "high" ? "high" : ""}` },
+      h("div", { class: "row" },
+        h("strong", { text: req.title }),
+        h("span", { class: `chip ${req.risk === "high" ? "bad" : "warn"}`,
+                    text: `${req.risk} risk` }),
+        h("span", { class: "spacer" }),
+        h("span", { class: "muted", text: format.time(new Date(req.at)) })),
+      h("p", { style: "margin:6px 0 0", text: req.description }),
+      // Provenance is the whole point. An approval card without it is a
+      // dialog box with a lever attached, and people learn to pull the lever.
+      h("dl", {}, ...Object.entries(req.provenance).flatMap(([k, v]) =>
+        [h("dt", { text: k }), h("dd", { text: v })])),
+      h("div", { class: "row" },
+        h("button", { class: "primary", text: "Approve",
+          onclick: () => decide(req, "approved") }),
+        h("button", { class: "danger", text: "Deny",
+          onclick: () => decide(req, "denied") }),
+        h("button", { class: "quiet", text: "Ask in the conversation",
+          onclick: () => ask(req) }))))
+    : [h("p", { class: "muted", text: "Nothing is waiting." })]));
+
+  $("#trail-body").replaceChildren(...trail.map((entry) =>
+    h("tr", {}, h("td", { text: entry.at }), h("td", { text: entry.title }),
+      h("td", { text: entry.decision }))));
+}
+
+async function decide(req, decision) {
+  if (decision === "approved" && req.risk === "high") {
+    const yes = await confirmDialog({ title: `Approve ${req.title}?`,
+      body: req.consequence, confirm: "Approve" });
+    if (!yes) return;
+  }
+  queue = queue.filter((r) => r !== req);
+  trail.unshift({ at: format.time(new Date()), title: req.title, decision });
+  draw();
+  announce(`${req.title} ${decision}`);
+  toast(`${req.title} ${decision}`);
+  // Only the decision crosses the boundary. Which cards were expanded, which
+  // were hovered, and how long the person took do not.
+  await bridge.updateModelContext({
+    content: [{ type: "text", text: `The user ${decision} ${req.title}.` }],
+    structuredContent: { decisions: trail.map((t) => ({ title: t.title,
+      decision: t.decision })) },
+  }).catch(() => {});
+}
+
+async function ask(req) {
+  await bridge.sendMessage(
+    `Before I decide on ${req.title}: ${req.question}`);
+  toast("Asked in the conversation");
+}
+
+View.boot({ name: "approval-center", version: "1.0.0" },
+  { tools: { listChanged: true } }, async (instance) => {
+  bridge = instance;
+  format = View.formatters(bridge.hostContext);
+
+  const result = await bridge.callServerTool("pending_approvals", {});
+  queue = result.structuredContent?.requests ?? [];
+  draw();
+
+  $("#audit").onclick = () => { $("#trail").hidden = !$("#trail").hidden; };
+
+  bridge.registerTool({
+    name: "queue_approval",
+    description: "Queue a sensitive action for human approval",
+    inputSchema: { type: "object" },
+    annotations: { readOnlyHint: false },
+  }, async (req) => {
+    queue = [req, ...queue];
+    draw();
+    announce(`New approval: ${req.title}`);
+    return { content: [{ type: "text", text: "Queued. A person has to decide." }] };
+  });
+
+  bridge.registerTool({
+    name: "get_decisions",
+    description: "Read the decisions made so far",
+    inputSchema: { type: "object" },
+    annotations: { readOnlyHint: true },
+  }, async () => ({
+    content: [{ type: "text", text: trail.length
+      ? trail.map((t) => `${t.title}: ${t.decision}`).join("; ")
+      : "Nothing decided yet." }],
+    structuredContent: { decisions: trail, pending: queue.length },
+  }));
+
+  // An agent asking to approve its own request is the case the whole recipe
+  // exists to refuse.
+  bridge.registerTool({
+    name: "approve",
+    description: "Approve a queued action",
+    inputSchema: { type: "object", properties: { title: { type: "string" } } },
+    annotations: { readOnlyHint: false },
+  }, async () => ({
+    isError: true,
+    content: [{ type: "text", text:
+      "Approval requires a person. This view does not accept approvals over "
+      + "the tool interface." }],
+  }));
+});
+</script>
+</body>
+</html>

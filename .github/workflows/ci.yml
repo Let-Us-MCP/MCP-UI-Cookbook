@@ -1,0 +1,38 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+      - name: Regenerate the registry
+        run: python3 capabilities/registry.py
+      - name: Prose, references, listings, counts
+        run: |
+          python3 tools/lint_prose.py
+          python3 tools/check_refs.py
+          python3 tools/check_listings.py
+          python3 tools/check_counts.py
+      - name: Specification claims
+        run: python3 tools/check_claims.py
+      - name: Build the demos and the site
+        run: |
+          python3 tools/build_demos.py
+          python3 tools/build_site.py
+      - name: Drive every demonstration and diff its transcript
+        run: node tools/check_demos.mjs
+      - name: The site must be committed and current
+        run: git diff --exit-code -- docs

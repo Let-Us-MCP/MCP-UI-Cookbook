@@ -1,0 +1,75 @@
+{
+  "demo": "lab-media",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ]
+        },
+        "appInfo": {
+          "name": "media-lab",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "serverTools": {}
+        },
+        "hostContext": {
+          "availableDisplayModes": [
+            "inline",
+            "fullscreen"
+          ],
+          "containerDimensions": {
+            "maxHeight": 440
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 271,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/tool-cancelled",
+      "id": null,
+      "payload": {
+        "reason": "The user stopped the request"
+      }
+    }
+  ]
+}

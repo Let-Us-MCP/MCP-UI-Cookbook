@@ -1,0 +1,139 @@
+{
+  "demo": "r13-settings",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "settings",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "serverTools": {}
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 600
+          },
+          "deviceCapabilities": {
+            "hover": true,
+            "touch": false
+          },
+          "displayMode": "inline",
+          "locale": "en-GB",
+          "theme": "light",
+          "timeZone": "Europe/London"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 481,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "load_preferences"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Digest at 08:30, quiet hours 21:00 to 07:00.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "preferences": {
+            "accent": "#0f5c8c",
+            "density": "comfortable",
+            "digest": "08:30",
+            "email": "sam@meridian.example",
+            "from": "21:00",
+            "motion": false,
+            "renewal": "2026-09-14",
+            "until": "07:00"
+          }
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 499,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "locale": "ja-JP",
+        "timeZone": "Asia/Tokyo"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/notifications/host-context-changed",
+      "id": null,
+      "payload": {
+        "deviceCapabilities": {
+          "hover": false,
+          "touch": true
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/resource-teardown",
+      "id": 1,
+      "payload": {
+        "reason": "The user navigated away"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 1,
+      "payload": {}
+    }
+  ]
+}

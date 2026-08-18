@@ -1,0 +1,7 @@
+{
+  "calls": [
+    { "tool": "list_deployments", "arguments": {}, "as": "list_deployments" },
+    { "tool": "explain_deployment", "arguments": { "id": "d5" },
+      "as": "explain_deployment" }
+  ]
+}

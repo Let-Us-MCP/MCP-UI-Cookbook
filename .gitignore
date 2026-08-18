@@ -1,0 +1,12 @@
+proto/
+reference/
+plan.md
+desc
+look.md
+/conf
+.venv/
+node_modules/
+.DS_Store
+*.swp
+__pycache__/
+/tmp/

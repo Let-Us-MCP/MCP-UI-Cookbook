@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>File Explorer</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  .panes { display:grid; grid-template-columns:minmax(150px,1fr) minmax(0,1.4fr); gap:12px }
+  .drop { outline:2px dashed var(--color-text-info); outline-offset:-3px }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <button id="new">New folder</button>
+    <button id="rename" disabled>Rename</button>
+    <button id="delete" class="danger" disabled>Delete</button>
+    <span class="spacer"></span>
+    <button id="undo" disabled>Undo</button>
+  </div>
+
+  <div class="panes">
+    <div class="card">
+      <ul id="tree" class="tree" role="tree" aria-label="Files"></ul>
+    </div>
+    <div class="card" id="detail">
+      <p class="muted">Select something.</p>
+    </div>
+  </div>
+
+  <p class="muted" id="hint">Drag a node onto a folder to move it. Right click for actions.</p>
+</div>
+
+<div id="menu" class="card" hidden role="menu"
+     style="position:absolute;z-index:20;padding:4px;box-shadow:var(--shadow-md)"></div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce, confirmDialog, promptDialog } = View;
+
+let tree = null;
+let selected = null;
+const past = [];
+let bridge;
+
+const walk = (node, fn, parent = null) => {
+  fn(node, parent);
+  (node.children ?? []).forEach((c) => walk(c, fn, node));
+};
+const find = (id) => { let hit = null; walk(tree, (n) => { if (n.id === id) hit = n; }); return hit; };
+const parentOf = (id) => { let p = null; walk(tree, (n, up) => { if (n.id === id) p = up; }); return p; };
+
+function apply(entry) {
+  entry.forward();
+  past.push(entry);
+  render();
+  announce(entry.label);
+}
+
+function undo() {
+  const entry = past.pop();
+  if (!entry) return;
+  entry.back();
+  render();
+  toast(`Undid ${entry.label}`);
+}
+
+function render() {
+  const node = (n, depth) => {
+    const item = h("li", { role: "none" },
+      h("div", { role: "treeitem", tabindex: n.id === selected ? "0" : "-1",
+                 "aria-selected": n.id === selected ? "true" : "false",
+                 "aria-expanded": n.children ? "true" : undefined,
+                 draggable: "true",
+                 text: `${n.children ? "▾ " : "  "}${n.name}`,
+                 onclick: () => { selected = n.id; render(); },
+                 oncontextmenu: (e) => { e.preventDefault(); selected = n.id;
+                                         render(); menu(e.clientX, e.clientY); },
+                 ondragstart: (e) => e.dataTransfer.setData("text/plain", n.id),
+                 ondragover: (e) => { if (n.children) { e.preventDefault();
+                                        e.currentTarget.classList.add("drop"); } },
+                 ondragleave: (e) => e.currentTarget.classList.remove("drop"),
+                 ondrop: (e) => { e.preventDefault();
+                                  e.currentTarget.classList.remove("drop");
+                                  move(e.dataTransfer.getData("text/plain"), n.id); } }));
+    if (n.children) {
+      item.append(h("ul", { class: "tree", role: "group" },
+        ...n.children.map((c) => node(c, depth + 1))));
+    }
+    return item;
+  };
+  $("#tree").replaceChildren(...(tree.children ?? []).map((c) => node(c, 0)));
+
+  const current = selected ? find(selected) : null;
+  $("#detail").replaceChildren(current
+    ? h("div", { class: "stack" },
+        h("h2", { text: current.name }),
+        h("table", {}, h("tbody", {},
+          ...Object.entries({ kind: current.children ? "folder" : "file",
+                              size: current.size ? `${current.size} bytes` : "-",
+                              modified: current.modified ?? "-" })
+            .map(([k, v]) => h("tr", {}, h("td", { text: k }), h("td", { text: v }))))),
+        h("button", { class: "quiet", text: "Copy path",
+          onclick: () => { navigator.clipboard?.writeText(pathOf(current.id))
+            .catch(() => {}); toast("Path copied"); } }))
+    : h("p", { class: "muted", text: "Select something." }));
+
+  $("#rename").disabled = $("#delete").disabled = !selected;
+  $("#undo").disabled = !past.length;
+}
+
+function pathOf(id) {
+  const parts = [];
+  let node = find(id);
+  while (node && node !== tree) { parts.unshift(node.name); node = parentOf(node.id); }
+  return `/${parts.join("/")}`;
+}
+
+function move(id, intoId) {
+  if (id === intoId) return;
+  const node = find(id), target = find(intoId), from = parentOf(id);
+  if (!node || !target?.children || !from) return;
+  const index = from.children.indexOf(node);
+  apply({ label: `move ${node.name} into ${target.name}`,
+          forward: () => { from.children.splice(index, 1); target.children.push(node); },
+          back: () => { target.children.pop(); from.children.splice(index, 0, node); } });
+}
+
+function menu(x, y) {
+  const node = find(selected);
+  const items = [
+    ["Rename", rename],
+    ["Duplicate", () => {
+      const parent = parentOf(node.id);
+      const copy = { ...node, id: `${node.id}-copy-${past.length}`,
+                     name: `${node.name} copy` };
+      apply({ label: `duplicate ${node.name}`,
+              forward: () => parent.children.push(copy),
+              back: () => parent.children.pop() });
+    }],
+    ["Delete", remove],
+  ];
+  $("#menu").replaceChildren(...items.map(([label, run]) =>
+    h("button", { class: "quiet", role: "menuitem", text: label,
+      style: "display:block;width:100%;text-align:left",
+      onclick: () => { $("#menu").hidden = true; run(); } })));
+  $("#menu").style.left = `${x}px`;
+  $("#menu").style.top = `${y}px`;
+  $("#menu").hidden = false;
+}
+addEventListener("click", (e) => { if (!e.target.closest("#menu")) $("#menu").hidden = true; });
+
+async function rename() {
+  const node = find(selected);
+  const before = node.name;
+  const after = await promptDialog({ title: "Rename", label: "New name", value: before });
+  if (!after || after === before) return;
+  apply({ label: `rename ${before}`, forward: () => { node.name = after; },
+          back: () => { node.name = before; } });
+}
+
+async function remove() {
+  const node = find(selected);
+  // Deletion is confirmed and undoable. Either alone would be worse: a
+  // confirmation with no undo trains people to click through it, and an undo
+  // with no confirmation loses a folder before anyone notices.
+  const yes = await confirmDialog({ title: `Delete ${node.name}?`,
+    body: "You can undo this from the toolbar.", confirm: "Delete", destructive: true });
+  if (!yes) return;
+  const parent = parentOf(node.id);
+  const index = parent.children.indexOf(node);
+  apply({ label: `delete ${node.name}`,
+          forward: () => parent.children.splice(index, 1),
+          back: () => parent.children.splice(index, 0, node) });
+  selected = null;
+}
+
+View.boot({ name: "file-explorer", version: "1.0.0" }, {}, async (instance) => {
+  bridge = instance;
+  const result = await bridge.callServerTool("list_files", {});
+  tree = result.structuredContent?.tree ?? { id: "root", name: "/", children: [] };
+  render();
+
+  $("#new").onclick = async () => {
+    const name = await promptDialog({ title: "New folder", label: "Name",
+                                      value: "New folder" });
+    if (!name) return;
+    const node = { id: `n${past.length}-${Date.now()}`, name, children: [] };
+    apply({ label: `create ${name}`, forward: () => tree.children.push(node),
+            back: () => tree.children.pop() });
+  };
+  $("#rename").onclick = rename;
+  $("#delete").onclick = remove;
+  $("#undo").onclick = undo;
+
+  addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); }
+    if (e.key === "Delete" && selected) remove();
+    if (e.key === "F2" && selected) rename();
+  });
+});
+</script>
+</body>
+</html>

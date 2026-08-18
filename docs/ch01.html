@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1. The Capability Model &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Eighty-five named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.">
+<meta property="og:title" content="1. The Capability Model">
+<meta property="og:description" content="Eighty-five named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html" class="current">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 1</p><h1>The Capability Model</h1><p class="summary">Eighty-five named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</p><p>An MCP application is a web page that has been stripped of almost everything a web page normally assumes. It has no origin worth the name, so storage and cookies are gone. It has no address bar, so navigation is gone. It cannot open a window, print, or ask for the camera without permission it did not grant itself. It is roughly four hundred pixels wide, inside a document it cannot see, next to a conversation it cannot read, belonging to a user it can see and a model it cannot.</p>
+<p>What it has instead is a message channel to the host. Everything the page cannot do on its own, it does by asking. That makes the interesting question of this book not “how do I build a table” but “which of the things a table normally does still work in here, and what do I do about the ones that do not”.</p>
+<p>The answer needs a vocabulary, because “it depends on the host” is true and useless. So the book breaks the surface into eighty-five named operations, and attaches four facts to each one.</p>
+<figure>
+<img src="figures/diag-capability.png" alt="The capability model: an identifier, a level, a tag, and a ground" />
+<figcaption aria-hidden="true">The capability model: an identifier, a level, a tag, and a ground</figcaption>
+</figure>
+<h2 id="namespaced-identifiers">Namespaced identifiers</h2>
+<p>Every capability has a stable identifier with a namespace: <code>surface.resize</code>, <code>input.selection</code>, <code>clipboard.write</code>, <code>tool.invoke</code>. Flat names are not used. The namespace is not decoration; it is what lets you scan an eighty-five row index and find the five entries about files without reading any of them, and it is what lets a conformance report say “this host fails four <code>input.*</code> checks” instead of listing four unrelated sentences.</p>
+<p>The identifiers are the book’s own. The extension does not define capability names, it defines messages, and one capability sometimes maps onto two messages while two capabilities sometimes share one. <code>surface.close</code> is the pair <code>ui/notifications/request-teardown</code> and <code>ui/resource-teardown</code>, which are a notification and a request pointing in opposite directions. Calling that one capability is a judgement, and the entry says which messages it means so you can disagree with the judgement without losing the facts.</p>
+<h2 id="four-conformance-levels">Four conformance levels</h2>
+<p>Capabilities are placed on a ladder of four cumulative levels. The ladder is what turns “this host supports MCP Apps” into something a person can act on.</p>
+<p><strong>Level 1, Embedded.</strong> The application renders, reports its size, receives a theme, opens a link through the host, and can find out what it is running inside. This is the floor. A host at Level 1 can display a chart or a summary card. It cannot yet be trusted with a form.</p>
+<p><strong>Level 2, Interactive.</strong> Focus, keyboard, selection, clipboard, files, dialogs, and errors that recover. Everything at this level is about the application becoming a place where work happens rather than a place where results appear.</p>
+<p><strong>Level 3, Native-Like.</strong> Display modes, spatial interaction, lifecycle awareness, persistence, history, media. This is where applications stop feeling like cards and start feeling like applications, and it is also where the standard runs out fastest.</p>
+<p><strong>Level 4, Agentic.</strong> Tools, streaming, model context, approval, and shared ownership of state. Nothing at this level has a counterpart in ordinary web development, because ordinary web pages do not have a second party that can edit the document while the user is typing in it.</p>
+<p>Levels are cumulative and they are claims. A host that says Level 3 is saying that every Core capability at Levels 1, 2 and 3 behaves the way the entry describes, and Appendix C turns that into a checklist somebody can run.</p>
+<h2 id="core-and-extended">Core and Extended</h2>
+<p>At each level, capabilities are tagged Core or Extended. Core capabilities are mandatory at their level: they are the substance of the claim. Extended capabilities are optional at any level, which is a statement about your code rather than about the host. It means an application that requires an Extended capability must still work when it is absent, and it means the entry has to say what “still work” looks like.</p>
+<p>Sixty-seven of the eighty-five capabilities are Core. That ratio is not a target, it is what fell out of asking, for each one, whether an application could be recognisably itself without it.</p>
+<h2 id="where-the-behaviour-actually-comes-from">Where the behaviour actually comes from</h2>
+<p>The most useful badge on an entry is the last one, because it answers a question that costs people days: is this a protocol feature, a browser feature, or my problem?</p>
+<div class="cap" id="link.open"><div class="cap-head"><code class="cap-id">link.open</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Delegate external navigation instead of attempting it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/open-link</code><code>openLinks</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r08.html">Code and Diff Reviewer</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p>That entry is on the wire. There is a message, the host answers it, the transcript pane shows it, and the failure mode is a rejected promise you can catch. Compare it with this one:</p>
+<div class="cap" id="input.selection"><div class="cap-head"><code class="cap-id">input.selection</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Single, additive, range, and select-all over text and objects.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r03.html">File Explorer</a>, <a href="r05.html">Spreadsheet</a>, <a href="r07.html">Workflow Builder</a>, <a href="r08.html">Code and Diff Reviewer</a>, <a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-input">lab-input</a></dd></dl></div>
+<p>Nothing on the wire at all. Selection inside your view is the browser doing what browsers do, and looking for a protocol feature to enable it is a way to lose an afternoon. And then there is the third kind:</p>
+<div class="cap" id="clipboard.read"><div class="cap-head"><code class="cap-id">clipboard.read</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Read what the user has on the clipboard.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r05.html">Spreadsheet</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p>No mechanism, anywhere. Not in the extension, not in the browser for an opaque origin, not by asking the host nicely. The entry says what to do instead, and Appendix B collects all fourteen of these into one table.</p>
+<p>The five grounds are:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Ground</th>
+<th>Meaning</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>On the wire</td>
+<td>The MCP Apps extension defines a message for it</td>
+<td>28</td>
+</tr>
+<tr>
+<td>Core MCP</td>
+<td>The base protocol defines it and views inherit it</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Platform</td>
+<td>The browser inside the sandbox provides it, with no host round trip</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Yours to build</td>
+<td>The view implements it and nobody else can</td>
+<td>19</td>
+</tr>
+<tr>
+<td>Not standardised</td>
+<td>No mechanism exists yet; the entry carries a workaround</td>
+<td>14</td>
+</tr>
+</tbody>
+</table></div>
+<p>Those counts are generated from the registry, and the twenty-eight wire claims are checked against the specification text on every build. A build where the extension has renamed a message fails before the sentence describing it can go stale.</p>
+<figure>
+<img src="figures/diag-grounds.png" alt="Where eighty-five capabilities actually come from" />
+<figcaption aria-hidden="true">Where eighty-five capabilities actually come from</figcaption>
+</figure>
+<h2 id="discovery-comes-first">Discovery comes first</h2>
+<p>The first capability in the book is not a feature. It is the question you ask before using any of the others.</p>
+<div class="cap" id="host.capabilities"><div class="cap-head"><code class="cap-id">host.capabilities</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Enumerate what this host supports before using any of it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/initialize</code><code>hostCapabilities</code><code>appCapabilities</code><code>ui/notifications/initialized</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-handshake">lab-handshake</a></dd></dl></div>
+<p>The handshake is one request and one notification. The view sends <code>ui/initialize</code> with its own name, version, and capabilities. The host answers with its name, its capabilities, and a context object describing the environment. The view sends <code>ui/notifications/initialized</code>, and only then is the host allowed to send anything.</p>
+<p>Everything the host is willing to do is in that answer. If <code>openLinks</code> is absent, the host will not open links, and a view that renders a link anyway is a view with a dead control in it. If <code>serverTools</code> is absent, your refresh button cannot work. If <code>sampling</code> is absent, the view cannot reach a model on its own and has to escalate to the conversation instead.</p>
+<p>The important discipline is not checking. It is checking <em>early</em>. A capability that turns out to be missing at the moment the user presses the button produces an error message; the same capability checked during initialization produces an interface that never offered the button. The demonstration below takes capabilities away one at a time so you can watch the difference.</p>
+<div class="demo" data-demo="lab-handshake" id="lab-handshake"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<p>Press “Become a very poor host” and reload. The view still works. It has fewer buttons, and it says why, and that is the whole of progressive enhancement in this environment.</p>
+<h2 id="what-this-book-will-not-tell-you">What this book will not tell you</h2>
+<p>It will not tell you which hosts support what. That information has a half-life of about a month, and a book that carried it would be wrong by the time you read it. What it carries instead is a method: the capability identifiers, the checklists in Appendix C, and a conformance harness in the repository that any host can run against itself. The answer to “does Claude Desktop support <code>input.dragBoundary</code>” should come from a test run, not from a paragraph written in August.</p>
+<p>It will also not tell you that everything is fine. Fourteen capabilities that recognisable applications need have no mechanism at all, and nine of them are Core. The honest version of this book says so on the entry, on the index, and in an appendix, and then shows you what people do instead.</p>
+
+<div class="pager"><a href="how-to-read.html"><span class="dir">Previous</span>How to Read This Book</a><a href="ch02.html" style="text-align:right"><span class="dir">Next</span>2. What Crosses the Boundary</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

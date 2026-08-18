@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Keyboard, pointer, selection</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="toolbar">
+    <span class="chip" id="mode">modality: unknown</span>
+    <span class="chip" id="keys">no key yet</span>
+    <span class="spacer"></span>
+    <small>Try <kbd>Cmd</kbd>/<kbd>Ctrl</kbd> + <kbd>F</kbd>, arrows, right click, drag</small>
+  </div>
+
+  <div class="row">
+    <div class="card" style="flex:1 1 240px">
+      <h2>Selection</h2>
+      <ul id="rows" role="listbox" aria-multiselectable="true"
+          class="stack" style="list-style:none;margin:0;padding:0"></ul>
+      <p class="muted" id="selcount">0 selected</p>
+    </div>
+
+    <div class="card" style="flex:1 1 200px">
+      <h2>Pointer and zoom</h2>
+      <div id="pad" style="height:120px;border-radius:8px;overflow:hidden;
+           background:var(--color-background-secondary);position:relative;
+           touch-action:none;cursor:grab">
+        <div id="dot" style="position:absolute;width:22px;height:22px;
+             border-radius:50%;background:var(--color-text-info);left:20px;top:20px"></div>
+      </div>
+      <p class="muted" id="zoom">scale 1.00</p>
+    </div>
+  </div>
+
+  <div id="menu" class="card" hidden role="menu"
+       style="position:absolute;z-index:20;padding:4px;box-shadow:var(--shadow-md)"></div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, $$, toast, announce } = View;
+
+const ROWS = ["Ada", "Bell", "Curie", "Dijkstra", "Euler", "Franklin"];
+const selected = new Set();
+let anchor = 0;
+
+function draw() {
+  $("#rows").replaceChildren(...ROWS.map((name, i) =>
+    h("li", { role: "option", tabindex: i === anchor ? "0" : "-1",
+              "aria-selected": selected.has(i) ? "true" : "false",
+              class: "row", style: "padding:3px 7px;border-radius:6px",
+              text: name })));
+  $("#selcount").textContent = `${selected.size} selected`;
+}
+
+// Three selection gestures, all of them platform behaviour, none of them
+// worth a round trip to a model: click replaces, meta-click adds, shift-click
+// extends from the anchor.
+function select(i, event) {
+  if (event.shiftKey) {
+    const [lo, hi] = [Math.min(anchor, i), Math.max(anchor, i)];
+    for (let k = lo; k <= hi; k += 1) selected.add(k);
+  } else if (event.metaKey || event.ctrlKey) {
+    selected.has(i) ? selected.delete(i) : selected.add(i);
+    anchor = i;
+  } else {
+    selected.clear();
+    selected.add(i);
+    anchor = i;
+  }
+  draw();
+  announce(`${selected.size} of ${ROWS.length} selected`);
+}
+
+function describeModality(device = {}) {
+  const parts = [device.touch && "touch", device.hover && "hover"].filter(Boolean);
+  $("#mode").textContent = `modality: ${parts.join(" + ") || "unstated"}`;
+}
+
+View.boot({ name: "input-lab", version: "1.0.0" }, {}, async (bridge) => {
+  describeModality(bridge.hostContext.deviceCapabilities);
+  bridge.on("hostcontextchanged", (patch) => {
+    if (patch.deviceCapabilities) describeModality(patch.deviceCapabilities);
+  });
+
+  draw();
+
+  $("#rows").addEventListener("click", (event) => {
+    const i = [...$("#rows").children].indexOf(event.target.closest("li"));
+    if (i >= 0) select(i, event);
+  });
+
+  // The grid keyboard model: arrows move, space toggles, shift extends,
+  // Ctrl+A takes everything. Users bring this from every other application
+  // they have ever used, and it costs about fifteen lines.
+  $("#rows").addEventListener("keydown", (event) => {
+    const last = ROWS.length - 1;
+    if (event.key === "ArrowDown") anchor = Math.min(last, anchor + 1);
+    else if (event.key === "ArrowUp") anchor = Math.max(0, anchor - 1);
+    else if (event.key === " ") { selected.has(anchor)
+      ? selected.delete(anchor) : selected.add(anchor); }
+    else if (event.key === "a" && (event.metaKey || event.ctrlKey)) {
+      ROWS.forEach((_, i) => selected.add(i));
+    } else if (event.key === "Escape") selected.clear();
+    else return;
+    event.preventDefault();
+    draw();
+    $("#rows").children[anchor]?.focus();
+  });
+
+  // Shortcuts are a negotiation you are not part of. The host may already own
+  // this chord; there is no message to ask, and no message to be told.
+  addEventListener("keydown", (event) => {
+    $("#keys").textContent = [event.metaKey && "Cmd", event.ctrlKey && "Ctrl",
+      event.shiftKey && "Shift", event.key].filter(Boolean).join(" + ");
+    if ((event.metaKey || event.ctrlKey) && event.key === "f") {
+      event.preventDefault();
+      toast("The view took Cmd/Ctrl+F. The host may disagree.");
+    }
+  });
+
+  // Right click and long press are the same intent on two modalities.
+  const openMenu = (x, y) => {
+    const menu = $("#menu");
+    menu.replaceChildren(...["Rename", "Duplicate", "Delete"].map((label) =>
+      h("button", { class: "quiet", role: "menuitem", text: label,
+        style: "display:block;width:100%;text-align:left",
+        onclick: () => { menu.hidden = true; toast(`${label} chosen`); } })));
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
+    menu.hidden = false;
+    menu.querySelector("button").focus();
+  };
+  addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+    openMenu(event.clientX, event.clientY);
+  });
+  addEventListener("click", (event) => {
+    if (!event.target.closest("#menu")) $("#menu").hidden = true;
+  });
+  let pressTimer = null;
+  $("#rows").addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "touch") return;
+    pressTimer = setTimeout(() => openMenu(event.clientX, event.clientY), 520);
+  });
+  addEventListener("pointerup", () => clearTimeout(pressTimer));
+
+  // Pointer capture is what makes a drag survive leaving the element. Without
+  // it the dot sticks to the edge the moment the pointer moves faster than
+  // the layout.
+  const pad = $("#pad"), dot = $("#dot");
+  let dragging = false, offset = { x: 0, y: 0 }, scale = 1;
+  dot.addEventListener("pointerdown", (event) => {
+    dragging = true;
+    dot.setPointerCapture(event.pointerId);
+    offset = { x: event.offsetX, y: event.offsetY };
+    pad.style.cursor = "grabbing";
+  });
+  dot.addEventListener("pointermove", (event) => {
+    if (!dragging) return;
+    const box = pad.getBoundingClientRect();
+    dot.style.left = `${Math.max(0, Math.min(box.width - 22,
+      event.clientX - box.left - offset.x))}px`;
+    dot.style.top = `${Math.max(0, Math.min(box.height - 22,
+      event.clientY - box.top - offset.y))}px`;
+  });
+  dot.addEventListener("pointerup", (event) => {
+    dragging = false;
+    dot.releasePointerCapture(event.pointerId);
+    pad.style.cursor = "grab";
+  });
+
+  pad.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    scale = Math.min(4, Math.max(0.5, scale * (event.deltaY < 0 ? 1.1 : 0.9)));
+    dot.style.transform = `scale(${scale})`;
+    $("#zoom").textContent = `scale ${scale.toFixed(2)}`;
+  }, { passive: false });
+});
+</script>
+</body>
+</html>

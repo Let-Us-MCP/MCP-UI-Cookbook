@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Appendix B. The Gaps &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Fourteen capabilities with no standard mechanism, what each one costs, and the shape a proposal would take.">
+<meta property="og:title" content="Appendix B. The Gaps">
+<meta property="og:description" content="Fourteen capabilities with no standard mechanism, what each one costs, and the shape a proposal would take.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html" class="current">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Appendix B</p><h1>The Gaps</h1><p class="summary">Fourteen capabilities with no standard mechanism, what each one costs, and the shape a proposal would take.</p><p>Every entry below is a capability that recognisable applications need and that no message, permission or platform feature currently provides. Nine of them are Core, which means they are needed at their conformance level rather than merely nice.</p>
+<figure>
+<img src="figures/xkcd-doors.png" alt="Fourteen doors that are shut" />
+<figcaption aria-hidden="true">Fourteen doors that are shut</figcaption>
+</figure>
+<div class="table-wrap"><table><thead><tr><th>Capability</th><th>Level</th><th>What is missing</th><th class="num">Recipes blocked</th></tr></thead><tbody><tr><td><a href="ch07.html#surface.focusHandoff"><code>surface.focusHandoff</code></a></td><td>2</td><td>Hand focus across the host boundary in either direction.</td><td class="num">0</td></tr><tr><td><a href="ch07.html#surface.reveal"><code>surface.reveal</code></a></td><td>2</td><td>Ask the host to scroll the conversation until this view is visible.</td><td class="num">0</td></tr><tr><td><a href="ch08.html#notify.attention"><code>notify.attention</code></a></td><td>3</td><td>Signal from a backgrounded view that a human is needed.</td><td class="num">2</td></tr><tr><td><a href="ch09.html#input.shortcut"><code>input.shortcut</code></a></td><td>2</td><td>Own an accelerator without fighting the host for it.</td><td class="num">2</td></tr><tr><td><a href="ch09.html#input.dragBoundary"><code>input.dragBoundary</code></a></td><td>2</td><td>Drag something out of the view and into the host, or the reverse.</td><td class="num">0</td></tr><tr><td><a href="ch10.html#clipboard.read"><code>clipboard.read</code></a></td><td>2</td><td>Read what the user has on the clipboard.</td><td class="num">1</td></tr><tr><td><a href="ch10.html#system.share"><code>system.share</code></a></td><td>3</td><td>Invoke the operating system share sheet.</td><td class="num">1</td></tr><tr><td><a href="ch10.html#system.print"><code>system.print</code></a></td><td>3</td><td>Request host-mediated printing.</td><td class="num">0</td></tr><tr><td><a href="ch15.html#state.save"><code>state.save</code></a></td><td>3</td><td>Persist view state keyed to the view&#x27;s identity.</td><td class="num">3</td></tr><tr><td><a href="ch15.html#state.restore"><code>state.restore</code></a></td><td>3</td><td>Come back up where the user left off.</td><td class="num">1</td></tr><tr><td><a href="ch17.html#agent.intent"><code>agent.intent</code></a></td><td>4</td><td>Name a semantic action rather than describing it in prose.</td><td class="num">1</td></tr><tr><td><a href="ch19.html#tool.partialOutput"><code>tool.partialOutput</code></a></td><td>4</td><td>Update stable elements as results arrive, not after.</td><td class="num">2</td></tr><tr><td><a href="ch21.html#approval.request"><code>approval.request</code></a></td><td>4</td><td>Require a human signature on a sensitive action.</td><td class="num">1</td></tr><tr><td><a href="ch21.html#elicit.request"><code>elicit.request</code></a></td><td>4</td><td>Ask the user a structured question mid-operation.</td><td class="num">1</td></tr></tbody></table></div>
+<h2 id="what-each-one-costs-and-what-would-fix-it">What each one costs, and what would fix it</h2>
+<h3 id="surface.focushandoff"><code>surface.focusHandoff</code></h3>
+<p>Neither party can move focus across the frame boundary. A view cannot return focus to the composer when a form is finished; a host cannot direct focus into a view’s search field. Voice control and switch access both need it.</p>
+<p><em>Workaround.</em> Finish interactions with a teardown request so focus returns by ordinary means, and register a tool that focuses a named element so an agent can do it.</p>
+<p><em>Shape.</em> <code>ui/request-focus</code> from the view, declinable, and a focus grant notification in the other direction carrying an optional target.</p>
+<p><em>Reopens.</em> Focus theft, which is why the request has to be declinable and should require a recent user gesture.</p>
+<h3 id="surface.reveal"><code>surface.reveal</code></h3>
+<p>A view scrolled out of the conversation cannot ask to be scrolled back into it. Anything that happens inside it is invisible until the user looks.</p>
+<p><em>Workaround.</em> Design for being unobserved: legible state on return rather than announcements at the moment of change.</p>
+<p><em>Shape.</em> <code>ui/request-reveal</code>, which the host may honour by scrolling, by badging, or by ignoring.</p>
+<p><em>Reopens.</em> Attention hijacking, mitigated by leaving the host in control of what “reveal” means.</p>
+<h3 id="input.shortcut"><code>input.shortcut</code></h3>
+<p>A view cannot discover which accelerators the host has taken, and cannot be told when it has collided. From the user’s side an accelerator sometimes works and sometimes does not.</p>
+<p><em>Workaround.</em> Take few, prefer document-scoped conventions, and always show a visible control.</p>
+<p><em>Shape.</em> A reserved-chords list in <code>hostContext</code>, or a request to claim one that returns whether it was granted.</p>
+<p><em>Reopens.</em> Nothing much. This is the cheapest of the fourteen.</p>
+<h3 id="input.dragboundary"><code>input.dragBoundary</code></h3>
+<p>Nothing can be dragged out of a view into the host, or in from the host, other than files the browser routes.</p>
+<p><em>Workaround.</em> Clipboard out, file input or paste in, <code>resources/read</code> when the object lives on the server anyway.</p>
+<p><em>Shape.</em> A serialisable transfer payload carried in a message on drag start and drop, with the host mediating both ends.</p>
+<p><em>Reopens.</em> Exfiltration, since a drag out is data leaving the frame. Needs the same treatment as <code>ui/download-file</code>.</p>
+<h3 id="clipboard.read"><code>clipboard.read</code></h3>
+<p>No permission exists, and the browser refuses reads from an opaque origin.</p>
+<p><em>Workaround.</em> Offer a paste target. The user’s Cmd+V is the consent, and the browser delivers the content without any permission.</p>
+<p><em>Shape.</em> A <code>clipboardRead</code> permission requiring a user gesture and a host-mediated grant, probably with visible indication in host chrome.</p>
+<p><em>Reopens.</em> Silent reading of whatever the user last copied, which is often a credential.</p>
+<h3 id="system.share"><code>system.share</code></h3>
+<p><code>navigator.share</code> needs the <code>web-share</code> permission policy, which is not in the extension’s set of four.</p>
+<p><em>Workaround.</em> <code>ui/open-link</code> with a canonical URL, or the clipboard.</p>
+<p><em>Shape.</em> A fifth permission, or a <code>ui/share</code> request taking standard content types, which would let the host present its own share surface.</p>
+<p><em>Reopens.</em> Little; the host would own the surface.</p>
+<h3 id="system.print"><code>system.print</code></h3>
+<p><code>window.print</code> needs <code>allow-modals</code>, which the sandbox does not grant.</p>
+<p><em>Workaround.</em> Generate a document and hand it to <code>ui/download-file</code>.</p>
+<p><em>Shape.</em> <code>ui/print</code> taking an embedded resource.</p>
+<p><em>Reopens.</em> Modal blocking of the host’s own window, which is why the request rather than the API is the right shape.</p>
+<h3 id="notify.attention"><code>notify.attention</code></h3>
+<p>A backgrounded or collapsed view cannot signal that a person is needed.</p>
+<p><em>Workaround.</em> A banner that survives until the user returns, and a context update so the model can raise it in the next turn.</p>
+<p><em>Shape.</em> <code>ui/request-attention</code> with a severity and a short label. Host free to badge, chime, or ignore. Probably the same feature as <code>surface.reveal</code>.</p>
+<p><em>Reopens.</em> Notification spam from many embedded views, which is exactly why the host must stay in control.</p>
+<h3 id="state.save-and-state.restore"><code>state.save</code> and <code>state.restore</code></h3>
+<p>The view’s origin is opaque, so storage is unavailable, and the extension has no state message. The Apps SDK on the other side of this ecosystem has <code>setWidgetState</code>, and the specification lists state persistence as deferred.</p>
+<p><em>Workaround.</em> Persist through an app-only server tool. Costs a round trip and fails entirely at Level 1.</p>
+<p><em>Shape.</em> <code>ui/set-view-state</code> and a <code>viewState</code> field in the initialize result, scoped to the view identity the host already tracks, with a host-enforced size limit.</p>
+<p><em>Reopens.</em> Storage as a covert channel between views, which a per-view scope and a size cap address.</p>
+<h3 id="agent.intent"><code>agent.intent</code></h3>
+<p>A view can send prose, and cannot send a verb and a target. The round trip through prose is lossy and untestable.</p>
+<p><em>Workaround.</em> Register a tool so the agent has a precise entry point in the other direction, and send structured data alongside the prose.</p>
+<p><em>Shape.</em> <code>ui/intent</code> with a verb, a target and arguments, delivered as a structured turn.</p>
+<p><em>Reopens.</em> Little; it is strictly more precise than the message it replaces.</p>
+<h3 id="tool.partialoutput"><code>tool.partialOutput</code></h3>
+<p>Input streams to the view. Output does not. There is no partial tool result.</p>
+<p><em>Workaround.</em> Poll an app-only tool, rely on a host that re-sends results, or paginate.</p>
+<p><em>Shape.</em> <code>ui/notifications/tool-result-partial</code>, mirroring the input side, with the same “never rely on it, always get a final one” contract.</p>
+<p><em>Reopens.</em> Nothing. This is the most clearly justified of the fourteen and the asymmetry with input streaming is hard to defend.</p>
+<h3 id="approval.request"><code>approval.request</code></h3>
+<p>A view’s Approve button is a button in an untrusted iframe. Nothing is attested, and the host does not know an approval happened.</p>
+<p><em>Workaround.</em> Queue at the server, perform through an app-only tool, and show provenance in the view. A convention, not a guarantee.</p>
+<p><em>Shape.</em> <code>ui/request-approval</code> answered by the host after the host itself asks the user, returning something the server can verify.</p>
+<p><em>Reopens.</em> Nothing; it closes the phishing case, since the host would render the consent surface.</p>
+<h3 id="elicit.request"><code>elicit.request</code></h3>
+<p>Core MCP has elicitation from server to host. There is no view-to-host equivalent, so a view’s mid-operation question carries no more weight than any other pixels in the frame.</p>
+<p><em>Workaround.</em> Ask in the view and accept the weaker guarantee, or send a message and take a turn.</p>
+<p><em>Shape.</em> <code>ui/elicit</code> mirroring <code>elicitation/create</code>, with the same hard prohibition on credentials in form mode and the same URL mode for anything that touches authentication.</p>
+<p><em>Reopens.</em> Credential phishing, unless the prohibition is carried over unchanged.</p>
+
+<div class="pager"><a href="appendix-a.html"><span class="dir">Previous</span>Appendix A. Capability Index</a><a href="appendix-c.html" style="text-align:right"><span class="dir">Next</span>Appendix C. Conformance Checklists</a></div>
+</main>
+</div>
+
+</body>
+</html>

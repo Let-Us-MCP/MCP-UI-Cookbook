@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4. The Sandbox and What It Costs You &middot; The MCP UI Cookbook</title>
+<meta name="description" content="An opaque origin, a content security policy your server declares and the host enforces, four permissions, and the surprising consequences of all of it.">
+<meta property="og:title" content="4. The Sandbox and What It Costs You">
+<meta property="og:description" content="An opaque origin, a content security policy your server declares and the host enforces, four permissions, and the surprising consequences of all of it.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html" class="current">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 4</p><h1>The Sandbox and What It Costs You</h1><p class="summary">An opaque origin, a content security policy your server declares and the host enforces, four permissions, and the surprising consequences of all of it.</p><p>The security model of MCP Apps is two sentences long. Views run in sandboxed iframes. All communication with the host is auditable JSON-RPC.</p>
+<p>Everything else follows from those two sentences, including a set of consequences that will look like bugs the first time you meet them. This chapter is here early because those consequences constrain every capability in Parts II and III, and because half of the “not standardised” entries in this book are not oversights in the specification. They are the sandbox doing its job.</p>
+<h2 id="the-threat-model">The threat model</h2>
+<p>The host is running code that arrived over the network from a server the user connected to, possibly on somebody else’s recommendation, and rendering it next to a conversation that may contain the user’s private data and next to a model that can take actions. The specification names five attacks: a malicious server delivering harmful HTML, a compromised view attempting to escape the sandbox, a view invoking tools it was not authorised to invoke, a view exfiltrating host data, and a view phishing the user inside a frame that looks like part of the host.</p>
+<p>Note the fifth. The other four are technical and have technical answers. The fifth is a design problem, and the specification’s answer is that hosts should clearly indicate sandboxed UI boundaries. That is why <code>prefersBorder</code> exists on the resource metadata: a view can ask to be visibly separate from the host, and a well behaved view asks for it.</p>
+<h2 id="the-opaque-origin">The opaque origin</h2>
+<p>The sandbox attribute grants <code>allow-scripts</code> and nothing that would let the frame reach the host. In particular it does not grant <code>allow-same-origin</code>, so the view’s document has an opaque origin. The consequences are worth stating plainly, because they explain a dozen entries later in the book:</p>
+<p><strong>No storage.</strong> <code>localStorage</code>, <code>sessionStorage</code>, IndexedDB and cookies either throw or are useless. This is why <code>state.save</code> and <code>state.restore</code> are gaps and why the Document Editor keeps its document on the server.</p>
+<p><strong>No <code>postMessage</code> targeting.</strong> There is no origin to name, so both sides use <code>"*"</code> and identify each other by object identity: the host compares <code>event.source</code> against its own iframe’s <code>contentWindow</code>. If you write a host, that comparison is your authentication.</p>
+<p><strong>No modals.</strong> <code>allow-modals</code> is not granted, so <code>window.alert</code>, <code>confirm</code> and <code>prompt</code> do nothing. Chapter 8 has a button that proves it. Everything in the dialog family is yours to build.</p>
+<p><strong>No downloads.</strong> <code>allow-downloads</code> is not granted, so an anchor with a <code>download</code> attribute is inert. This is precisely why <code>ui/download-file</code> exists.</p>
+<p><strong>No top-level navigation.</strong> The view cannot navigate the host away, which is why <code>ui/open-link</code> exists.</p>
+<p><strong>Module scripts need care.</strong> A module fetch from an opaque origin is a CORS request. If you are loading your view’s script from a static file host that does not send permissive headers, a classic script works where a module does not. The bridge in this repository is a classic script for that reason.</p>
+<p>None of this is hostile. Every restriction maps to one of the five attacks, and the two escape hatches that exist, <code>ui/open-link</code> and <code>ui/download-file</code>, are exactly the two where a human decision can be inserted.</p>
+<figure>
+<img src="figures/diag-sandbox.png" alt="What the sandbox takes away, and the two doors it leaves open" />
+<figcaption aria-hidden="true">What the sandbox takes away, and the two doors it leaves open</figcaption>
+</figure>
+<h2 id="the-content-security-policy">The content security policy</h2>
+<p>Your server declares which origins the view needs. The host constructs the CSP and enforces it. The rule is one way: a host may restrict further, and must not allow anything undeclared.</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="json"><code>&quot;_meta&quot;: { &quot;ui&quot;: {
+  &quot;csp&quot;: {
+    &quot;connectDomains&quot;: [&quot;https://api.example.com&quot;],
+    &quot;resourceDomains&quot;: [&quot;https://cdn.example.com&quot;],
+    &quot;frameDomains&quot;: [],
+    &quot;baseUriDomains&quot;: []
+  },
+  &quot;permissions&quot;: { &quot;clipboardWrite&quot;: {} },
+  &quot;prefersBorder&quot;: true
+} }</code></pre>
+<p><code>connectDomains</code> becomes <code>connect-src</code> and governs fetch, XHR and WebSocket. <code>resourceDomains</code> becomes the source list for scripts, styles, images, fonts and media. <code>frameDomains</code> becomes <code>frame-src</code>, and omitting it means <code>frame-src 'none'</code>. <code>baseUriDomains</code> becomes <code>base-uri</code>, defaulting to <code>'self'</code>.</p>
+<p>Omit the whole block and you get the restrictive default: <code>default-src 'none'</code>, self and inline for scripts and styles, self and data URIs for images and media, and no network at all. Every view in this book declares an empty CSP, because none of them load anything, and an empty declaration is a stronger statement than a missing one. A reviewer reading <code>csp: {}</code> knows the author thought about it.</p>
+<p>Two placement details matter. The metadata may appear on the <code>resources/list</code> entry, on the <code>resources/read</code> content item, or both, and the content item wins. And the metadata belongs to the <strong>resource</strong>, not to the tool. A CSP block attached to a tool descriptor is silently ignored, which means the view renders with the restrictive default and the developer spends an afternoon wondering why <code>fetch</code> is blocked.</p>
+<h2 id="permissions">Permissions</h2>
+<p>Four, and only four, in the current specification: <code>camera</code>, <code>microphone</code>, <code>geolocation</code>, and <code>clipboardWrite</code>. Your server requests them in <code>_meta.ui.permissions</code>; the host may honour them by setting the frame’s <code>allow</code> attribute; and <code>hostCapabilities.sandbox.permissions</code> reports what was actually granted.</p>
+<p>Notice what is not on that list. No fullscreen, which is why <code>media.fullscreen</code> goes through <code>ui/request-display-mode</code> instead of the Fullscreen API. No web share, which is why <code>system.share</code> is a gap. No clipboard read, which is why <code>clipboard.read</code> is a gap. No print. The permission set is deliberately small, and the specification’s advice is the right one: never assume a permission was granted, feature-detect and fall back.</p>
+<h2 id="least-privilege-in-practice">Least privilege in practice</h2>
+<p>An application requests what it currently needs, not what it might need. This is worth taking seriously for a reason beyond principle: <code>_meta.ui</code> is the part of your server a host reviewer actually reads. A view that asks for camera access because a future feature might use it is a view that gets declined by a cautious host today.</p>
+<p>Concretely: declare no CSP if you load nothing. Request no permissions if you need none. Prefer a <code>resources/read</code> through the host over a <code>fetch</code> to your own API, because the read is auditable and the fetch is a hole you asked to have opened. Use <code>visibility: ["app"]</code> on tools that exist to serve the view, so the model’s tool list stays short and a refresh button is not something the model can decide to press.</p>
+<h2 id="tools-your-view-provides-are-untrusted-too">Tools your view provides are untrusted too</h2>
+<p>When a view registers tools, the trust direction reverses. The agent can now call code inside a sandboxed frame that a server delivered. The specification is direct about the consequences: descriptions may not fully capture side effects, names may collide with server tools, and results should be validated against declared schemas. It recommends per-app or per-server approval policies, clear attribution in the host’s UI so a user can see which app is calling, resource limits, and an audit trail.</p>
+<p>For an application author the practical rule is smaller. Annotate honestly. <code>readOnlyHint: true</code> on a tool that mutates is the one lie in this system that a host will believe, and it is the lie that gets automatic approval. Chapter 18 registers four tools and marks exactly the two that change something.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>The sandbox is why this book has fourteen gaps, and most of them are gaps on purpose. Before proposing a mechanism for one, it is worth asking which of the five attacks the mechanism reopens. Some of them have good answers. <code>clipboard.read</code> behind an explicit user gesture and a host-mediated permission is a reasonable proposal. Others do not: a view that could read the conversation would make the fifth attack considerably easier, and no amount of convenience is worth that.</p>
+
+<div class="pager"><a href="ch03.html"><span class="dir">Previous</span>3. The Local-First Principle</a><a href="ch05.html" style="text-align:right"><span class="dir">Next</span>5. Entries, Recipes, and the Discipline of Degradation</a></div>
+</main>
+</div>
+
+</body>
+</html>

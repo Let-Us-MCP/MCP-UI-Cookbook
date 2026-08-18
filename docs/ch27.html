@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>27. The Coverage Matrix and the Checklists &middot; The MCP UI Cookbook</title>
+<meta name="description" content="What eighty-five capabilities by thirteen recipes actually shows, why the matrix is generated rather than maintained, and what a host is claiming when it claims a level.">
+<meta property="og:title" content="27. The Coverage Matrix and the Checklists">
+<meta property="og:description" content="What eighty-five capabilities by thirteen recipes actually shows, why the matrix is generated rather than maintained, and what a host is claiming when it claims a level.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html" class="current">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 27</p><h1>The Coverage Matrix and the Checklists</h1><p class="summary">What eighty-five capabilities by thirteen recipes actually shows, why the matrix is generated rather than maintained, and what a host is claiming when it claims a level.</p><p>Two artifacts come out of the registry on every build, and both are more useful as diagnostics of the book than as references for the reader.</p>
+<h2 id="the-matrix">The matrix</h2>
+<p>Appendix A carries the full capability by recipe matrix. It is generated from the registry, never hand-maintained, and reading down a column tells you what a recipe needs while reading across a row tells you how well covered a capability is.</p>
+<p>The interesting entries are the extremes.</p>
+<p><strong>Rows with no marks at all.</strong> A capability that no recipe exercises is a capability this book has described and not demonstrated. There are several, and they cluster: <code>op.pause</code>, <code>system.print</code>, and the environment signals that have no visible consequence in a small view. Each is either genuinely rare or a recipe that should exist and does not.</p>
+<p><strong>Rows with a mark everywhere.</strong> <code>surface.resize</code>, <code>env.theme</code> and <code>host.capabilities</code> are in every recipe, which is what “Level 1” means in practice. If a host gets those three wrong, nothing in Part V renders.</p>
+<p><strong>Columns that are unusually short.</strong> A recipe that touches few capabilities is either focused or thin. Recipe 5’s column is short and it is focused; Recipe 2’s is short and could carry more.</p>
+<p><strong>The delta diagonal.</strong> Reading the deltas in order shows the book’s argument as a shape: the first recipe claims sixteen capabilities, and by the thirteenth the deltas are down to a handful each. That taper is the evidence for the completeness claim. If the thirteenth recipe still needed six new primitives, the model would not be converging.</p>
+<h2 id="why-generated-rather-than-maintained">Why generated rather than maintained</h2>
+<p>A hand-maintained matrix is wrong within a week and nobody notices, because nothing reads it. A generated one is wrong only if the registry is wrong, and the registry is what everything else reads.</p>
+<p>The generation also enables checks that a document cannot make. The build reports capabilities with no entry in any chapter, which is how the missing <code>tool.cancel</code> entry in Chapter 19 was found. It could equally fail on a Core capability with no covering recipe, which is the check a mature version of this suite would run in CI.</p>
+<figure>
+<img src="figures/diag-levels.png" alt="Capabilities per level, split by where they come from" />
+<figcaption aria-hidden="true">Capabilities per level, split by where they come from</figcaption>
+</figure>
+<h2 id="what-a-level-claim-means">What a level claim means</h2>
+<p>Appendix C turns each level into a checklist of observable behaviours. The translation from capability to check is mechanical, and the phrasing is deliberately in the form an assertion takes.</p>
+<p>A host claiming <strong>Level 1</strong> is claiming that a view renders, that <code>ui/notifications/size-changed</code> resizes the frame, that <code>hostContext</code> carries a theme and a locale, that <code>ui/open-link</code> works or is honestly absent from <code>hostCapabilities</code>, and that <code>ui/initialize</code> returns a capability set that matches what the host will actually do.</p>
+<p>That last clause is the one that fails most often, and it is worth stating as its own rule. <strong>A capability advertised and not implemented is worse than one that was never advertised.</strong> The whole progressive enhancement discipline in Chapter 1 depends on the handshake being truthful. A host that advertises <code>downloadFile</code> and then does nothing when a view sends <code>ui/download-file</code> has broken every view that checked properly, and rewarded every view that did not check at all.</p>
+<p><strong>Level 2</strong> adds the interactive set, and the checks are mostly about the host staying out of the way: that keyboard events reach the frame, that the frame’s focus ring is not clipped by host styling, that a context menu inside the frame is not shadowed by the host’s own.</p>
+<p><strong>Level 3</strong> is where hosts diverge most. Display modes, lifecycle signals, and the persistence gap all live here, and a host can be excellent at Levels 1 and 2 while implementing none of Level 3. That is a legitimate position for a host whose views are all cards.</p>
+<p><strong>Level 4</strong> is the agentic set, and it has the largest gap between what the checklist asks and what the specification provides. Nine Core capabilities across all levels have no standard mechanism, and Appendix C marks each of them, because a checklist that asked hosts to implement something unspecified would be worthless.</p>
+<h2 id="reading-the-checklist-as-a-host-implementer">Reading the checklist as a host implementer</h2>
+<p>The useful order is not top to bottom. It is:</p>
+<p>Get the handshake truthful. Everything else in the book assumes it.</p>
+<p>Get <code>surface.resize</code> right, including the zero-height case on first render. More views look broken because of this than because of anything else.</p>
+<p>Get <code>ui/resource-teardown</code> right, including waiting for the response. This is the only data-loss bug in the protocol, and views cannot work around a host that does not wait.</p>
+<p>Then work down the levels in order, and publish which one you pass.</p>
+<h2 id="reading-the-checklist-as-an-application-author">Reading the checklist as an application author</h2>
+<p>The order is different. Assume Level 1, check for everything above it, and make the check the thing that decides whether a control exists.</p>
+<p>Then use the failure column of the recipe entries in Part V as a design prompt. Every one of those tables was written by asking, for each capability, what the application looks like without it. That exercise takes an hour and produces most of the progressive enhancement work you were going to do anyway, before the code makes it expensive.</p>
+<h2 id="the-matrix-as-an-argument">The matrix as an argument</h2>
+<p>One last use. The matrix is the closest thing this book has to a proof, and it is not one. What it shows is that thirteen recognisable applications were built from eighty-five named primitives, that the primitives were sufficient for all thirteen, and that fourteen of them had to be worked around because no mechanism exists.</p>
+<p>That is evidence for the completeness test in Chapter 25 and not an answer to it. The answer needs Layer 5 from Chapter 26: the same recipes, unmodified, running in hosts that were not built alongside them.</p>
+
+<div class="pager"><a href="ch26.html"><span class="dir">Previous</span>26. The Verification Layers</a><a href="ch28.html" style="text-align:right"><span class="dir">Next</span>28. The Missing Primitive Loop, and the Live Book</a></div>
+</main>
+</div>
+
+</body>
+</html>

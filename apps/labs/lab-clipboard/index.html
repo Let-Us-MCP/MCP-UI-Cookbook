@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Clipboard, files, links</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="row">
+    <button id="copy">Copy the table</button>
+    <button id="paste">Read the clipboard</button>
+    <button id="export">Export CSV</button>
+    <button id="open">Choose a file</button>
+    <button id="link">Open the specification</button>
+  </div>
+
+  <div id="drop" class="card" style="border-style:dashed;text-align:center;
+       padding:18px">
+    Drop a file here. Nothing leaves this frame.
+  </div>
+
+  <table>
+    <thead><tr><th>Region</th><th class="num">Orders</th><th class="num">Revenue</th></tr></thead>
+    <tbody id="body"></tbody>
+  </table>
+
+  <p class="muted" id="status">Ready.</p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast, announce } = View;
+
+const DATA = [
+  ["North", 1284, 91240],
+  ["South", 932, 64110],
+  ["East", 1601, 118920],
+  ["West", 745, 51380],
+];
+
+const csv = () => ["Region,Orders,Revenue",
+  ...DATA.map((r) => r.join(","))].join("\n");
+
+// Two clipboard paths, because the permission may not be there. The async
+// Clipboard API needs `permissions.clipboardWrite` in the resource metadata
+// and a host willing to grant it; the execCommand fallback needs neither and
+// works from a user gesture. Ship both, silently.
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return "Clipboard API";
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.append(area);
+    area.select();
+    const ok = document.execCommand("copy");
+    area.remove();
+    if (!ok) throw new Error("both clipboard paths refused");
+    return "execCommand fallback";
+  }
+}
+
+View.boot({ name: "clipboard-lab", version: "1.0.0" }, {}, async (bridge) => {
+  const format = View.formatters(bridge.hostContext);
+  $("#body").replaceChildren(...DATA.map(([region, orders, revenue]) =>
+    h("tr", {},
+      h("td", { text: region }),
+      h("td", { class: "num", text: format.number(orders) }),
+      h("td", { class: "num", text: format.currency(revenue) }))));
+
+  const say = (text) => { $("#status").textContent = text; announce(text); };
+
+  $("#copy").onclick = async () => {
+    try { say(`Copied through the ${await copyText(csv())}.`); }
+    catch (error) { say(`Copy failed: ${error.message}`); }
+  };
+
+  // There is no clipboard read capability anywhere in the extension, and the
+  // browser will not grant one to an opaque origin. This button exists to
+  // show you the refusal.
+  $("#paste").onclick = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      say(`Clipboard held ${text.length} characters.`);
+    } catch (error) {
+      say(`Clipboard read refused: ${error.name}. Offer a paste target instead.`);
+    }
+  };
+
+  $("#export").onclick = async () => {
+    if (!bridge.hostCapabilities.downloadFile) {
+      say("This host has no downloadFile capability, so there is nothing to "
+        + "fall back to: a sandboxed frame cannot save a file on its own.");
+      return;
+    }
+    await bridge.downloadFile([{
+      type: "resource",
+      resource: { uri: "file:///regions.csv", mimeType: "text/csv", text: csv() },
+    }]);
+    say("Handed the file to the host. The host decides where it lands.");
+  };
+
+  // A file input works inside the sandbox with no permission and no message.
+  // The file never leaves the frame unless you send it somewhere.
+  $("#open").onclick = () => {
+    const input = h("input", { type: "file", style: "display:none" });
+    input.onchange = () => {
+      const file = input.files[0];
+      if (file) say(`${file.name}, ${file.type || "unknown type"}, `
+        + `${Math.ceil(file.size / 1024)} KB, still local.`);
+      input.remove();
+    };
+    document.body.append(input);
+    input.click();
+  };
+
+  $("#link").onclick = async () => {
+    try {
+      await bridge.openLink("https://modelcontextprotocol.io/specification");
+      say("Link handed to the host.");
+    } catch (error) {
+      say(`The host declined: ${error.message}`);
+    }
+  };
+
+  const drop = $("#drop");
+  drop.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    drop.style.borderColor = "var(--color-text-info)";
+  });
+  drop.addEventListener("dragleave", () => {
+    drop.style.borderColor = "";
+  });
+  drop.addEventListener("drop", (event) => {
+    event.preventDefault();
+    drop.style.borderColor = "";
+    const files = [...event.dataTransfer.files];
+    if (!files.length) { say("That drop carried no files."); return; }
+    say(files.map((f) => `${f.name} (${Math.ceil(f.size / 1024)} KB)`).join(", "));
+  });
+});
+</script>
+</body>
+</html>

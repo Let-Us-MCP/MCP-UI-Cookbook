@@ -1,0 +1,112 @@
+{
+  "recordedFrom": "apps/recipes/r01-data-explorer/server.js",
+  "serverInfo": {
+    "name": "cookbook-data-explorer",
+    "version": "1.0.0"
+  },
+  "results": {
+    "list_deployments": {
+      "content": [
+        {
+          "type": "text",
+          "text": "8 deployments. Worst p95 is 1290ms on billing."
+        }
+      ],
+      "structuredContent": {
+        "deployments": [
+          {
+            "id": "d1",
+            "service": "checkout",
+            "env": "production",
+            "version": "4.18.2",
+            "p95": 412,
+            "errors": 17,
+            "at": "2026-08-17T09:12:00Z"
+          },
+          {
+            "id": "d2",
+            "service": "checkout",
+            "env": "canary",
+            "version": "4.19.0-rc1",
+            "p95": 388,
+            "errors": 2,
+            "at": "2026-08-18T06:40:00Z"
+          },
+          {
+            "id": "d3",
+            "service": "search",
+            "env": "production",
+            "version": "2.7.11",
+            "p95": 96,
+            "errors": 0,
+            "at": "2026-08-15T14:03:00Z"
+          },
+          {
+            "id": "d4",
+            "service": "search",
+            "env": "staging",
+            "version": "2.8.0",
+            "p95": 104,
+            "errors": 1,
+            "at": "2026-08-18T08:21:00Z"
+          },
+          {
+            "id": "d5",
+            "service": "billing",
+            "env": "production",
+            "version": "9.2.4",
+            "p95": 1290,
+            "errors": 143,
+            "at": "2026-08-16T22:55:00Z"
+          },
+          {
+            "id": "d6",
+            "service": "billing",
+            "env": "staging",
+            "version": "9.3.0",
+            "p95": 502,
+            "errors": 4,
+            "at": "2026-08-18T07:02:00Z"
+          },
+          {
+            "id": "d7",
+            "service": "notifications",
+            "env": "production",
+            "version": "1.14.0",
+            "p95": 233,
+            "errors": 6,
+            "at": "2026-08-14T11:30:00Z"
+          },
+          {
+            "id": "d8",
+            "service": "notifications",
+            "env": "canary",
+            "version": "1.15.0-rc2",
+            "p95": 219,
+            "errors": 0,
+            "at": "2026-08-18T05:15:00Z"
+          }
+        ]
+      }
+    },
+    "explain_deployment": {
+      "content": [
+        {
+          "type": "text",
+          "text": "billing 9.2.4 went to production on 2026-08-16T22:55:00Z. p95 1290ms, 143 errors in the first hour."
+        }
+      ],
+      "structuredContent": {
+        "deployment": {
+          "id": "d5",
+          "service": "billing",
+          "env": "production",
+          "version": "9.2.4",
+          "p95": 1290,
+          "errors": 143,
+          "at": "2026-08-16T22:55:00Z"
+        }
+      }
+    }
+  }
+}

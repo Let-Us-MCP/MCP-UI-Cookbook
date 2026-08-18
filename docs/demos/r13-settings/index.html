@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings and Preferences</title>
+<link rel="stylesheet" href="../lib/view.css">
+<style>
+  fieldset { border:1px solid var(--color-border-primary); border-radius:var(--border-radius-md);
+    padding:10px 12px; margin:0 }
+  legend { font-size:12px; color:var(--color-text-secondary); padding:0 6px }
+  .field { display:grid; grid-template-columns:minmax(120px,180px) minmax(0,1fr);
+    gap:8px; align-items:center; margin-bottom:8px }
+  .field .err { grid-column:2; color:var(--color-text-danger); font-size:11.5px }
+  .field input[aria-invalid="true"] { border-color:var(--color-text-danger) }
+</style>
+</head>
+<body>
+<div class="stack">
+  <form id="form" novalidate>
+    <fieldset>
+      <legend>Notifications</legend>
+      <div class="field">
+        <label for="digest">Daily digest at</label>
+        <input id="digest" type="time" value="08:30" required>
+      </div>
+      <div class="field">
+        <label for="from">Quiet hours start</label>
+        <input id="from" type="time" value="21:00">
+      </div>
+      <div class="field">
+        <label for="until">Quiet hours end</label>
+        <input id="until" type="time" value="07:00">
+      </div>
+      <div class="field">
+        <label for="email">Send a copy to</label>
+        <input id="email" type="email" value="sam@meridian.example"
+               aria-describedby="email-err">
+        <p class="err" id="email-err" hidden></p>
+      </div>
+    </fieldset>
+
+    <fieldset style="margin-top:10px">
+      <legend>Appearance</legend>
+      <div class="field">
+        <label for="accent">Accent colour</label>
+        <input id="accent" type="color" value="#0f5c8c">
+      </div>
+      <div class="field">
+        <label for="density">Density</label>
+        <select id="density">
+          <option value="comfortable">Comfortable</option>
+          <option value="compact">Compact</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="renewal">Renewal date</label>
+        <input id="renewal" type="date" value="2026-09-14">
+      </div>
+      <div class="field">
+        <label for="motion">Reduce motion</label>
+        <input id="motion" type="checkbox">
+      </div>
+    </fieldset>
+  </form>
+
+  <div class="row">
+    <button id="save" class="primary" disabled>Save changes</button>
+    <button id="cancel" disabled>Discard</button>
+    <span class="spacer"></span>
+    <span class="chip" id="state">no changes</span>
+  </div>
+
+  <p class="muted" id="note"></p>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { $, $$, toast, announce, confirmDialog } = View;
+
+let original = {};
+let bridge, format;
+
+const read = () => ({
+  digest: $("#digest").value, from: $("#from").value, until: $("#until").value,
+  email: $("#email").value, accent: $("#accent").value,
+  density: $("#density").value, renewal: $("#renewal").value,
+  motion: $("#motion").checked,
+});
+
+const write = (values) => {
+  for (const [k, v] of Object.entries(values)) {
+    const field = $(`#${k}`);
+    if (!field) continue;
+    if (field.type === "checkbox") field.checked = Boolean(v);
+    else field.value = v;
+  }
+};
+
+const dirty = () => JSON.stringify(read()) !== JSON.stringify(original);
+
+// Validation runs on change and on submit, never on every keystroke. Telling
+// somebody their email is invalid while they are still typing the at sign is
+// the most common way to make a form feel hostile.
+function validate({ live = false } = {}) {
+  const values = read();
+  let ok = true;
+  const email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(values.email);
+  if (!email && (!live || $("#email").dataset.touched)) {
+    $("#email").setAttribute("aria-invalid", "true");
+    $("#email-err").hidden = false;
+    $("#email-err").textContent = "That is not an address this will reach.";
+    ok = false;
+  } else {
+    $("#email").removeAttribute("aria-invalid");
+    $("#email-err").hidden = true;
+  }
+  return ok;
+}
+
+function refresh() {
+  const changed = dirty();
+  $("#save").disabled = !changed;
+  $("#cancel").disabled = !changed;
+  $("#state").textContent = changed ? "unsaved changes" : "no changes";
+  $("#state").className = `chip ${changed ? "warn" : "good"}`;
+  document.documentElement.style.setProperty("--color-text-info", read().accent);
+  document.documentElement.style.setProperty("--gap",
+    read().density === "compact" ? "6px" : "10px");
+}
+
+View.boot({ name: "settings", version: "1.0.0" }, {}, async (instance) => {
+  bridge = instance;
+  format = View.formatters(bridge.hostContext);
+
+  const result = await bridge.callServerTool("load_preferences", {});
+  original = result.structuredContent?.preferences ?? read();
+  write(original);
+  refresh();
+
+  $("#note").textContent =
+    `Times are shown in ${bridge.hostContext.timeZone ?? "the machine timezone"} `
+    + `and dates as ${format.date(new Date("2026-09-14T00:00:00Z"))}, both from `
+    + "the host context rather than from this browser.";
+
+  for (const field of $$("#form input, #form select")) {
+    field.addEventListener("input", () => { validate({ live: true }); refresh(); });
+    field.addEventListener("blur", () => { field.dataset.touched = "1";
+                                           validate({ live: true }); });
+  }
+
+  $("#save").onclick = async () => {
+    if (!validate()) {
+      $("#email").focus();
+      announce("The form has an error");
+      return;
+    }
+    const values = read();
+    const saved = await bridge.callServerTool("save_preferences", values);
+    if (saved.isError) {
+      $("#note").textContent = saved.content?.[0]?.text ?? "Save failed.";
+      return;
+    }
+    original = values;
+    refresh();
+    toast("Saved");
+    announce("Preferences saved");
+  };
+
+  $("#cancel").onclick = async () => {
+    const yes = await confirmDialog({ title: "Discard changes?",
+      body: "The form goes back to the last saved values.",
+      confirm: "Discard", destructive: true });
+    if (!yes) return;
+    write(original);
+    validate();
+    refresh();
+  };
+
+  bridge.on("teardown", async () => {
+    if (!dirty()) return;
+    $("#note").textContent = "Saving before the view closes.";
+    await bridge.callServerTool("save_preferences", read());
+  });
+});
+</script>
+</body>
+</html>

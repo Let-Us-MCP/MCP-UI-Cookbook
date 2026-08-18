@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13. Accessibility &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Three preferences the host never sends, one live region you have to build, and the reason an embedded frame makes all of this harder than a page.">
+<meta property="og:title" content="13. Accessibility">
+<meta property="og:description" content="Three preferences the host never sends, one live region you have to build, and the reason an embedded frame makes all of this harder than a page.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html" class="current">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 13</p><h1>Accessibility</h1><p class="summary">Three preferences the host never sends, one live region you have to build, and the reason an embedded frame makes all of this harder than a page.</p><p>Accessibility is a section in every entry of this book rather than a chapter at the end, because that is the only arrangement that survives a deadline. This chapter carries the four capabilities that do not belong to any other group, and the specifically embedded problems that the rest of the entries refer back to.</p>
+<div class="demo" data-demo="lab-a11y" id="lab-a11y"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="what-makes-a-frame-harder-than-a-page">What makes a frame harder than a page</h2>
+<p>Four things, and none of them are your fault.</p>
+<p><strong>Your view is a document inside a document.</strong> A screen reader user reaches it by moving into the frame, and inside it your headings start again at whatever level you chose. Use a sensible internal hierarchy and give the frame a meaningful title, because the title is what the host can expose as the frame’s accessible name.</p>
+<p><strong>You cannot see the host’s landmarks.</strong> You do not know whether the conversation is a <code>main</code>, whether there is already an <code>h1</code>, or what else has <code>role="status"</code>. Assume your announcements are competing with the host’s.</p>
+<p><strong>Focus cannot cross the boundary.</strong> Chapter 7 is the whole story. The practical consequence is that a keyboard user who enters your view must be able to leave it by ordinary tabbing, which means no traps outside modals and no infinite roving lists.</p>
+<p><strong>The user’s preferences reach you by a different route than the theme.</strong> The host sends colours. The operating system sends motion, contrast and text size, through media queries. Those two can disagree, and the demonstration above has a control that makes them disagree on purpose.</p>
+<h2 id="reduced-motion">Reduced motion</h2>
+<div class="cap" id="env.reducedMotion"><div class="cap-head"><code class="cap-id">env.reducedMotion</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Respect a stated preference for less movement.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r12.html">Media Viewer</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-a11y">lab-a11y</a></dd></dl></div>
+<p><code>prefers-reduced-motion: reduce</code> works inside the sandbox and reflects the operating system.</p>
+<p><strong>Application behaviour.</strong> The blunt instrument is a stylesheet rule that collapses every animation and transition, and it is the right default:</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+}</code></pre>
+<p>The finer instrument is to check the query in JavaScript where motion is functional rather than decorative. A dashboard that repaints a sparkline every 1.4 seconds is not decorating; it is moving, continuously, in somebody’s peripheral vision. Recipe 2 slows its polling to four seconds under a reduced motion preference, which is a different response from removing an animation and a more honest one.</p>
+<p><strong>What to keep.</strong> Reduced motion does not mean no feedback. Replace slides with crossfades, replace crossfades with instant changes, and keep the state change legible. A toast that appears instantly is fine; a toast that never appears is a regression.</p>
+<h2 id="contrast">Contrast</h2>
+<div class="cap" id="env.contrast"><div class="cap-head"><code class="cap-id">env.contrast</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Survive forced colours and high contrast.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r06.html">Image Annotator</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-a11y">lab-a11y</a></dd></dl></div>
+<p><code>prefers-contrast: more</code> and forced-colors mode are both real and both arrive without the host’s involvement.</p>
+<p><strong>The embedded-specific trap.</strong> In forced colours, the operating system replaces the palette. Anything you drew with a background image, a gradient, or a <code>box-shadow</code> to indicate state loses that indication entirely, because those properties are not overridden and the colours around them are. State has to be carried by something that survives: a border, an outline, text, or an icon.</p>
+<p>The same applies to your own custom properties. A view that indicates selection only by <code>background: var(--color-background-info)</code> shows no selection at all under forced colours. Recipe 1 sets both a background and an <code>aria-selected</code> attribute, and the attribute is what makes it survive.</p>
+<h2 id="text-scale">Text scale</h2>
+<div class="cap" id="env.textScale"><div class="cap-head"><code class="cap-id">env.textScale</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Stay usable when text is two sizes larger than you designed for.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-a11y">lab-a11y</a></dd></dl></div>
+<p>Users enlarge text. In a page that means everything reflows; in a four hundred pixel frame it means your two-column layout has three words per line.</p>
+<p><strong>Application behaviour.</strong> Size in relative units so the root scales everything. Never set a fixed pixel height on anything that contains text. Let the frame grow: <code>surface.resize</code> exists for precisely this, and a view that reports its true height when text doubles is a view that stays usable.</p>
+<p>WCAG 2.2 asks for usability at 200% zoom and reflow at 320 CSS pixels of width. Both are testable with the browser’s own zoom, and a four hundred pixel card at 200% is roughly a phone, so testing one gets you most of the other.</p>
+<h2 id="announcements">Announcements</h2>
+<div class="cap" id="a11y.announce"><div class="cap-head"><code class="cap-id">a11y.announce</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Tell assistive technology that something changed.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r05.html">Spreadsheet</a>, <a href="r10.html">Approval Center</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-a11y">lab-a11y</a></dd></dl></div>
+<p>This is the capability with no equivalent anywhere else in the book: telling assistive technology that something changed, when the change was not caused by the user moving focus.</p>
+<p>Everything in an agentic application is that kind of change. A tool result arrives. The agent highlights a row. A streaming log gains forty lines. A task fails. A sighted user notices; nobody else does, unless you say so.</p>
+<p><strong>Application behaviour.</strong> One polite live region, created once, updated with text. Politeness matters: <code>aria-live="assertive"</code> interrupts whatever is being read, and in an application where results arrive continuously that is unusable.</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>function announce(text) {
+  let region = $(&quot;#live-region&quot;);
+  if (!region) {
+    region = h(&quot;div&quot;, { id: &quot;live-region&quot;, class: &quot;sr-only&quot;,
+                        role: &quot;status&quot;, &quot;aria-live&quot;: &quot;polite&quot; });
+    document.body.append(region);
+  }
+  region.textContent = &quot;&quot;;
+  setTimeout(() =&gt; { region.textContent = text; }, 30);
+}</code></pre>
+<p>The clear-then-set with a small delay is not superstition. Screen readers announce <em>changes</em> to a live region, and setting the same string twice is not a change, so the second identical event is silent without it.</p>
+<p><strong>Announce the outcome, not the event.</strong> “Six of forty selected” rather than one announcement per row. “Import failed. Row 812 has a malformed date.” rather than “error”. The demonstration announces at phase boundaries only, which is what a sighted user actually perceives from a progress bar.</p>
+<p><strong>What not to announce.</strong> Hover. Scroll position. Anything the user did deliberately and can already feel. A live region that narrates the mouse is worse than no live region.</p>
+<h2 id="the-checklist-that-fits-on-a-card">The checklist that fits on a card</h2>
+<p>Every recipe in Part V is built against this list, and Appendix C turns it into assertions.</p>
+<p>Every interactive element is reachable by Tab and operable by Enter or Space. Every composite widget is one tab stop with arrow key navigation inside it. Every control has a name, and the name is what a person would call it. State changes that were not caused by focus are announced. Focus is visible, and the ring is not clipped by an <code>overflow: hidden</code> ancestor. Nothing depends on colour alone. Nothing depends on hover alone. Every spatial gesture has a button or a key equivalent. Text stays usable at 200%. Motion respects the preference.</p>
+<p>Ten lines, and running <code>axe-core</code> against your view will confirm perhaps half of them. The other half need a keyboard and five minutes, which is a cheaper test than most of the automated ones in Part VI and catches more.</p>
+
+<div class="pager"><a href="ch12.html"><span class="dir">Previous</span>12. Host Environment and Theming</a><a href="ch14.html" style="text-align:right"><span class="dir">Next</span>14. Lifecycle and Connectivity</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

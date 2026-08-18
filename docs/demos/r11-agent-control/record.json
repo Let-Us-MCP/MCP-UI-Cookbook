@@ -1,0 +1,2 @@
+{ "calls": [ { "tool": "list_tasks", "arguments": {} },
+             { "tool": "run_task", "arguments": { "name": "Reindex shard 1" } } ] }

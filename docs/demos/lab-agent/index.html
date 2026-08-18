@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>UI to agent</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <table>
+    <thead><tr><th>Ticket</th><th>Owner</th><th class="num">Age</th><th>State</th></tr></thead>
+    <tbody id="body"></tbody>
+  </table>
+
+  <div class="row">
+    <button id="explain" class="primary" disabled>Ask about the selection</button>
+    <button id="publish" disabled>Publish selection as context</button>
+    <button id="draft" disabled>Draft a reply with the model</button>
+    <button id="hover">Publish hover state too</button>
+  </div>
+
+  <div id="out" class="card" style="font-size:12.5px">Nothing sent yet.</div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast } = View;
+
+const ROWS = [
+  ["INC-4102", "priya", 14, "waiting on customer"],
+  ["INC-4118", "sam", 9, "in progress"],
+  ["INC-4133", "priya", 31, "stalled"],
+  ["INC-4140", "wei", 2, "new"],
+];
+
+const selected = new Set();
+let hovered = null;
+let publishHover = false;
+
+function draw() {
+  $("#body").replaceChildren(...ROWS.map((row, i) =>
+    h("tr", { "aria-selected": selected.has(i) ? "true" : "false",
+              onclick: () => { selected.has(i) ? selected.delete(i) : selected.add(i);
+                               draw(); update(); },
+              onmouseenter: () => { hovered = i; update(); } },
+      ...row.map((cell, c) => h("td", { class: c === 2 ? "num" : "", text: String(cell) })))));
+  const any = selected.size > 0;
+  for (const id of ["#explain", "#publish", "#draft"]) $(id).disabled = !any;
+}
+
+function selectionText() {
+  return [...selected].map((i) => ROWS[i].join(" | ")).join("\n");
+}
+
+let bridge;
+
+// Model context is a replacement, not an append. Publishing on every hover
+// would keep overwriting the thing the model was about to read, and would
+// spend the user's tokens describing a mouse.
+function update() {
+  if (!bridge?.hostCapabilities.updateModelContext) return;
+  if (!selected.size) return;
+  const payload = {
+    content: [{ type: "text", text:
+      `The user has ${selected.size} ticket(s) selected:\n${selectionText()}` }],
+    structuredContent: {
+      selected: [...selected].map((i) => ({ id: ROWS[i][0], owner: ROWS[i][1],
+                                            ageDays: ROWS[i][2], state: ROWS[i][3] })),
+      ...(publishHover && hovered != null ? { hovering: ROWS[hovered][0] } : {}),
+    },
+  };
+  bridge.updateModelContext(payload);
+  $("#out").textContent = "Context now reads:\n"
+    + JSON.stringify(payload.structuredContent, null, 2);
+}
+
+View.boot({ name: "agent-lab", version: "1.0.0" }, {}, async (instance) => {
+  bridge = instance;
+  draw();
+
+  // Escalation is the user saying "talk about this", so it carries the
+  // selection and stops. It is not a place to summarise the whole view.
+  $("#explain").onclick = async () => {
+    const text = `Why are these tickets stalled?\n${selectionText()}`;
+    try {
+      await bridge.sendMessage(text);
+      $("#out").textContent = `Sent to the conversation:\n${text}`;
+    } catch (error) {
+      $("#out").textContent = `The host refused the message: ${error.message}`;
+    }
+  };
+
+  $("#publish").onclick = update;
+
+  $("#hover").onclick = () => {
+    publishHover = !publishHover;
+    $("#hover").textContent = publishHover
+      ? "Stop publishing hover state" : "Publish hover state too";
+    toast(publishHover
+      ? "Now leaking pointer position into the model's context"
+      : "Hover state stays in the view where it belongs");
+    update();
+  };
+
+  $("#draft").onclick = async () => {
+    if (!bridge.hostCapabilities.sampling) {
+      $("#out").textContent = "This host does not offer sampling, so the view "
+        + "cannot reach a model on its own. Escalate to the conversation instead.";
+      return;
+    }
+    $("#out").textContent = "Asking the host's model…";
+    const reply = await bridge.createSamplingMessage({
+      messages: [{ role: "user", content: { type: "text",
+        text: `Draft a two sentence update for:\n${selectionText()}` } }],
+      maxTokens: 200,
+    });
+    $("#out").textContent = `The host's model said:\n${reply.content?.text}`;
+  };
+});
+</script>
+</body>
+</html>

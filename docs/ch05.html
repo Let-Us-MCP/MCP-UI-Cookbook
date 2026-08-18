@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5. Entries, Recipes, and the Discipline of Degradation &middot; The MCP UI Cookbook</title>
+<meta name="description" content="The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.">
+<meta property="og:title" content="5. Entries, Recipes, and the Discipline of Degradation">
+<meta property="og:description" content="The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.">
+<link rel="stylesheet" href="book.css">
+
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html" class="current">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 5</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>The rest of this book is two shapes repeated. Parts II and III are capability entries. Part V is recipes. Both templates are stated here, up front, so that the rest of the book can be held to them, and so that you can tell when it fails to be.</p>
+<h2 id="the-atomic-capability-entry">The atomic capability entry</h2>
+<p>Each entry answers eleven questions in the same order.</p>
+<p><strong>Capability.</strong> Identifier, level, tag, and ground. Generated from the registry, so the prose cannot contradict it.</p>
+<p><strong>Motivation.</strong> Why an application needs this at all. If the honest answer is “it does not, but people expect it”, the entry says that.</p>
+<p><strong>User experience.</strong> What the person sees and does. Written from the outside.</p>
+<p><strong>Application behaviour.</strong> What your code does, including the part it does before anybody clicks anything.</p>
+<p><strong>Host behaviour.</strong> What belongs to the host. This is the half most entries in other documents leave out, and it is the half that determines whether your application works in a host you have never tested against.</p>
+<p><strong>Lifecycle.</strong> Initialisation, execution, cancellation, completion, destruction. Most capabilities are boring here. The ones that are not are the ones that break.</p>
+<p><strong>Security.</strong> Which trust boundary this crosses and what the host is entitled to do about it.</p>
+<p><strong>Accessibility.</strong> Keyboard, focus, name and role, scaling, motion. Not a section at the end of the book. A section in every entry, because that is the only way it survives contact with a deadline.</p>
+<p><strong>Failure modes.</strong> Unsupported, denied, cancelled, timeout, failed. Five of them, always, in that order.</p>
+<p><strong>Minimal example.</strong> The smallest thing that demonstrates it, running on the page.</p>
+<p><strong>Conformance tests.</strong> The automated checks that decide whether an implementation has it.</p>
+<p>Not every entry in this book spends a paragraph on all eleven. A capability like <code>picker.color</code> has nothing interesting to say about lifecycle. The template is a checklist for the author, not a quota for the reader, and where a section is silent it is because the honest content was one sentence long.</p>
+<h2 id="the-five-failure-modes">The five failure modes</h2>
+<p>This is the part worth internalising, because it is where the difference between a demonstration and an application lives.</p>
+<p><strong>Unsupported.</strong> The host never offered the capability. You knew this at initialisation, before drawing anything, so the correct behaviour is an interface that does not contain the control. Not a disabled control with a tooltip. Not a control that shows an error. The absence of a thing the user never saw.</p>
+<p><strong>Denied.</strong> The capability exists and the host or the user said no to this particular use. This one you learn at the moment of the attempt, so it needs a visible, specific, recoverable response. “The host declined to open that link” tells the user what happened and implies what to do. “Error” does not.</p>
+<p><strong>Cancelled.</strong> Somebody stopped it on purpose. The interface must return to a state that matches reality, which is not always the state before it started. If three of five steps completed, saying “cancelled” and resetting the progress bar to zero is a lie. Chapter 11’s control centre says how far it got.</p>
+<p><strong>Timeout.</strong> No answer came. This is the one people forget, and it is the one that leaves a spinner running until the user reloads. Every request in a sandboxed frame is a request to a party you cannot inspect. Give it a deadline.</p>
+<p><strong>Failed.</strong> It was attempted and did not work. A structured error says what failed, whether retrying could help, and what the recovery action is. Three facts, not one adjective.</p>
+<figure>
+<img src="figures/diag-failures.png" alt="The five failure modes, and the moment each one is discoverable" />
+<figcaption aria-hidden="true">The five failure modes, and the moment each one is discoverable</figcaption>
+</figure>
+<p>The value of naming all five is that they are discoverable at different times. Unsupported is known before render. Denied and failed are known at the attempt. Cancelled comes from the user or the host at any moment. Timeout is known only by deciding it. An application that handles one of them and calls it error handling has handled the least common one.</p>
+<h2 id="the-recipe-entry">The recipe entry</h2>
+<p>Part V uses a different template, because a recipe is an argument rather than a reference.</p>
+<p><strong>Goal.</strong> The conventional application being reproduced, in one line.</p>
+<p><strong>Capability delta.</strong> Which primitives this recipe exercises that no earlier recipe does. This is the load-bearing field. A recipe with an empty delta gets merged or deleted, because it is not teaching anything and not testing anything, and thirteen recipes that each cover the same twelve capabilities would prove nothing about the model’s sufficiency.</p>
+<p><strong>Surface.</strong> What it looks like and how much room it needs.</p>
+<p><strong>Components.</strong> Which Part IV components it composes.</p>
+<p><strong>Atomic capabilities.</strong> The full list, generated from the registry.</p>
+<p><strong>Local interactions and agentic interactions.</strong> The split from Chapter 3, declared as a table before any code.</p>
+<p><strong>Host dependencies.</strong> What it needs by conformance level, so a reader can tell whether it will run in their host.</p>
+<p><strong>Failure cases.</strong> What happens when each dependency is absent. The recipes in this book are all built to run at Level 1 with reduced function, and the entry says what “reduced” means.</p>
+<p><strong>Accessibility.</strong> The keyboard-only path through the whole application.</p>
+<p><strong>Conformance checks.</strong> The observable behaviours a host has to produce, in the form the harness asserts them.</p>
+<h2 id="provenance-on-every-listing">Provenance on every listing</h2>
+<p>One more convention, visible on every code block in the book. A tag above each listing says where it came from:</p>
+<p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
+<p><em>Captured</em> means it is real output from a real run, quoted verbatim, including the parts that are inconvenient.</p>
+<p><em>Illustrative</em> means it was written for the page and nothing executes it. Message shapes quoted from the specification are illustrative. So are the sketches of code you might write.</p>
+<p>The reason for the convention is that books about protocols accumulate code that used to work. A reader who cannot tell which listings are load-bearing has to treat all of them as suspect. Chapter 29 describes the check that keeps the tags honest.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>If you take one thing from Part I into the rest of the book, take the failure section. Every capability entry from here on has one, and in almost every case it is longer than the section describing the happy path. That ratio is the point. The happy path is a few lines of code you would have written anyway. The rest is what makes an application survive a host that says no.</p>
+
+<div class="pager"><a href="ch04.html"><span class="dir">Previous</span>4. The Sandbox and What It Costs You</a><a href="ch06.html" style="text-align:right"><span class="dir">Next</span>6. Surfaces and Geometry</a></div>
+</main>
+</div>
+
+</body>
+</html>

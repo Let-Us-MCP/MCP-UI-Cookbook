@@ -1,0 +1,116 @@
+{
+  "demo": "r05-spreadsheet",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {},
+        "appInfo": {
+          "name": "spreadsheet",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "serverTools": {}
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 500
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 124,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "load_sheet"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Four regions with units and price; column D and row 6 are formulas.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "cells": {
+            "A1": "Region",
+            "A2": "North",
+            "A3": "South",
+            "A4": "East",
+            "A5": "West",
+            "A6": "Total",
+            "B1": "Units",
+            "B2": "1284",
+            "B3": "932",
+            "B4": "1601",
+            "B5": "745",
+            "B6": "=SUM(B2:B5)",
+            "C1": "Price",
+            "C2": "71",
+            "C3": "69",
+            "C4": "74",
+            "C5": "69",
+            "D1": "Revenue",
+            "D2": "=B2*C2",
+            "D3": "=B3*C3",
+            "D4": "=B4*C4",
+            "D5": "=B5*C5",
+            "D6": "=SUM(D2:D5)"
+          }
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 307,
+        "width": 836
+      }
+    }
+  ]
+}

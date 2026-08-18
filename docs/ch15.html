@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>15. Persistence and History &middot; The MCP UI Cookbook</title>
+<meta name="description" content="The sandbox took away your storage and the extension has not replaced it. Undo, on the other hand, was always yours, and in an agentic application it matters more than it ever did in a page.">
+<meta property="og:title" content="15. Persistence and History">
+<meta property="og:description" content="The sandbox took away your storage and the extension has not replaced it. Undo, on the other hand, was always yours, and in an agentic application it matters more than it ever did in a page.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html" class="current">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Chapter 15</p><h1>Persistence and History</h1><p class="summary">The sandbox took away your storage and the extension has not replaced it. Undo, on the other hand, was always yours, and in an agentic application it matters more than it ever did in a page.</p><p>Native-like applications remember. They come back where you left them, and they let you take back what you just did. One of those is a gap with a workaround; the other is entirely yours to build and is the single most valuable thing you can build in an application where somebody else can edit your document.</p>
+<div class="demo" data-demo="lab-state" id="lab-state"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-storage-that-is-not-there">The storage that is not there</h2>
+<div class="cap" id="state.save"><div class="cap-head"><code class="cap-id">state.save</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Persist view state keyed to the view&#x27;s identity.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r05.html">Spreadsheet</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
+<div class="cap" id="state.restore"><div class="cap-head"><code class="cap-id">state.restore</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Come back up where the user left off.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
+<p>The view’s origin is opaque. <code>localStorage</code> either throws a <code>SecurityError</code> or gives you a partition that is discarded with the frame. The demonstration probes it at startup and reports what it found, which is the honest way to discover this rather than reading a specification.</p>
+<p>And there is no message. The extension has no <code>ui/set-state</code>, no <code>ui/get-state</code>, and nothing in <code>hostContext</code> that round-trips. The OpenAI Apps SDK has <code>setWidgetState</code>, which is exactly this feature, and its absence here is one of the clearest gaps in the current draft. The specification’s own “Future Considerations” lists state persistence and restoration as deferred.</p>
+<p><strong>The workaround is a server tool.</strong> Persist through <code>tools/call</code>, keyed by something stable that the server knows: a conversation identifier, a document id, the tool’s own arguments. Recipe 4 does this, with a <code>save_document</code> tool marked <code>visibility: ["app"]</code> so the model neither sees it nor can call it.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r04-document-editor/server.js</code></p><pre class="js"><code>save_document: {
+  description: &quot;Persist the draft. Called by the view, not by the model.&quot;,
+  inputSchema: { type: &quot;object&quot;, properties: { html: { type: &quot;string&quot; } },
+                 required: [&quot;html&quot;] },
+  visibility: [&quot;app&quot;],
+  run: ({ html }) =&gt; {
+    document = html;
+    saves += 1;
+    return { content: [{ type: &quot;text&quot;,
+      text: `Saved revision ${saves} at the server.` }] };
+  },
+},</code></pre>
+<p><strong>What the workaround costs.</strong> A round trip for every save, which means debouncing and an autosave interval rather than saving on every keystroke. Server state for something that is conceptually local, like a scroll position or which panel is open, which feels wrong because it is. And no persistence at all when <code>hostCapabilities.serverTools</code> is absent, which is a real Level 1 host.</p>
+<p><strong>What a mechanism would look like.</strong> <code>ui/set-view-state</code> and a <code>viewState</code> field in the initialize result, scoped to the view identity the host already has, with a size limit the host enforces. Cheap, obviously useful, and proposed by prior art on both sides of this ecosystem.</p>
+<p><strong>Design around it in the meantime.</strong> Ask what genuinely has to survive. A document does. A sort order probably does not, and reconstructing it from the tool arguments is free. The recipes here persist documents and preferences and deliberately forget everything else, which is not a compromise so much as a discipline the gap forced.</p>
+<h2 id="transactions">Transactions</h2>
+<div class="cap" id="history.transaction"><div class="cap-head"><code class="cap-id">history.transaction</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Group mutations into one undoable unit.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r04.html">Document Editor</a>, <a href="r05.html">Spreadsheet</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
+<p>Undo is not a stack of snapshots. It is a stack of <em>transactions</em>, each of which knows how to apply itself and how to reverse itself.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-state/index.html</code></p><pre class="js"><code>const past = [];
+const future = [];
+
+function apply({ label, forward, back }) {
+  forward();
+  past.push({ label, forward, back });
+  future.length = 0;
+  draw();
+  announce(label);
+}</code></pre>
+<p>Three properties of that shape matter.</p>
+<p><strong>Clearing the redo stack on a new action</strong> is what makes the history a line rather than a tree, and it is what every user expects.</p>
+<p><strong>A label per transaction</strong> is what lets you say “Undid delete Contracts” instead of “Undid”. In an application where an agent also makes changes, the label is how a user tells whose change they are about to reverse.</p>
+<p><strong>Closures rather than snapshots</strong> is the part that matters in an agentic application. A snapshot-based undo reverts the whole document to an earlier state, which also silently reverts anything the agent did in between. A transaction reverses exactly its own change and leaves the rest alone.</p>
+<p><strong>Grouping.</strong> One transaction per meaningful unit, not per event. Typing gets grouped by pause: Recipe 4 commits a transaction after 900 milliseconds of inactivity. Dragging gets one transaction on drop, not one per pointermove. The test is whether a user pressing Undo once gets back to a state they recognise.</p>
+<figure>
+<img src="figures/xkcd-undo.png" alt="One undo stack, two authors" />
+<figcaption aria-hidden="true">One undo stack, two authors</figcaption>
+</figure>
+<h2 id="undo-and-redo">Undo and redo</h2>
+<div class="cap" id="history.undo"><div class="cap-head"><code class="cap-id">history.undo</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Revert the last transaction, including the agent&#x27;s.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r04.html">Document Editor</a>, <a href="r05.html">Spreadsheet</a>, <a href="r06.html">Image Annotator</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
+<div class="cap" id="history.redo"><div class="cap-head"><code class="cap-id">history.redo</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Reapply what was reverted.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
+<p>The operations themselves are four lines each once the transaction model exists. What deserves the attention is what belongs in the stack.</p>
+<p><strong>Include the agent’s changes.</strong> This is the argument of Chapter 20 arriving early. When an agent rewrites a paragraph, that rewrite goes on the same undo stack as the user’s own edits, so a single Cmd+Z takes it back. An agent whose changes cannot be undone is an agent people will not let near their document, and correctly so.</p>
+<p>Recipe 4 makes accepting a proposed rewrite exactly one transaction, so one Undo restores the human’s words. That is the whole safety story for agent-assisted editing, and it is nine lines of code.</p>
+<p><strong>Do not include selection, scroll, or view state.</strong> Undo that restores a scroll position feels broken, because the user’s model of undo is about content. Some editors undo selection changes as part of restoring context, which is a defensible variant, but undoing a <em>pure</em> selection change as its own step is not.</p>
+<p><strong>Bind the shortcuts.</strong> Cmd/Ctrl+Z and Shift+Cmd/Ctrl+Z, with the caveats from Chapter 9 about the host possibly owning them. Provide visible buttons too, because a shortcut the user cannot see is a shortcut most users do not have.</p>
+<p><strong>Accessibility.</strong> Announce the label, both ways. A screen reader user pressing Undo needs to hear what was undone; a silent stack change is indistinguishable from a key that did nothing.</p>
+<h2 id="the-persistence-and-history-pairing">The persistence and history pairing</h2>
+<p>These two capabilities interact in a way worth naming. Undo depth is state, and it is state that does not survive a teardown, because the closures cannot be serialised. So a view that persists its document but not its history comes back with a document it cannot un-edit.</p>
+<p>That is usually the right trade. Serialising a transaction stack means representing every operation as data rather than as a closure, which is a substantially larger design, and the value of undoing something from before a reload is low. But it should be a decision rather than a discovery. Recipe 4 persists the document, drops the history, and says so.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Persistence is a gap with a workable but heavy workaround, so keep the set of things that must survive as small as you can defend. Undo is not a gap, it is a design, and in an agentic application it is the mechanism that makes it safe for a model to touch a document at all.</p>
+
+<div class="pager"><a href="ch14.html"><span class="dir">Previous</span>14. Lifecycle and Connectivity</a><a href="ch16.html" style="text-align:right"><span class="dir">Next</span>16. Media, Progress, Cancellation and Errors</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

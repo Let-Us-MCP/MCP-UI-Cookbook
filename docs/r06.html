@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipe 6. Image Annotator &middot; The MCP UI Cookbook</title>
+<meta name="description" content="A canvas with pointer capture, zoom about the cursor, a dropzone that validates, and an export that degrades to the clipboard.">
+<meta property="og:title" content="Recipe 6. Image Annotator">
+<meta property="og:description" content="A canvas with pointer capture, zoom about the cursor, a dropzone that validates, and an export that degrades to the clipboard.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html" class="current">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Recipe 6</p><h1>Image Annotator</h1><p class="summary">A canvas with pointer capture, zoom about the cursor, a dropzone that validates, and an export that degrades to the clipboard.</p><div class="cap recipe" id="r06"><div class="cap-head"><code class="cap-id">r06</code><span class="cap-tag core">Image Annotator</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Label regions on an image.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch09.html#input.zoompan">input.zoompan</a></code><code><a href="ch13.html#env.contrast">env.contrast</a></code><code><a href="ch11.html#picker.color">picker.color</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.zoompan">input.zoompan</a></code><code><a href="ch09.html#input.pointer">input.pointer</a></code><code><a href="ch09.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch10.html#file.dropzone">file.dropzone</a></code><code><a href="ch10.html#file.export">file.export</a></code><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch13.html#env.contrast">env.contrast</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch11.html#picker.color">picker.color</a></code></dd></dl></div>
+<p>The spatial recipe. Everything in it is Level 2 and 3 platform behaviour except the export, and the export is where the sandbox shows up.</p>
+<div class="demo" data-demo="r06-image-annotator" id="r06-image-annotator"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-split">The split</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Normally local</th>
+<th>Worth crossing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Draw, move and delete boxes</td>
+<td>“Are these defects the same type?”</td>
+</tr>
+<tr>
+<td>Zoom, pan, fit</td>
+<td>“Label the regions you can see”</td>
+</tr>
+<tr>
+<td>Change label and colour</td>
+<td>“Compare this to yesterday’s plate”</td>
+</tr>
+<tr>
+<td>Export</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="surface">Surface</h2>
+<p>A fixed-height stage with a transformed world inside it. The image is inline SVG drawn by the view, which is why the recipe declares an empty CSP: a JPEG from a CDN would need <code>resourceDomains</code> and a host willing to allow it.</p>
+<h2 id="zoom-about-the-cursor">Zoom about the cursor</h2>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>const before = scale;
+scale = Math.min(6, Math.max(0.4, scale * (event.deltaY &lt; 0 ? 1.12 : 0.89)));
+const rect = stage.getBoundingClientRect();
+const px = event.clientX - rect.left, py = event.clientY - rect.top;
+panX = px - ((px - panX) / before) * scale;
+panY = py - ((py - panY) / before) * scale;</code></pre>
+<p>Six lines, and they are the difference between a canvas that feels right and one that fights. Zooming about the origin moves whatever the user was looking at off screen, every time.</p>
+<h2 id="pointer-capture-for-the-draw-gesture">Pointer capture for the draw gesture</h2>
+<p>The stage captures the pointer on <code>pointerdown</code>, so a drag that leaves the stage still produces a correctly sized box. Without capture, dragging past the edge stops the gesture and leaves a half-drawn rectangle.</p>
+<p><code>touch-action: none</code> on the stage stops the browser interpreting a drag as a scroll, which otherwise makes drawing impossible on a touch device.</p>
+<h2 id="the-dropzone-that-says-what-it-wants">The dropzone that says what it wants</h2>
+<p>The zone states “Drop a file here” in its resting state and rejects anything that is not JSON with a message naming the file. A dropzone that silently ignores a bad file is indistinguishable from a broken one.</p>
+<h2 id="export-and-what-happens-without-it">Export, and what happens without it</h2>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>if (!bridge.hostCapabilities.downloadFile) {
+  await navigator.clipboard.writeText(payload).catch(() =&gt; {});
+  toast(&quot;No download capability, so the JSON went to the clipboard&quot;);
+  return;
+}</code></pre>
+<p>Press “Refuse downloads” in the demonstration. The button stays, its behaviour changes, and the toast says why. This is the one place in Part V where a missing capability changes what a control does rather than whether it exists, and it is defensible because the underlying user need, getting the annotations out, has an alternative that works.</p>
+<h2 id="host-dependencies">Host dependencies</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Needs</th>
+<th>Without it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Render, resize, theme</td>
+<td>Nothing works</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>file.export</code></td>
+<td>Export goes to the clipboard instead</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>file.dropzone</code></td>
+<td>Platform; always present</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>input.zoompan</code></td>
+<td>Platform; always present</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tool.invoke</code></td>
+<td>No saved annotations to load</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="failure-cases">Failure cases</h2>
+<p><strong>A tiny box.</strong> Drags under six pixels in either dimension are discarded, so a click on the canvas does not leave an invisible annotation.</p>
+<p><strong>A JSON file that is not annotations.</strong> Caught by the <code>try</code> around the parse, reported by name, and the existing boxes are untouched.</p>
+<h2 id="accessibility">Accessibility</h2>
+<p>This is the recipe with the weakest accessibility story in Part V, and saying so is more useful than claiming otherwise. The zoom and pan have button equivalents through Fit. Drawing a box does not: there is no keyboard route to create an annotation, and a complete implementation would need one, most plausibly a form that takes coordinates or a tool the agent can call on the user’s behalf. The existing boxes are announced when loaded, and the label and colour controls are ordinary form fields.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>load_annotations</code> returns two boxes and both render.</li>
+<li>A drag creates a box whose dimensions match the drag.</li>
+<li>Wheel zoom keeps the point under the cursor stationary within a pixel.</li>
+<li>Fit returns the plate to the visible stage.</li>
+<li>Undo removes the most recently added box.</li>
+<li>With <code>downloadFile</code> present, export sends <code>ui/download-file</code>.</li>
+<li>With it absent, export sends no message and reports the clipboard fallback.</li>
+</ol>
+
+<div class="pager"><a href="r05.html"><span class="dir">Previous</span>Recipe 5. Spreadsheet</a><a href="r07.html" style="text-align:right"><span class="dir">Next</span>Recipe 7. Workflow Builder</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lifecycle and connectivity</title>
+<link rel="stylesheet" href="../lib/view.css">
+</head>
+<body>
+<div class="stack">
+  <div class="row">
+    <span class="chip" id="vis">visibility: ?</span>
+    <span class="chip" id="net">network: ?</span>
+    <span class="chip" id="dirty">saved</span>
+    <span class="spacer"></span>
+    <span class="muted" id="ticks">0 polls</span>
+  </div>
+
+  <label class="stack">Notes
+    <textarea id="notes" rows="3">Type here, then press the teardown button below.</textarea>
+  </label>
+
+  <div class="row">
+    <button id="save" class="primary">Save</button>
+    <button id="done" class="quiet">Done, close me</button>
+  </div>
+
+  <div id="log" class="card" style="font-size:12px;max-height:120px;overflow:auto"></div>
+</div>
+
+<script src="../lib/app-bridge.js"></script>
+<script src="../lib/view.js"></script>
+<script>
+const { h, $, toast } = View;
+
+let dirty = false;
+let polls = 0;
+let timer = null;
+
+function say(text) {
+  $("#log").prepend(h("div", { text: `${new Date().toISOString().slice(11, 19)}  ${text}` }));
+}
+
+View.boot({ name: "lifecycle-lab", version: "1.0.0" }, {}, async (bridge) => {
+  const setDirty = (value) => {
+    dirty = value;
+    $("#dirty").textContent = value ? "unsaved changes" : "saved";
+    $("#dirty").className = `chip ${value ? "warn" : "good"}`;
+  };
+  setDirty(false);
+
+  $("#notes").oninput = () => setDirty(true);
+  $("#save").onclick = () => { setDirty(false); toast("Saved"); say("saved"); };
+
+  // Polling while nobody is looking is the cheapest bug in this category and
+  // the most common. The Page Visibility API fires inside the frame when the
+  // host's tab is hidden; it does not fire when the host merely scrolls the
+  // frame out of sight, which is why lifecycle.visibility is only partly the
+  // platform's job.
+  const poll = () => {
+    if (document.hidden) return;
+    polls += 1;
+    $("#ticks").textContent = `${polls} polls`;
+  };
+  timer = setInterval(poll, 1000);
+
+  const paintVisibility = () => {
+    $("#vis").textContent = `visibility: ${document.visibilityState}`;
+    say(`visibility became ${document.visibilityState}`);
+  };
+  document.addEventListener("visibilitychange", paintVisibility);
+  $("#vis").textContent = `visibility: ${document.visibilityState}`;
+
+  const paintNetwork = () => {
+    const online = navigator.onLine;
+    $("#net").textContent = `network: ${online ? "online" : "offline"}`;
+    $("#net").className = `chip ${online ? "good" : "bad"}`;
+    say(online ? "back online" : "went offline");
+  };
+  addEventListener("online", paintNetwork);
+  addEventListener("offline", paintNetwork);
+  $("#net").textContent = `network: ${navigator.onLine ? "online" : "offline"}`;
+
+  $("#done").onclick = () => {
+    // Asking to be closed is a notification. The host answers with a
+    // teardown request, which is the only handshake in the protocol that
+    // gives a view time to finish something.
+    say("sent ui/notifications/request-teardown");
+    bridge.requestTeardown();
+  };
+
+  bridge.on("teardown", async ({ reason }) => {
+    say(`teardown: ${reason}`);
+    if (dirty) {
+      say("flushing unsaved notes before answering");
+      await new Promise((r) => setTimeout(r, 600));
+      setDirty(false);
+    }
+    clearInterval(timer);
+    say("answered; the host may now remove the frame");
+  });
+});
+</script>
+</body>
+</html>

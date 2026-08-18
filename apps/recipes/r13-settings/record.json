@@ -1,0 +1,4 @@
+{ "calls": [ { "tool": "load_preferences", "arguments": {} },
+             { "tool": "save_preferences",
+               "arguments": { "email": "not an address" },
+               "as": "save_rejected" } ] }

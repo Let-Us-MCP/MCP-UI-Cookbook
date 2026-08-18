@@ -1,0 +1,207 @@
+{
+  "demo": "r04-document-editor",
+  "messages": [
+    {
+      "direction": "app→host",
+      "method": "ui/initialize",
+      "id": 1,
+      "payload": {
+        "appCapabilities": {
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "appInfo": {
+          "name": "document-editor",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "hostCapabilities": {
+          "logging": {},
+          "message": {
+            "text": {}
+          },
+          "sampling": {},
+          "serverTools": {}
+        },
+        "hostContext": {
+          "containerDimensions": {
+            "maxHeight": 540
+          },
+          "displayMode": "inline",
+          "locale": "en-US",
+          "theme": "light",
+          "timeZone": "UTC"
+        },
+        "hostInfo": {
+          "name": "cookbook-emulator",
+          "version": "1.0.0"
+        },
+        "protocolVersion": "2026-07-28"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/initialized",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 274,
+        "width": 836
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {},
+        "name": "load_document"
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "The renewal is on track for the 14th. Priya has the vendor patch in staging and expects to promote it on Thursday.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "html": "<p>The renewal is <strong>on track</strong> for the 14th. Priya has the vendor patch in staging and expects to promote it on Thursday.</p>"
+        }
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "app→host",
+      "method": "notifications/tools/list_changed",
+      "id": null,
+      "payload": {}
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 1,
+      "payload": {
+        "arguments": {
+          "html": "<p>The renewal has slipped to the <strong>21st</strong>. The vendor patch is delayed and Priya is chasing a firm date.</p>",
+          "rationale": "The vendor confirmed the delay in the ticket this morning."
+        },
+        "name": "propose_rewrite"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 1,
+      "payload": {
+        "content": [
+          {
+            "text": "Shown to the user. Not applied.",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "ui/notifications/size-changed",
+      "id": null,
+      "payload": {
+        "height": 360,
+        "width": 836
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 2,
+      "payload": {
+        "arguments": {
+          "text": "on track"
+        },
+        "name": "highlight_phrase"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 2,
+      "payload": {
+        "content": [
+          {
+            "text": "Highlighted \"on track\".",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "tools/call",
+      "id": 3,
+      "payload": {
+        "arguments": {},
+        "name": "get_document"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 3,
+      "payload": {
+        "content": [
+          {
+            "text": "The renewal is on track for the 14th. Priya has the vendor patch in staging and expects to promote it on Thursday.",
+            "type": "text"
+          }
+        ],
+        "structuredContent": {
+          "dirty": false,
+          "html": "<p>The renewal is <strong><span class=\"mark\">on track</span></strong> for the 14th. Priya has the vendor patch in staging and expects to promote it on Thursday.</p>"
+        }
+      }
+    },
+    {
+      "direction": "host→app",
+      "method": "ui/resource-teardown",
+      "id": 4,
+      "payload": {
+        "reason": "The user closed the tab"
+      }
+    },
+    {
+      "direction": "app→host",
+      "method": "result",
+      "id": 4,
+      "payload": {}
+    }
+  ]
+}

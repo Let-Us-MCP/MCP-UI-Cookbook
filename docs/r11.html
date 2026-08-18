@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipe 11. Agent Control Center &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Tasks that stream in before they exist, progress against a running request, cancellation that admits how far it got, and a retry that does not make you start over.">
+<meta property="og:title" content="Recipe 11. Agent Control Center">
+<meta property="og:description" content="Tasks that stream in before they exist, progress against a running request, cancellation that admits how far it got, and a retry that does not make you start over.">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="demos/demo.css">
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
+<p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div class="part">Front matter</div>
+<a href="preface.html">What This Book Is</a>
+<a href="how-to-read.html">How to Read This Book</a>
+<div class="part">Part I - Foundations</div>
+<a href="ch01.html">1. The Capability Model</a>
+<a href="ch02.html">2. What Crosses the Boundary</a>
+<a href="ch03.html">3. The Local-First Principle</a>
+<a href="ch04.html">4. The Sandbox and What It Costs You</a>
+<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<div class="part">Part II - Atomic UI capabilities</div>
+<a href="ch06.html">6. Surfaces and Geometry</a>
+<a href="ch07.html">7. Focus and Scroll</a>
+<a href="ch08.html">8. Dialogs and Attention</a>
+<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
+<a href="ch10.html">10. Clipboard, Files and System Integration</a>
+<a href="ch11.html">11. Pickers and Dropzones</a>
+<a href="ch12.html">12. Host Environment and Theming</a>
+<a href="ch13.html">13. Accessibility</a>
+<a href="ch14.html">14. Lifecycle and Connectivity</a>
+<a href="ch15.html">15. Persistence and History</a>
+<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<div class="part">Part III - Agent and UI</div>
+<a href="ch17.html">17. UI to Agent</a>
+<a href="ch18.html">18. Agent to UI</a>
+<a href="ch19.html">19. Tool Invocation and Streaming</a>
+<a href="ch20.html">20. State Ownership and Concurrency</a>
+<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<div class="part">Part IV - Reusable components</div>
+<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
+<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
+<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<div class="part">Part V - Application recipes</div>
+<a href="r01.html">Recipe 1. Data Explorer</a>
+<a href="r02.html">Recipe 2. Dashboard</a>
+<a href="r03.html">Recipe 3. File Explorer</a>
+<a href="r04.html">Recipe 4. Document Editor</a>
+<a href="r05.html">Recipe 5. Spreadsheet</a>
+<a href="r06.html">Recipe 6. Image Annotator</a>
+<a href="r07.html">Recipe 7. Workflow Builder</a>
+<a href="r08.html">Recipe 8. Code and Diff Reviewer</a>
+<a href="r09.html">Recipe 9. Monitoring Console</a>
+<a href="r10.html">Recipe 10. Approval Center</a>
+<a href="r11.html" class="current">Recipe 11. Agent Control Center</a>
+<a href="r12.html">Recipe 12. Media Viewer</a>
+<a href="r13.html">Recipe 13. Settings and Preferences</a>
+<div class="part">Part VI - Verification and conformance</div>
+<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
+<a href="ch26.html">26. The Verification Layers</a>
+<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
+<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<div class="part">Appendices</div>
+<a href="appendix-a.html">Appendix A. Capability Index</a>
+<a href="appendix-b.html">Appendix B. The Gaps</a>
+<a href="appendix-c.html">Appendix C. Conformance Checklists</a>
+<a href="appendix-d.html">Appendix D. Glossary</a>
+<a href="appendix-e.html">Appendix E. Prior Art and Sources</a>
+<div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
+</nav>
+<main>
+<p class="eyebrow">Recipe 11</p><h1>Agent Control Center</h1><p class="summary">Tasks that stream in before they exist, progress against a running request, cancellation that admits how far it got, and a retry that does not make you start over.</p><div class="cap recipe" id="r11"><div class="cap-head"><code class="cap-id">r11</code><span class="cap-tag core">Agent Control Center</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Observe and steer running tasks.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch19.html#tool.cancel">tool.cancel</a></code><code><a href="ch19.html#tool.partialInput">tool.partialInput</a></code><code><a href="ch16.html#op.cancel">op.cancel</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch19.html#tool.invoke">tool.invoke</a></code><code><a href="ch19.html#tool.cancel">tool.cancel</a></code><code><a href="ch19.html#tool.partialInput">tool.partialInput</a></code><code><a href="ch19.html#tool.partialOutput">tool.partialOutput</a></code><code><a href="ch16.html#op.progress">op.progress</a></code><code><a href="ch16.html#op.cancel">op.cancel</a></code><code><a href="ch16.html#op.retry">op.retry</a></code><code><a href="ch08.html#notify.attention">notify.attention</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch18.html#app.tools">app.tools</a></code></dd></dl></div>
+<p>The recipe about watching work happen. Its delta is the whole of Chapter 16 under load: several operations in flight, each with its own progress, its own cancellation, and its own failure.</p>
+<div class="demo" data-demo="r11-agent-control" id="r11-agent-control"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="the-split">The split</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Normally local</th>
+<th>Worth crossing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cancel, retry, expand a task</td>
+<td>“Why did shard 41 fail?”</td>
+</tr>
+<tr>
+<td>Read progress and steps</td>
+<td>“Run the reindex for every shard”</td>
+</tr>
+<tr>
+<td>Cancel everything</td>
+<td>“Should I retry this or escalate?”</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="a-task-that-exists-before-it-exists">A task that exists before it exists</h2>
+<p>The row appears while the model is still writing the arguments.</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>bridge.on(&quot;toolinputpartial&quot;, ({ arguments: args }) =&gt; {
+  const task = tasks.get(&quot;pending&quot;) ?? { id: &quot;pending&quot;, name: &quot;…&quot;, steps: [],
+    percent: 0, done: 0, total: 5, state: &quot;queued&quot; };
+  task.name = args?.name ?? task.name;
+  task.steps = [`arguments arriving: ${JSON.stringify(args ?? {})}`];
+  tasks.set(&quot;pending&quot;, task);
+  draw();
+});</code></pre>
+<p>Press “Agent streams a task in” and watch <code>"Reindex sh"</code> become <code>"Reindex shard 9"</code> before the task starts. This is the difference between an interface that feels immediate and one that shows a spinner for as long as the model takes to write JSON.</p>
+<p>The pending row is keyed separately and replaced when <code>ui/notifications/tool-input</code> arrives, so a partial row never becomes a real task by accident.</p>
+<h2 id="progress-against-the-running-request">Progress against the running request</h2>
+<p><code>notifications/progress</code> carries a step count and a message, and each message is appended to the task’s step list. The bar moves; the last three step names are visible. A phase name is worth more than a percentage, because it tells the user whether the slow part is the part they expected to be slow.</p>
+<h2 id="cancellation-that-tells-the-truth">Cancellation that tells the truth</h2>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>task.error = `Stopped after ${task.done} of ${task.total} steps. `
+  + &quot;Completed steps were not rolled back.&quot;;</code></pre>
+<p>Resetting the bar to zero would say nothing happened, which is false. Leaving it at sixty percent would suggest the work is still there, which is also false. Saying where it stopped and what state that leaves is the only honest option, and it is one sentence.</p>
+<h2 id="retry-that-keeps-the-arguments">Retry that keeps the arguments</h2>
+<p>The failed task keeps its name and its configuration, and Retry re-runs the same call. The user does not rebuild anything. Chapter 16 argues that a failure that clears the form is the same failure plus a punishment.</p>
+<h2 id="host-dependencies">Host dependencies</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Needs</th>
+<th>Without it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Render, resize, theme</td>
+<td>Nothing works</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>op.progress</code></td>
+<td>Bars are indeterminate; step names are absent</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>notify.attention</code></td>
+<td>Gap; the banner-on-return is the fallback</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tool.invoke</code>, <code>tool.cancel</code></td>
+<td>Nothing to run and nothing to stop</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tool.partialInput</code></td>
+<td>Tasks appear only when fully specified</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="failure-cases">Failure cases</h2>
+<p><strong>A task fails midway.</strong> Press “Make the next task fail”. The task turns red, keeps its step history, shows the server’s explanation, and offers Retry. The explanation is three facts: what failed, what state it left, what to do.</p>
+<p><strong>Cancel everything.</strong> Each running task is cancelled individually, each sends <code>notifications/cancelled</code> with its own request id, and each reports where it stopped.</p>
+<p><strong>A failure while the view is hidden.</strong> Raises a banner that survives until the user returns, which is the same fallback Recipe 9 uses for the same missing capability.</p>
+<h2 id="accessibility">Accessibility</h2>
+<p>Each task is a region with a heading and a <code>role="progressbar"</code>. Completion and failure are announced once; progress ticks are not, because a screen reader narrating five steps a second for four tasks is unusable. The step log is scrollable and reachable. Cancel and Retry are ordinary buttons in tab order next to the task they belong to.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li><code>ui/notifications/tool-input-partial</code> creates a pending row.</li>
+<li><code>ui/notifications/tool-input</code> replaces it with a running task.</li>
+<li>Each <code>notifications/progress</code> advances the bar and appends a step.</li>
+<li>Cancel sends <code>notifications/cancelled</code> with the right request id.</li>
+<li>A cancelled task reports the step it reached.</li>
+<li>A failed task offers Retry and Retry re-sends the same arguments.</li>
+</ol>
+
+<div class="pager"><a href="r10.html"><span class="dir">Previous</span>Recipe 10. Approval Center</a><a href="r12.html" style="text-align:right"><span class="dir">Next</span>Recipe 12. Media Viewer</a></div>
+</main>
+</div>
+<script type="module" src="demos/demo.js"></script>
+</body>
+</html>
