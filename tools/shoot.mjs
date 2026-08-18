@@ -81,7 +81,8 @@ try {
   await send("Runtime.enable");
   await send("Emulation.setDeviceMetricsOverride",
     { width: WIDTH, height: 1200, deviceScaleFactor: 2, mobile: false });
-  await send("Page.navigate", { url: `http://127.0.0.1:${PORT}/${page}` });
+  const url = page.startsWith("http") ? page : `http://127.0.0.1:${PORT}/${page}`;
+  await send("Page.navigate", { url });
   await sleep(1600);
 
   let clip;
