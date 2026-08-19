@@ -130,11 +130,12 @@ it is the right one.
 
 ## Open items
 
-- **One host.** Everything runs against hosts written in this repository: the
-  browser emulator and the render driver. Layer 5 of Chapter 27, the same suite
-  against `basic-host` and against production hosts, is the check that would
-  turn the completeness argument into evidence. It is now the largest gap in
-  the book's own verification.
+- **One host.** The views still run only against hosts written here: the
+  browser emulator and the render driver. The servers no longer do, since
+  `check_sdk_client.mjs` drives all thirteen with the real SDK's transport,
+  which caught two specification MUSTs nobody here had noticed. Layer 5 of
+  Chapter 27 against `basic-host` and against production hosts is blocked
+  until the SDK supports `2026-07-28` or this book moves off it.
 - **No component layer tests.** Part IV components are a shared stylesheet and
   helper file rather than a library with stories, so they are audited only
   through the recipes that use them. `axe-core` is vendored and does run

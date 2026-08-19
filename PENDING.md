@@ -75,14 +75,34 @@ and not something the suite relies on.
 written by the same person who wrote the applications. That is the condition
 under which a capability model looks more general than it is.
 
-**What would close it.** The same 30 demonstrations against `basic-host` from
-the extension SDK, then against the MCP-UI client, then against production
-hosts where automation is permitted. Results published per host and per
-capability, in the manner of the public web platform test dashboards.
+**The server half: built.** `tools/check_sdk_client.mjs` drives all thirteen
+recipe servers over `@modelcontextprotocol/sdk`'s own stdio transport, 179
+assertions covering the handshake, `server/discover`, `tools/list`, the
+`_meta.ui.resourceUri` on every tool, the `resources/read` that returns the
+view, and every read-only tool call. It needs `proto/sdk-client/`, which is
+never committed, and skips without it.
 
-**Why it matters most after render conformance.** One host running thirteen
-recipes proves the recipes work. Several hosts running them unmodified is the
-only evidence that would answer the completeness test in Chapter 26.
+It found two defects on first contact, both MUSTs in the pinned specification
+and both in all thirteen servers. Every server answered `initialize` with its
+own `protocolVersion` whatever the client asked for, which is indistinguishable
+from agreement, instead of the `UnsupportedProtocolVersionError` carrying the
+versions it does support. And none implemented `server/discover`. Neither was
+reachable from a host that already speaks `2026-07-28`, which is why nothing
+here had caught them, and it is the case for testing against an implementation
+nobody in this repository wrote.
+
+**The host half: still open, and blocked.** This book is pinned to
+`2026-07-28`; the published SDK at 1.30.0 supports up to `2025-11-25` and its
+`Client` refuses the handshake rather than negotiating. So `basic-host` cannot
+drive these servers until one side moves. The check works around it by using
+the SDK's transport and building its own requests, and reports that it does.
+
+**What would still close it.** The same 30 demonstrations against
+`basic-host`, then the MCP-UI client, then production hosts where automation
+is permitted, published per host and per capability in the manner of the
+public web platform test dashboards. One host running thirteen recipes proves
+the recipes work. Several hosts running them unmodified is the only evidence
+that would answer the completeness test in Chapter 26.
 
 ## 3. Component layer checks
 

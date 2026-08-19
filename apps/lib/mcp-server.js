@@ -26,20 +26,43 @@ export function serve({ name, version = "1.0.0", resourceUri, viewFile,
 
   function handle({ id, method, params }) {
     const reply = (result) => ({ jsonrpc: "2.0", id, result });
-    const fail = (code, message) => ({ jsonrpc: "2.0", id, error: { code, message } });
+    const fail = (code, message, data) => ({ jsonrpc: "2.0", id,
+      error: { code, message, ...(data ? { data } : {}) } });
+
+    const capabilities = {
+      tools: { listChanged: false },
+      resources: { listChanged: false },
+      extensions: {
+        "io.modelcontextprotocol/ui": { mimeTypes: [RESOURCE_MIME] },
+      },
+    };
 
     switch (method) {
-      case "initialize":
+      case "initialize": {
+        // Echoing our own version at a client that asked for another one is
+        // how a server looks like it agreed when it did not. The specification
+        // gives the refusal a shape, and the point of the shape is that the
+        // client learns what to retry with.
+        const asked = params?.protocolVersion;
+        if (asked !== undefined && asked !== PROTOCOL_VERSION) {
+          return fail(-32022, "Unsupported protocol version",
+            { supported: [PROTOCOL_VERSION], requested: asked });
+        }
         return reply({
           protocolVersion: PROTOCOL_VERSION,
           serverInfo: { name, version },
-          capabilities: {
-            tools: { listChanged: false },
-            resources: { listChanged: false },
-            extensions: {
-              "io.modelcontextprotocol/ui": { mimeTypes: [RESOURCE_MIME] },
-            },
-          },
+          capabilities,
+        });
+      }
+
+      // A client is allowed to ask what a server speaks before committing to
+      // a version. Servers MUST answer, and none of these did.
+      case "server/discover":
+        return reply({
+          resultType: "complete",
+          supportedVersions: [PROTOCOL_VERSION],
+          capabilities,
+          _meta: { "io.modelcontextprotocol/serverInfo": { name, version } },
         });
 
       case "tools/list":

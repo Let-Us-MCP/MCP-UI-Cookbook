@@ -120,20 +120,43 @@ const RESOURCES = {
 function handle(message) {
   const { id, method, params } = message;
   const reply = (result) => ({ jsonrpc: "2.0", id, result });
-  const fail = (code, msg) => ({ jsonrpc: "2.0", id, error: { code, message: msg } });
+  const fail = (code, msg, data) => ({ jsonrpc: "2.0", id,
+    error: { code, message: msg, ...(data ? { data } : {}) } });
+
+  const CAPABILITIES = {
+    tools: { listChanged: false },
+    resources: { listChanged: false },
+    extensions: {
+      "io.modelcontextprotocol/ui": { mimeTypes: [RESOURCE_MIME] },
+    },
+  };
 
   switch (method) {
-    case "initialize":
+    case "initialize": {
+      // Echoing our own version at a client that asked for another one is how
+      // a server looks like it agreed when it did not. The refusal has a
+      // shape so the client learns what to retry with.
+      const asked = params?.protocolVersion;
+      if (asked !== undefined && asked !== PROTOCOL_VERSION) {
+        return fail(-32022, "Unsupported protocol version",
+          { supported: [PROTOCOL_VERSION], requested: asked });
+      }
       return reply({
         protocolVersion: PROTOCOL_VERSION,
         serverInfo: { name: "cookbook-data-explorer", version: "1.0.0" },
-        capabilities: {
-          tools: { listChanged: false },
-          resources: { listChanged: false },
-          extensions: {
-            "io.modelcontextprotocol/ui": { mimeTypes: [RESOURCE_MIME] },
-          },
-        },
+        capabilities: CAPABILITIES,
+      });
+    }
+
+    // A client may ask what a server speaks before committing to a version.
+    // Servers MUST answer.
+    case "server/discover":
+      return reply({
+        resultType: "complete",
+        supportedVersions: [PROTOCOL_VERSION],
+        capabilities: CAPABILITIES,
+        _meta: { "io.modelcontextprotocol/serverInfo": {
+          name: "cookbook-data-explorer", version: "1.0.0" } },
       });
 
     case "tools/list":

@@ -40,5 +40,14 @@ jobs:
         run: node tools/check_demos.mjs
       - name: Render conformance against every recipe's real server
         run: node tools/check_render.mjs
+      # The one check that uses an implementation nobody here wrote. It skips
+      # without proto/sdk-client, so the install is what makes it run at all.
+      - name: Every recipe server, driven by the real MCP SDK
+        run: |
+          mkdir -p proto/sdk-client
+          cd proto/sdk-client
+          npm install --no-audit --no-fund @modelcontextprotocol/sdk
+          cd ../..
+          node tools/check_sdk_client.mjs
       - name: The site must be committed and current
         run: git diff --exit-code -- docs

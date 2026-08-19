@@ -43,7 +43,7 @@ make check     # what CI runs
 make serve     # docs/ on http://127.0.0.1:8977/
 ```
 
-`make check` runs ten things:
+`make check` runs eleven things:
 
 | Check | What it proves |
 |---|---|
@@ -55,12 +55,19 @@ make serve     # docs/ on http://127.0.0.1:8977/
 | `check_claims.py` | Every wire claim appears in the pinned specification text |
 | `check_identifiers.py` | Every identifier in the prose exists in a spec, the SDK or the source |
 | `check_web_claims.py` | Every sandbox token, CSP directive, ARIA name and WCAG number matches its own spec |
+| `check_sdk_client.mjs` | Every recipe server answers the real MCP SDK, not just the host written here |
 | `check_demos.mjs` | All 30 demonstrations run in Chrome and their transcripts match |
 | `check_render.mjs` | Each recipe's real server renders and produces the expected DOM |
 
-The last two need Chrome. The two specification checks need `proto/`, a pair
-of specification clones that are never committed, and skip cleanly without
-them.
+The last two need Chrome. The specification checks and the SDK client check
+need `proto/`, which holds a pair of specification clones and an installed
+copy of `@modelcontextprotocol/sdk`, is never committed, and which they all
+skip cleanly without.
+
+```
+mkdir -p proto/sdk-client && cd proto/sdk-client
+npm install @modelcontextprotocol/sdk
+```
 
 ### Render conformance
 
