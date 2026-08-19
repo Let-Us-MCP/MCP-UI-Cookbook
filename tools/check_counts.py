@@ -55,6 +55,8 @@ RENDER = ROOT / "conformance" / "render"
 render_cases = sorted(RENDER.glob("*.json"))
 render_assertions = sum(
     len(step.get("expect", []))
+    + len(step.get("evalExpect", []))
+    + (1 if step.get("expectMessage") else 0)
     for case in render_cases
     for step in json.loads(case.read_text()).get("steps", []))
 
