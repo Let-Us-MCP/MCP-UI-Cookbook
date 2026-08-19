@@ -1,0 +1,158 @@
+{
+  "note": "Recorded by tools/check_sandbox.mjs in a real sandbox=\"allow-scripts\" iframe with an opaque origin. Regenerate with `make sandbox`.",
+  "userAgentBrand": "Not=A?Brand 99, Google Chrome 151, Chromium 151",
+  "results": {
+    "origin": {
+      "ok": true,
+      "value": "null"
+    },
+    "isOpaqueOrigin": {
+      "ok": true,
+      "value": true
+    },
+    "localStorage": {
+      "ok": false,
+      "error": "SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandbo"
+    },
+    "sessionStorage": {
+      "ok": false,
+      "error": "SecurityError: Failed to read the 'sessionStorage' property from 'Window': The document is sand"
+    },
+    "indexedDBObject": {
+      "ok": true,
+      "value": "present"
+    },
+    "cookieWrite": {
+      "ok": false,
+      "error": "SecurityError: Failed to set the 'cookie' property on 'Document': The document is sandboxed and"
+    },
+    "clipboardApiPresent": {
+      "ok": true,
+      "value": true
+    },
+    "clipboardReadTextPresent": {
+      "ok": true,
+      "value": true
+    },
+    "sharePresent": {
+      "ok": true,
+      "value": true
+    },
+    "printPresent": {
+      "ok": true,
+      "value": true
+    },
+    "dragAndDropPresent": {
+      "ok": true,
+      "value": true
+    },
+    "fileInputPresent": {
+      "ok": true,
+      "value": true
+    },
+    "execCommandPresent": {
+      "ok": true,
+      "value": true
+    },
+    "windowOpen": {
+      "ok": true,
+      "value": "returned null"
+    },
+    "indexedDBOpen": {
+      "ok": false,
+      "error": "SecurityError: Failed to execute 'open' on 'IDBFactory': access to the Indexed Database API is denied in "
+    },
+    "shareCall": {
+      "verdict": "denied before any surface appeared",
+      "ok": false
+    },
+    "clipboardReadWithPermission": {
+      "ok": false,
+      "error": "NotAllowedError: Failed to execute 'readText' on 'Clipboard': Document is not focused."
+    },
+    "pasteEvent": {
+      "ok": true,
+      "value": "{\"fired\":true,\"types\":[\"text/plain\"],\"text\":\"pasted through a user gesture\"}"
+    },
+    "printCall": {
+      "ok": true,
+      "value": "returned"
+    }
+  },
+  "control": {
+    "origin": {
+      "ok": true,
+      "value": "http://127.0.0.1:8987"
+    },
+    "probe": {
+      "origin": {
+        "ok": true,
+        "value": "http://127.0.0.1:8987"
+      },
+      "isOpaqueOrigin": {
+        "ok": true,
+        "value": false
+      },
+      "localStorage": {
+        "ok": true,
+        "value": "wrote"
+      },
+      "sessionStorage": {
+        "ok": true,
+        "value": "wrote"
+      },
+      "indexedDBObject": {
+        "ok": true,
+        "value": "present"
+      },
+      "cookieWrite": {
+        "ok": true,
+        "value": "k=v"
+      },
+      "clipboardApiPresent": {
+        "ok": true,
+        "value": true
+      },
+      "clipboardReadTextPresent": {
+        "ok": true,
+        "value": true
+      },
+      "sharePresent": {
+        "ok": true,
+        "value": true
+      },
+      "printPresent": {
+        "ok": true,
+        "value": true
+      },
+      "dragAndDropPresent": {
+        "ok": true,
+        "value": true
+      },
+      "fileInputPresent": {
+        "ok": true,
+        "value": true
+      },
+      "execCommandPresent": {
+        "ok": true,
+        "value": true
+      },
+      "windowOpen": {
+        "ok": true,
+        "value": "opened"
+      }
+    },
+    "indexedDBOpen": {
+      "ok": true,
+      "value": "opened"
+    },
+    "shareCall": {
+      "verdict": "reached the browser's own share surface",
+      "ok": false
+    },
+    "clipboardRead": {
+      "ok": false,
+      "error": "NotAllowedError: Failed to execute 'readText' on 'Clipboard': Document is not focused."
+    }
+  }
+}

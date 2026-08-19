@@ -75,6 +75,7 @@
 </nav>
 <main>
 <p class="eyebrow">Appendix B</p><h1>The Gaps</h1><p class="summary">Sixteen capabilities with no standard mechanism, what each one costs, and the shape a proposal would take.</p><p>Every entry below is a capability that recognisable applications need and that no message, permission or platform feature currently provides. Ten of them are Core, which means they are needed at their conformance level.</p>
+<p>Several of these entries make a claim about a browser rather than about the specification, and a claim about a browser deserves a run instead of an argument. <code>tools/check_sandbox.mjs</code> loads a probe document into a real <code>sandbox="allow-scripts"</code> iframe with an opaque origin, and into an unsandboxed frame beside it running the identical code. The second frame is the control: without it, a refusal could be an artefact of running headless and blaming the sandbox would be a guess wearing a result. The section at the end of this appendix has the recorded output, and it corrected one entry here.</p>
 <figure>
 <img src="figures/xkcd-doors.png" alt="Sixteen doors that are shut" />
 <figcaption aria-hidden="true">Sixteen doors that are shut</figcaption>
@@ -102,17 +103,32 @@
 <p><em>Shape.</em> A serialisable transfer payload carried in a message on drag start and drop, with the host mediating both ends.</p>
 <p><em>Reopens.</em> Exfiltration, since a drag out is data leaving the frame. Needs the same treatment as <code>ui/download-file</code>.</p>
 <h3 id="clipboard.read"><code>clipboard.read</code></h3>
-<p>No permission exists, and the browser refuses reads from an opaque origin.</p>
-<p><em>Workaround.</em> Offer a paste target. The user’s Cmd+V is the consent, and the browser delivers the content without any permission.</p>
+<p>No permission exists. The extension’s set is <code>camera</code>, <code>microphone</code>, <code>geolocation</code> and <code>clipboardWrite</code>, so there is no way for a host to grant a programmatic read even if it wanted to.</p>
+<p><em>Workaround, and it works.</em> Offer a paste target. The user’s Cmd+V is the consent, the browser hands the content to a <code>paste</code> handler, and no permission is involved at any point. The probe pastes into a sandboxed frame with an opaque origin and the event arrives carrying <code>text/plain</code>:</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-clipboard/index.html</code></p><pre class="js"><code>  $(&quot;#pastehere&quot;).addEventListener(&quot;paste&quot;, (event) =&gt; {
+    const data = event.clipboardData;
+    if (!data) return;
+    const text = data.getData(&quot;text/plain&quot;);
+    const types = [...data.types].join(&quot;, &quot;) || &quot;none&quot;;
+    say(`Paste delivered ${text.length} characters. Types offered: ${types}. `
+      + &quot;No permission was requested and none exists.&quot;);
+  });</code></pre>
+<p>This is the weakest gap in the appendix and it is listed honestly as weak. A view cannot read the clipboard on its own initiative; it can receive whatever the user chooses to paste, which covers most of what applications actually want. What is lost is reading without a gesture, and reading without a gesture is the part that should require a permission anyway.</p>
+<p><em>An earlier version of this entry said the browser refuses reads from an opaque origin.</em> The probe does not show that. The programmatic read fails in the sandboxed frame and fails identically in the unsandboxed control, both because a headless document is not focused, so this suite has no evidence about the origin at all. The absence of a permission is the part that is demonstrated, and it is the part that matters.</p>
 <p><em>Shape.</em> A <code>clipboardRead</code> permission requiring a user gesture and a host-mediated grant, probably with visible indication in host chrome.</p>
 <p><em>Reopens.</em> Silent reading of whatever the user last copied, which is often a credential.</p>
 <h3 id="system.share"><code>system.share</code></h3>
-<p><code>navigator.share</code> needs the <code>web-share</code> permission policy, which is not in the extension’s set of four.</p>
+<p><code>navigator.share</code> needs the <code>web-share</code> permission policy, which is not in the extension’s set of four. The function exists on <code>navigator</code> in a view, which is worth knowing: a feature-detection check on its presence reports that sharing is available and then the call is denied.</p>
+<p class="provenance extracted">Extracted from from <code>conformance/sandbox.json</code></p><pre class="json"><code>    &quot;shareCall&quot;: {
+      &quot;verdict&quot;: &quot;denied before any surface appeared&quot;,
+      &quot;ok&quot;: false
+    },</code></pre>
+<p>The control frame running the identical code reaches the browser’s own share surface instead, so the denial is the sandbox and the permissions policy and not the headless environment. Feature-detect by calling and catching, never by checking that the method exists.</p>
 <p><em>Workaround.</em> <code>ui/open-link</code> with a canonical URL, or the clipboard.</p>
 <p><em>Shape.</em> A fifth permission, or a <code>ui/share</code> request taking standard content types, which would let the host present its own share surface.</p>
 <p><em>Reopens.</em> Little; the host would own the surface.</p>
 <h3 id="system.print"><code>system.print</code></h3>
-<p><code>window.print</code> needs <code>allow-modals</code>, which the sandbox does not grant.</p>
+<p><code>window.print</code> needs <code>allow-modals</code>, which the sandbox does not grant. The failure is the awkward kind: <code>window.print()</code> <strong>returns normally and does nothing</strong>. It does not throw, there is no rejected promise, and no event says the print did not happen. A view that calls it and then reports success to the user is reporting a print that never occurred.</p>
 <p><em>Workaround.</em> Generate a document and hand it to <code>ui/download-file</code>.</p>
 <p><em>Shape.</em> <code>ui/print</code> taking an embedded resource.</p>
 <p><em>Reopens.</em> Modal blocking of the host’s own window, which is why a request is the right shape.</p>
@@ -146,13 +162,74 @@
 <p><em>Workaround.</em> Ask in the view and accept the weaker guarantee, or send a message and take a turn.</p>
 <p><em>Shape.</em> <code>ui/elicit</code> mirroring <code>elicitation/create</code>, with the same hard prohibition on credentials in form mode and the same URL mode for anything that touches authentication.</p>
 <p><em>Reopens.</em> Credential phishing, unless the prohibition is carried over unchanged.</p>
+<h2 id="what-the-sandbox-actually-refuses">What the sandbox actually refuses</h2>
+<p>Every claim in this appendix about what a browser will not do is recorded rather than argued. Both frames run the same document; the only difference is one attribute.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Sandboxed view</th>
+<th>Unsandboxed control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window.origin</code></td>
+<td><code>"null"</code></td>
+<td>the server’s origin</td>
+</tr>
+<tr>
+<td><code>localStorage.setItem</code></td>
+<td><code>SecurityError</code></td>
+<td>wrote</td>
+</tr>
+<tr>
+<td><code>sessionStorage.setItem</code></td>
+<td><code>SecurityError</code></td>
+<td>wrote</td>
+</tr>
+<tr>
+<td><code>indexedDB.open</code></td>
+<td><code>SecurityError</code></td>
+<td>opened</td>
+</tr>
+<tr>
+<td><code>document.cookie</code> write</td>
+<td><code>SecurityError</code></td>
+<td>wrote</td>
+</tr>
+<tr>
+<td><code>navigator.share()</code></td>
+<td><code>NotAllowedError</code></td>
+<td>reached the share surface</td>
+</tr>
+<tr>
+<td><code>window.open</code></td>
+<td>returned <code>null</code></td>
+<td>opened</td>
+</tr>
+<tr>
+<td><code>window.print()</code></td>
+<td>returned, did nothing</td>
+<td>returned</td>
+</tr>
+<tr>
+<td><code>paste</code> event</td>
+<td>fired, carried <code>text/plain</code></td>
+<td>fired</td>
+</tr>
+</tbody>
+</table></div>
+<p>Two rows are worth reading twice. <code>window.print()</code> and the <code>paste</code> event are the only two where the sandboxed frame behaves like the control, and they are opposite kinds of surprise: printing looks like it worked and did not, and pasting looks like it should be blocked and is not.</p>
+<p>One experiment produced no usable answer. <code>navigator.clipboard.readText()</code> fails identically in both frames, because a headless document is never focused, so this suite cannot say whether the sandbox would refuse it. The entry above says so instead of claiming a result it does not have.</p>
 <h2 id="reading-this-appendix-as-a-work-list">Reading this appendix as a work list</h2>
-<p>The fourteen are not equally urgent, and the ordering that matters is by how many applications they block and how cheap a mechanism would be.</p>
+<p>The sixteen are not equally urgent, and the ordering that matters is by how many applications they block and how cheap a mechanism would be.</p>
 <p><strong>Cheap and clearly justified.</strong> <code>tool.partialOutput</code> and <code>input.shortcut</code>. The first is an asymmetry with the input side that is hard to defend; the second is a list in <code>hostContext</code> and reopens nothing.</p>
 <p><strong>Cheap, with prior art on both sides of this ecosystem.</strong> <code>state.save</code> and <code>state.restore</code>. The Apps SDK has <code>setWidgetState</code>, the specification lists state persistence as deferred, and the shape is well understood.</p>
 <p><strong>Needs a design, not just a message.</strong> <code>approval.request</code> and <code>elicit.request</code>. Both require the host to render a consent surface the user trusts, and both have to carry the core specification’s prohibition on collecting credentials into an untrusted frame.</p>
 <p><strong>One feature wearing three hats.</strong> <code>surface.reveal</code>, <code>notify.attention</code> and the visibility half of <code>lifecycle.visibility</code> are all the same missing signal: the host knows whether a view is being looked at, and the view does not.</p>
-<p><strong>Genuinely hard.</strong> <code>clipboard.read</code> and <code>input.dragBoundary</code>, because both move data across the boundary in the direction the sandbox exists to prevent.</p>
+<p><strong>Genuinely hard.</strong> <code>input.dragBoundary</code>, because it moves data across the boundary in the direction the sandbox exists to prevent, and because both ends of a drag need mediating.</p>
+<p><strong>Weaker than it looks, and listed anyway.</strong> <code>clipboard.read</code>. A paste target covers the case applications actually have, it needs no permission, and it is demonstrated in <code>lab-clipboard</code>. What remains missing is reading without a user gesture, which is the part that ought to be hard. An entry that stayed on the list because nobody re-tested it would be the same failure this book spends Part VI trying to avoid.</p>
 
 <div class="pager"><a href="appendix-a.html"><span class="dir">Previous</span>Appendix A. Capability Index</a><a href="appendix-c.html" style="text-align:right"><span class="dir">Next</span>Appendix C. Conformance Checklists</a></div>
 </main>

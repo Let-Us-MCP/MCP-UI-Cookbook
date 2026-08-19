@@ -20,6 +20,11 @@
     Drop a file here. Nothing leaves this frame.
   </div>
 
+  <label class="stack">Paste target: press Cmd+V or Ctrl+V here
+    <textarea id="pastehere" rows="2"
+      placeholder="The gesture is the permission."></textarea>
+  </label>
+
   <table>
     <thead><tr><th>Region</th><th class="num">Orders</th><th class="num">Revenue</th></tr></thead>
     <tbody id="body"></tbody>
@@ -92,6 +97,20 @@ View.boot({ name: "clipboard-lab", version: "1.0.0" }, {}, async (bridge) => {
       say(`Clipboard read refused: ${error.name}. Offer a paste target instead.`);
     }
   };
+
+  // The workaround, built rather than described. A programmatic read needs a
+  // permission that does not exist here; a paste event needs nothing, because
+  // the user's own keystroke is the consent and the browser hands the data
+  // straight to the handler. This works inside the sandbox, and
+  // `tools/check_sandbox.mjs` proves it in a frame with an opaque origin.
+  $("#pastehere").addEventListener("paste", (event) => {
+    const data = event.clipboardData;
+    if (!data) return;
+    const text = data.getData("text/plain");
+    const types = [...data.types].join(", ") || "none";
+    say(`Paste delivered ${text.length} characters. Types offered: ${types}. `
+      + "No permission was requested and none exists.");
+  });
 
   $("#export").onclick = async () => {
     if (!bridge.hostCapabilities.downloadFile) {

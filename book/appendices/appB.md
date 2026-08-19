@@ -10,6 +10,15 @@ Every entry below is a capability that recognisable applications need and that
 no message, permission or platform feature currently provides. Ten of them
 are Core, which means they are needed at their conformance level.
 
+Several of these entries make a claim about a browser rather than about the
+specification, and a claim about a browser deserves a run instead of an
+argument. `tools/check_sandbox.mjs` loads a probe document into a real
+`sandbox="allow-scripts"` iframe with an opaque origin, and into an
+unsandboxed frame beside it running the identical code. The second frame is
+the control: without it, a refusal could be an artefact of running headless
+and blaming the sandbox would be a guess wearing a result. The section at the
+end of this appendix has the recorded output, and it corrected one entry here.
+
 ![Sixteen doors that are shut](figures/xkcd-doors.png)
 
 @gaps
@@ -76,10 +85,39 @@ same treatment as `ui/download-file`.
 
 ### `clipboard.read`
 
-No permission exists, and the browser refuses reads from an opaque origin.
+No permission exists. The extension's set is `camera`, `microphone`,
+`geolocation` and `clipboardWrite`, so there is no way for a host to grant a
+programmatic read even if it wanted to.
 
-*Workaround.* Offer a paste target. The user's Cmd+V is the consent, and the
-browser delivers the content without any permission.
+*Workaround, and it works.* Offer a paste target. The user's Cmd+V is the
+consent, the browser hands the content to a `paste` handler, and no permission
+is involved at any point. The probe pastes into a sandboxed frame with an
+opaque origin and the event arrives carrying `text/plain`:
+
+<!-- listing: extracted from `apps/labs/lab-clipboard/index.html` -->
+```js
+  $("#pastehere").addEventListener("paste", (event) => {
+    const data = event.clipboardData;
+    if (!data) return;
+    const text = data.getData("text/plain");
+    const types = [...data.types].join(", ") || "none";
+    say(`Paste delivered ${text.length} characters. Types offered: ${types}. `
+      + "No permission was requested and none exists.");
+  });
+```
+
+This is the weakest gap in the appendix and it is listed honestly as weak. A
+view cannot read the clipboard on its own initiative; it can receive whatever
+the user chooses to paste, which covers most of what applications actually
+want. What is lost is reading without a gesture, and reading without a gesture
+is the part that should require a permission anyway.
+
+*An earlier version of this entry said the browser refuses reads from an
+opaque origin.* The probe does not show that. The programmatic read fails in
+the sandboxed frame and fails identically in the unsandboxed control, both
+because a headless document is not focused, so this suite has no evidence
+about the origin at all. The absence of a permission is the part that is
+demonstrated, and it is the part that matters.
 
 *Shape.* A `clipboardRead` permission requiring a user gesture and a
 host-mediated grant, probably with visible indication in host chrome.
@@ -90,7 +128,22 @@ credential.
 ### `system.share`
 
 `navigator.share` needs the `web-share` permission policy, which is not in the
-extension's set of four.
+extension's set of four. The function exists on `navigator` in a view, which
+is worth knowing: a feature-detection check on its presence reports that
+sharing is available and then the call is denied.
+
+<!-- listing: extracted from `conformance/sandbox.json` -->
+```json
+    "shareCall": {
+      "verdict": "denied before any surface appeared",
+      "ok": false
+    },
+```
+
+The control frame running the identical code reaches the browser's own share
+surface instead, so the denial is the sandbox and the permissions policy and
+not the headless environment. Feature-detect by calling and catching, never by
+checking that the method exists.
 
 *Workaround.* `ui/open-link` with a canonical URL, or the clipboard.
 
@@ -101,7 +154,12 @@ types, which would let the host present its own share surface.
 
 ### `system.print`
 
-`window.print` needs `allow-modals`, which the sandbox does not grant.
+`window.print` needs `allow-modals`, which the sandbox does not grant. The
+failure is the awkward kind: `window.print()` **returns normally and does
+nothing**. It does not throw,
+there is no rejected promise, and no event says the print did not happen. A
+view that calls it and then reports success to the user is reporting a print
+that never occurred.
 
 *Workaround.* Generate a document and hand it to `ui/download-file`.
 
@@ -195,9 +253,37 @@ that touches authentication.
 *Reopens.* Credential phishing, unless the prohibition is carried over
 unchanged.
 
+## What the sandbox actually refuses
+
+Every claim in this appendix about what a browser will not do is recorded
+rather than argued. Both frames run the same document; the only difference is
+one attribute.
+
+| Experiment | Sandboxed view | Unsandboxed control |
+|---|---|---|
+| `window.origin` | `"null"` | the server's origin |
+| `localStorage.setItem` | `SecurityError` | wrote |
+| `sessionStorage.setItem` | `SecurityError` | wrote |
+| `indexedDB.open` | `SecurityError` | opened |
+| `document.cookie` write | `SecurityError` | wrote |
+| `navigator.share()` | `NotAllowedError` | reached the share surface |
+| `window.open` | returned `null` | opened |
+| `window.print()` | returned, did nothing | returned |
+| `paste` event | fired, carried `text/plain` | fired |
+
+Two rows are worth reading twice. `window.print()` and the `paste` event are
+the only two where the sandboxed frame behaves like the control, and they are
+opposite kinds of surprise: printing looks like it worked and did not, and
+pasting looks like it should be blocked and is not.
+
+One experiment produced no usable answer. `navigator.clipboard.readText()`
+fails identically in both frames, because a headless document is never
+focused, so this suite cannot say whether the sandbox would refuse it. The
+entry above says so instead of claiming a result it does not have.
+
 ## Reading this appendix as a work list
 
-The fourteen are not equally urgent, and the ordering that matters is by how
+The sixteen are not equally urgent, and the ordering that matters is by how
 many applications they block and how cheap a mechanism would be.
 
 **Cheap and clearly justified.** `tool.partialOutput` and `input.shortcut`.
@@ -217,6 +303,14 @@ collecting credentials into an untrusted frame.
 the visibility half of `lifecycle.visibility` are all the same missing signal:
 the host knows whether a view is being looked at, and the view does not.
 
-**Genuinely hard.** `clipboard.read` and `input.dragBoundary`, because both
-move data across the boundary in the direction the sandbox exists to prevent.
+**Genuinely hard.** `input.dragBoundary`, because it moves data across the
+boundary in the direction the sandbox exists to prevent, and because both ends
+of a drag need mediating.
+
+**Weaker than it looks, and listed anyway.** `clipboard.read`. A paste target
+covers the case applications actually have, it needs no permission, and it is
+demonstrated in `lab-clipboard`. What remains missing is reading without a
+user gesture, which is the part that ought to be hard. An entry that stayed on
+the list because nobody re-tested it would be the same failure this book
+spends Part VI trying to avoid.
 
