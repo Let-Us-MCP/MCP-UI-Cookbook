@@ -120,7 +120,7 @@
 <p class="provenance extracted">Extracted from from <code>conformance/wire/r01-data-explorer.json</code></p><pre class="json"><code>      {
         &quot;uri&quot;: &quot;ui://cookbook/data-explorer&quot;,
         &quot;mimeType&quot;: &quot;text/html;profile=mcp-app&quot;,
-        &quot;text&quot;: &quot;&lt;7232 characters of HTML, elided&gt;&quot;,
+        &quot;text&quot;: &quot;&lt;the view&#39;s HTML, elided&gt;&quot;,
         &quot;_meta&quot;: {
           &quot;ui&quot;: {
             &quot;csp&quot;: {},
@@ -128,7 +128,7 @@
           }
         }
       }</code></pre>
-<p>The elision is the recorder’s, not the server’s: seven thousand characters of markup teaches nobody anything, and <code>tools/record_wire.mjs</code> replaces any string over 120 characters with a note saying how long it was. Everything else in both listings is verbatim, and <code>make wire</code> fails the build if a server’s answer stops matching what is quoted here.</p>
+<p>The elision is the recorder’s, not the server’s: seven thousand characters of markup teaches nobody anything, so <code>tools/record_wire.mjs</code> replaces any string over 120 characters with a marker and records its length beside it. Everything else in both listings is verbatim, and <code>make wire</code> fails the build if a server’s answer stops matching what is quoted here.</p>
 <p>The <code>_meta.ui</code> on a <em>tool</em> carries <code>resourceUri</code> and <code>visibility</code>; the <code>_meta.ui</code> on a <em>resource</em> carries <code>csp</code> and <code>prefersBorder</code>. Same namespace, different objects, and confusing them is the most common mistake in a first server. And <code>"csp": {}</code> is declared rather than omitted, because these views load nothing from the network and an empty object says that deliberately.</p>
 <p>You can watch the whole sequence in the browser. Open any recipe on this site and read the first four lines of its message log, which are host-to-server, not host-to-view: <code>tools/list</code>, its result, <code>resources/read</code> with that URI, and the HTML coming back. Only then does the view’s own <code>ui/initialize</code> appear.</p>
 <p>Nothing names a file. The host is handed a tool, finds the resource URI in that tool’s metadata, reads the resource, and renders whatever HTML comes back. The view in the frame above those messages is the document that arrived on line four.</p>

@@ -227,6 +227,18 @@ host.onEvent = (event, params) => {
 // The host emulator answers the view; the driver answers the host, from the
 // real server. Nothing here fabricates a result.
 window.__host = host;
+// Failure levers. A demonstration that only ever succeeds proves that the
+// happy path works, which is the smaller half of what an application does.
+window.__deny = (name) => { delete host.hostCapabilities[name]; };
+window.__grant = (name) => { host.hostCapabilities[name] = {}; };
+window.__teardown = (reason) => host.teardown(reason)
+  .then((r) => { window.__teardownResult = r; })
+  .catch((e) => { window.__teardownResult = { error: String(e.message) }; });
+window.__errors = [];
+addEventListener("unhandledrejection", (e) => {
+  window.__errors.push(String(e.reason?.message ?? e.reason));
+});
+addEventListener("error", (e) => { window.__errors.push(String(e.message)); });
 window.__forward = (message) => host._send(message, "host\u2192app");
 window.__deliver = (result, args) => {
   if (args) host.sendToolInput(args);
@@ -304,6 +316,7 @@ function compare(expect, actual) {
 
 async function runCase(spec, name, browser, workdir) {
   const problems = [];
+  let failNext = null;
   const server = new ServerConnection(path.join(ROOT, spec.server));
 
   try {
@@ -341,6 +354,20 @@ async function runCase(spec, name, browser, workdir) {
 
     // Forward every tool call the view makes to the server that is running.
     browser.onServerCall = async ({ id, name, arguments: args }) => {
+      if (failNext) {
+        const injected = failNext;
+        failNext = null;
+        if (injected.reject) {
+          await browser.evalPage(
+            `window.__resolveServerCall(${id}, null, `
+            + `${JSON.stringify(injected.reject)})`);
+        } else {
+          await browser.evalPage(
+            `window.__resolveServerCall(${id}, `
+            + `${JSON.stringify(injected)}, null)`);
+        }
+        return;
+      }
       try {
         const proxied = await server.request("tools/call",
           { name, arguments: args ?? {}, _meta: { progressToken: 1 } });
@@ -356,6 +383,19 @@ async function runCase(spec, name, browser, workdir) {
     await browser.send("Page.navigate", { url: `http://127.0.0.1:${PORT}/shell.html` });
     await browser.send("Runtime.addBinding", { name: "__mcpCall" });
     await waitFor(() => browser.evalPage("window.__ready === true"), 12000);
+
+    // An unhandled rejection inside the view is a defect that every DOM
+    // assertion can still pass around, and a refused capability is exactly
+    // where one hides. The listener has to be in the frame, because that is
+    // the realm the view's promises reject in.
+    await browser.evalFrame(`(() => {
+      window.__errors = [];
+      addEventListener("unhandledrejection", (e) => {
+        window.__errors.push(String(e.reason?.message ?? e.reason));
+      });
+      addEventListener("error", (e) => { window.__errors.push(String(e.message)); });
+      return true;
+    })()`);
 
     // Forward anything the server volunteers, which is what a host does with
     // progress notifications against a running request.
@@ -380,6 +420,23 @@ async function runCase(spec, name, browser, workdir) {
 
     for (const [i, step] of (spec.steps ?? []).entries()) {
       const label = step.label ?? `step ${i + 1}`;
+      // Take a capability away mid-session. The view's own copy of
+      // `hostCapabilities` is whatever arrived at initialize, so this tests
+      // the other half: what happens when the request is refused.
+      if (step.deny) {
+        await browser.evalPage(`window.__deny(${JSON.stringify(step.deny)})`);
+      }
+      if (step.grant) {
+        await browser.evalPage(`window.__grant(${JSON.stringify(step.grant)})`);
+      }
+      // Make the next tool call the view issues fail, either as a JSON-RPC
+      // error or as a well-formed result carrying isError.
+      if (step.failNextCall !== undefined) {
+        failNext = step.failNextCall;
+      }
+      if (step.teardown) {
+        await browser.evalPage(`window.__teardown(${JSON.stringify(step.teardown)})`);
+      }
       if (step.click) {
         await browser.evalFrame(
           `document.querySelector(${JSON.stringify(step.click)}).click()`);
@@ -418,6 +475,16 @@ async function runCase(spec, name, browser, workdir) {
           `window.__host.patchContext(${JSON.stringify(step.patchContext)})`);
       }
       await sleep(step.settleMs ?? 350);
+      // An unhandled rejection is a defect even when every assertion passes,
+      // and a refused capability is exactly where one hides.
+      const thrown = await browser.evalFrame(
+        "JSON.stringify(window.__errors ?? [])");
+      const list = JSON.parse(thrown || "[]");
+      if (list.length) {
+        problems.push(`${label}: page reported ${list.length} unhandled `
+          + `error(s), first is ${JSON.stringify(list[0])}`);
+        await browser.evalFrame("window.__errors.length = 0");
+      }
       if (step.expect) {
         const actual = await browser.evalFrame(assertionScript(step.expect));
         problems.push(...compare(step.expect, actual)

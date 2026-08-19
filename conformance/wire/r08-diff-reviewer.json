@@ -35,7 +35,8 @@
         {
           "uri": "ui://cookbook/diff-reviewer",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<5353 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 5353,
           "_meta": {
             "ui": {
               "csp": {},

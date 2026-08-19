@@ -49,6 +49,31 @@
         { "selector": "#count", "text": "8 rows, 1 selected" },
         { "selector": "tbody tr", "count": 2 }
       ]
+    },
+    {
+      "label": "the host refuses a download it advertised",
+      "deny": "downloadFile",
+      "settleMs": 600,
+      "click": "#export",
+      "settleMs": 500,
+      "expect": [
+        { "selector": ".toast", "minCount": 1 },
+        { "selector": ".toast", "textContains": "declined to save" },
+        { "selector": "tbody tr", "count": 2 }
+      ]
+    },
+    {
+      "label": "a failing refresh leaves the table and says so",
+      "failNextCall": { "isError": true,
+        "content": [{ "type": "text",
+          "text": "The deployment index is unavailable. Nothing was changed." }] },
+      "click": "#reload",
+      "settleMs": 600,
+      "expect": [
+        { "selector": "#error", "hidden": false },
+        { "selector": "#error", "textContains": "unavailable" },
+        { "selector": "tbody tr", "minCount": 1 }
+      ]
     }
   ]
 }

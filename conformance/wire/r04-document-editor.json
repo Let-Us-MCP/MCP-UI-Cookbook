@@ -58,7 +58,8 @@
         {
           "uri": "ui://cookbook/document-editor",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<7389 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 8064,
           "_meta": {
             "ui": {
               "csp": {},

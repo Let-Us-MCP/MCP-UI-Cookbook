@@ -18,11 +18,20 @@ and by CI. It found four bugs on its first pass, three of which no
 message-level check could have caught, including one where the book asserted a
 safety property the code did not have.
 
-**Still missing inside it.** Assertions on failure paths: a server that errors,
-a capability withdrawn mid-session, a teardown with unsaved work. The driver
-can express all three and only a few cases use them. Also no visual assertions,
-which would need reference images and a tolerance, and are a different kind of
-brittle.
+**Failure paths: built.** The driver has three levers now. `deny` withdraws a
+host capability mid-session, `failNextCall` makes the next tool call return
+`isError: true` or reject, and `teardown` starts the close handshake. They
+found two real defects on the first pass: Recipe 1's export button was
+completely silent when the host refused, and Recipe 4 marked the document
+saved when the save had failed, which is silent data loss in an autosaving
+editor.
+
+**Still missing inside it.** Teardown-with-unsaved-work has a lever and no
+case using it. No visual assertions, which would need reference images and a
+tolerance, and are a different kind of brittle. And the harness watches for
+unhandled rejections in the frame, which caught a deliberately provoked one
+but did not fire for a real refused request; that detector is a bonus signal
+and not something the suite relies on.
 
 ## 2. Cross-host conformance
 

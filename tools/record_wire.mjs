@@ -63,14 +63,24 @@ function rpc(serverPath, requests) {
 }
 
 // A view is tens of kilobytes. Say so instead of printing it.
+//
+// The marker is deliberately constant. Putting the exact length in it made
+// every listing that quotes this file stale the moment anybody edited a view,
+// which is churn without information. The length is recorded beside it, where
+// nothing quotes it.
 function elide(node) {
   if (Array.isArray(node)) return node.map(elide);
   if (node && typeof node === "object") {
-    return Object.fromEntries(
-      Object.entries(node).map(([k, v]) => [k, elide(v)]));
-  }
-  if (typeof node === "string" && node.length > 120) {
-    return `<${node.length} characters of HTML, elided>`;
+    const out = {};
+    for (const [k, v] of Object.entries(node)) {
+      if (typeof v === "string" && v.length > 120) {
+        out[k] = "<the view's HTML, elided>";
+        out[`${k}Length`] = v.length;
+      } else {
+        out[k] = elide(v);
+      }
+    }
+    return out;
   }
   return node;
 }

@@ -185,20 +185,32 @@ View.boot({ name: "data-explorer", version: "1.0.0" }, {}, async (instance) => {
     toast(`${selected.size} rows copied`);
   };
 
+  // Two failures, not one. The capability can be absent at initialize, which
+  // is answered by offering something else, and the request can be refused at
+  // the moment it is made, which is answered by saying so. A control that is
+  // silent on the second is a control the user presses again.
   $("#export").onclick = async () => {
     if (!bridge.hostCapabilities.downloadFile) {
       toast("This host cannot save files. Copy instead.");
       return;
     }
-    await bridge.downloadFile([{ type: "resource", resource: {
-      uri: "file:///deployments.csv", mimeType: "text/csv", text: csv() } }]);
-    toast("Handed to the host");
+    try {
+      await bridge.downloadFile([{ type: "resource", resource: {
+        uri: "file:///deployments.csv", mimeType: "text/csv", text: csv() } }]);
+      toast("Handed to the host");
+    } catch (error) {
+      toast(`The host declined to save that file. ${error.message}`);
+    }
   };
 
   $("#ask").onclick = async () => {
-    await bridge.sendMessage(
-      `Why is p95 high on these deployments?\n${csv()}`);
-    toast("Asked in the conversation");
+    try {
+      await bridge.sendMessage(
+        `Why is p95 high on these deployments?\n${csv()}`);
+      toast("Asked in the conversation");
+    } catch (error) {
+      toast(`The host declined to start a turn. ${error.message}`);
+    }
   };
 
   await load();

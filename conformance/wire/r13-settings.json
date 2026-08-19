@@ -50,7 +50,8 @@
         {
           "uri": "ui://cookbook/settings",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<6291 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 6291,
           "_meta": {
             "ui": {
               "csp": {},

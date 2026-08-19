@@ -35,7 +35,8 @@
         {
           "uri": "ui://cookbook/file-explorer",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<7843 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 7843,
           "_meta": {
             "ui": {
               "csp": {},

@@ -35,7 +35,8 @@
         {
           "uri": "ui://cookbook/approval-center",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<5427 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 5427,
           "_meta": {
             "ui": {
               "csp": {},

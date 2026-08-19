@@ -59,7 +59,8 @@
         {
           "uri": "ui://cookbook/agent-control",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<5296 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 5296,
           "_meta": {
             "ui": {
               "csp": {},

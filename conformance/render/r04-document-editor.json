@@ -16,4 +16,13 @@
       "expect": [ { "selector": "#doc", "textContains": "slipped to the 21st" },
                   { "selector": "#proposal", "hidden": true } ] },
     { "label": "one undo restores the human's words", "click": "#undo",
-      "expect": [ { "selector": "#doc", "textContains": "on track" } ] } ] }
+      "expect": [ { "selector": "#doc", "textContains": "on track" } ] },
+    { "label": "a save that the server refuses leaves the document unsaved",
+      "failNextCall": { "isError": true,
+        "content": [{ "type": "text",
+          "text": "The document store is read only. Nothing was written." }] },
+      "keysTarget": "#doc",
+      "keys": [{ "key": "s", "ctrlKey": true }],
+      "settleMs": 700,
+      "expect": [ { "selector": "#state", "text": "unsaved" },
+                  { "selector": "#log", "textContains": "read only" } ] } ] }

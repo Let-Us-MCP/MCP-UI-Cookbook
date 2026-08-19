@@ -35,7 +35,8 @@
         {
           "uri": "ui://cookbook/workflow-builder",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<11945 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 11945,
           "_meta": {
             "ui": {
               "csp": {},

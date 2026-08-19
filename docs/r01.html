@@ -172,6 +172,15 @@
 <h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The tool fails.</strong> Press “Break the server”. The table keeps the rows it had, a banner explains that the data is from the previous successful call, and the reload button still works. An empty table with an error above it would have thrown away the information the user still needed.</p>
 <p><strong>The host cannot save files.</strong> The export button is not rendered. Copy is offered instead, which puts CSV on the clipboard through whichever of the two paths works.</p>
+<p><strong>The host refuses a save it advertised.</strong> A different failure, and it needs a different answer. <code>downloadFile</code> was present at <code>ui/initialize</code>, so the button is rendered, and the host declines when it is pressed. The control reports the host’s own message and stays enabled:</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r01-data-explorer/index.html</code></p><pre class="js"><code>    try {
+      await bridge.downloadFile([{ type: &quot;resource&quot;, resource: {
+        uri: &quot;file:///deployments.csv&quot;, mimeType: &quot;text/csv&quot;, text: csv() } }]);
+      toast(&quot;Handed to the host&quot;);
+    } catch (error) {
+      toast(`The host declined to save that file. ${error.message}`);
+    }</code></pre>
+<p>Without the catch this button is silent when it is refused, which is worse than an error: the user presses it again. The render harness withdraws <code>downloadFile</code> mid-session and asserts that a toast appears, because that silence was the actual behaviour until the harness could withdraw a capability.</p>
 <p><strong>The locale changes mid-session.</strong> Press “Switch to ja-JP / Tokyo”. Numbers and timestamps re-render; the underlying data does not change; the selection survives.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>The table is a grid with <code>aria-selected</code> on each row and <code>tabindex="0"</code> for keyboard activation. Space toggles selection, and the selected count is announced once per change. Sortable headers carry <code>aria-sort</code>. The error banner is a live region. Every column that is numeric is right-aligned with tabular figures, which is a legibility requirement and is the sort of thing that gets dropped first.</p>

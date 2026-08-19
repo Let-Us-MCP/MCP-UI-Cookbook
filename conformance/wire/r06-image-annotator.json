@@ -55,7 +55,8 @@
         {
           "uri": "ui://cookbook/image-annotator",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<10727 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 10727,
           "_meta": {
             "ui": {
               "csp": {},

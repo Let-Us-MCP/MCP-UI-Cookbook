@@ -35,7 +35,8 @@
         {
           "uri": "ui://cookbook/media-viewer",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<6171 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 6171,
           "_meta": {
             "ui": {
               "csp": {},

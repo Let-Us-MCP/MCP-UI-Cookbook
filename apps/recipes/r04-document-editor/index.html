@@ -101,11 +101,28 @@ async function save() {
   if (!dirty || saving) return;
   saving = true;
   setDirty(true);
-  const result = await bridge.callServerTool("save_document",
-    { html: $("#doc").innerHTML });
-  saving = false;
-  setDirty(false);
-  $("#log").textContent = result.content?.[0]?.text ?? "Saved.";
+  try {
+    const result = await bridge.callServerTool("save_document",
+      { html: $("#doc").innerHTML });
+    saving = false;
+    // A tool that ran and failed reports `isError: true` with a readable
+    // message. Clearing the dirty flag here regardless would tell the user
+    // their work is safe at the exact moment it is not, which is the worst
+    // thing an autosaving editor can do.
+    if (result.isError) {
+      setDirty(true);
+      $("#log").textContent = result.content?.[0]?.text ?? "The save failed.";
+      return;
+    }
+    setDirty(false);
+    $("#log").textContent = result.content?.[0]?.text ?? "Saved.";
+  } catch (error) {
+    // A transport failure is the same story with a different cause: the
+    // document is still unsaved and the user has to be told.
+    saving = false;
+    setDirty(true);
+    $("#log").textContent = `Not saved. ${error.message}`;
+  }
 }
 
 View.boot({ name: "document-editor", version: "1.0.0" },
@@ -142,7 +159,7 @@ View.boot({ name: "document-editor", version: "1.0.0" },
     if (!(event.metaKey || event.ctrlKey)) return;
     if (event.key === "z" && !event.shiftKey) { event.preventDefault(); undo(); }
     else if (event.key === "z" && event.shiftKey) { event.preventDefault(); redo(); }
-    else if (event.key === "s") { event.preventDefault(); save(); toast("Saved"); }
+    else if (event.key === "s") { event.preventDefault(); save(); }
     else if (event.key === "b") { event.preventDefault(); command("bold"); }
   });
 

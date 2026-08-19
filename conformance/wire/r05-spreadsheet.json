@@ -35,7 +35,8 @@
         {
           "uri": "ui://cookbook/spreadsheet",
           "mimeType": "text/html;profile=mcp-app",
-          "text": "<7019 characters of HTML, elided>",
+          "text": "<the view's HTML, elided>",
+          "textLength": 7019,
           "_meta": {
             "ui": {
               "csp": {},

@@ -191,8 +191,8 @@
 </table></div>
 <h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The host does not wait for the teardown response.</strong> Indistinguishable from the inside. Autosave is what makes it survivable: at worst 900 milliseconds of typing is lost.</p>
-<p><strong>The save fails.</strong> The dirty flag stays set, the chip stays amber, and the next autosave retries. The document is never marked saved on a failure.</p>
-<p><strong>The agent proposes while the user is typing.</strong> The proposal appears below rather than replacing anything, so there is no race. Recipe 20’s lab shows the harder version of this, where the agent writes directly into a shared field.</p>
+<p><strong>The save fails.</strong> The dirty flag stays set, the chip stays amber, the tool’s own message appears under the document, and the next autosave retries. Both failure shapes are handled: a result carrying <code>isError: true</code>, which means the tool ran and refused, and a rejected call, which means it never ran. The document is never marked saved on a failure, and the render harness asserts it by refusing one save and checking that the chip still reads “unsaved”.</p>
+<p><strong>The agent proposes while the user is typing.</strong> The proposal appears below rather than replacing anything, so there is no race. Chapter 21’s lab shows the harder version of this, where the agent writes directly into a shared field.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>The editable region is <code>role="textbox"</code> with <code>aria-multiline</code>. Undo and redo announce their labels. The proposal card is a live region so its arrival is announced, and its buttons are reachable in tab order immediately after the document. Formatting shortcuts are duplicated as toolbar buttons.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
