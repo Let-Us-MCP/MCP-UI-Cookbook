@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>12. Host Environment and Theming &middot; The MCP UI Cookbook</title>
-<meta name="description" content="A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.">
-<meta property="og:title" content="12. Host Environment and Theming">
-<meta property="og:description" content="A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.">
+<title>12. Pickers and Dropzones &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.">
+<meta property="og:title" content="12. Pickers and Dropzones">
+<meta property="og:description" content="Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html" class="current">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html" class="current">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,107 +74,107 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 12</p><h1>Host Environment and Theming</h1><p class="summary">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</p><p>The host sends CSS custom properties in <code>hostContext.styles.variables</code>, and you use them with your own fallback defined for every single one. No component library is involved anywhere in this, and that is deliberate: the specification rejected shipping one because no single library works across every host’s aesthetic, and rejected sending spacing tokens because layouts break when spacing varies from what they were designed against.</p>
-<p>Seven capabilities describe the environment. All arrive in <code>hostContext</code>, all can change through <code>ui/notifications/host-context-changed</code>, and the most common bug in this group is reading them once at startup.</p>
-<div class="demo" data-demo="lab-theme" id="lab-theme"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="what-does-the-host-actually-send">What does the host actually send?</h2>
-<p>The theming story is layered, and it helps to see which layer each decision belongs to.</p>
-<p><strong>The wire format</strong> is CSS custom properties in <code>hostContext.styles.variables</code>, with an optional block of <code>@font-face</code> or <code>@import</code> rules in <code>styles.css.fonts</code>. The specification standardises the <em>names</em>: background, text, border and ring colours in a fixed set of semantic slots, font families and weights, a type scale, border radii, and four shadow levels.</p>
-<p><strong>The semantics</strong> are roles, not palettes. There is no “blue”. There is <code>--color-background-primary</code> and <code>--color-text-primary</code>, and the pairing is what makes contrast work. A view that uses <code>--color-text-danger</code> on <code>--color-background-danger</code> is legible in every theme; one that uses a red it picked itself on a background the host chose is legible in the theme it was built in.</p>
-<p><strong>The adaptation</strong> is dark mode, contrast, motion and text scale, and only the first of those is on the wire. Chapter 13 covers the others, which are media queries.</p>
-<p>Spacing is deliberately absent from the variable set, and the reason is worth repeating: layouts break when spacing varies from what they were designed against. A host can change your colours safely and cannot change your rhythm safely.</p>
-<h2 id="how-do-i-follow-the-hosts-theme">How do I follow the host’s theme?</h2>
-<div class="cap" id="env.theme"><div class="cap-head"><code class="cap-id">env.theme</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Take the host&#x27;s tokens and follow them when they change.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>styles</code><code>--color-background-primary</code><code>light-dark</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p>Apply the variables to the document root and define a fallback for every one you use, because a host is permitted to send all of them, some of them, or none. Falling back happens per variable rather than wholesale, which is what makes a partial set more dangerous than an empty one.</p>
-<p>The specification warns about partial sets specifically. If a host sends a dark background and no text colour, your light-mode text fallback lands on it and the result is unreadable, which is worse than either theme applied whole. Using role pairs consistently is the defence: take <code>--color-background-danger</code> and <code>--color-text-danger</code> together, so a missing pair fails as a pair.</p>
-<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>:root {
-  color-scheme: light dark;
-  --color-background-primary: light-dark(#ffffff, #16181d);
-  --color-text-primary: light-dark(#15181d, #e7eaee);
-  --color-text-info: light-dark(#0f5c8c, #63aedc);
-  --border-radius-md: 8px;
+<p class="eyebrow">Chapter 12</p><h1>Pickers and Dropzones</h1><p class="summary">Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.</p><p>Use the native inputs. Three of these four capabilities are HTML input types with a decade of platform work behind them, and the effort you would spend replacing one buys you a worse version. The fourth reaches into the server’s namespace, not the user’s machine, and that one has to go through the host because your view holds no connection of its own.</p>
+<div class="demo" data-demo="lab-pickers" id="lab-pickers"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="which-picker-do-i-use">Which picker do I use?</h2>
+<div class="cap" id="picker.date"><div class="cap-head"><code class="cap-id">picker.date</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native date selection, localised by the host locale.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
+<div class="cap" id="picker.time"><div class="cap-head"><code class="cap-id">picker.time</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native time selection in the host timezone.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
+<div class="cap" id="picker.color"><div class="cap-head"><code class="cap-id">picker.color</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native colour selection.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r06.html">Image Annotator</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
+<p><code>&lt;input type="date"&gt;</code>, <code>type="time"&gt;</code> and <code>type="color"&gt;</code>, all of which work inside the sandbox with no permission and no message. Nothing about the opaque origin interferes, because the picker is drawn by the browser rather than by your document, and the value arrives through an ordinary <code>input</code> event.</p>
+<p>You get keyboard support, screen reader support, the platform’s own calendar and colour panel, and localisation for every region the browser knows, which is more than your component library knows.</p>
+<p>The argument for replacing them is usually visual: they do not match the design. That is true, and the cost of replacing them is a component that has to reimplement date arithmetic, week-start conventions, month names in the user’s language, and a keyboard model, and that will still be wrong for the calendar systems you have not heard of. In a four hundred pixel card next to somebody’s conversation, the trade is not close.</p>
+<p><strong>The one thing you have to add.</strong> The picker collects a value; you have to <em>display</em> values in the user’s terms, and the browser’s idea of “the user” is the machine, not the person the host is serving. Formatting comes from <code>hostContext.locale</code> and <code>hostContext.timeZone</code>, through <code>Intl</code>.</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>function formatters(hostContext) {
+  const locale = hostContext?.locale || undefined;
+  const timeZone = hostContext?.timeZone || undefined;
+  return {
+    number: (n, options) =&gt; new Intl.NumberFormat(locale, options).format(n),
+    date: (value, options = { dateStyle: &quot;medium&quot; }) =&gt;
+      new Intl.DateTimeFormat(locale, { ...options, timeZone })
+        .format(value instanceof Date ? value : new Date(value)),
+    time: (value) =&gt; new Intl.DateTimeFormat(locale, {
+      timeStyle: &quot;medium&quot;, timeZone })
+      .format(value instanceof Date ? value : new Date(value)),
+  };
 }</code></pre>
-<p><code>light-dark()</code> with <code>color-scheme: light dark</code> is the compact way to write a fallback that is already theme-aware, so a view with no host variables at all still respects the operating system. The host’s values, when they arrive, override it.</p>
-<p><strong>Removing is as important as setting.</strong> When the host stops sending a variable, the view is supposed to fall back to its own value, which it cannot do while last theme’s override is still on the root element. The bridge here tracks what it applied and removes what is no longer sent.</p>
-<p class="provenance extracted">Extracted from from <code>emulator/app-bridge.js</code></p><pre class="js"><code>for (const name of appliedVariables) {
-  if (variables[name] == null) root.style.removeProperty(name);
-}
-appliedVariables = [];
-for (const [name, value] of Object.entries(variables)) {
-  if (value != null) {
-    root.style.setProperty(name, value);
-    appliedVariables.push(name);
+<p>Press “Switch to ja-JP / Tokyo” in the demonstration. The pickers keep their ISO values, which is correct, and everything the view renders changes, which is also correct. A view that formats with the default locale looks right on the developer’s machine and wrong for most of its users.</p>
+<p><strong>Accessibility.</strong> Native inputs come with the platform’s accessibility already wired. What they still need from you is a real <code>&lt;label&gt;</code> associated with the input, a hint about the expected format when there is one, and enough contrast on the border that the field is visible in a high contrast theme.</p>
+<h2 id="how-do-i-pick-something-the-server-owns">How do I pick something the server owns?</h2>
+<div class="cap" id="picker.resource"><div class="cap-head"><code class="cap-id">picker.resource</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Pick from resources the server exposes, through the host.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>resources/read</code><code>serverResources</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
+<p>Call <code>resources/read</code> when <code>hostCapabilities.serverResources</code> is present, and the host proxies it to the server and hands back the contents. The important difference from a file picker is whose namespace you are reaching into: a file picker touches the user’s machine and needs their consent, while a resource read touches the server your view came from and needs the host’s.</p>
+<p>This is different in kind from a file picker. A file picker reaches the user’s machine; a resource picker reaches the server’s namespace, and your view holds no connection to the server.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-pickers/index.html</code></p><pre class="js"><code>$(&quot;#load&quot;).onclick = async () =&gt; {
+  try {
+    const result = await bridge.readServerResource($(&quot;#uri&quot;).value);
+    $(&quot;#out&quot;).textContent = result.contents?.[0]?.text ?? JSON.stringify(result);
+  } catch (error) {
+    $(&quot;#out&quot;).textContent = `Refused: ${error.message}`;
   }
-}</code></pre>
-<p>Press “Send only half the variables” in the demonstration to see why this matters: with half a dark palette applied over a light fallback, the result is unreadable, and that is exactly the clash the specification warns about. The mitigation on the view side is to use <em>pairs</em> consistently, so that a missing background and a present foreground are both wrong together rather than separately.</p>
-<p><strong>Failure modes.</strong> No styles at all is the common case and must look deliberate. Partial styles is the dangerous case. A theme that changes while a menu is open is the fiddly case: re-render or re-read on <code>hostcontextchanged</code> rather than caching computed colours in JavaScript.</p>
-<div class="cap" id="env.fonts"><div class="cap-head"><code class="cap-id">env.fonts</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Load the host&#x27;s typeface without loading anything else.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>fonts</code><code>--font-sans</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p>Fonts arrive as a CSS block to inject, and <code>--font-sans</code> names the family. Inject the block into a <code>&lt;style&gt;</code> element in the head and let the variable do the rest. If the host sends the variable and not the block, or the block fails to load, your fallback stack is what people see, so make it a real stack and not a single exotic name.</p>
-<figure>
-<img src="figures/xkcd-belonging.png" alt="A view that ignores the host’s tokens reads as an advertisement" />
-<figcaption aria-hidden="true">A view that ignores the host’s tokens reads as an advertisement</figcaption>
-</figure>
-<h2 id="whose-clock-and-whose-language">Whose clock and whose language?</h2>
-<div class="cap" id="env.locale"><div class="cap-head"><code class="cap-id">env.locale</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Format numbers, dates, and text for the user&#x27;s region.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>locale</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<div class="cap" id="env.timezone"><div class="cap-head"><code class="cap-id">env.timezone</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Render instants in the timezone the user is actually in.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>timeZone</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p><code>hostContext.locale</code> and <code>hostContext.timeZone</code>, always.</p>
-<p>Not <code>navigator.language</code>, which is the browser’s. Not the system timezone, which is the machine’s. A host serving a user in Tokyo from a server in Virginia sends <code>ja-JP</code> and <code>Asia/Tokyo</code>; a view that reads the machine renders Virginia’s answer.</p>
-<p><strong>A concrete failure.</strong> A deployment list showing “Aug 18, 2026, 4:21 AM” because the view formatted a UTC instant with the machine’s offset, while the user is in Tokyo and the deploy happened at lunchtime. Nothing errors. Everybody’s timeline is wrong by nine hours.</p>
-<figure>
-<img src="figures/xkcd-timezone.png" alt="Whose clock is it" />
-<figcaption aria-hidden="true">Whose clock is it</figcaption>
-</figure>
-<h2 id="am-i-on-a-phone">Am I on a phone?</h2>
-<div class="cap" id="env.platform"><div class="cap-head"><code class="cap-id">env.platform</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Coarse platform shape, used sparingly.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>platform</code><code>userAgent</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<div class="cap" id="env.inputMode"><div class="cap-head"><code class="cap-id">env.inputMode</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Size targets for the modality actually in use.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>deviceCapabilities</code><code>touch</code><code>hover</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p><code>platform</code> is <code>web</code>, <code>desktop</code> or <code>mobile</code>, and <code>userAgent</code> names the host. Both are Extended, both are coarse, and both should be used sparingly. Reach for a media query or a capability check first; branch on the host name only when you are working around a known bug in a specific host, and comment it with the bug.</p>
-<p><code>deviceCapabilities</code> carries <code>touch</code> and <code>hover</code>, and this pair is worth acting on. Touch without hover means every hover-revealed control is unreachable and targets want the 44 by 44 CSS pixels of WCAG’s AAA criterion rather than the 24 by 24 its AA criterion requires. Hover means tooltips work and a compact toolbar is fine. Both can be true on a laptop with a touchscreen, so treat them as independent facts rather than as a device category.</p>
-<p class="provenance extracted">Extracted from from <code>apps/labs/lab-input/index.html</code></p><pre class="js"><code>function describeModality(device = {}) {
-  const parts = [device.touch &amp;&amp; &quot;touch&quot;, device.hover &amp;&amp; &quot;hover&quot;].filter(Boolean);
-  $(&quot;#mode&quot;).textContent = `modality: ${parts.join(&quot; + &quot;) || &quot;unstated&quot;}`;
-}
-bridge.on(&quot;hostcontextchanged&quot;, (patch) =&gt; {
-  if (patch.deviceCapabilities) describeModality(patch.deviceCapabilities);
-});</code></pre>
-<h2 id="what-are-safeareainsets-for">What are safeAreaInsets for?</h2>
-<div class="cap" id="env.safeArea"><div class="cap-head"><code class="cap-id">env.safeArea</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Keep content out of regions the host has spoken for.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>safeAreaInsets</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p>Four numbers in pixels, which you add to your outermost padding. They describe regions of the host’s window that something else already occupies: a notch, a title bar, a home indicator, a floating toolbar.</p>
-<p>A native app would read <code>env(safe-area-inset-*)</code>. A view inside someone else’s window cannot, because the notch is not on its viewport, so the host sends the numbers instead.</p>
-<p><strong>Application behaviour.</strong> Turn them into custom properties and add them to your outermost padding. The view stylesheet in this repository does exactly that, which is why pressing “Add a notch” in the demonstration visibly moves the content in from every edge.</p>
-<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>body {
-  padding-top: calc(12px + var(--safe-top, 0px));
-  padding-right: calc(12px + var(--safe-right, 0px));
-  padding-bottom: calc(12px + var(--safe-bottom, 0px));
-  padding-left: calc(12px + var(--safe-left, 0px));
-}</code></pre>
-<p>The controls most affected are the ones pinned to an edge: a bottom toolbar, a floating action button, a toast stack. Everything in the middle of the view is fine, which is why this bug survives testing on a desktop and appears on the first phone.</p>
-<h2 id="the-variables-grouped">The variables, grouped</h2>
-<p>The standardised set is long and the grouping is what makes it usable. There are four families, and a view that uses one member of a family should use the rest of it rather than mixing in its own values.</p>
-<p><strong>Backgrounds and text</strong> come in pairs by role: primary, secondary, tertiary, inverse, and the status roles info, success, warning, danger, plus disabled. The pairing is the contrast guarantee. <code>--color-text-danger</code> on <code>--color-background-danger</code> is legible in every theme a host can send; a red you chose on a background the host chose is legible in the theme you tested.</p>
-<p><strong>Borders and rings</strong> mirror the same roles. The ring set exists because focus indication needs to be distinguishable from a border, and a host with an unusual palette needs to be able to say so.</p>
-<p><strong>Typography</strong> carries families, four weights, a text scale in four sizes and a heading scale in seven, each with a matching line height. Using the size without its line height is the most common way to end up with cramped text in a host that sends a larger scale than you designed against.</p>
-<p><strong>Radii, border width and four shadow levels</strong> are the shape vocabulary. These are the ones most likely to be absent, because many hosts do not have opinions about them, so their fallbacks matter more than the colours’.</p>
-<p>Spacing is deliberately absent, and the specification says why: layouts break when spacing varies from what they were designed against. Your rhythm is yours.</p>
+};</code></pre>
+<p><strong>The awkward part, and a live discrepancy.</strong> The specification’s list of standard MCP messages available to a view names exactly one resource method: <code>resources/read</code>. On a plain reading, a view can read a resource it already knows the URI of and cannot discover one.</p>
+<p>The SDK disagrees. <code>@modelcontextprotocol/ext-apps</code> ships <code>App.listServerResources()</code>, and its own documentation uses it to build a picker by filtering the returned list on MIME type. <code>hostCapabilities</code> also carries <code>serverResources.listChanged</code>, which only means something if listing is proxied at all.</p>
+<p>So the honest position is that <code>resources/list</code> from a view is supported by the reference implementation and unstated in the specification text, which means hosts may reasonably differ. Treat it as an enhancement: try the list, and have a fallback for a host that refuses. This book files it as a documentation gap, because the SDK’s behaviour looks like the intended one.</p>
+<p>A picker can also learn its options without listing at all: from the tool result that rendered the view, from a server tool that returns a list, or from a namespace the server documents. The last two are worth preferring anyway, because a server tool returning a list also gets you filtering and pagination. In the demonstration the options come from the host fixture, and the “missing” entry is there so you can watch a refused read.</p>
+<p><strong>Security.</strong> This is the good path for reading server-side data, and it is worth choosing over a <code>fetch</code> to your own API even when you could declare the origin in <code>connectDomains</code>. A read through the host is visible to the host, subject to the host’s policy, and appears in the transcript. A direct fetch is a hole you asked the host to open and then used unobserved.</p>
+<p><strong>Failure modes.</strong> Unsupported when <code>serverResources</code> is absent: the picker should not appear, and whatever it was going to configure needs a different route. Denied and failed both come back as JSON-RPC errors, and the error message is the host’s, so display it, and do not replace it with your own guess.</p>
+<h2 id="what-about-dropzones">What about dropzones?</h2>
+<div class="cap" id="file.dropzone"><div class="cap-head"><code class="cap-id">file.dropzone</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Accept dropped files with validation, preview, and progress.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r06.html">Image Annotator</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p>Covered in Chapter 11, listed here because a dropzone and a picker are two routes to the same thing and an application that offers one should usually offer both. The picker is discoverable, the dropzone is fast, and users split roughly evenly between them.</p>
+<p>The one addition specific to this chapter: a dropzone that accepts a <em>type</em> of file should say so in its resting state, not only in its error state. “Drop a JSON annotation file” tells somebody what to look for. “Drop files here” followed by “wrong file type” tells them what they did wrong.</p>
+<h2 id="what-a-picker-costs-at-each-level">What a picker costs at each level</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What you get</th>
+<th>What you build</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Native date, time and colour inputs</td>
+<td>Formatting through the host’s locale</td>
+</tr>
+<tr>
+<td>2</td>
+<td>The same, plus files through <code>file.open</code></td>
+<td>Validation and preview</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Resource reads through the host</td>
+<td>The list, and a fallback when reads fail</td>
+</tr>
+</tbody>
+</table></div>
+<p>The table is worth reading as a warning about the third row. A resource picker looks like a small feature and it is the only one here that depends on a host capability, a server round trip, and a listing mechanism the specification does not describe. Budget accordingly, and consider whether a server tool returning exactly the options you need would be simpler than a general picker.</p>
 <h2 id="failure-modes-across-the-group">Failure modes across the group</h2>
-<p><strong>No styles at all.</strong> The common case, and it must look deliberate rather than unstyled. Every view in this book renders correctly with an empty <code>hostContext</code>, which is the test worth running first.</p>
-<p><strong>Half the variables.</strong> The dangerous case, and the one the specification warns about. Use role pairs consistently so a missing background and a present foreground fail together rather than separately.</p>
-<p><strong>A theme that changes mid-interaction.</strong> Re-read rather than cache. Anything you computed in JavaScript from a variable is stale the moment <code>ui/notifications/host-context-changed</code> arrives.</p>
-<p><strong>A font block that does not load.</strong> Your fallback stack is what people see, so make it a real stack. A single exotic family name with no fallback is a view rendered in whatever the browser picks.</p>
+<p><strong>Unsupported.</strong> The native inputs cannot be unsupported; every browser has them. <code>picker.resource</code> is unsupported when <code>serverResources</code> is absent, and the correct response is to omit the picker and configure the thing some other way, usually from the tool arguments that rendered the view.</p>
+<p><strong>Denied.</strong> Only <code>picker.resource</code> can be denied, as a JSON-RPC error from the host. Show the host’s message and add no guess of your own.</p>
+<p><strong>Failed.</strong> A resource that does not exist returns an error with the URI in it. Say which resource, because a picker with three options and one broken one is a picker whose failure the user can work around.</p>
+<p><strong>Cancelled and timeout.</strong> The native pickers cannot be cancelled from outside, and a dismissed picker simply leaves the value unchanged, which needs no handling. A resource read has no timeout of its own, so give it one.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li><code>hostContext</code> carries <code>theme</code>, <code>locale</code> and <code>timeZone</code> in the initialize result.</li>
-<li>Style variables are applied to the document root and removed when the host stops sending them.</li>
-<li>A theme change arrives as a partial <code>ui/notifications/host-context-changed</code> and the view re-renders without a reload.</li>
-<li>The view renders correctly with no <code>styles</code> at all.</li>
-<li><code>safeAreaInsets</code> moves content away from every edge it names.</li>
-<li><code>deviceCapabilities.touch</code> produces targets of at least 24 by 24 CSS pixels, and 44 by 44 where the design allows it.</li>
+<li>Native date, time and colour inputs render and open their platform pickers inside the sandbox.</li>
+<li>Values are displayed using <code>hostContext.locale</code> and <code>hostContext.timeZone</code>, not the machine’s.</li>
+<li>Changing the host locale re-renders every formatted value without a reload.</li>
+<li><code>resources/read</code> through the host returns content for a known URI.</li>
+<li>A read for an unknown URI returns an error, and the view reports it.</li>
+<li>With <code>serverResources</code> absent, the view sends no <code>resources/read</code>.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>Read the environment in a function, not in a constant. Define a fallback for every variable you use. Format through the host’s locale and timezone. Those three habits cover almost everything in this chapter, and the demonstration above will break a view that lacks any of them within three button presses.</p>
+<p>Two rules. Use the platform’s inputs, because they are better than the ones you would write and they are free. And format every value you display through the host’s locale and timezone, which are not the browser’s, because in this environment the browser is not where the user is.</p>
+<h2 id="what-native-actually-buys-you">What “native” actually buys you</h2>
+<p>The date input deserves one more paragraph, because the same argument generalises to every native control in Chapter 23 and it is the argument people skip fastest when a design does not match.</p>
+<p>Ask what a replacement has to know. Which day the week starts on, in the user’s region. The names of the months, in the user’s language, in the correct grammatical case for a date. Whether the region uses a non-Gregorian calendar. How to type a date rather than pick one, because most people type. What a screen reader should say when the value changes. How the picker behaves at 200% zoom, and on a touch device, and under forced colours.</p>
+<p>The browser knows all of that, for every locale it supports, and it was paid for by somebody else. A component library knows some of it for the locales its authors tested. A component you write in a four hundred pixel frame at the end of a sprint knows the first two.</p>
+<p>The visual mismatch is real and it is the only cost. In an embedded view that is already visually distinct from its host by design, it is a smaller cost than it looks.</p>
 
-<div class="pager"><a href="ch11.html"><span class="dir">Previous</span>11. Pickers and Dropzones</a><a href="ch13.html" style="text-align:right"><span class="dir">Next</span>13. Accessibility</a></div>
+<div class="pager"><a href="ch11.html"><span class="dir">Previous</span>11. Clipboard, Files and System Integration</a><a href="ch13.html" style="text-align:right"><span class="dir">Next</span>13. Host Environment and Theming</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>20. State Ownership and Concurrency &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.">
-<meta property="og:title" content="20. State Ownership and Concurrency">
-<meta property="og:description" content="Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.">
+<title>20. Tool Invocation and Streaming &middot; The MCP UI Cookbook</title>
+<meta name="description" content="The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.">
+<meta property="og:title" content="20. Tool Invocation and Streaming">
+<meta property="og:description" content="The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html" class="current">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html" class="current">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,93 +74,126 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 20</p><h1>State Ownership and Concurrency</h1><p class="summary">Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.</p><p>Label every region of your state user-owned, agent-owned or shared before you write any code. It takes about ten minutes and it converts an argument about merge semantics into a short list of decisions, most of which turn out to be obvious once the regions are named.</p>
-<p>This is not about merge algorithms. The agent is not another user: it is fast, it works in bursts, it cannot see the screen, it does not know the human is mid-sentence, and it cannot be asked to wait.</p>
-<div class="demo" data-demo="lab-ownership" id="lab-ownership"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="who-owns-what">Who owns what?</h2>
-<div class="cap" id="state.ownership"><div class="cap-head"><code class="cap-id">state.ownership</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Declare who owns each region when both parties can write.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-ownership">lab-ownership</a></dd></dl></div>
-<p>Every region of application state gets exactly one of three labels, and the labels should be visible in the interface rather than only in your head. A user who can see that the risk score belongs to the agent and the note belongs to them can predict what will change under their cursor.</p>
-<p><strong>User-owned.</strong> The agent may read it and may propose changes to it in conversation. It may not write it. Personal notes, drafts the user has not shared, anything where the point is that a person said it.</p>
-<p><strong>Agent-owned.</strong> The agent computes it and the view displays it. The user does not edit it directly; if they disagree, they change the inputs. Risk scores, classifications, generated summaries that are labelled as generated.</p>
-<p><strong>Shared.</strong> Both may write, and therefore a conflict policy is required. This is where all the difficulty lives, and the useful discipline is to keep the shared set small.</p>
-<p>The demonstration has one region of each, and the labels are visible in the interface. That visibility is not decoration: a user who can see that the risk score is the agent’s and the note is theirs can predict what will change under them.</p>
-<p><strong>Write the map down before the code.</strong> It takes ten minutes and it converts an argument about merge semantics into a list of decisions. Recipe 4 declares its map in the recipe entry, and the map is what determined which tools the view registers.</p>
-<figure>
-<img src="figures/diag-ownership.png" alt="Three regions, three owners, one conflict policy each" />
-<figcaption aria-hidden="true">Three regions, three owners, one conflict policy each</figcaption>
-</figure>
-<h2 id="what-happens-when-both-write">What happens when both write?</h2>
-<div class="cap" id="state.conflict"><div class="cap-head"><code class="cap-id">state.conflict</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Decide what happens when they both do.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-ownership">lab-ownership</a></dd></dl></div>
-<p>For each shared region, pick one policy and make it visible. The four are not equally safe, and the choice is worth making deliberately rather than discovering it the first time two writes land in the same second.</p>
-<p><strong>Reject.</strong> The write fails and the writer is told. Appropriate when the region is small and the loss is cheap. The tool returns <code>isError: true</code> with an explanation, which the agent can relay.</p>
-<p><strong>Last writer wins.</strong> The later write applies. Simple, and dangerous exactly when the human is the earlier writer, because they lose work they can see on screen. Acceptable only with a visible notice and an undo.</p>
-<p><strong>Merge.</strong> For structured state where writes touch different fields, apply both. Requires that your state actually be structured rather than a blob of HTML, which is a good reason to structure it.</p>
-<p><strong>Ask.</strong> Hold the write, show both versions, let the human choose. The heaviest and the safest, and the right default when the human is actively editing.</p>
-<p>The demonstration implements the last one with a rule that costs eight lines: while the human has typed within the last 1.5 seconds, hold the agent’s write and offer it when they stop.</p>
-<p class="provenance extracted">Extracted from from <code>apps/labs/lab-ownership/index.html</code></p><pre class="js"><code>bridge.registerTool({
-  name: &quot;rewrite_summary&quot;,
-  description: &quot;Replace the shared summary text&quot;,
-  inputSchema: { type: &quot;object&quot;, properties: { text: { type: &quot;string&quot; } },
-                 required: [&quot;text&quot;] },
-  annotations: { readOnlyHint: false },
-}, async ({ text }) =&gt; {
-  if (userTyping) {
-    pending = text;
-    setOwner(&quot;Agent write held: the human is typing.&quot;, &quot;warn&quot;);
-    return { content: [{ type: &quot;text&quot;,
-      text: &quot;Held. The user is editing; the change will be offered to them.&quot; }] };
-  }
-  offer(text);
-  return { content: [{ type: &quot;text&quot;, text: &quot;Offered to the user for review.&quot; }] };
+<p class="eyebrow">Chapter 20</p><h1>Tool Invocation and Streaming</h1><p class="summary">The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.</p><p>Your view can call server tools itself, with no model between the click and the call. This is the capability most applications under-use, because it is easy to assume that anything leaving the frame is a conversation, and most of what leaves the frame should not be.</p>
+<p><code>tools/call</code> from a view is not asking the agent to do anything. It is a straight line: view, host, server, view. Nothing is sampled and nothing enters the conversation.</p>
+<div class="demo" data-demo="lab-tools" id="lab-tools"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="how-do-i-refresh-my-data">How do I refresh my data?</h2>
+<div class="cap" id="tool.invoke"><div class="cap-head"><code class="cap-id">tool.invoke</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Call a server tool from a button, through the host.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>tools/call</code><code>serverTools</code><code>visibility</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p>Send <code>tools/call</code>. When <code>hostCapabilities.serverTools</code> is present the host proxies it to the server and returns a standard <code>CallToolResult</code>, the same shape the model would have received. Nothing is sampled, nothing is added to the conversation, and the round trip is a network call.</p>
+<p>The design decision here is tool visibility. A tool’s <code>_meta.ui.visibility</code> array controls who can call it. <code>["model", "app"]</code> is the default and means both. <code>["app"]</code> means the view only: the host must not show it in the agent’s tool list, and cross-server calls are blocked.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r13-settings/server.js</code></p><pre class="js"><code>save_preferences: {
+  description: &quot;Persist preferences. Called by the view.&quot;,
+  inputSchema: { type: &quot;object&quot; },
+  visibility: [&quot;app&quot;],
+  run: (values) =&gt; {</code></pre>
+<p>Use <code>["app"]</code> for anything that exists to serve the interface: refresh, save, validate, load a page of results. Two benefits, and both are larger than they sound. The model’s tool list stays short, which measurably improves its choice among the tools that remain. And a save that the model cannot call is a save that the model cannot decide to call.</p>
+<p><strong>Application behaviour.</strong> Check the capability at initialisation; a view whose refresh button cannot work should not have one. Disable the control while a call is in flight, or make it idempotent, because users press buttons twice. Keep the last good data on screen while the new call runs.</p>
+<p><strong>Failure modes.</strong> Unsupported means no <code>serverTools</code>, and the view is reduced to whatever arrived in its initial tool result. That is a real Level 1 host and every recipe here still renders under it. Denied is a JSON-RPC error from the host. Failed is a result with <code>isError: true</code>, which means the tool ran and did not work, and its text is meant to be read by a person.</p>
+<h2 id="how-do-i-render-before-the-arguments-arrive">How do I render before the arguments arrive?</h2>
+<div class="cap" id="tool.partialInput"><div class="cap-head"><code class="cap-id">tool.partialInput</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Render something useful while arguments are still streaming.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/tool-input-partial</code><code>ui/notifications/tool-input</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p>The host sends <code>ui/notifications/tool-input-partial</code> zero or more times while the model is still writing the arguments, and then exactly one <code>ui/notifications/tool-input</code> with the complete set. Both halves of that are optional in practice: a host may send no partials at all, and a view may ignore every one it receives, and both remain conformant.</p>
+<p>The partial arguments are best-effort recovered JSON: the host closes unclosed brackets and braces to produce a valid object. So fields appear, change, and occasionally disappear between notifications.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-tools/index.html</code></p><pre class="js"><code>bridge.on(&quot;toolinputpartial&quot;, ({ arguments: args }) =&gt; {
+  $(&quot;#title&quot;).textContent = args?.region
+    ? `Weather in ${args.region}` : &quot;Weather in&quot;;
+  $(&quot;#args&quot;).textContent = &quot;Arguments still arriving: &quot;
+    + JSON.stringify(args ?? {});
+});
+
+bridge.on(&quot;toolinput&quot;, ({ arguments: args }) =&gt; {
+  $(&quot;#title&quot;).textContent = `Weather in ${args?.region ?? &quot;nowhere&quot;}`;
 });</code></pre>
-<p>Two things to notice. The tool tells the agent what actually happened, so it does not report to the user that the summary has been rewritten when it has not. And “held” and “offered” are different outcomes with different words, because an agent that reads “held” can decide to wait and try again.</p>
-<h2 id="how-do-i-say-no-to-the-agent">How do I say no to the agent?</h2>
-<p>The user-owned region needs a registered tool as well, and that tool’s entire job is to refuse usefully. Not registering one is worse: a model that cannot find a way to write the note will try adjacent tools, or will report to the user that it updated the note when nothing happened.</p>
-<p class="provenance extracted">Extracted from from <code>apps/labs/lab-ownership/index.html</code></p><pre class="js"><code>bridge.registerTool({
-  name: &quot;write_note&quot;,
-  description: &quot;Attempt to write the user-owned note&quot;,
-  inputSchema: { type: &quot;object&quot;, properties: { text: { type: &quot;string&quot; } },
-                 required: [&quot;text&quot;] },
-  annotations: { readOnlyHint: false },
-}, async () =&gt; ({
-  isError: true,
-  content: [{ type: &quot;text&quot;,
-    text: &quot;The internal note is user owned. Propose a change in the &quot;
-        + &quot;conversation instead of writing it.&quot; }],
-}));</code></pre>
-<p>The alternative, not registering the tool at all, is worse. A model that cannot find a way to write the note will try adjacent tools, or will tell the user it has updated the note when it has not. An explicit refusal that names the correct route is a better interface for a model in exactly the way it is for a person.</p>
-<h2 id="what-about-optimistic-updates">What about optimistic updates?</h2>
-<p>The other concurrency problem has nothing to do with the agent. It is between your view and the server, and it appears the moment you show a change before the call that makes it has returned.</p>
-<p>A view that applies a change locally and then calls a tool has committed to an outcome it does not have yet. When the call fails, or is cancelled, or the frame is torn down mid-flight, the interface is showing something that never happened.</p>
-<p><strong>The rule.</strong> Optimistic updates need a compensating action recorded at the same moment they are applied, which is the same transaction shape as Chapter 15’s undo. On failure, apply the compensation and say why. On cancellation, apply the compensation only for steps that did not complete, and say how far it got: Recipe 11 reports “stopped after three of five steps, completed steps were not rolled back”, which is unglamorous and true.</p>
-<p><strong>The unrecoverable case.</strong> If the frame is torn down while a write is in flight, nobody rolls anything back. The server may have applied it. This is why writes that matter should be idempotent and keyed, so the next render can ask what actually happened rather than assuming.</p>
-<h2 id="put-the-agent-on-the-undo-stack">Put the agent on the undo stack</h2>
-<p>The single most important rule in this chapter, and mechanically it belongs to Chapter 15’s transaction stack rather than to anything new here.</p>
-<p>Every agent write goes onto the same undo stack as the user’s own edits, as one transaction, with a label that names the agent. One Cmd+Z restores the human’s words. Recipe 4 does this for accepted rewrites, and the whole safety argument for agent-assisted editing rests on it: a change you can take back in one keystroke is a change you can afford to let a model make.</p>
-<p>An agent whose changes are outside the undo stack is an agent whose changes are permanent, and users respond to permanent changes by not using the feature.</p>
-<h2 id="picking-a-policy-fast">Picking a policy, fast</h2>
-<p>A shortcut for picking one, since this choice is usually made under time pressure and the wrong default is expensive. Four questions, in order, and the first one that gets a yes decides it.</p>
-<p><strong>Is losing this write cheap?</strong> Reject. The tool says no with a reason and the agent can relay it.</p>
-<p><strong>Is the region a field rather than a document?</strong> Merge, if writes touch different fields, and last-writer-wins with a notice if they do not.</p>
-<p><strong>Is a human likely to be editing it right now?</strong> Ask, as defined above. This is the default for anything a person types into, and the cost of getting it wrong is somebody watching their sentence disappear as they write it.</p>
-<p><strong>Is the region computed rather than authored?</strong> Agent-owned. There is no conflict, because the user does not write it; if they disagree they change the inputs.</p>
-<p>The demonstration implements Ask with a 1.5 second idle timer, which is crude and works. A more careful version would key on whether the field has focus rather than on a timer, and would still need the timer for the case where somebody types and then looks away.</p>
+<p><strong>What this is worth.</strong> It is the difference between an application that feels instant and a spinner that lasts as long as the model takes to write a JSON object. Press “Stream the tool input” in the demonstration and watch the title fill in as <code>"Nor"</code> becomes <code>"Nordics"</code>.</p>
+<p><strong>The rules.</strong> Never act on partial arguments. Never fire a request, never write anything, never treat a field as final. Render a skeleton and fill it in. Handle fields appearing and changing between notifications without throwing. The whole thing is optional in both directions: a host may send none, and a view may ignore all of them, and both are conformant.</p>
+<h2 id="how-does-the-result-reach-me">How does the result reach me?</h2>
+<div class="cap" id="tool.result"><div class="cap-head"><code class="cap-id">tool.result</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Take delivery of the result that this view was rendered for.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/tool-result</code><code>ui/notifications/tool-cancelled</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p><code>ui/notifications/tool-result</code> carries the standard <code>CallToolResult</code> for the call that rendered this view, and <code>ui/notifications/tool-cancelled</code> arrives instead, with a reason, if the call never completed. Exactly one of the two arrives, so a view that renders a spinner until the result lands must handle both or it will spin forever on a cancelled call.</p>
+<p><strong>The two channels, again.</strong> <code>content</code> is what the model reads; <code>structuredContent</code> is what your view reads and never reaches the model. Chapter 2 made the case; here is the concrete version from a working server:</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r01-data-explorer/server.js</code></p><pre class="js"><code>return {
+  content: [{ type: &quot;text&quot;, text: summarise(rows) }],
+  structuredContent: { deployments: rows },
+};</code></pre>
+<p><code>summarise(rows)</code> produces “8 deployments. Worst p95 is 1290ms on billing.” The eight full records go in <code>structuredContent</code>. The model gets a sentence it can reason with; the view gets the data it can render; nobody pays for eight rows of JSON in the context window.</p>
+<p><strong>Cancellation is not an error.</strong> Keep the last good state, say what happened, and do not blank the view. The demonstration’s cancellation control leaves the table populated and explains that the call was stopped.</p>
+<div class="cap" id="tool.cancel"><div class="cap-head"><code class="cap-id">tool.cancel</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground core">Core MCP</span></div><p class="cap-summary">Cancel a call the user has stopped caring about.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>notifications/cancelled</code></dd><dt>Ground</dt><dd>Core MCP defines it; the view inherits it.</dd><dt>Recipes</dt><dd><a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p>Cancelling a call the user has stopped caring about is core MCP’s <code>notifications/cancelled</code>, carrying the id of the request being abandoned. The view sends it, the host relays it, and the server stops if it can. Chapter 17 covers what the interface has to do afterwards, which is the harder half: a cancelled call leaves the view holding an optimistic state that never became true, and rolling it back honestly means saying how far the work actually got.</p>
+<figure>
+<img src="figures/diag-streaming.png" alt="Input streams to the view. Output does not." />
+<figcaption aria-hidden="true">Input streams to the view. Output does not.</figcaption>
+</figure>
+<h2 id="can-the-server-stream-results-to-me">Can the server stream results to me?</h2>
+<div class="cap" id="tool.partialOutput"><div class="cap-head"><code class="cap-id">tool.partialOutput</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Update stable elements as results arrive, not after.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>
+<p>No, and this is the most consequential gap in Part III, because it is the one that changes what you can build and not merely how you build it.</p>
+<p>A tool result arrives exactly once, when the tool finishes. There is no <code>ui/notifications/tool-result-partial</code> anywhere in the specification. Input streams to you through <code>ui/notifications/tool-input-partial</code>, and output does not stream back, which is an asymmetry that is hard to justify from the view’s side: the model’s arguments arrive progressively and the server’s answer does not.</p>
+<p>For anything that produces results progressively, a log tail, a long generation, a scan over many objects, the view has three options and none of them is good.</p>
+<p><strong>Poll.</strong> Call an app-visible tool on a timer. Simple, works everywhere, wastes a call whenever nothing changed, and the interval is a guess.</p>
+<p><strong>Push through repeated results.</strong> A host that re-sends <code>ui/notifications/tool-result</code> as new data arrives gives you a stream, which is what Recipe 9’s demonstration does. Nothing forbids it, and nothing requires it, so it is not something you can build on across hosts.</p>
+<p><strong>Chunk into many calls.</strong> Ask for a page at a time. This turns a stream into pagination, which changes the interface and is sometimes fine.</p>
+<p><code>notifications/progress</code> helps a little, because it carries a message string, but it is a progress report and the extension does not list it among the notifications a view receives.</p>
+<p><strong>What a mechanism would look like.</strong> A <code>ui/notifications/tool-result-partial</code> mirroring the input side, with the same “never rely on it, always get a final one” contract. The asymmetry between input and output streaming is hard to justify from the view’s point of view: the model streams its arguments <em>to</em> you and the server cannot stream its results <em>to</em> you.</p>
+<p><strong>Design around it.</strong> Update stable elements in place. Recipe 9 appends rows and never redraws the list, so selection and scroll survive. Whatever your streaming mechanism turns out to be, that discipline is what keeps it usable, and it is the discipline the conformance checks assert.</p>
+<h2 id="four-things-called-a-tool-call">Four things called “a tool call”</h2>
+<p>It is worth putting the whole tool picture in one place, because four different things in this book are all called “a tool call” and they are not the same.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Message</th>
+<th>Needs</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View to server</td>
+<td><code>tools/call</code></td>
+<td><code>hostCapabilities.serverTools</code></td>
+<td>Refresh, save, load</td>
+</tr>
+<tr>
+<td>Model to server</td>
+<td><code>tools/call</code></td>
+<td>Nothing from the view</td>
+<td>The call that rendered you</td>
+</tr>
+<tr>
+<td>Model to view</td>
+<td><code>tools/call</code></td>
+<td><code>appCapabilities.tools</code></td>
+<td>Agent acting on the interface</td>
+</tr>
+<tr>
+<td>View to model</td>
+<td><code>sampling/createMessage</code></td>
+<td><code>hostCapabilities.sampling</code></td>
+<td>Private completions</td>
+</tr>
+</tbody>
+</table></div>
+<p>The second row is the one people forget is different. Your view exists because the model called a server tool; the result arrives as a notification, and the view never sent anything. Everything else in the table is a call your code makes or answers.</p>
+<h2 id="failure-modes-across-the-group">Failure modes across the group</h2>
+<p><strong>Unsupported.</strong> No <code>serverTools</code> means no refresh, no save, no pagination. The recipes all render from their initial tool result under this condition, which is worth testing.</p>
+<p><strong>Denied.</strong> The host may refuse a specific call on policy grounds even with the capability present. Report its message.</p>
+<p><strong>Failed.</strong> <code>isError: true</code> with readable text. Keep the last good state.</p>
+<p><strong>Cancelled.</strong> Either direction. Keep the last good state and say where it stopped.</p>
+<p><strong>Timeout.</strong> Give every call a deadline. A host that never answers is indistinguishable from a slow server, and a spinner with no end is the worst of the five failure modes because it never resolves into anything the user can act on.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li>An agent write to a user-owned region returns <code>isError: true</code> with a reason.</li>
-<li>An agent write to a shared region while the user is typing is held rather than applied.</li>
-<li>A held write is offered to the user rather than dropped.</li>
-<li>The tool result distinguishes held, offered and applied.</li>
-<li>Every applied agent write is one undo transaction.</li>
-<li>A failed optimistic update is rolled back and the reason is shown.</li>
-<li>A cancelled multi-step operation reports how far it got.</li>
+<li><code>tools/call</code> from the view reaches the server and its result returns.</li>
+<li>A tool with <code>visibility: ["app"]</code> is absent from the agent’s tool list.</li>
+<li>A cross-server call for an app-only tool is refused.</li>
+<li><code>ui/notifications/tool-input</code> arrives exactly once, after any partials.</li>
+<li>Partial arguments are recoverable JSON and never a fragment.</li>
+<li><code>ui/notifications/tool-result</code> carries the standard result shape.</li>
+<li>With <code>serverTools</code> absent, the view sends no <code>tools/call</code>.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>Three labels, four policies, and a decision made before the code rather than after the bug report. Keep the shared set small, hold agent writes while a human is typing, tell the agent what actually happened, and put everything the agent does on the undo stack. That is the entire chapter, and every part of it is cheaper to build than the merge algorithm you were considering.</p>
+<p><code>tool.invoke</code> is the workhorse of Part III and the one most applications under-use, because it is easy to think of every server round trip as a conversation. It is not. A refresh button that calls an app-only tool is cheaper, faster, more reliable and more testable than anything routed through a model, and it is the mechanism that lets a view be an application rather than a rendering of one turn.</p>
 
-<div class="pager"><a href="ch19.html"><span class="dir">Previous</span>19. Tool Invocation and Streaming</a><a href="ch21.html" style="text-align:right"><span class="dir">Next</span>21. Approval, Elicitation and the Context Boundary</a></div>
+<div class="pager"><a href="ch19.html"><span class="dir">Previous</span>19. Agent to UI</a><a href="ch21.html" style="text-align:right"><span class="dir">Next</span>21. State Ownership and Concurrency</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

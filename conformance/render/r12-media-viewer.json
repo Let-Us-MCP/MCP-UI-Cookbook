@@ -5,7 +5,8 @@
       "expect": [ { "selector": ".strip button", "count": 3 },
                   { "selector": "#clock", "text": "0:00 / 1:36" },
                   { "selector": "#frame", "attr": { "name": "aria-label", "value": "Assembly line, wide" } },
-                  { "selector": "#caption", "hidden": true } ] },
+                  { "selector": "#caption", "hidden": true },
+                  { "selector": "#seek", "attr": { "name": "aria-valuetext", "value": "0:00 of 1:36" } } ] },
     { "label": "switching clip", "click": ".strip button:nth-child(2)",
       "expect": [ { "selector": "#clock", "text": "0:00 / 1:02" },
                   { "selector": "[aria-current=\"true\"]", "count": 1 } ] } ] }

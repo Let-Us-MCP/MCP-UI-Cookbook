@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>5. Entries, Recipes, and the Discipline of Degradation &middot; The MCP UI Cookbook</title>
-<meta name="description" content="The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.">
-<meta property="og:title" content="5. Entries, Recipes, and the Discipline of Degradation">
-<meta property="og:description" content="The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.">
+<title>5. The Sandbox and What It Costs You &middot; The MCP UI Cookbook</title>
+<meta name="description" content="An opaque origin, a content security policy your server declares and the host enforces, four permissions, and the surprising consequences of all of it.">
+<meta property="og:title" content="5. The Sandbox and What It Costs You">
+<meta property="og:description" content="An opaque origin, a content security policy your server declares and the host enforces, four permissions, and the surprising consequences of all of it.">
 <link rel="stylesheet" href="book.css">
 
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html" class="current">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html" class="current">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,104 +74,83 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 5</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>Two shapes, repeated throughout. Parts II and III are capability entries and Part V is recipes. Both templates are set out below so you can hold the rest of the book to them and see where it falls short. Where an entry says nothing about a section, the omission is deliberate: <code>picker.color</code> has no interesting lifecycle, and inventing a paragraph about one would be worse than the silence.</p>
-<h2 id="what-is-in-a-capability-entry">What is in a capability entry?</h2>
-<p>Each entry answers eleven questions in the same order, so that a reader who has read one entry knows where to look in all eighty-five.</p>
-<p><strong>Capability.</strong> Identifier, level, tag, and ground. Generated from the registry, so the prose cannot contradict it.</p>
-<p><strong>Motivation.</strong> Why an application needs it. Where the answer is “it does not, but users expect it”, the entry says so: <code>dialog.alert</code> is one.</p>
-<p><strong>User experience.</strong> What the person sees and does, from the outside. For <code>file.export</code>: a button appears, they press it, the host asks where to save.</p>
-<p><strong>Application behaviour.</strong> What your code does, including at startup. For <code>file.export</code>: check <code>hostCapabilities.downloadFile</code> in the initialize result, and render the button only if it is there.</p>
-<p><strong>Host behaviour.</strong> What the host owes you. For <code>file.export</code>: confirm with the user, derive the filename from the last segment of <code>resource.uri</code>, sanitise it against path traversal. Most documents omit this half, and it is the half that decides whether you work in an untested host.</p>
-<p><strong>Lifecycle.</strong> Initialisation, execution, cancellation, completion, destruction. Most entries have nothing to say. <code>lifecycle.beforeClose</code> and <code>tool.invoke</code> have all of it.</p>
-<p><strong>Security.</strong> Which boundary it crosses and what the host may do about it. For <code>file.export</code>: bytes leave the sandbox, so the host may refuse on size or policy.</p>
-<p><strong>Accessibility.</strong> Keyboard, focus, name and role, scaling, motion. Not a section at the end of the book. A section in every entry, because that is the only way it survives contact with a deadline.</p>
-<p><strong>Failure modes.</strong> Unsupported, denied, cancelled, timeout, failed. Five of them, always, in that order.</p>
-<p><strong>Minimal example.</strong> The smallest running demonstration. <code>file.export</code> is in <code>lab-clipboard</code>, three buttons and about 20 lines.</p>
-<p><strong>Conformance tests.</strong> The assertions that decide whether an implementation has it. For <code>file.export</code>: <code>ui/download-file</code> is sent when <code>downloadFile</code> is present, and never sent when it is absent.</p>
-<p>Not every entry uses all eleven. <code>picker.color</code> has nothing to say about lifecycle. The template is a checklist for the author, not a quota, and silence means the content was one sentence long.</p>
-<h2 id="the-five-failure-modes">The five failure modes</h2>
-<p>This is the part to internalise, because it is where the difference between a demonstration and an application lives. A demonstration handles the path where everything works. An application handles five, and four of them are more likely than the first on any given day in a host you have not tested.</p>
-<p><strong>Unsupported.</strong> <code>hostCapabilities.downloadFile</code> was absent at <code>ui/initialize</code>. Do not render the export button at all. Not disabled with a tooltip, not showing an error when pressed: absent.</p>
-<p><strong>Denied.</strong> <code>ui/open-link</code> came back with a JSON-RPC error. Show the host’s message next to the control and leave the control enabled: “The host declined to open that link” says what happened and what to try. “Error” says neither.</p>
-<p><strong>Cancelled.</strong> Someone sent <code>notifications/cancelled</code>, or the host sent <code>ui/notifications/tool-cancelled</code>. Report where it stopped. Recipe 11 writes “Stopped after 3 of 5 steps. Completed steps were not rolled back.” Resetting the bar to zero claims nothing happened, and three steps happened.</p>
-<p><strong>Timeout.</strong> No answer at all. Give every request a deadline, 8 seconds is a reasonable default, and treat expiry as a failure with a retry. Skip this and you ship a spinner that runs until the user reloads the host.</p>
-<p><strong>Failed.</strong> The tool ran and returned <code>isError: true</code>. Its <code>content</code> carries three facts: what failed, what state that leaves, and what to do. “The index volume is full, so nothing was written. Free space and retry.” is 14 words carrying all three.</p>
+<p class="eyebrow">Chapter 5</p><h1>The Sandbox and What It Costs You</h1><p class="summary">An opaque origin, a content security policy your server declares and the host enforces, four permissions, and the surprising consequences of all of it.</p><p>Two sentences. Views run in sandboxed iframes. All host communication is auditable JSON-RPC.</p>
+<p>Everything else follows, including a set of consequences that look like bugs the first time you meet them. They constrain every capability in Parts II and III, and half the gaps in this book are the sandbox doing its job.</p>
+<h2 id="what-is-this-defending-against">What is this defending against?</h2>
+<p>The host is running code that arrived over the network from a server the user connected to, possibly on somebody else’s recommendation, and rendering it next to a conversation that may contain the user’s private data and next to a model that can take actions. The specification names five attacks: a malicious server delivering harmful HTML, a compromised view attempting to escape the sandbox, a view invoking tools it was not authorised to invoke, a view exfiltrating host data, and a view phishing the user inside a frame that looks like part of the host.</p>
+<p>Note the fifth. The other four are technical and have technical answers. The fifth is a design problem, and the specification’s answer is that hosts should clearly indicate sandboxed UI boundaries. That is why <code>prefersBorder</code> exists on the resource metadata: a view can ask to be visibly separate from the host, and a well behaved view asks for it.</p>
+<h2 id="what-does-the-opaque-origin-cost-me">What does the opaque origin cost me?</h2>
+<p>The sandbox attribute grants <code>allow-scripts</code> and nothing that would let the frame reach the host. In particular it does not grant <code>allow-same-origin</code>, so the view’s document has an opaque origin. The consequences are worth stating plainly, because they explain a dozen entries later in the book:</p>
+<p>That is one attribute, and it is the whole security boundary. Here it is in the emulator that renders every demonstration on this site:</p>
+<p class="provenance extracted">Extracted from from <code>emulator/demo.js</code></p><pre class="js"><code>    this.frame = el(&quot;iframe&quot;, {
+      ...(spec.tool ? {} : { src: `${this.base}${this.id}/index.html` }),
+      sandbox: &quot;allow-scripts&quot;,
+      title: spec.title ?? this.id,
+      loading: &quot;lazy&quot;,
+    });</code></pre>
+<p><code>sandbox="allow-scripts"</code> without <code>allow-same-origin</code> is the combination that matters. Granting both together would restore the frame’s ability to reach into the embedding document and remove its own sandbox attribute, which is why the two are never granted together and why the specification names the pair explicitly.</p>
+<p><strong>No storage.</strong> <code>localStorage</code>, <code>sessionStorage</code>, IndexedDB and cookies either throw or are useless. This is why <code>state.save</code> and <code>state.restore</code> are gaps and why the Document Editor keeps its document on the server.</p>
+<p><strong>No <code>postMessage</code> targeting.</strong> There is no origin to name, so both sides use <code>"*"</code> and identify each other by object identity: the host compares <code>event.source</code> against its own iframe’s <code>contentWindow</code>. If you write a host, that comparison is your authentication.</p>
+<p><strong>No modals.</strong> <code>allow-modals</code> is not granted, so <code>window.alert</code>, <code>confirm</code> and <code>prompt</code> do nothing. Chapter 9 has a button that proves it. Everything in the dialog family is yours to build.</p>
+<p><strong>No downloads.</strong> <code>allow-downloads</code> is not granted, so an anchor with a <code>download</code> attribute is inert. This is precisely why <code>ui/download-file</code> exists.</p>
+<p><strong>No top-level navigation.</strong> The view cannot navigate the host away, which is why <code>ui/open-link</code> exists.</p>
+<p><strong>Module scripts need care.</strong> A module fetch from an opaque origin is a CORS request. If you are loading your view’s script from a static file host that does not send permissive headers, a classic script works where a module does not. The bridge in this repository is a classic script for that reason.</p>
+<p>None of this is hostile. Every restriction maps to one of the five attacks, and the two escape hatches that exist, <code>ui/open-link</code> and <code>ui/download-file</code>, are exactly the two where a human decision can be inserted.</p>
 <figure>
-<img src="figures/diag-failures.png" alt="The five failure modes, and the moment each one is discoverable" />
-<figcaption aria-hidden="true">The five failure modes, and the moment each one is discoverable</figcaption>
+<img src="figures/diag-sandbox.png" alt="What the sandbox takes away, and the two doors it leaves open" />
+<figcaption aria-hidden="true">What the sandbox takes away, and the two doors it leaves open</figcaption>
 </figure>
-<p>They become discoverable at different moments, which is why naming all five matters. Unsupported is known at <code>ui/initialize</code>. Denied and failed arrive with the response. Cancelled arrives at any time, from either side. Timeout you decide yourself.</p>
-<p>An application that handles only “failed” and calls it error handling has covered one case in five, and not the most common one. Unsupported happens on every host that is a level below you, which over a product’s life is most of them.</p>
-<h2 id="what-is-in-a-recipe-entry">What is in a recipe entry?</h2>
-<p>Part V uses a different template, because a recipe is an argument rather than a reference.</p>
-<p><strong>Goal.</strong> The conventional application being reproduced, in one line. Recipe 5: “editable grid computation”.</p>
-<p><strong>Capability delta.</strong> The primitives this recipe exercises that no earlier one does, generated from the registry. Recipe 1 claims 16; Recipe 13 claims 4. An empty delta means the recipe gets merged or deleted.</p>
-<p><strong>Surface.</strong> What it looks like and how much room it needs. Recipe 1 is one column at any width and asks for <code>maxHeight: 620</code>.</p>
-<p><strong>Components.</strong> Which Part IV components it composes, all from <code>apps/lib/view.css</code>.</p>
-<p><strong>Atomic capabilities.</strong> The full list, generated from the registry.</p>
-<p><strong>Local and agentic interactions.</strong> The Chapter 3 split, as a table, before any code. Recipe 1 lists 6 local and 4 crossings.</p>
-<p><strong>Host dependencies.</strong> What it needs by level, so you can tell whether it runs in your host. Every recipe here renders at level 1 with reduced function.</p>
-<p><strong>Failure cases.</strong> What happens when each dependency is absent. Recipe 6 sends its export to the clipboard when <code>downloadFile</code> is missing, and says so in a toast.</p>
-<p><strong>Accessibility.</strong> The keyboard-only path through the application. Recipes 6 and 7 say where theirs is incomplete.</p>
-<p><strong>Conformance checks.</strong> The observable behaviours, phrased as the harness asserts them. <code>make render</code> runs 88 of these against real servers.</p>
-<h2 id="why-every-listing-has-a-tag">Why every listing has a tag</h2>
-<p>One more convention, visible on every code block in this book. A tag above each listing says where the code came from, because a reader who cannot tell which listings are load-bearing has to treat all of them as suspect:</p>
-<p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
-<p><em>Captured</em> means real output from a real run, quoted verbatim, including the parts that are inconvenient. Three listings in this book are captured, and one of them is a test run reporting its own failures.</p>
-<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 22 of the 55 listings.</p>
-<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 30 extracted listings against their files line by line.</p>
-<h2 id="a-worked-failure-table">A worked failure table</h2>
-<p>Here is the same capability, <code>file.export</code>, written out as the template asks, so that the shape is concrete before Part II starts using it eighty-five times.</p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>When you learn</th>
-<th>What the interface does</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Unsupported</td>
-<td>Initialisation</td>
-<td>No export control is rendered. Copy is offered instead.</td>
-</tr>
-<tr>
-<td>Denied</td>
-<td>The click</td>
-<td>“The host declined to save that file.” The control stays.</td>
-</tr>
-<tr>
-<td>Cancelled</td>
-<td>The click</td>
-<td>Nothing. The user changed their mind and the interface is unchanged.</td>
-</tr>
-<tr>
-<td>Timeout</td>
-<td>Your deadline</td>
-<td>“No answer from the host.” The control returns to idle.</td>
-</tr>
-<tr>
-<td>Failed</td>
-<td>The click</td>
-<td>The host’s message, verbatim, next to the button.</td>
-</tr>
-</tbody>
-</table></div>
-<p>Five rows, and notice that three of them leave the interface in a different state and two leave it identical. Cancelled and unsupported both produce no error and no message, for opposite reasons: one because nothing was attempted, the other because nothing was ever offered.</p>
-<p>The row people skip is timeout, and skipping it is what produces the single most common defect in embedded applications: a spinner with no end, in a frame whose host stopped listening, that only a reload will clear.</p>
-<h2 id="where-the-templates-came-from">Where the templates came from</h2>
-<p>Both are adapted from how specification-anchored test suites describe web platform features, and the borrowing is deliberate. A capability entry that names its host behaviour and its failure modes can be turned into assertions mechanically, which is what Appendix C does. An entry that describes only the happy path cannot, which is why so much interface documentation is unfalsifiable and therefore ages without anybody noticing.</p>
+<h2 id="how-do-i-declare-a-csp">How do I declare a CSP?</h2>
+<p>Your server declares which origins the view needs. The host constructs the CSP and enforces it. The rule is one way: a host may restrict further, and must not allow anything undeclared.</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="json"><code>&quot;_meta&quot;: { &quot;ui&quot;: {
+  &quot;csp&quot;: {
+    &quot;connectDomains&quot;: [&quot;https://api.example.com&quot;],
+    &quot;resourceDomains&quot;: [&quot;https://cdn.example.com&quot;],
+    &quot;frameDomains&quot;: [],
+    &quot;baseUriDomains&quot;: []
+  },
+  &quot;permissions&quot;: { &quot;clipboardWrite&quot;: {} },
+  &quot;prefersBorder&quot;: true
+} }</code></pre>
+<p><code>connectDomains</code> becomes <code>connect-src</code> and governs fetch, XHR and WebSocket. <code>resourceDomains</code> becomes the source list for scripts, styles, images, fonts and media. <code>frameDomains</code> becomes <code>frame-src</code>, and omitting it means <code>frame-src 'none'</code>. <code>baseUriDomains</code> becomes <code>base-uri</code>, defaulting to <code>'self'</code>.</p>
+<p>Omit the whole block and you get the restrictive default: <code>default-src 'none'</code>, self and inline for scripts and styles, self and data URIs for images and media, and no network at all. Every view in this book declares an empty CSP, because none of them load anything, and an empty declaration is a stronger statement than a missing one. A reviewer reading <code>csp: {}</code> knows the author thought about it.</p>
+<p><strong>What the demonstrations here do and do not enforce.</strong> The host emulator reads your <code>_meta.ui</code> and reports it back in <code>hostCapabilities.sandbox</code>, so a view can see what was granted, which is not always what was asked for. It honours <code>prefersBorder</code>, which is why every recipe on this site is drawn with a visible boundary. It does not enforce the CSP, and cannot: the demo renders the returned HTML with <code>srcdoc</code>, which has no origin, so <code>'self'</code> would match nothing and the view’s own stylesheet would be blocked along with everything else. A real host serves the resource from its sandbox proxy’s origin, where <code>'self'</code> means something and the policy is enforceable. Treat the CSP sections of these pages as documentation.</p>
+<p>Two placement details matter. The metadata may appear on the <code>resources/list</code> entry, on the <code>resources/read</code> content item, or both, and the content item wins. And the metadata belongs to the <strong>resource</strong>, not to the tool. A CSP block attached to a tool descriptor is silently ignored, which means the view renders with the restrictive default and the developer spends an afternoon wondering why <code>fetch</code> is blocked.</p>
+<h2 id="which-permissions-can-i-ask-for">Which permissions can I ask for?</h2>
+<p>Four, and only four, in the current specification: <code>camera</code>, <code>microphone</code>, <code>geolocation</code>, and <code>clipboardWrite</code>. Your server requests them in <code>_meta.ui.permissions</code>; the host may honour them by setting the frame’s <code>allow</code> attribute; and <code>hostCapabilities.sandbox.permissions</code> reports what was actually granted.</p>
+<p>Notice what is not on that list. No fullscreen, which is why <code>media.fullscreen</code> goes through <code>ui/request-display-mode</code> instead of the Fullscreen API. No web share, which is why <code>system.share</code> is a gap. No clipboard read, which is why <code>clipboard.read</code> is a gap. No print. The permission set is deliberately small, and the specification’s advice is the right one: never assume a permission was granted, feature-detect and fall back.</p>
+<h2 id="least-privilege-concretely">Least privilege, concretely</h2>
+<p>An application requests what it currently needs, not what it might need. This is worth taking seriously for a reason beyond principle: <code>_meta.ui</code> is the part of your server a host reviewer actually reads. A view that asks for camera access because a future feature might use it is a view that gets declined by a cautious host today.</p>
+<p>Concretely: declare no CSP if you load nothing. Request no permissions if you need none. Prefer a <code>resources/read</code> through the host over a <code>fetch</code> to your own API, because the read is auditable and the fetch is a hole you asked to have opened. Use <code>visibility: ["app"]</code> on tools that exist to serve the view, so the model’s tool list stays short and a refresh button is not something the model can decide to press.</p>
+<h2 id="your-own-tools-are-untrusted-too">Your own tools are untrusted too</h2>
+<p>When a view registers tools, the trust direction reverses. The agent can now call code inside a sandboxed frame that a server delivered. The specification is direct about the consequences: descriptions may not fully capture side effects, names may collide with server tools, and results should be validated against declared schemas. It recommends per-app or per-server approval policies, clear attribution in the host’s UI so a user can see which app is calling, resource limits, and an audit trail.</p>
+<p>For an application author the practical rule is smaller. Annotate honestly. <code>readOnlyHint: true</code> on a tool that mutates is the one lie in this system that a host will believe, and it is the lie that gets automatic approval. Chapter 19’s lab registers four tools and marks exactly the two that change something.</p>
+<h2 id="six-questions-before-you-ship">Six questions before you ship</h2>
+<p>Six questions, in the order a cautious host reviewer would ask them. They take ten minutes and they are the difference between a server that gets approved and one that gets a request for changes.</p>
+<p>Predeclaration is what makes this review possible at all. Your template arrives at connection time, well before any tool result, so a cautious host can read it, hash it, and decide about it before a single line of it executes. Everything below is what that host is reading.</p>
+<p><strong>Does the CSP declare anything?</strong> If your view loads nothing, say so with an empty block. <code>csp: {}</code> reads as considered; a missing field reads as unexamined, even though they produce the same policy.</p>
+<p><strong>Is every declared origin actually used?</strong> A <code>resourceDomains</code> entry left over from a font you removed is a hole with no purpose, and it is the kind of thing a reviewer finds and you do not.</p>
+<p><strong>Are the permissions the minimum?</strong> Four exist. Most views need none. A view that requests <code>camera</code> for a feature that is not built yet gets declined today for a benefit it gets later.</p>
+<p><strong>Is <code>_meta.ui</code> on the resource?</strong> Not on the tool. A policy on a tool descriptor is ignored, and the view renders under the restrictive default with nobody noticing until a <code>fetch</code> fails.</p>
+<p><strong>Which tools can the model call?</strong> Anything not marked <code>visibility: ["app"]</code> is in the agent’s tool list and can be invoked by a model that misreads a description. Saves, deletes and anything with a side effect should be app-only unless you specifically want the model to be able to trigger them.</p>
+<p><strong>Are the annotations true?</strong> <code>readOnlyHint: true</code> is the one claim a host acts on automatically. Every tool you mark read-only should be one you would be comfortable having called without asking.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>The frame carries <code>allow-scripts</code> and not <code>allow-same-origin</code>.</li>
+<li>The CSP is constructed from <code>_meta.ui.csp</code>, and undeclared origins are blocked.</li>
+<li>With no <code>_meta.ui.csp</code>, the restrictive default applies.</li>
+<li><code>_meta.ui</code> on the <code>resources/read</code> content item takes precedence over the <code>resources/list</code> entry.</li>
+<li>Permissions granted are reported in <code>hostCapabilities.sandbox.permissions</code>.</li>
+<li><code>prefersBorder</code> is honoured, or the host’s own boundary is visible anyway.</li>
+<li>Messages from the frame are matched by <code>event.source</code>, because there is no origin to match.</li>
+</ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>If you take one thing from Part I into the rest of the book, take the failure section. Every capability entry from here on has one, and in almost every case it is longer than the section describing the happy path. That ratio is the point. The happy path is a few lines of code you would have written anyway. The rest is what makes an application survive a host that says no.</p>
-<h2 id="reading-an-entry-critically">Reading an entry critically</h2>
-<p>Not every entry deserves equal trust. Two habits:</p>
-<p><strong>Check the ground badge against your own experience.</strong> A <em>platform</em> entry is a claim about browsers, and browsers differ. A <em>wire</em> entry is a claim about a specification that is still moving, and eight of them carry a draft badge. A <em>gap</em> entry is the strongest claim in the book, because it asserts that something does not exist, and absence is the hardest thing to verify.</p>
-<p><strong>Ask what the failure section leaves out.</strong> The template asks for five modes and most entries have something to say about three. Where an entry is silent on cancelled or timeout, it is usually because the capability is synchronous and local, and that reasoning should be visible rather than assumed. Where it is silent and the capability is neither, the entry is thin and you should treat it as a starting point rather than as a specification.</p>
+<p>The sandbox is why this book has sixteen gaps, and most of them are gaps on purpose. Before proposing a mechanism for one, it is worth asking which of the five attacks the mechanism reopens. Some of them have good answers. <code>clipboard.read</code> behind an explicit user gesture and a host-mediated permission is a reasonable proposal. Others do not: a view that could read the conversation would make the fifth attack considerably easier, and no amount of convenience is worth that.</p>
 
-<div class="pager"><a href="ch04.html"><span class="dir">Previous</span>4. The Sandbox and What It Costs You</a><a href="ch06.html" style="text-align:right"><span class="dir">Next</span>6. Surfaces and Geometry</a></div>
+<div class="pager"><a href="ch04.html"><span class="dir">Previous</span>4. The Local-First Principle</a><a href="ch06.html" style="text-align:right"><span class="dir">Next</span>6. Entries, Recipes, and the Discipline of Degradation</a></div>
 </main>
 </div>
 
+<script src="copy.js"></script>
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>7. Focus and Scroll &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Inside the frame, focus and scrolling work exactly as they always have. Across the frame boundary, neither of them works at all, and the protocol has nothing to say about it.">
-<meta property="og:title" content="7. Focus and Scroll">
-<meta property="og:description" content="Inside the frame, focus and scrolling work exactly as they always have. Across the frame boundary, neither of them works at all, and the protocol has nothing to say about it.">
+<title>7. Surfaces and Geometry &middot; The MCP UI Cookbook</title>
+<meta name="description" content="How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.">
+<meta property="og:title" content="7. Surfaces and Geometry">
+<meta property="og:description" content="How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html" class="current">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html" class="current">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,57 +74,108 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 7</p><h1>Focus and Scroll</h1><p class="summary">Inside the frame, focus and scrolling work exactly as they always have. Across the frame boundary, neither of them works at all, and the protocol has nothing to say about it.</p><p>Focus works normally inside your frame and does not cross its boundary in either direction. There is no message that makes it, in either the extension or core MCP, so a host cannot direct focus into your search field and you cannot hand it back to the composer when a form is finished. Two of the four capabilities here are plain web platform behaviour that needs nothing from anybody; the other two are gaps, and together they are the shortest illustration of exactly where this extension currently stops.</p>
-<div class="demo" data-demo="lab-focus" id="lab-focus"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="how-does-focus-work-inside-my-view">How does focus work inside my view?</h2>
-<div class="cap" id="surface.focus"><div class="cap-head"><code class="cap-id">surface.focus</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Move, trap, and restore focus inside the view.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-focus">lab-focus</a></dd></dl></div>
-<p>Exactly as it always has. Elements are focusable, <code>tabindex</code> orders them, <code>:focus-visible</code> styles them, and <code>&lt;dialog&gt;</code> with <code>showModal()</code> traps focus and restores it on close. Nothing about the sandbox interferes, because focus is a property of your document and your document is entirely yours.</p>
-<p>What changes is the consequences of getting it wrong. In a page, a user stuck in a focus trap can reach the address bar or the browser chrome. In a view they cannot: your frame is the whole world their keyboard can see, and the host’s own controls are on the other side of a boundary focus does not cross. Four things embedded views get wrong more often than pages do:</p>
-<p><em>Manage a roving tabindex in composite widgets.</em> A list of fifty rows should be one tab stop, not fifty. The focused row carries <code>tabindex="0"</code>, every other row carries <code>-1</code>, and arrow keys move the zero. The selection lab in Chapter 9 does this in about ten lines. Without it, a keyboard user tabs through your entire dataset to reach the button after it.</p>
-<p><em>Restore focus after overlays.</em> Record what had focus before you open something, put it back when you close. The <code>&lt;dialog&gt;</code> element does this for you when you use <code>showModal()</code> and <code>close()</code>; anything hand-rolled does not.</p>
-<p><em>Never trap focus outside a modal.</em> A trap that survives its dialog is a keyboard user stuck inside your frame with no way out, and unlike a page they cannot press the address bar to escape.</p>
-<p><em>Do not steal focus on load.</em> Your view appears in the middle of somebody’s conversation, often while they are typing. Calling <code>focus()</code> during initialisation moves the caret out of the message box, and from the user’s point of view the application they did not ask for has just eaten a sentence.</p>
-<p><strong>Failure modes.</strong> Unsupported does not apply; the platform is always there. The realistic failures are a focus ring that the host’s stylesheet does not provide, which is why the view stylesheet in this repository sets <code>:focus-visible</code> explicitly rather than trusting an inherited default, and a focus ring clipped by an <code>overflow: hidden</code> container, which is a real accessibility failure that looks like a cosmetic one.</p>
-<h2 id="can-the-host-focus-my-search-field">Can the host focus my search field?</h2>
-<div class="cap" id="surface.focusHandoff"><div class="cap-head"><code class="cap-id">surface.focusHandoff</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Hand focus across the host boundary in either direction.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-focus">lab-focus</a></dd></dl></div>
-<p>No. There is no message for focus in either direction, and the workarounds are worse than they look.</p>
-<p>A host can call <code>focus()</code> on the iframe element, which gives the frame focus without choosing anything inside it and without telling your code that it happened. From your side the first thing you know is a <code>focusin</code> event on whatever the browser picked, usually the first tab stop, which is rarely the search field the user asked for. Press “Host tries to focus the view” in the demonstration and watch the transcript stay completely empty: nothing crossed the boundary, because there is nothing to cross it with.</p>
-<p>The host cannot say “the user just asked to interact with your view, please focus your search field”. It can call <code>focus()</code> on the iframe element, which gives the frame focus without telling the document inside it anything useful, and without choosing what inside it should be focused. Press “Host tries to focus the view” in the demonstration and watch the transcript stay empty.</p>
-<p>The view cannot say “I am done, please return focus to the composer”. After a user finishes with an embedded form, focus stays wherever the form left it, and the next keystroke goes to the frame rather than to the conversation.</p>
-<p><strong>Why it matters.</strong> Voice control and switch access both depend on being able to move focus deliberately across the whole surface a user perceives. From the user’s point of view the host window is one thing; the frame boundary is an implementation detail they did not agree to.</p>
-<p><strong>Workarounds.</strong> Two, both partial. A view can register a tool that focuses a named element, which gives an agent a way to do it even though the host has no direct route. And a view can avoid needing the handoff at all by not being the last step: finish the interaction with an explicit “Done” that sends <code>ui/notifications/request-teardown</code>, so the host removes the frame and focus returns to the host by ordinary means.</p>
-<p><strong>What a mechanism would look like.</strong> A <code>ui/request-focus</code> request from the view, with the host free to decline, and a <code>ui/notifications/focus-granted</code> notification in the other direction carrying an optional target selector. Both are cheap. Neither exists. The gap is filed in Appendix B.</p>
-<h2 id="how-do-i-scroll-to-something">How do I scroll to something?</h2>
-<div class="cap" id="surface.scroll"><div class="cap-head"><code class="cap-id">surface.scroll</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Scroll to a position or bring an element into view inside the frame.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-focus">lab-focus</a></dd></dl></div>
-<p>Also ordinary platform behaviour: <code>scrollIntoView</code>, <code>scrollTo</code>, sticky headers, <code>scroll-margin</code> so a sticky header does not cover the thing you just scrolled to.</p>
-<p>The one embedded-specific rule is about scroll containers. A view that lets its own body scroll competes with the host’s conversation scroller, and on a trackpad the result is scroll chaining that feels broken in both directions. Put the scroll on an inner container with a bounded height, and let the frame itself be exactly as tall as its content. This is also what makes <code>surface.resize</code> behave: a body that never scrolls has an honest <code>scrollHeight</code>.</p>
-<p><strong>Restoring position.</strong> Views are re-rendered. If your view has a long list, record the scroll offset alongside whatever state you persist, and restore it when the data comes back. Since <code>state.save</code> is a gap (Chapter 15), that usually means sending it to a server tool, which is heavier than it should be for a number.</p>
-<h2 id="how-do-i-scroll-the-conversation-to-my-view">How do I scroll the conversation to my view?</h2>
-<div class="cap" id="surface.reveal"><div class="cap-head"><code class="cap-id">surface.reveal</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Ask the host to scroll the conversation until this view is visible.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-focus">lab-focus</a></dd></dl></div>
-<p>You cannot. <code>scrollIntoView</code> moves your own scroll container; the conversation that contains your frame belongs to the host and is not reachable from inside an opaque origin.</p>
-<p>This is the gap users actually notice, and it gets worse the longer a view lives. Your frame was rendered twenty messages ago and has scrolled well out of sight. Something happens inside it that needs a person: a tool call fails, a long job finishes, an approval lands in the queue. The view knows. The user is reading something else and will not find out until they scroll back, and nothing in the interface gives them a reason to.</p>
-<p><strong>Workarounds.</strong> If the host supports <code>updateModelContext</code> or <code>message</code>, the view can make the conversation itself move by putting something in it, but that is a heavy instrument for “please look over here” and it costs a turn. The realistic mitigation is to design for the view being invisible: assume nobody sees a change until they next look, make state legible on arrival rather than announcing it at the moment it happens, and use <code>notify.banner</code> for anything that must survive being missed.</p>
-<p><strong>What a mechanism would look like.</strong> A <code>ui/request-reveal</code> notification, with the host free to ignore it or to badge the collapsed view instead of scrolling to it. Chapter 8’s <code>notify.attention</code> is the same gap wearing a different hat, and a single mechanism would probably serve both.</p>
-<h2 id="a-worked-example-the-escape-hatch">A worked example: the escape hatch</h2>
-<p>Consider a view with a search field, inside a host with its own message composer. The user is typing in the composer, notices the view, clicks into the search field, types a query, and presses Enter. So far so ordinary.</p>
-<p>Now they want to go back to the conversation. What are their options? Clicking works. Tabbing forward eventually leaves the frame, if the view has not trapped focus and if the remaining tab stops are few. Pressing Escape does nothing, because Escape is not defined as “leave this frame” anywhere, and the view has no way to hand focus back even if it wanted to.</p>
-<p>For a mouse user this is invisible. For somebody driving by keyboard it is the difference between an application and an obstacle, and the reason the fix is not simply “add fewer tab stops” is that the view legitimately has controls.</p>
-<p>What the recipes in Part V do about it is bound the number of tab stops with roving tabindex, never trap outside a modal, and end multi-step interactions with an explicit action that removes the view. That is a workaround for a missing message, and it is the best available answer today.</p>
+<p class="eyebrow">Chapter 7</p><h1>Surfaces and Geometry</h1><p class="summary">How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.</p><p>You do not own the rectangle you render into. The host decides how wide it is, whether it may grow, and when it stops existing, and it makes those decisions without ever seeing your content. Four capabilities cover that negotiation, and between them they account for most of what looks like a broken embedded application: a scrollbar inside a scrollbar, a view six pixels tall, a fullscreen button that does nothing.</p>
+<div class="demo" data-demo="lab-surface" id="lab-surface"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="how-do-i-make-the-frame-fit-my-content">How do I make the frame fit my content?</h2>
+<p>Send <code>ui/notifications/size-changed</code> whenever your content resizes. This is the only channel that exists for it. The host has rendered your HTML into an iframe it cannot read, so it knows the frame’s dimensions and nothing about what is inside; you know your content’s dimensions and nothing about the frame. Neither side can measure what the other has, and one notification closes that gap.</p>
+<p class="provenance extracted">Extracted from from <code>emulator/app-bridge.js</code></p><pre class="js"><code>autoResize(element = document.documentElement) {
+  let last = { width: 0, height: 0 };
+  const report = () =&gt; {
+    const width = Math.ceil(element.scrollWidth);
+    const height = Math.ceil(element.scrollHeight);
+    if (width === last.width &amp;&amp; height === last.height) return;
+    last = { width, height };
+    this.notify(&quot;ui/notifications/size-changed&quot;, { width, height });
+  };
+  new ResizeObserver(report).observe(element);
+  report();
+  return this;
+}</code></pre>
+<div class="cap" id="surface.resize"><div class="cap-head"><code class="cap-id">surface.resize</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Report content size so the host can size the frame around it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/size-changed</code><code>containerDimensions</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
+<p>The <code>last</code> comparison is the part that matters. A <code>ResizeObserver</code> fires during layout, and layout runs more often than content actually changes: a font loading, a scrollbar appearing, an image decoding, all of them produce a callback with dimensions identical to the previous one. Sending each of those turns a resize into a flood, and because the host resizes the frame on each message, the flood feeds itself. Comparing against the last reported size costs two integers and removes the whole class of problem. The SDK does the same thing when <code>autoResize</code> is left on, which it is by default, so unless you have a reason to hand-roll this you should not.</p>
+<p>What the host owes you in return depends on which mode the dimension is in. If it is flexible, the host must listen and apply your size within a frame or two, because your content is the authority. If it is fixed, the host is entitled to ignore you completely, and your content has to fit or scroll inside itself.</p>
+<h2 id="how-much-room-do-i-actually-have">How much room do I actually have?</h2>
+<p>Read <code>hostContext.containerDimensions</code> from the initialize result. Each axis is independently in one of three modes, and the field that is present tells you which:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field present</th>
+<th>Mode</th>
+<th>What you do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>height</code> or <code>width</code></td>
+<td>Fixed</td>
+<td>Fill it. Scroll inside.</td>
+</tr>
+<tr>
+<td><code>maxHeight</code> or <code>maxWidth</code></td>
+<td>Flexible</td>
+<td>Size yourself, up to the limit.</td>
+</tr>
+<tr>
+<td>Neither</td>
+<td>Unbounded</td>
+<td>Size yourself. No limit.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="cap" id="surface.viewport"><div class="cap-head"><code class="cap-id">surface.viewport</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Read the space actually available: fixed, flexible, or unbounded.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>containerDimensions</code><code>safeAreaInsets</code><code>deviceCapabilities</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
+<p>The two axes are decided separately and commonly differ. A fixed width with a flexible height is the standard inline card: the host has a column of known width in its conversation, and it will let your card be as tall as it needs within reason. A side panel is often the reverse. Writing code that assumes both axes match is writing code that works in one host.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-surface/index.html</code></p><pre class="js"><code>function describe(dimensions) {
+  if (!dimensions) return &quot;Unbounded in both directions.&quot;;
+  const axis = (fixed, max, name) =&gt;
+    fixed != null ? `${name} is fixed at ${fixed}px`
+    : max != null ? `${name} is flexible up to ${max}px`
+    : `${name} is unbounded`;
+  return [
+    axis(dimensions.width, dimensions.maxWidth, &quot;Width&quot;),
+    axis(dimensions.height, dimensions.maxHeight, &quot;Height&quot;),
+  ].join(&quot;. &quot;) + &quot;.&quot;;
+}</code></pre>
+<p>Guessing wrong is expensive in both directions. Assume fixed when the host gave you flexible and you build an inner scroller inside a frame that would happily have grown, so the user scrolls a 200-pixel window through 900 pixels of table for no reason. Assume flexible when the host gave you fixed and your content overflows a frame that will never move, so the bottom of your interface is simply gone. Press “Fix the height at 200px” in the demonstration and watch the view switch behaviour: it stops asking to grow and starts scrolling inside what it has.</p>
+<p>Read the field in a function in a function, not once at startup. Everything in <code>hostContext</code> can change through <code>ui/notifications/host-context-changed</code>, and a container change is one of the commonest: the user drags the divider on a side panel, or rotates a phone, or the host collapses its own sidebar. The same object also carries <code>safeAreaInsets</code>, <code>platform</code> and <code>deviceCapabilities</code>, which Chapter 13 covers.</p>
+<p>WCAG’s Reflow criterion asks that content stay usable at 320 CSS pixels wide without two-dimensional scrolling, and a host on a phone will hand you close to that. It is worth testing at 320 deliberately: most layouts that survive 380 also survive 320, and the ones that do not usually fail on a single fixed-width element you can find in a minute.</p>
+<figure>
+<img src="figures/diag-geometry.png" alt="Fixed, flexible and unbounded, decided per axis" />
+<figcaption aria-hidden="true">Fixed, flexible and unbounded, decided per axis</figcaption>
+</figure>
+<h2 id="how-do-i-go-fullscreen">How do I go fullscreen?</h2>
+<p>Send <code>ui/request-display-mode</code>, and then use the mode that comes back, which may not be the one you asked for.</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>const { mode } = await bridge.requestDisplayMode(&quot;fullscreen&quot;);
+// mode may still be &quot;inline&quot;. The host is allowed to say no.</code></pre>
+<div class="cap" id="surface.displayMode"><div class="cap-head"><code class="cap-id">surface.displayMode</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Move between inline, fullscreen, and picture-in-picture.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/request-display-mode</code><code>availableDisplayModes</code><code>ui/notifications/host-context-changed</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r06.html">Image Annotator</a>, <a href="r08.html">Code and Diff Reviewer</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
+<p>The negotiation has four steps. You declare which modes you support in <code>appCapabilities.availableDisplayModes</code> during initialisation. The host declares which it supports in <code>hostContext.availableDisplayModes</code>. You check its list before asking, because a host may refuse a mode purely on the grounds that you never declared it. And the host answers with the mode it actually set, which it may also change later, without being asked, through <code>ui/notifications/host-context-changed</code>.</p>
+<p>Three of those four get skipped, and each produces a different failure. Assuming the request succeeded gives you an interface convinced it is fullscreen while sitting in a 380-pixel card, with controls sized for a screen it does not have. Asking for a mode you never declared gives you a refusal you did not plan for. Ignoring a change you did not request means the user presses the host’s own fullscreen control and your layout stays inline.</p>
+<p>The rule that covers all three is to lay out for the mode you got, from a single function that reads <code>hostContext.displayMode</code>, called both after the request resolves and on every context change. Press “Withdraw fullscreen” in the demonstration and then press the view’s own button: the view checks the list, finds fullscreen gone, and says so rather than firing a request that would fail.</p>
+<h2 id="how-do-i-close-myself">How do I close myself?</h2>
+<p>Send <code>ui/notifications/request-teardown</code>. It is a notification, so it has no id, gets no answer, and carries no guarantee: the host may act on it, defer it, or ignore it entirely, and you will not be told which.</p>
+<div class="cap" id="surface.close"><div class="cap-head"><code class="cap-id">surface.close</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Ask the host to dismiss this view.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/request-teardown</code><code>ui/resource-teardown</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
+<p>If the host does agree, it sends you <code>ui/resource-teardown</code>, which is a request with an id and a reason, and it should wait for your response before removing the frame. That gap between the request arriving and your response leaving is the only interval in the entire protocol where a view is guaranteed to still exist and to have the host’s attention. Everything you were about to lose has to be flushed inside it, which is why Chapter 15 spends a whole section on what belongs there and how small it has to be.</p>
+<p>Two host failures are worth knowing about because you cannot work around either. A host that removes the frame without sending <code>ui/resource-teardown</code> takes your unsaved work with it, and nothing in your code runs. A host that sends the request and does not wait for the answer looks identical from the inside: you begin your flush, the frame disappears mid-write, and no error is raised anywhere. The only defence against both is to keep the amount of unflushed state small at all times, which in practice means autosaving on a short timer rather than relying on the handshake.</p>
+<h2 id="three-geometry-bugs">Three geometry bugs</h2>
+<p><strong>The six-pixel view.</strong> A frame that has just been appended has no layout yet, so the first <code>ResizeObserver</code> callback can report a height of zero or a handful of pixels. A host that believes it sets the frame to that height, and now the view has almost no viewport, so its content reflows to almost nothing, so the next report confirms the tiny size. The collapse is self-reinforcing and the view never recovers. Both sides have to be defensive: views send only positive sizes, and hosts treat a zero as “not yet” and never as “empty”. This one survives manual testing, because the first frame on a page usually lays out before the observer fires and the second one does not.</p>
+<p><strong>The nested scrollbar.</strong> You set <code>height: 100%</code> on a container while the host gave you a flexible height. Now the container’s height is derived from the frame, and the frame’s height is derived from the container, and the two settle wherever the first measurement happened to land, which is usually too short. The user gets your scrollbar inside the host’s scrollbar. The rule that prevents it is narrow enough to remember: in a flexible dimension, nothing in the chain the observer measures may have a percentage size. Let content decide the height, and put the scroll on an inner element with an explicit <code>max-height</code> in pixels or <code>rem</code>.</p>
+<p><strong>The oscillating frame.</strong> A hover effect changes an element’s height by a few pixels. You report the new size, the host resizes the frame, the layout shifts, the pointer is now over a different element, the first element un-hovers, and you report again. The frame twitches for as long as the pointer sits near the boundary. Reserve the hovered dimensions up front and change only colour, border or shadow on hover.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li>Tab from the host’s own controls reaches the view’s first focusable element and eventually leaves it.</li>
-<li>A modal opened inside the view traps focus and returns it on close.</li>
-<li>The focus ring is visible against the host’s background in both themes.</li>
-<li>Nothing in the view calls <code>focus()</code> before the user has interacted with it.</li>
-<li>Scrolling inside the view does not chain to the host’s conversation scroller while the view’s own scroller has room left.</li>
+<li>A size reported in a flexible dimension resizes the frame within one animation frame.</li>
+<li>A reported size of zero does not collapse the frame.</li>
+<li><code>containerDimensions</code> is in the initialize result and describes each axis independently.</li>
+<li>A container change sends <code>ui/notifications/host-context-changed</code> with only the changed keys.</li>
+<li><code>ui/request-display-mode</code> returns the resulting mode, and the host never switches a view to a mode absent from its <code>appCapabilities</code>.</li>
+<li><code>ui/notifications/request-teardown</code> is honoured with <code>ui/resource-teardown</code> or ignored, never acted on silently.</li>
+<li>The host waits for the teardown response before removing the frame.</li>
 </ol>
-<h2 id="the-pattern-worth-carrying-forward">The pattern worth carrying forward</h2>
-<p>Both gaps here are the same shape: a capability the view has <em>inside itself</em> that it cannot exercise <em>at the boundary</em>. It is worth carrying that shape into the rest of Part II, because it recurs. Drag and drop works inside the frame and stops at its edge. The clipboard can be written and not read. Dialogs can be drawn and not raised above the host. In every case the platform gives the view a local version of something, and the boundary is where the local version runs out.</p>
-<p>That is not an accident or an oversight. Every one of those boundaries is a place where a hostile view could reach into the host’s window, and the extension’s answer so far has been to leave the boundary closed and add explicit messages one at a time where the value is clear. <code>ui/open-link</code> and <code>ui/download-file</code> are two that made it through. The entries in Appendix B are the ones still waiting.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Both parties are guessing at the same number from opposite sides, and the protocol gives each of them exactly one way to tell the other what it knows: you send <code>ui/notifications/size-changed</code>, the host sends <code>containerDimensions</code>. Get those two right, keep percentage heights out of the measured chain, and treat every display mode answer as authoritative, and the layout problems in this chapter stop happening.</p>
 
-<div class="pager"><a href="ch06.html"><span class="dir">Previous</span>6. Surfaces and Geometry</a><a href="ch08.html" style="text-align:right"><span class="dir">Next</span>8. Dialogs and Attention</a></div>
+<div class="pager"><a href="ch06.html"><span class="dir">Previous</span>6. Entries, Recipes, and the Discipline of Degradation</a><a href="ch08.html" style="text-align:right"><span class="dir">Next</span>8. Focus and Scroll</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

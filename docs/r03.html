@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,7 +74,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Recipe 3</p><h1>File Explorer</h1><p class="summary">A tree, a context menu, drag to move, and a deletion that is both confirmed and undoable.</p><div class="cap recipe" id="r03"><div class="cap-head"><code class="cap-id">r03</code><span class="cap-tag core">File Explorer</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Hierarchical browse and manage.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch09.html#input.contextmenu">input.contextmenu</a></code><code><a href="ch09.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch09.html#input.longpress">input.longpress</a></code><code><a href="ch08.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch10.html#file.open">file.open</a></code><code><a href="ch10.html#file.dropzone">file.dropzone</a></code><code><a href="ch07.html#surface.focus">surface.focus</a></code><code><a href="ch08.html#notify.toast">notify.toast</a></code><code><a href="ch11.html#picker.resource">picker.resource</a></code><code><a href="ch02.html#resource.read">resource.read</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch15.html#history.transaction">history.transaction</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.contextmenu">input.contextmenu</a></code><code><a href="ch09.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch09.html#input.longpress">input.longpress</a></code><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch10.html#clipboard.write">clipboard.write</a></code><code><a href="ch08.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch10.html#file.open">file.open</a></code><code><a href="ch10.html#file.dropzone">file.dropzone</a></code><code><a href="ch07.html#surface.focus">surface.focus</a></code><code><a href="ch08.html#notify.toast">notify.toast</a></code><code><a href="ch11.html#picker.resource">picker.resource</a></code><code><a href="ch02.html#resource.read">resource.read</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch15.html#history.transaction">history.transaction</a></code></dd></dl></div>
+<p class="eyebrow">Recipe 3</p><h1>File Explorer</h1><p class="summary">A tree, a context menu, drag to move, and a deletion that is both confirmed and undoable.</p><div class="cap recipe" id="r03"><div class="cap-head"><code class="cap-id">r03</code><span class="cap-tag core">File Explorer</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Hierarchical browse and manage.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch10.html#input.contextmenu">input.contextmenu</a></code><code><a href="ch10.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch10.html#input.longpress">input.longpress</a></code><code><a href="ch09.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch11.html#file.open">file.open</a></code><code><a href="ch11.html#file.dropzone">file.dropzone</a></code><code><a href="ch08.html#surface.focus">surface.focus</a></code><code><a href="ch09.html#notify.toast">notify.toast</a></code><code><a href="ch12.html#picker.resource">picker.resource</a></code><code><a href="ch02.html#resource.read">resource.read</a></code><code><a href="ch16.html#history.undo">history.undo</a></code><code><a href="ch16.html#history.transaction">history.transaction</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch10.html#input.contextmenu">input.contextmenu</a></code><code><a href="ch10.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch10.html#input.longpress">input.longpress</a></code><code><a href="ch10.html#input.selection">input.selection</a></code><code><a href="ch11.html#clipboard.write">clipboard.write</a></code><code><a href="ch09.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch11.html#file.open">file.open</a></code><code><a href="ch11.html#file.dropzone">file.dropzone</a></code><code><a href="ch08.html#surface.focus">surface.focus</a></code><code><a href="ch09.html#notify.toast">notify.toast</a></code><code><a href="ch12.html#picker.resource">picker.resource</a></code><code><a href="ch02.html#resource.read">resource.read</a></code><code><a href="ch16.html#history.undo">history.undo</a></code><code><a href="ch16.html#history.transaction">history.transaction</a></code></dd></dl></div>
 <p>The recipe that exercises the pointer and keyboard group hardest. Everything in it is Level 2 or below except the tool call that loads the tree, which means it is the recipe most likely to work in a host you have not tested.</p>
 <div class="demo" data-demo="r03-file-explorer" id="r03-file-explorer"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
@@ -119,13 +120,13 @@ if (!yes) return;
 apply({ label: `delete ${node.name}`,
         forward: () =&gt; parent.children.splice(index, 1),
         back: () =&gt; parent.children.splice(index, 0, node) });</code></pre>
-<p>Chapter 8 argues that a confirmation without undo trains people to click through it, and that undo without confirmation loses a folder before anyone notices. Doing both costs four lines and the confirmation stops being ritual.</p>
+<p>Chapter 9 argues that a confirmation without undo trains people to click through it, and that undo without confirmation loses a folder before anyone notices. Doing both costs four lines and the confirmation stops being ritual.</p>
 <h2 id="move-as-a-transaction">Move as a transaction</h2>
-<p>Dragging a node onto a folder is one transaction that remembers the index it came from, so undo puts it back where it was rather than at the end of its old parent’s list. That detail is invisible when it works and obvious when it does not.</p>
+<p>Dragging a node onto a folder is one transaction that remembers the index it came from, so undo puts it back where it was. That detail is invisible when it works and obvious when it does not.</p>
 <h2 id="try-this">Try this</h2>
-<p><strong>Drag <code>notes.txt</code> onto the <code>documents</code> folder, then press Undo.</strong> It returns to its original position in its original parent, because the transaction recorded the index rather than just the parent.</p>
+<p><strong>Drag <code>notes.txt</code> onto the <code>documents</code> folder, then press Undo.</strong> It returns to its original position in its original parent, because the transaction recorded the index and the parent.</p>
 <p><strong>Right click any node.</strong> The menu is drawn by the view, positioned inside the frame, and closes on Escape with focus restored.</p>
-<p><strong>Select a file and press Delete.</strong> The confirmation says the action can be undone, which is what makes the confirmation honest rather than ritual.</p>
+<p><strong>Select a file and press Delete.</strong> The confirmation says the action can be undone, which is what makes the confirmation honest.</p>
 <p><strong>Tab into the tree, then use the arrow keys.</strong> The whole tree is one tab stop.</p>
 <h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
@@ -162,7 +163,7 @@ apply({ label: `delete ${node.name}`,
 <p>This recipe needs the least from the host of any in Part V. Its one hard dependency is the tool call that loads the tree, and a host without <code>serverTools</code> can still deliver that through the initial tool result.</p>
 <h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The drop target is not a folder.</strong> <code>dragover</code> only calls <code>preventDefault()</code> for nodes with children, so the drop never fires on a file and there is no error to report.</p>
-<p><strong>Two menus.</strong> A host that shows its own context menu on right click would produce two, and neither party can currently detect the other. Chapter 9 has the gap.</p>
+<p><strong>Two menus.</strong> A host that shows its own context menu on right click would produce two, and neither party can currently detect the other. Chapter 10 has the gap.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p><code>role="tree"</code> with <code>role="treeitem"</code> children and one roving tabindex, so a hundred-file tree is one tab stop. <code>aria-expanded</code> on folders, <code>aria-selected</code> on the current node. F2 renames, Delete deletes, Cmd/Ctrl+Z undoes. The context menu is reachable from the keyboard and moves focus to its first item. Every action announces its outcome, including undo.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
@@ -180,5 +181,6 @@ apply({ label: `delete ${node.name}`,
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

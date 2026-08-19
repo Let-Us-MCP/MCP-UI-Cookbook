@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>26. The Verification Layers &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.">
-<meta property="og:title" content="26. The Verification Layers">
-<meta property="og:description" content="Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.">
+<title>26. Why Recipes Are the Test Suite &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.">
+<meta property="og:title" content="26. Why Recipes Are the Test Suite">
+<meta property="og:description" content="Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.">
 <link rel="stylesheet" href="book.css">
 
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html" class="current">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html" class="current">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,76 +74,78 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 26</p><h1>The Verification Layers</h1><p class="summary">Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.</p><p>Six layers, because the failures are layered. A malformed message, an inaccessible combobox and a host that ignores display mode requests are three different problems and no single check finds all three.</p>
-<p>For each layer this chapter says what this repository runs today and what it does not. The second half matters: describing an aspirational test pyramid and shipping none of it is exactly what Chapter 25 argues against.</p>
-<h2 id="layer-0-schemas">Layer 0: Schemas</h2>
-<p>Capability manifests and every bridge message validate against JSON Schemas derived from the extension specification, so nothing untyped ships. This is the cheapest layer to build and the one that catches the errors nobody notices: a field renamed in a draft, a message shape that drifted, an identifier that exists in the prose and nowhere else.</p>
-<p><strong>What runs here.</strong> The registry is generated from a single Python source and every downstream artifact reads the generated JSON, so an identifier that exists in one place and not another is impossible by construction rather than by discipline. <code>tools/check_claims.py</code> goes further and greps the pinned specification text for every message name the registry claims exists: sixty-eight claims, checked on every build.</p>
-<p>That check has already earned itself. It reports which anchors exist in the current draft but not in the last dated release, and the answer is eight: <code>ui/download-file</code>, <code>downloadFile</code>, <code>ui/notifications/request-teardown</code>, <code>updateModelContext</code>, <code>sampling/createMessage</code>, <code>notifications/tools/list_changed</code>, <code>resource_link</code> and <code>isError</code>. A book that did not check would have described all eight as though they were settled.</p>
-<p><strong>What does not run.</strong> Full JSON Schema validation of every message against the SDK’s generated schema. The bridge here validates shape by construction rather than against a schema document.</p>
-<h2 id="layer-1-protocol-transcripts">Layer 1: Protocol transcripts</h2>
-<p>Because every message is JSON-RPC over <code>postMessage</code>, a scenario can be replayed and its message log diffed. A transcript diff in a pull request is a protocol change somebody has to explain.</p>
-<p><strong>What runs here.</strong> <code>tools/check_demos.mjs</code> drives all thirty demonstrations in headless Chrome over the DevTools Protocol, waits for the handshake, clicks every host control in order, and records the normalised message log to <code>conformance/transcripts/</code>. Timings and request ids are stripped, object keys are sorted, and the result is compared byte for byte with the committed file.</p>
-<p>A missing handshake is a hard failure rather than a warning, for the reason Chapter 25 gives: a view that never sends <code>ui/initialize</code> is a view whose script never ran, and nothing else about it can be meaningfully checked. Any console error that is not a missing favicon fails the run as well.</p>
-<h2 id="layer-2-capability-harness">Layer 2: Capability harness</h2>
-<p>One minimal application per capability group, driven inside a reference host, with assertions on both the observable behaviour and the message log. The point of keeping them minimal is diagnostic: when a lab fails there is one capability in it, so the failure names itself.</p>
-<p><strong>What runs here.</strong> The seventeen labs are that harness. Each exercises a single chapter’s capabilities, carries a fixture host with controls for the things only a host can do, and has a recorded transcript that the build diffs. Keeping each lab one chapter wide is what makes a failure legible: when one breaks, the set of things that could have broken it is small enough to read.</p>
-<p><strong>What does not.</strong> They run against the emulator in this repository, not against the <code>basic-host</code> that ships with the official SDK. Running the same labs against that host is the obvious next step and would convert a set of assertions about this book’s host into assertions about a reference one.</p>
-<h2 id="layer-3-component-checks">Layer 3: Component checks</h2>
-<p>Part IV components in isolation, with interaction tests, automated accessibility audits from <code>axe-core</code>, and the ARIA Authoring Practices keyboard checklists transcribed into executable assertions. A component layer is where accessibility regressions are cheapest to catch, because a combobox tested once is a combobox correct in all thirteen recipes that use it.</p>
-<p><strong>What does not run.</strong> This layer is not implemented. The components exist as a shared stylesheet and helper file rather than as a component library with stories, and no <code>axe-core</code> run is wired into the build. The accessibility claims in this book come from the checklist in Chapter 13 applied by hand, which is weaker than an automated audit for the half of the list a machine can check and stronger for the half it cannot.</p>
-<p>Saying so is more useful than a passing badge, because a reader can then discount the accessibility claims in this book to the right degree rather than to zero or to one.</p>
-<h2 id="layer-2b-render-conformance">Layer 2b: Render conformance</h2>
-<p>The layer the first edition of this suite did not have, and the one the book is actually about. Everything above verifies messages. This verifies the interface that the messages produce.</p>
-<p>For each of the thirteen recipes, <code>tools/check_render.mjs</code> runs the whole chain with no recording anywhere in it. Six steps, and the fourth is the one that makes the rest meaningful:</p>
-<ol type="1">
-<li>Start the recipe’s MCP server as a child process over stdio.</li>
-<li>Perform the host’s <code>initialize</code>, declaring the UI extension, so a server is free to register different tools when it is absent.</li>
-<li>Call <code>tools/list</code> and read <code>_meta.ui.resourceUri</code> off the tool.</li>
-<li>Fetch the view’s HTML through <code>resources/read</code>. That is what the frame renders. Nothing is read from <code>apps/</code> or from the built site.</li>
-<li>Call the tool. Deliver the arguments and result as notifications.</li>
-<li>Proxy the view’s own <code>tools/call</code> back to the same server, and forward that server’s progress notifications onward.</li>
-</ol>
-<p>Then it asserts on the DOM inside the sandboxed frame: row counts, cell text, which element carries <code>aria-selected</code>, whether the error banner is hidden. 88 assertions across the thirteen recipes.</p>
-<p class="provenance captured">Captured output from <code>node tools/check_render.mjs</code></p><pre><code>  r01-data-explorer: 12 assertion(s) on rendered output
-  r04-document-editor: 10 assertion(s) on rendered output
-  r07-workflow-builder: 9 assertion(s) on rendered output
-13 case(s), 88 assertion(s) against real servers, 0 failing</code></pre>
-<p><strong>No model appears in those six steps.</strong> A host connects to servers, allocates surfaces and mediates privileged operations, and none of that requires an LLM. A host driven by <code>conformance/render/r01-data-explorer.json</code> is the same architecture as a host driven by a person, which is why the surface is testable at all.</p>
-<p><strong>How it reads into the frame.</strong> Over the DevTools Protocol, not from page script. Page script cannot: the frame has an opaque origin, which is precisely the property that stops a host reading a view, and Chapter 4 is about why that is correct. A debugger is not page script, and attaching to the child frame gives a session that can evaluate inside it. The sandbox that ships is not weakened; the harness is simply outside the model the sandbox defends against.</p>
-<p>That also closes a limitation this chapter used to state. The harness can click inside the view, so a recipe no longer has to register tools in order to be driven. Cases in <code>conformance/render/</code> interleave three kinds of step: a click inside the frame, a call to one of the view’s registered tools, and a change to the host context, each followed by assertions.</p>
-<h2 id="layer-4-recipe-integration">Layer 4: Recipe integration</h2>
-<p>Each recipe end to end against a scripted mock agent, with recorded tool results, deterministic streaming and deliberate fault injection. The fault injection is the part that earns its keep: capabilities withdrawn mid-session, servers that fail, calls cancelled halfway, teardown with unsaved work.</p>
-<p><strong>What runs here.</strong> All thirteen recipes are driven by the same harness as the labs, with fixtures recorded from their real servers by <code>tools/record_fixtures.mjs</code>. The fault injection is real: controls that break the server, withdraw capabilities, cancel mid-flight, and tear the view down are part of every recipe’s demonstration and are exercised by the harness.</p>
-<p><strong>What each of the two browser layers covers.</strong> The transcript layer drives the published demonstrations from the host side, which is what verifies the message log. The render layer drives the recipes from a live server and reaches inside the frame, which is what verifies the interface. Between them a recipe is checked on both halves of the promise it makes.</p>
-<p>Registering tools is still worth doing, and Chapter 18 gives three reasons that survive: an agent can drive the view, an accessibility tool can drive it, and a test can express an intention rather than a click. A case that calls <code>connect_steps</code> says what it means; a case that clicks a coordinate says where a button happened to be.</p>
-<h2 id="layer-5-cross-host-conformance">Layer 5: Cross-host conformance</h2>
-<p>The same suite run against several hosts, with results published per host and per capability the way the public web platform test dashboards do it. That format matters as much as the results: a per-feature, per-implementation grid is what lets somebody write portable code without guessing.</p>
-<p><strong>What does not run.</strong> Nothing. This book runs against one emulator. The <code>basic-host</code> in the extension SDK, the MCP-UI client, and the production hosts that implement the standard are all candidates, and the checklists in Appendix C are written so that they could be run against any of them.</p>
-<p>The reason this matters more than the missing Layer 3 is that cross-host results are the only evidence that would answer the completeness test in Chapter 25. One host running thirteen recipes proves the recipes work. Several hosts running them unmodified proves the capability model is general, which is the claim the whole book is making.</p>
-<h2 id="what-one-run-looks-like">What one run looks like</h2>
-<p><code>node tools/check_demos.mjs</code> starts a static server over <code>docs/</code>, launches headless Chrome, and for each of the thirty demonstrations opens the harness page, waits for <code>ui/initialize</code> and <code>ui/notifications/initialized</code> to appear in the log, clicks every host control in order with time to settle, and then reads the transcript back out of the DOM.</p>
-<p>The log is normalised before comparison: request ids and timings are dropped because they vary, and object keys are sorted because insertion order is not meaningful. What is left is a list of direction, method and payload, which is the part that is supposed to be stable.</p>
-<p class="provenance captured">Captured output from <code>node tools/check_demos.mjs</code></p><pre><code>  lab-surface: 10 messages
-  lab-theme: 11 messages
-  r01-data-explorer: 9 messages
-  r07-workflow-builder: 20 messages
-  r13-settings: 11 messages
-30 demos driven, 0 transcripts written, 0 failing</code></pre>
-<p>“0 transcripts written” is the assertion. A demonstration whose behaviour changed writes nothing and fails, and the diff of its transcript file is what the change actually was.</p>
-<h2 id="the-checks-that-are-not-about-the-protocol">The checks that are not about the protocol</h2>
-<p>Four more checks run on every build, and between them they catch a class of error that no browser test can see: prose that has drifted from the code, the specification, or the repository it describes.</p>
-<p><code>check_refs.py</code> verifies that every figure the prose asks for exists, that every capability in the registry has exactly one defining entry, and that every <code>@demo</code> names a directory that is really there. It found the missing <code>tool.cancel</code> entry.</p>
-<p><code>check_listings.py</code> takes every code block tagged <em>extracted from</em> a file and checks it against that file line by line. It found two listings that had been quietly abridged and presented as extracted.</p>
-<p><code>check_counts.py</code> recomputes every number the prose asserts about the repository and fails when the prose disagrees. It found the Core capability count wrong in Chapter 1, which had been written from an estimate.</p>
-<p><code>check_identifiers.py</code> pulls every protocol identifier out of the prose and requires it to appear in the pinned specification, the SDK, or this repository’s own source. Two hundred and three identifiers, and the reason it exists is that a plausible-looking field name reads as a fact and is not one.</p>
-<h2 id="the-layer-that-is-not-on-the-list">The layer that is not on the list</h2>
-<p>Human usability sessions. None were run for this edition, and none of the design claims here are backed by watching somebody use these applications. The recipes are built to a set of principles with arguments behind them, and the arguments could be wrong in ways no automated check would detect.</p>
-<p>That is the largest single gap in this book’s evidence, larger than Layers 3 and 5 combined, because those two would confirm that the applications work while this one would tell you whether they should exist in that shape at all.</p>
+<p class="eyebrow">Chapter 26</p><h1>Why Recipes Are the Test Suite</h1><p class="summary">Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.</p><p>The recipes are the test suite, and being illustrations is a side effect. That ordering is the decision the rest of Part VI follows from, and it constrains what a recipe is allowed to be. A recipe whose behaviour depends on what a model happened to say cannot assert anything, so none of them depend on that: the model decides <em>when</em> a tool is called, and the recipe decides what the tool does.</p>
+<h2 id="why-testing-capabilities-alone-is-not-enough">Why testing capabilities alone is not enough</h2>
+<p>A host can implement every capability in Parts II and III correctly, one at a time, and still fail to run any of the recipes. Composition is where the failures live, and they are specific and repeatable:</p>
+<ul>
+<li><strong>Focus fails inside fullscreen</strong>, because the mode change re-parented the frame and the browser dropped focus with it.</li>
+<li><strong>Drag and drop conflicts with host scrolling</strong>, because the conversation scroller and your drag gesture want the same pointer.</li>
+<li><strong>Shortcuts collide</strong>, because the host bound Cmd+F before your view existed and Chapter 10 has no mechanism to find out.</li>
+<li><strong>Streaming updates destroy selection</strong>, because a view that rebuilds its list on each batch has a selection that lasts one batch.</li>
+<li><strong>Resizing loses scroll position</strong>, because the frame changed height and the scroll container was measured against the old one.</li>
+<li><strong>Cancellation leaves optimistic state behind</strong>, because the compensating action was never recorded.</li>
+</ul>
+<p>Every one of those is two capabilities that both work correctly on their own. A capability harness cannot find any of them, because it exercises one capability at a time and none of these failures exists inside one. Only a recipe puts two of them in the same frame, at the same moment, with a user in the middle doing something ordinary.</p>
+<figure>
+<img src="figures/xkcd-blank.png" alt="The failure that reports nothing" />
+<figcaption aria-hidden="true">The failure that reports nothing</figcaption>
+</figure>
+<h2 id="the-question-the-recipes-answer">The question the recipes answer</h2>
+<div class="principle">
+<p><strong>The question the recipes answer.</strong> Can a host construct conventional, native-like applications entirely from a small, well defined set of reusable UI capabilities?</p>
+</div>
+<p>There are only two ways a recipe can fail, and both produce a finding. That is the property that makes the exercise worth the effort of building thirteen applications.</p>
+<p>If a recipe cannot be built from the primitives in Parts II and III, it has found a missing capability. Appendix B is where the sixteen current findings live, and Chapter 29 describes what turning one into a proposal involves.</p>
+<p>If a recipe can be built but does not run in a particular host, it has found a conformance failure. That is a finding about an implementation, and the checklist in Appendix C is what turns it into a bug report with a specific line in it.</p>
+<p>No third outcome exists. A recipe either cannot be expressed, which indicts the capability model, or can be expressed and does not run, which indicts an implementation. Both answers are more useful than a chapter arguing about whether the model is complete.</p>
+<h2 id="why-an-empty-delta-is-fatal">Why an empty delta is fatal</h2>
+<p>Every recipe carries a delta: the capabilities it exercises that no earlier recipe does, generated from the registry rather than asserted in prose. A recipe whose delta comes out empty gets merged or deleted, because it is teaching nothing and testing nothing that is not already covered. Thirteen recipes that each exercised the same twelve capabilities would demonstrate nothing about whether the model is sufficient.</p>
+<p>That rule is what stops thirteen recipes from being thirteen views of the same six capabilities. It is also what determined the order: the Data Explorer is first because its delta is the baseline, and Settings is last because its delta is the picker set and the accessibility requirements, which need everything before them to be in place.</p>
+<p>The deltas are generated from the registry rather than asserted in prose, so a recipe whose delta becomes empty because an earlier recipe grew will show it in the build output.</p>
+<h2 id="what-a-recipe-test-asserts">What a recipe test asserts</h2>
+<p>Three kinds of assertion, in increasing order of what they catch and of how much work they are to write.</p>
+<p><strong>The handshake happened.</strong> <code>ui/initialize</code> went out, a result came back, <code>ui/notifications/initialized</code> followed. This is the cheapest check in the whole suite and it catches the worst failure: a view with a syntax error never runs, so it never sends anything, so the frame sits there empty with nothing logged anywhere. Every demonstration in this book is checked for it, and it is the reason a missing handshake is a hard failure in the harness.</p>
+<p class="provenance extracted">Extracted from from <code>tools/check_demos.mjs</code></p><pre class="js"><code>      // The handshake, or nothing else matters.
+      await waitFor(() =&gt; session.eval(
+        `(() =&gt; { const rows = [...document.querySelectorAll(&#39;.demo-row .method&#39;)]
+             .map(n =&gt; n.textContent);
+           return rows.includes(&#39;ui/initialize&#39;)
+             &amp;&amp; rows.includes(&#39;ui/notifications/initialized&#39;); })()`), 12000);</code></pre>
+<p>It reads the transcript out of the page rather than instrumenting the bridge, which means it is checking the same thing a reader sees. The twelve second deadline is what turns “never sent” into a failure instead of a hang, and a timeout here is the signal that the view did not run at all.</p>
+<p><strong>The observable behaviour is right.</strong> The table has eight rows. Sorting changes the order. Undo restores the node at its original index. These are ordinary assertions about a running application.</p>
+<p>Those are written as data, not as code, so a case is a list of selectors and expected values against the live DOM:</p>
+<p class="provenance extracted">Extracted from from <code>conformance/render/r12-media-viewer.json</code></p><pre class="json"><code>    { &quot;label&quot;: &quot;the gallery renders&quot;,
+      &quot;expect&quot;: [ { &quot;selector&quot;: &quot;.strip button&quot;, &quot;count&quot;: 3 },
+                  { &quot;selector&quot;: &quot;#clock&quot;, &quot;text&quot;: &quot;0:00 / 1:36&quot; },
+                  { &quot;selector&quot;: &quot;#frame&quot;, &quot;attr&quot;: { &quot;name&quot;: &quot;aria-label&quot;, &quot;value&quot;: &quot;Assembly line, wide&quot; } },
+                  { &quot;selector&quot;: &quot;#caption&quot;, &quot;hidden&quot;: true },
+                  { &quot;selector&quot;: &quot;#seek&quot;, &quot;attr&quot;: { &quot;name&quot;: &quot;aria-valuetext&quot;, &quot;value&quot;: &quot;0:00 of 1:36&quot; } } ] },</code></pre>
+<p>Every value in that file came out of the recipe’s real server, and the last line asserts an accessible name that no screenshot would ever show. A reader can check any of them by opening the same page, and changing the interface without changing the entry fails the build.</p>
+<p><strong>The transcript is right.</strong> Selecting a row sent exactly one <code>ui/update-model-context</code>. Selecting a second one replaced the first. Withdrawing <code>downloadFile</code> means no <code>ui/download-file</code> is ever sent. This is the layer that catches protocol regressions, and it is the layer that only exists because the whole conversation is JSON-RPC over <code>postMessage</code> and therefore recordable.</p>
+<h2 id="how-is-any-of-this-deterministic">How is any of this deterministic?</h2>
+<p>An agentic application looks untestable at first glance. A model is involved, models are stochastic, and an assertion about a sampled token is not an assertion at all. Every test in this repository would be flaky if the model were in the loop.</p>
+<p>The way out is that the model is never in the loop of a recipe test. Every tool result is a recorded fixture. Every stream is a scripted sequence. Every failure is injected on purpose. The agent’s side is played by the harness calling the view’s registered tools, which is exactly what an agent would do and is completely deterministic.</p>
+<p>That is a design constraint on the recipes themselves, not just on the tests. A recipe whose behaviour depends on what a model happened to say cannot be a test, so the recipes are built so that it does not. The model decides <em>when</em> to call <code>connect_steps</code>; the recipe decides what <code>connect_steps</code> does. Chapter 4’s local-first principle turns out to be the same rule as testability, which is a good sign that it is the right rule.</p>
+<h2 id="what-building-them-actually-found">What building them actually found</h2>
+<p>The exercise is only worth anything if it produced findings, so here are the ones building thirteen applications against eighty-seven capabilities turned up. None of them was predicted from reading the specification.</p>
+<p><strong>An empty red banner, visible in the Data Explorer.</strong> The error element had the <code>hidden</code> attribute set and was displayed anyway, because an author rule with a class selector beats the user agent’s <code>[hidden]</code> rule. Every component in the shared stylesheet that sets <code>display</code> had the same defect. Found by looking at a screenshot, fixed with one declaration, and the comment explaining it is still in <code>apps/lib/view.css</code>.</p>
+<p><strong>A transcript that changed on every run.</strong> The workflow builder minted node ids from <code>Date.now()</code>, and those ids travel to the agent in a tool result, so the recorded transcript differed every time the suite ran. The fix was a counter. The finding is that anything reaching the wire has to be deterministic or the whole of Layer 1 is noise.</p>
+<p><strong>Module scripts do not load from an opaque origin.</strong> The first version of the view bridge was an ES module, which is a CORS request from a sandboxed frame, which a static file host will not answer. It is a classic script now, and the reason is a comment at the top of the file.</p>
+<p><strong>Dynamic import resolves against the module, not the page.</strong> The demo widget loaded each demonstration’s fixture with a relative specifier and got a 404 on every page except the harness. Both of these are the kind of thing that is obvious once seen and costs an hour when not.</p>
+<p><strong>Half a theme is worse than none.</strong> Applying host style variables without removing the ones the host has stopped sending leaves the previous theme’s overrides in place, so a view that switches from a dark host to a bare one is unreadable. The specification warns about partial variable sets; this is the same hazard from the view’s side, and the bridge now tracks and clears what it applied.</p>
+<p><strong>A spreadsheet full of <code>#VALUE</code>.</strong> Every text cell rendered as an error, because the evaluator passed its contents through <code>Number()</code> and the view rendered the resulting <code>NaN</code>. It had been that way in every screenshot and nobody had looked at the top-left cell.</p>
+<p><strong>Accepting the agent’s rewrite could not be undone.</strong> Recipe 4 recorded its transaction by comparing the document against itself, which it did before replacing the text, so the comparison found no change and pushed nothing. One undo did not restore the human’s words. This is the safety property Chapters 15 and 20 both argue is the whole reason it is acceptable to let a model edit a document, and the recipe asserting it did not have it.</p>
+<p><strong>The monitoring console showed every line twice.</strong> It received the tool result it was rendered for and also called the tool itself on mount, so two rows shared an identifier and selecting one selected both.</p>
+<p>Eight findings, seven of them in shipped code. The last three are the interesting ones, because they were invisible to every check that existed before: the messages were all correct, and the interface was wrong. They came from the layer described in the next chapter, which starts a real server, renders the view that server delivers, and then looks at the result.</p>
+<h2 id="what-this-cannot-do">What this cannot do</h2>
+<p>Two things this suite cannot do, both of which limit what the rest of Part VI is entitled to claim.</p>
+<p>It cannot drive the view’s own interface from outside. The frame is sandboxed with an opaque origin and the harness cannot reach its DOM, which is the same property that stops a host reading it. So view-initiated behaviour is driven through the tools a view registers, which covers the recipes that register tools and does not cover the ones that do not. Chapter 27 says exactly which.</p>
+<p>And it cannot tell you whether an application is any good. Every check in this book is about whether a thing works, not about whether it should exist. Chapter 4 is the only defence against building a well tested application that nobody wants, and it is not a test.</p>
 
-<div class="pager"><a href="ch25.html"><span class="dir">Previous</span>25. Why Recipes Are the Test Suite</a><a href="ch27.html" style="text-align:right"><span class="dir">Next</span>27. The Coverage Matrix and the Checklists</a></div>
+<div class="pager"><a href="r13.html"><span class="dir">Previous</span>Recipe 13. Settings and Preferences</a><a href="ch27.html" style="text-align:right"><span class="dir">Next</span>27. The Verification Layers</a></div>
 </main>
 </div>
 
+<script src="copy.js"></script>
 </body>
 </html>

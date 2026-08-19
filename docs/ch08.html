@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>8. Dialogs and Attention &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Six capabilities, no messages, one broken browser API, and a decision procedure for how loudly to interrupt somebody.">
-<meta property="og:title" content="8. Dialogs and Attention">
-<meta property="og:description" content="Six capabilities, no messages, one broken browser API, and a decision procedure for how loudly to interrupt somebody.">
+<title>8. Focus and Scroll &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Inside the frame, focus and scrolling work exactly as they always have. Across the frame boundary, neither of them works at all, and the protocol has nothing to say about it.">
+<meta property="og:title" content="8. Focus and Scroll">
+<meta property="og:description" content="Inside the frame, focus and scrolling work exactly as they always have. Across the frame boundary, neither of them works at all, and the protocol has nothing to say about it.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html" class="current">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html" class="current">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,100 +74,66 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 8</p><h1>Dialogs and Attention</h1><p class="summary">Six capabilities, no messages, one broken browser API, and a decision procedure for how loudly to interrupt somebody.</p><p><code>window.alert</code>, <code>window.confirm</code> and <code>window.prompt</code> do nothing at all. All three need the <code>allow-modals</code> sandbox token, which the MCP Apps sandbox does not include, so the call returns immediately with a default value and your code carries on as though the user answered. That last part is what makes it dangerous rather than merely broken: <code>confirm()</code> returns <code>false</code>, which reads as “the user declined”, and a delete flow guarded by it silently stops working. The demonstration has a button that proves it.</p>
-<p>So you build the whole attention system yourself, which is the better outcome anyway. The browser’s versions were never appropriate here, for three reasons that all matter more inside a frame than they do in a page:</p>
-<ul>
-<li>They block the main thread, which would freeze your bridge and stop you answering <code>ui/resource-teardown</code>.</li>
-<li>They render outside your styling, so they look like the browser, not the host.</li>
-<li>They are modal to the whole tab, which a card in someone else’s conversation has no business being.</li>
-</ul>
-<div class="demo" data-demo="lab-dialogs" id="lab-dialogs"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="which-one-do-i-use">Which one do I use?</h2>
-<p>These six differ mainly in how much of the user’s attention they take, and the implementations are all easy. Picking the wrong volume is the actual failure, and it is a failure with a cost: every unnecessary interruption trains people to dismiss the next one without reading it, so a view that confirms trivial actions has spent the credibility it needed for the one confirmation that mattered.</p>
-<figure>
-<img src="figures/xkcd-attention.png" alt="The attention ladder: what each level costs the user" />
-<figcaption aria-hidden="true">The attention ladder: what each level costs the user</figcaption>
-</figure>
-<p><strong>Does the user have to decide something before anything else happens?</strong> Then it is a dialog: confirm for a binary decision, prompt for a small value.</p>
-<p><strong>Did something finish, and does the user just need to know?</strong> A toast. Nothing to decide, so nothing to block.</p>
-<p><strong>Is something persistently true that changes how the interface should be read?</strong> A banner. Stale data, degraded mode, offline, read-only.</p>
-<p><strong>Is the view not currently visible, and does it need a person?</strong> That is <code>notify.attention</code>, and it is a gap.</p>
-<p>The mistake that shows up most is a modal dialog for a completion. “Export finished. OK.” blocks the user to tell them something they can see, and trains them to dismiss dialogs without reading, which then breaks the one dialog that mattered.</p>
-<h2 id="alert-an-acknowledgement-they-cannot-miss">Alert: an acknowledgement they cannot miss</h2>
-<div class="cap" id="dialog.alert"><div class="cap-head"><code class="cap-id">dialog.alert</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Block on an acknowledgement the user cannot miss.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>An acknowledgement the user cannot miss. In practice this is the rarest of the six and nearly every instance in the wild is a mis-specified toast.</p>
-<p>It earns its place only when two things are true at once: the information changes what the user is about to do, and they are about to do it right now. “Your session expired, so the next save will fail” qualifies while they are typing. “Export finished” does not qualify at all, because nothing they were about to do has changed and the result is visible on screen anyway.</p>
-<p><strong>Application behaviour.</strong> A <code>&lt;dialog&gt;</code> with <code>showModal()</code>, one button, focus on that button. Escape closes it, because a dialog with a single acknowledgement has nothing to cancel.</p>
-<p><strong>Accessibility.</strong> <code>showModal()</code> gives you the focus trap, the inert background and the <code>aria-modal</code> semantics for free. A hand-rolled overlay gives you none of those and will be missed by a screen reader user entirely.</p>
-<h2 id="confirm-a-binary-decision">Confirm: a binary decision</h2>
-<div class="cap" id="dialog.confirm"><div class="cap-head"><code class="cap-id">dialog.confirm</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Take an explicit binary decision before acting.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r10.html">Approval Center</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>The binary decision, and the two rules that matter are both about the words rather than the widget. Users read the buttons before they read the title, so the buttons have to carry the decision on their own.</p>
-<p>Label the buttons with the verb, not with “OK”. A user reading “Delete invoices?” with “OK” and “Cancel” has to reconstruct which button does what. The same dialog with “Delete” and “Keep” can be answered without reading the title.</p>
-<p>And prefer undo. A confirmation asks somebody to be careful <em>before</em> they know what happens; undo lets them find out and change their mind. The File Explorer in Recipe 3 does both, deliberately: destructive actions confirm, and the confirmation says the action can be undone, which is what makes the confirmation honest rather than ritual.</p>
-<p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>function confirmDialog({ title, body, confirm = &quot;Confirm&quot;, cancel = &quot;Cancel&quot;,
-                         destructive = false }) {
-  return new Promise((resolve) =&gt; {
-    const dialog = h(&quot;dialog&quot;, {},
-      h(&quot;h2&quot;, { text: title }),
-      body ? h(&quot;p&quot;, { class: &quot;muted&quot;, text: body }) : null,
-      h(&quot;div&quot;, { class: &quot;row&quot;, style: &quot;justify-content:flex-end&quot; },
-        h(&quot;button&quot;, { class: &quot;quiet&quot;, text: cancel,
-          onclick: () =&gt; { dialog.close(); resolve(false); } }),
-        h(&quot;button&quot;, { class: destructive ? &quot;danger&quot; : &quot;primary&quot;, text: confirm,
-          onclick: () =&gt; { dialog.close(); resolve(true); } })));
-    dialog.addEventListener(&quot;cancel&quot;, () =&gt; resolve(false));
-    dialog.addEventListener(&quot;close&quot;, () =&gt; dialog.remove());
-    document.body.append(dialog);
-    dialog.showModal();
-  });
+<p class="eyebrow">Chapter 8</p><h1>Focus and Scroll</h1><p class="summary">Inside the frame, focus and scrolling work exactly as they always have. Across the frame boundary, neither of them works at all, and the protocol has nothing to say about it.</p><p>Focus works normally inside your frame and does not cross its boundary in either direction. There is no message that makes it, in either the extension or core MCP, so a host cannot direct focus into your search field and you cannot hand it back to the composer when a form is finished. Two of the four capabilities here are plain web platform behaviour that needs nothing from anybody; the other two are gaps, and together they are the shortest illustration of exactly where this extension currently stops.</p>
+<div class="demo" data-demo="lab-focus" id="lab-focus"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="how-does-focus-work-inside-my-view">How does focus work inside my view?</h2>
+<div class="cap" id="surface.focus"><div class="cap-head"><code class="cap-id">surface.focus</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Move, trap, and restore focus inside the view.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-focus">lab-focus</a></dd></dl></div>
+<p>Exactly as it always has. Elements are focusable, <code>tabindex</code> orders them, <code>:focus-visible</code> styles them, and <code>&lt;dialog&gt;</code> with <code>showModal()</code> traps focus and restores it on close. Nothing about the sandbox interferes, because focus is a property of your document and your document is entirely yours.</p>
+<p>What changes is the consequences of getting it wrong. In a page, a user stuck in a focus trap can reach the address bar or the browser chrome. In a view they cannot: your frame is the whole world their keyboard can see, and the host’s own controls are on the other side of a boundary focus does not cross. Four things embedded views get wrong more often than pages do:</p>
+<p><em>Manage a roving tabindex in composite widgets.</em> A list of fifty rows should be one tab stop, not fifty. The focused row carries <code>tabindex="0"</code>, every other row carries <code>-1</code>, and arrow keys move the zero. The selection lab in Chapter 10 does this in about ten lines. Without it, a keyboard user tabs through your entire dataset to reach the button after it.</p>
+<p><em>Restore focus after overlays.</em> Record what had focus before you open something, put it back when you close. The <code>&lt;dialog&gt;</code> element does this for you when you use <code>showModal()</code> and <code>close()</code>; anything hand-rolled does not.</p>
+<p><em>Never trap focus outside a modal.</em> A trap that survives its dialog is a keyboard user stuck inside your frame with no way out, and unlike a page they cannot press the address bar to escape.</p>
+<p><em>Do not steal focus on load.</em> Your view appears in the middle of somebody’s conversation, often while they are typing. Calling <code>focus()</code> during initialisation moves the caret out of the message box, and from the user’s point of view the application they did not ask for has just eaten a sentence.</p>
+<p><strong>Failure modes.</strong> Unsupported does not apply; the platform is always there. The realistic failures are a focus ring that the host’s stylesheet does not provide, which is why the view stylesheet in this repository sets <code>:focus-visible</code> explicitly, trusting no inherited default, and a focus ring clipped by an <code>overflow: hidden</code> container, which is a real accessibility failure that looks like a cosmetic one.</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-ring-primary);
+  outline-offset: 2px;
 }</code></pre>
-<p>The <code>cancel</code> event is the Escape key. Forgetting to resolve on it leaves a promise hanging forever, and in an application that awaits the answer before doing anything else, a hung promise is a frozen interface.</p>
-<h2 id="prompt-one-small-value">Prompt: one small value</h2>
-<div class="cap" id="dialog.prompt"><div class="cap-head"><code class="cap-id">dialog.prompt</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Collect one small value without leaving the surface.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>One small value collected without leaving the surface: rename this, name that, add a label. The distinguishing test is whether the value needs validation beyond “not empty”. If it does, or if there are two of them, you have a form rather than a prompt, and Recipe 13 is the form.</p>
-<p><strong>Application behaviour.</strong> Focus and select the input on open, so typing replaces the existing value and Enter submits. Both are what the browser’s <code>prompt</code> did, and both are what people expect.</p>
-<p><strong>When not to.</strong> If the value needs validation with rules, or two fields, it is a form and not a prompt. Recipe 13 is a form.</p>
-<h2 id="toast-it-happened-carry-on">Toast: it happened, carry on</h2>
-<div class="cap" id="notify.toast"><div class="cap-head"><code class="cap-id">notify.toast</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Say saved, copied, failed, and get out of the way.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>Transient, non-blocking, gone in a couple of seconds: saved, copied, completed. A toast is the right answer whenever the user needs to know something happened and has no decision to make about it, which covers most of what an application wants to say.</p>
-<p><strong>Accessibility.</strong> A toast that is only a visual is invisible to a screen reader. <code>role="status"</code> on the toast, or a parallel announcement into a polite live region, makes it perceivable. The helper in this repository does the former; Chapter 13 covers the latter and explains when each is right.</p>
-<p><strong>Failure modes.</strong> Toasts for failures are a judgement call. A failed save is usually not a toast, because the toast will be gone before the user understands the consequence and there will be nothing left on screen to say that the document is unsaved. Toast the successes, banner the ongoing problems.</p>
-<h2 id="banner-true-until-it-isnt">Banner: true until it isn’t</h2>
-<div class="cap" id="notify.banner"><div class="cap-head"><code class="cap-id">notify.banner</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Hold a persistent, non-modal status in view.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>Persistent and non-modal. The distinguishing property is that a banner lasts exactly as long as its condition, which obliges the code that raises one to own the code that removes it. A banner nobody clears becomes furniture, and furniture is invisible: users stop reading a warning that has been there since Tuesday, including on the day it starts mattering.</p>
-<p>Good uses are all statements about the <em>state of the interface</em> rather than about an event: this data is four minutes stale, you are offline and looking at a cached copy, this document is read-only because somebody else has it open, this host does not support downloads so the export button is missing.</p>
-<p>The last row is the exception to Chapter 1. Normally you omit a control you cannot offer. When the user is hunting for it, a banner saying “this host cannot save files, use Copy” beats a mystery.</p>
-<h2 id="how-do-i-get-attention-from-a-hidden-view">How do I get attention from a hidden view?</h2>
-<div class="cap" id="notify.attention"><div class="cap-head"><code class="cap-id">notify.attention</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Signal from a backgrounded view that a human is needed.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>You cannot. A view that is scrolled away, collapsed, or on a tab nobody is looking at has no way to say a person is needed.</p>
-<p>This matters most for the recipes that run over time. Recipe 9’s monitoring console sees an error at three in the morning. Recipe 11’s control centre has a task that failed and needs a retry. Recipe 10’s approval queue has a refund waiting. In every case the interface knows and the user does not.</p>
-<p><strong>Workarounds.</strong> Make the state loud on return rather than at the moment it happens: the console raises a banner describing what happened while the view was hidden, which the user meets when they come back. Where the host supports it, <code>ui/update-model-context</code> puts the fact where the model can raise it in the next turn, which is indirect but real. And a view can send <code>notifications/message</code> at warning level, which lands in the host’s log and is at least auditable.</p>
-<p><strong>What a mechanism would look like.</strong> A <code>ui/request-attention</code> notification with a severity and a short label, and the host free to badge, chime, or ignore. The host has to stay in control, because the alternative is thirty embedded views competing for a notification badge. Appendix B has it, next to <code>surface.reveal</code>, which is the same problem seen from the other side.</p>
-<h2 id="what-is-the-host-doing-meanwhile">What is the host doing meanwhile?</h2>
-<p>Nothing, and it cannot. No message in this chapter exists, so the host has no way to learn that your view has a modal open, and no way to coordinate with it. That asymmetry produces three specific consequences, and none of them has a workaround worth the name.</p>
-<p>Three consequences.</p>
-<ul>
-<li><strong>Your dialog is clipped by the frame.</strong> A 500px dialog in a 380px view has its buttons off screen. Size to the container and scroll the body.</li>
-<li><strong>Your backdrop dims your frame, not the host’s window.</strong> The user can still click anything outside it, so a modal here is modal to a card.</li>
-<li><strong>Teardown during a dialog leaks.</strong> <code>ui/resource-teardown</code> removes the frame and the promise you were awaiting never settles. Resolve it in a <code>finally</code>.</li>
-</ul>
-<p>The corollary is that a genuinely blocking decision, the kind where the user must not be able to do anything else, cannot be built inside a view at all. That is an approval, it belongs to the host, and Chapter 21 is about the fact that the mechanism for it does not exist yet.</p>
+<p>Three details are deliberate. <code>:where()</code> keeps the specificity at zero, so a component can override the ring without an <code>!important</code>. The colour comes from the host’s variables, so the ring stays visible against whatever background the host chose. And <code>outline</code> is used instead of <code>box-shadow</code> because outlines survive Windows forced-colours mode, where a shadow is simply discarded and the ring disappears for the users most likely to need it.</p>
+<h2 id="can-the-host-focus-my-search-field">Can the host focus my search field?</h2>
+<div class="cap" id="surface.focusHandoff"><div class="cap-head"><code class="cap-id">surface.focusHandoff</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Hand focus across the host boundary in either direction.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-focus">lab-focus</a></dd></dl></div>
+<p>No. There is no message for focus in either direction, and the workarounds are worse than they look.</p>
+<p>A host can call <code>focus()</code> on the iframe element, which gives the frame focus without choosing anything inside it and without telling your code that it happened. From your side the first thing you know is a <code>focusin</code> event on whatever the browser picked, usually the first tab stop, which is rarely the search field the user asked for. Press “Host tries to focus the view” in the demonstration and watch the transcript stay completely empty: nothing crossed the boundary, because there is nothing to cross it with.</p>
+<p>The host cannot say “the user just asked to interact with your view, please focus your search field”. It can call <code>focus()</code> on the iframe element, which gives the frame focus without telling the document inside it anything useful, and without choosing what inside it should be focused. Press “Host tries to focus the view” in the demonstration and watch the transcript stay empty.</p>
+<p>The view cannot say “I am done, please return focus to the composer”. After a user finishes with an embedded form, focus stays wherever the form left it, and the next keystroke goes to the frame, and the conversation never sees it.</p>
+<p><strong>Why it matters.</strong> Voice control and switch access both depend on being able to move focus deliberately across the whole surface a user perceives. From the user’s point of view the host window is one thing; the frame boundary is an implementation detail they did not agree to.</p>
+<p><strong>Workarounds.</strong> Two, both partial. A view can register a tool that focuses a named element, which gives an agent a way to do it even though the host has no direct route. And a view can avoid needing the handoff at all by not being the last step: finish the interaction with an explicit “Done” that sends <code>ui/notifications/request-teardown</code>, so the host removes the frame and focus returns to the host by ordinary means.</p>
+<p><strong>What a mechanism would look like.</strong> A <code>ui/request-focus</code> request from the view, with the host free to decline, and a <code>ui/notifications/focus-granted</code> notification in the other direction carrying an optional target selector. Both are cheap. Neither exists. The gap is filed in Appendix B.</p>
+<h2 id="how-do-i-scroll-to-something">How do I scroll to something?</h2>
+<div class="cap" id="surface.scroll"><div class="cap-head"><code class="cap-id">surface.scroll</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Scroll to a position or bring an element into view inside the frame.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-focus">lab-focus</a></dd></dl></div>
+<p>Also ordinary platform behaviour: <code>scrollIntoView</code>, <code>scrollTo</code>, sticky headers, <code>scroll-margin</code> so a sticky header does not cover the thing you just scrolled to.</p>
+<p>The one embedded-specific rule is about scroll containers. A view that lets its own body scroll competes with the host’s conversation scroller, and on a trackpad the result is scroll chaining that feels broken in both directions. Put the scroll on an inner container with a bounded height, and let the frame itself be exactly as tall as its content. This is also what makes <code>surface.resize</code> behave: a body that never scrolls has an honest <code>scrollHeight</code>.</p>
+<p>The shared stylesheet spends one line on it:</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>.scroll { overflow: auto; max-height: 240px; border-radius: var(--border-radius-md); }</code></pre>
+<p><code>max-height</code> is what makes it work. <code>overflow: auto</code> on a container with no height bound never scrolls, it just grows, and the growth ends up on the body where it becomes the host’s problem. Every recipe with a long list wraps it in this class, which is why none of them fight the conversation scroller.</p>
+<p><strong>Restoring position.</strong> Views are re-rendered. If your view has a long list, record the scroll offset alongside whatever state you persist, and restore it when the data comes back. Since <code>state.save</code> is a gap (Chapter 16), that usually means sending it to a server tool, which is heavier than it should be for a number.</p>
+<h2 id="how-do-i-scroll-the-conversation-to-my-view">How do I scroll the conversation to my view?</h2>
+<div class="cap" id="surface.reveal"><div class="cap-head"><code class="cap-id">surface.reveal</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Ask the host to scroll the conversation until this view is visible.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-focus">lab-focus</a></dd></dl></div>
+<p>You cannot. <code>scrollIntoView</code> moves your own scroll container; the conversation that contains your frame belongs to the host and is not reachable from inside an opaque origin.</p>
+<p>This is the gap users actually notice, and it gets worse the longer a view lives. Your frame was rendered twenty messages ago and has scrolled well out of sight. Something happens inside it that needs a person: a tool call fails, a long job finishes, an approval lands in the queue. The view knows. The user is reading something else and will not find out until they scroll back, and nothing in the interface gives them a reason to.</p>
+<p><strong>Workarounds.</strong> If the host supports <code>updateModelContext</code> or <code>message</code>, the view can make the conversation itself move by putting something in it, but that is a heavy instrument for “please look over here” and it costs a turn. The realistic mitigation is to design for the view being invisible: assume nobody sees a change until they next look, make state legible on arrival rather than announcing it at the moment it happens, and use <code>notify.banner</code> for anything that must survive being missed.</p>
+<p><strong>What a mechanism would look like.</strong> A <code>ui/request-reveal</code> notification, with the host free to ignore it or to badge the collapsed view instead of scrolling to it. Chapter 9’s <code>notify.attention</code> is the same gap wearing a different hat, and a single mechanism would probably serve both.</p>
+<h2 id="a-worked-example-the-escape-hatch">A worked example: the escape hatch</h2>
+<p>Consider a view with a search field, inside a host with its own message composer. The user is typing in the composer, notices the view, clicks into the search field, types a query, and presses Enter. So far so ordinary.</p>
+<p>Now they want to go back to the conversation. What are their options? Clicking works. Tabbing forward eventually leaves the frame, if the view has not trapped focus and if the remaining tab stops are few. Pressing Escape does nothing, because Escape is not defined as “leave this frame” anywhere, and the view has no way to hand focus back even if it wanted to.</p>
+<p>For a mouse user this is invisible. For somebody driving by keyboard it is the difference between an application and an obstacle, and the reason the fix is not simply “add fewer tab stops” is that the view legitimately has controls.</p>
+<p>What the recipes in Part V do about it is bound the number of tab stops with roving tabindex, never trap outside a modal, and end multi-step interactions with an explicit action that removes the view. That is a workaround for a missing message, and it is the best available answer today.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li><code>window.alert</code>, <code>window.confirm</code> and <code>window.prompt</code> are inert, and the view does not depend on them.</li>
-<li>A dialog opened in the view traps focus and restores it on close.</li>
-<li>Escape closes any open overlay and resolves its promise.</li>
-<li>A dialog taller than the container scrolls its body rather than overflowing the frame.</li>
-<li>Toasts carry <code>role="status"</code> or announce into a live region.</li>
-<li>A banner is removed when the condition it describes ends.</li>
+<li>Tab from the host’s own controls reaches the view’s first focusable element and eventually leaves it.</li>
+<li>A modal opened inside the view traps focus and returns it on close.</li>
+<li>The focus ring is visible against the host’s background in both themes.</li>
+<li>Nothing in the view calls <code>focus()</code> before the user has interacted with it.</li>
+<li>Scrolling inside the view does not chain to the host’s conversation scroller while the view’s own scroller has room left.</li>
 </ol>
-<h2 id="what-to-remember">What to remember</h2>
-<p>All of it is yours to build, which means all of it is yours to keep consistent, and consistency is harder than any individual widget. A view with two dialog implementations has two focus behaviours, two escape behaviours and two visual languages, and the second one always gets less attention than the first. Pick one of each and use it everywhere.</p>
-<p>The 13 recipes share one of each, defined once in <code>apps/lib/view.js</code>: <code>confirmDialog</code>, <code>promptDialog</code>, <code>toast</code> and the <code>.banner</code> class.</p>
+<h2 id="the-pattern-worth-carrying-forward">The pattern worth carrying forward</h2>
+<p>Both gaps here are the same shape: a capability the view has <em>inside itself</em> that it cannot exercise <em>at the boundary</em>. It is worth carrying that shape into the rest of Part II, because it recurs. Drag and drop works inside the frame and stops at its edge. The clipboard can be written and not read. Dialogs can be drawn and not raised above the host. In every case the platform gives the view a local version of something, and the boundary is where the local version runs out.</p>
+<p>That is not an accident or an oversight. Every one of those boundaries is a place where a hostile view could reach into the host’s window, and the extension’s answer so far has been to leave the boundary closed and add explicit messages one at a time where the value is clear. <code>ui/open-link</code> and <code>ui/download-file</code> are two that made it through. The entries in Appendix B are the ones still waiting.</p>
 
-<div class="pager"><a href="ch07.html"><span class="dir">Previous</span>7. Focus and Scroll</a><a href="ch09.html" style="text-align:right"><span class="dir">Next</span>9. Keyboard, Pointer and Selection</a></div>
+<div class="pager"><a href="ch07.html"><span class="dir">Previous</span>7. Surfaces and Geometry</a><a href="ch09.html" style="text-align:right"><span class="dir">Next</span>9. Dialogs and Attention</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

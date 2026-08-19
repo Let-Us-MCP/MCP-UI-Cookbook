@@ -12,7 +12,7 @@ optional at any level and their absence must be handled by applications.
 
 Items marked *not standardised* are Core capabilities with no mechanism. No
 host can implement them until the gap in Appendix B closes. They are listed so
-the missing work is countable: 9 of the 67 Core capabilities.
+the missing work is countable: 10 of the 68 Core capabilities.
 
 @checklists
 
@@ -27,7 +27,7 @@ that checked properly.
 
 **The frame is sized from the notification.** When a dimension is flexible,
 `ui/notifications/size-changed` changes the frame. A zero from a freshly
-appended frame is treated as "not yet" rather than as "empty".
+appended frame is treated as "not yet" and never as "empty".
 
 **Teardown waits.** `ui/resource-teardown` is sent before removal and the host
 waits for the response, with a bounded but generous deadline. This is the only
@@ -53,7 +53,7 @@ controls exist. Define a fallback for every style variable you use. Format
 through `hostContext.locale` and `timeZone`. Report your size on change only.
 Answer `ui/resource-teardown` promptly, and flush before you do. Publish state
 to the model, not events, and only state that changes an answer. Put every
-agent write on the undo stack. Handle all five failure modes from Chapter 5,
+agent write on the undo stack. Handle all five failure modes from Chapter 6,
 and check that the interface is honest in each.
 
 ## Publishing a result

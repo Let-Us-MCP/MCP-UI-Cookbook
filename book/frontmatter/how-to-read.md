@@ -31,7 +31,7 @@ teaching anything and not testing anything.
 
 **Capability validation.** The recipes run as tests. A host either passes them
 or does not, and the coverage matrix in Appendix A is generated from the test
-annotations rather than written by hand.
+annotations.
 
 ## The words this book uses
 
@@ -60,7 +60,7 @@ Atomic capability
 
 Agent boundary
 :   The line between interactions handled locally and interactions that
-    involve the model, tools, or external state. Chapter 3 is entirely about
+    involve the model, tools, or external state. Chapter 4 is entirely about
     where to draw it.
 
 Golden transcript
@@ -82,7 +82,7 @@ Levels are cumulative: a Level 3 host supports everything at Levels 1 and 2.
 **Core or Extended** says whether the capability is mandatory at its level.
 Core capabilities are the promise a host makes by claiming the level. Extended
 capabilities are optional at any level, which means your application must
-handle their absence rather than assuming a modern host will have them.
+handle their absence, because a modern host may still not have them.
 
 **The ground badge** is the most useful thing on the page, and the labels mean
 exactly this:
@@ -139,7 +139,7 @@ dependency table. That table is the list of things that can go wrong in a host
 you have not tested against.
 
 **You are implementing a host.** Chapter 1 for the ladder, Chapter 2 for the
-wire, Appendix C for the checklist, and then Chapter 27's ordering advice,
+wire, Appendix C for the checklist, and then Chapter 28's ordering advice,
 which is that the handshake, `surface.resize` and the teardown handshake are
 worth more than everything else put together.
 
@@ -165,7 +165,6 @@ Everything here exists to answer one question:
 
 If a recipe needs host behaviour that the primitives in Parts II and III
 cannot express, the recipe has found a missing capability, and that finding
-belongs upstream in the specification rather than in a private extension. If
-the recipes run unmodified across several hosts, the capability model is
-evidence rather than opinion. Part VI describes the machinery that makes both
-outcomes observable.
+belongs upstream in the specification. If the recipes run unmodified across
+several hosts, the capability model is evidence. Part VI describes the
+machinery that makes both outcomes observable.

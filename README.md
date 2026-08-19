@@ -6,7 +6,7 @@ Read it: <https://let-us-mcp.github.io/MCP-UI-Cookbook/>
 
 A practical reference and conformance suite for building interactive,
 host-integrated, agent-connected MCP applications. It takes the surface an MCP
-application actually has, cuts it into 85 named capabilities, composes those
+application actually has, cuts it into 87 named capabilities, composes those
 into 13 recognisable applications, and ships a harness that decides whether a
 host really supports what it claims.
 
@@ -104,7 +104,7 @@ whose content is the view, and points its tools at that resource through
 
 ## Contributing a finding
 
-If you build something the 85 capabilities cannot express, that is a finding
+If you build something the 87 capabilities cannot express, that is a finding
 rather than a bug. Appendix B is the list of the 14 that already exist, and
 each entry names the recipe that needs it, what the workaround costs, the
 shape a mechanism would take, and which part of the threat model it reopens.

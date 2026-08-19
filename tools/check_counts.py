@@ -32,7 +32,11 @@ WORDS = {
     9: "nine", 10: "ten", 11: "eleven", 12: "twelve", 13: "thirteen",
     14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen",
     18: "eighteen", 19: "nineteen", 20: "twenty", 28: "twenty-eight",
-    30: "thirty", 67: "sixty-seven", 68: "sixty-eight", 85: "eighty-five",
+    19: "nineteen", 22: "twenty-two", 23: "twenty-three",
+    24: "twenty-four", 58: "fifty-eight", 86: "eighty-six",
+    30: "thirty", 32: "thirty-two", 41: "forty-one", 59: "fifty-nine",
+    67: "sixty-seven", 68: "sixty-eight",
+    85: "eighty-five", 87: "eighty-seven",
 }
 
 caps = REGISTRY["capabilities"]
@@ -42,6 +46,12 @@ demos = sum(1 for group in ("labs", "recipes")
             for p in (ROOT / "apps" / group).iterdir() if p.is_dir())
 claims = sum(len(c["wire"]) for c in caps)
 core_gaps = sum(1 for c in caps if c["ground"] == "gap" and c["tag"] == "core")
+levels = Counter(c["level"] for c in caps)
+
+TAG = re.compile(r"^<!-- listing:\s*(extracted|captured|illustrative)", re.M)
+listing_tags = Counter()
+for page in sorted(BOOK.rglob("*.md")):
+    listing_tags.update(TAG.findall(page.read_text(encoding="utf-8")))
 
 FACTS = {
     "capabilities": len(caps),
@@ -55,6 +65,15 @@ FACTS = {
     "demonstrations": demos,
     "specification claims": claims,
     "labs": sum(1 for p in (ROOT / "apps" / "labs").iterdir() if p.is_dir()),
+    "extended capabilities": tags["extended"],
+    "level 1 capabilities": levels[1],
+    "level 2 capabilities": levels[2],
+    "level 3 capabilities": levels[3],
+    "level 4 capabilities": levels[4],
+    "listings": sum(listing_tags.values()),
+    "extracted listings": listing_tags["extracted"],
+    "captured listings": listing_tags["captured"],
+    "illustrative listings": listing_tags["illustrative"],
 }
 
 # fact -> phrases the prose may use for it. NUMBER stands for digits or the
@@ -103,12 +122,43 @@ PATTERNS = {
     ],
     "core capabilities": [
         r"NUMBER of the eighty-five capabilities are Core",
+        r"accounts for NUMBER of the 87",
+        r"NUMBER of the 87 are Core",
     ],
     "labs": [
         r"The NUMBER labs",
     ],
     "wire capabilities": [
         r"the NUMBER wire\s+claims",
+    ],
+    "extended capabilities": [
+        r"work without it\. NUMBER of\s+the 87",
+        r"accounts for the other NUMBER",
+    ],
+    "level 1 capabilities": [
+        r"NUMBER capabilities sit at level 1",
+    ],
+    "level 2 capabilities": [
+        r"NUMBER at level 2",
+    ],
+    "level 3 capabilities": [
+        r"NUMBER at\s+level 3",
+        r"NUMBER at level 3",
+    ],
+    "level 4 capabilities": [
+        r"NUMBER at level 4",
+    ],
+    "listings": [
+        r"of the NUMBER listings",
+    ],
+    "extracted listings": [
+        r"all NUMBER extracted listings",
+    ],
+    "captured listings": [
+        r"NUMBER listings in this book are captured",
+    ],
+    "illustrative listings": [
+        r"NUMBER of the \d+ listings",
     ],
 }
 

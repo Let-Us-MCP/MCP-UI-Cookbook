@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>21. Approval, Elicitation and the Context Boundary &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Two capabilities the extension does not have, one principle it depends on, and an argument about what the model should never be told.">
-<meta property="og:title" content="21. Approval, Elicitation and the Context Boundary">
-<meta property="og:description" content="Two capabilities the extension does not have, one principle it depends on, and an argument about what the model should never be told.">
+<title>21. State Ownership and Concurrency &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.">
+<meta property="og:title" content="21. State Ownership and Concurrency">
+<meta property="og:description" content="Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html" class="current">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html" class="current">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,103 +74,94 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 21</p><h1>Approval, Elicitation and the Context Boundary</h1><p class="summary">Two capabilities the extension does not have, one principle it depends on, and an argument about what the model should never be told.</p><p>This is where the protocol runs out. Human approval has no message. Structured questions from a view have no message. Both are things real applications need.</p>
-<p>The chapter closes with the principle that has been implicit since Chapter 3: UI state is not model context, and the default is silence. That default is easily lost, because publishing feels free and helpful, and each individual update looks reasonable in isolation.</p>
-<div class="demo" data-demo="lab-approval" id="lab-approval"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="how-do-i-require-a-human-signature">How do I require a human signature?</h2>
-<div class="cap" id="approval.request"><div class="cap-head"><code class="cap-id">approval.request</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Require a human signature on a sensitive action.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-approval">lab-approval</a></dd></dl></div>
-<p>Put the gate on the server rather than in the view. Your Approve button is an ordinary button in an untrusted iframe: nothing signs the click, nothing attests that a human made it, and the host never learns that an approval happened.</p>
-<p>Core MCP is built on user consent, and the specification is clear that hosts must give users control over what is authorised. What the Apps extension does not give you is a way for a <em>view</em> to demand it. Your Approve button is an ordinary button in an untrusted iframe. Nothing is signed and nothing is attested.</p>
-<p><strong>What that means in practice.</strong> Approval today is a convention rather than a mechanism, and its integrity depends on where the enforcement lives. The enforceable design is:</p>
-<p>The <strong>server</strong> holds the gate. A refund tool does not perform a refund; it queues one and returns a queue id. A separate tool performs it, and that tool is <code>visibility: ["app"]</code> so the model cannot call it, and it requires the queue id. The view calls it after a human presses a button.</p>
-<p>The <strong>view</strong> shows provenance. Who asked, on whose behalf, using which tool, with which arguments, and what the consequence is. Recipe 10’s card carries five provenance fields, and the reason is that an approval card without them is a dialog with a lever attached, and users learn to pull levers.</p>
-<p>The <strong>host</strong> shows the boundary. <code>prefersBorder</code> and whatever chrome the host provides are what tell a user that this rectangle came from a server rather than from their assistant. The specification names phishing inside a view as a threat for exactly this reason.</p>
-<p><strong>The tool that refuses.</strong> Recipe 10 registers an <code>approve</code> tool whose only behaviour is to decline:</p>
-<p class="provenance extracted">Extracted from from <code>apps/recipes/r10-approval-center/index.html</code></p><pre class="js"><code>bridge.registerTool({
-  name: &quot;approve&quot;,
-  description: &quot;Approve a queued action&quot;,
-  inputSchema: { type: &quot;object&quot;, properties: { title: { type: &quot;string&quot; } } },
+<p class="eyebrow">Chapter 21</p><h1>State Ownership and Concurrency</h1><p class="summary">Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.</p><p>Label every region of your state user-owned, agent-owned or shared before you write any code. It takes about ten minutes and it converts an argument about merge semantics into a short list of decisions, most of which turn out to be obvious once the regions are named.</p>
+<p>This is not about merge algorithms. The agent is not another user: it is fast, it works in bursts, it cannot see the screen, it does not know the human is mid-sentence, and it cannot be asked to wait.</p>
+<div class="demo" data-demo="lab-ownership" id="lab-ownership"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="who-owns-what">Who owns what?</h2>
+<div class="cap" id="state.ownership"><div class="cap-head"><code class="cap-id">state.ownership</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Declare who owns each region when both parties can write.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-ownership">lab-ownership</a></dd></dl></div>
+<p>Every region of application state gets exactly one of three labels, and the labels should be visible in the interface. A user who can see that the risk score belongs to the agent and the note belongs to them can predict what will change under their cursor.</p>
+<p><strong>User-owned.</strong> The agent may read it and may propose changes to it in conversation. It may not write it. Personal notes, drafts the user has not shared, anything where the point is that a person said it.</p>
+<p><strong>Agent-owned.</strong> The agent computes it and the view displays it. The user does not edit it directly; if they disagree, they change the inputs. Risk scores, classifications, generated summaries that are labelled as generated.</p>
+<p><strong>Shared.</strong> Both may write, and therefore a conflict policy is required. This is where all the difficulty lives, and the useful discipline is to keep the shared set small.</p>
+<p>The demonstration has one region of each, and the labels are visible in the interface. That visibility is not decoration: a user who can see that the risk score is the agent’s and the note is theirs can predict what will change under them.</p>
+<p><strong>Write the map down before the code.</strong> It takes ten minutes and it converts an argument about merge semantics into a list of decisions. Recipe 4 declares its map in the recipe entry, and the map is what determined which tools the view registers.</p>
+<figure>
+<img src="figures/diag-ownership.png" alt="Three regions, three owners, one conflict policy each" />
+<figcaption aria-hidden="true">Three regions, three owners, one conflict policy each</figcaption>
+</figure>
+<h2 id="what-happens-when-both-write">What happens when both write?</h2>
+<div class="cap" id="state.conflict"><div class="cap-head"><code class="cap-id">state.conflict</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Decide what happens when they both do.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-ownership">lab-ownership</a></dd></dl></div>
+<p>For each shared region, pick one policy and make it visible. The four are not equally safe, and the choice is worth making deliberately, before the first time two writes land in the same second.</p>
+<p><strong>Reject.</strong> The write fails and the writer is told. Appropriate when the region is small and the loss is cheap. The tool returns <code>isError: true</code> with an explanation, which the agent can relay.</p>
+<p><strong>Last writer wins.</strong> The later write applies. Simple, and dangerous exactly when the human is the earlier writer, because they lose work they can see on screen. Acceptable only with a visible notice and an undo.</p>
+<p><strong>Merge.</strong> For structured state where writes touch different fields, apply both. Requires that your state actually be structured, and no blob of HTML, which is a good reason to structure it.</p>
+<p><strong>Ask.</strong> Hold the write, show both versions, let the human choose. The heaviest and the safest, and the right default when the human is actively editing.</p>
+<p>The demonstration implements the last one with a rule that costs eight lines: while the human has typed within the last 1.5 seconds, hold the agent’s write and offer it when they stop. The number is a guess and the mechanism is not. Anything between one and three seconds behaves the same way to a user, and the property that matters is that the agent’s text never appears under a moving cursor.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-ownership/index.html</code></p><pre class="js"><code>bridge.registerTool({
+  name: &quot;rewrite_summary&quot;,
+  description: &quot;Replace the shared summary text&quot;,
+  inputSchema: { type: &quot;object&quot;, properties: { text: { type: &quot;string&quot; } },
+                 required: [&quot;text&quot;] },
+  annotations: { readOnlyHint: false },
+}, async ({ text }) =&gt; {
+  if (userTyping) {
+    pending = text;
+    setOwner(&quot;Agent write held: the human is typing.&quot;, &quot;warn&quot;);
+    return { content: [{ type: &quot;text&quot;,
+      text: &quot;Held. The user is editing; the change will be offered to them.&quot; }] };
+  }
+  offer(text);
+  return { content: [{ type: &quot;text&quot;, text: &quot;Offered to the user for review.&quot; }] };
+});</code></pre>
+<p>Two things to notice. The tool tells the agent what actually happened, so it does not report to the user that the summary has been rewritten when it has not. And “held” and “offered” are different outcomes with different words, because an agent that reads “held” can decide to wait and try again.</p>
+<h2 id="how-do-i-say-no-to-the-agent">How do I say no to the agent?</h2>
+<p>The user-owned region needs a registered tool as well, and that tool’s entire job is to refuse usefully. Not registering one is worse: a model that cannot find a way to write the note will try adjacent tools, or will report to the user that it updated the note when nothing happened.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-ownership/index.html</code></p><pre class="js"><code>bridge.registerTool({
+  name: &quot;write_note&quot;,
+  description: &quot;Attempt to write the user-owned note&quot;,
+  inputSchema: { type: &quot;object&quot;, properties: { text: { type: &quot;string&quot; } },
+                 required: [&quot;text&quot;] },
   annotations: { readOnlyHint: false },
 }, async () =&gt; ({
   isError: true,
-  content: [{ type: &quot;text&quot;, text:
-    &quot;Approval requires a person. This view does not accept approvals over &quot;
-    + &quot;the tool interface.&quot; }],
+  content: [{ type: &quot;text&quot;,
+    text: &quot;The internal note is user owned. Propose a change in the &quot;
+        + &quot;conversation instead of writing it.&quot; }],
 }));</code></pre>
-<p>Registering a tool in order to refuse it looks strange until you consider the alternative. An agent that finds no approval tool will try something else, and what it tries may be a server tool that does not have the gate. An explicit refusal that states the rule is a better interface for a model in the same way it is for a person.</p>
-<p><strong>What a mechanism would look like.</strong> <code>ui/request-approval</code> from the view, answered by the host after the host itself asks the user, returning something the server can verify. The host is the only party in a position to render an authentic consent surface, because it is the only one the user has a trust relationship with.</p>
-<h2 id="can-i-ask-a-structured-question">Can I ask a structured question?</h2>
-<div class="cap" id="elicit.request"><div class="cap-head"><code class="cap-id">elicit.request</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Ask the user a structured question mid-operation.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-approval">lab-approval</a></dd></dl></div>
-<p>Core MCP has elicitation, which lets a server ask the host to collect structured input from the user in the middle of an operation. It also has a URL mode for out-of-band interactions, with a hard requirement that credentials never be collected in form mode: passwords, API keys, tokens and payment details must go through a URL the user can inspect.</p>
-<p>That flows server to host. There is no view-to-host equivalent, so a view with a mid-operation question has two options. Ask in its own UI, which works and carries no more weight than any other pixels in an untrusted iframe. Or send <code>ui/message</code> and wait for a turn, which costs the flow.</p>
-<p><strong>The rule that survives regardless.</strong> Never collect credentials in a view. The elicitation specification’s prohibition on form-mode credential collection applies with more force here, not less: a form inside an untrusted iframe asking for a password is the phishing attack in the threat model, drawn by the application itself. If your flow needs authentication, it needs URL-mode elicitation from the server, or a link opened through <code>ui/open-link</code> into a real browser context where the user can see the address bar.</p>
-<figure>
-<img src="figures/diag-context.png" alt="What crosses the context boundary, and what does not" />
-<figcaption aria-hidden="true">What crosses the context boundary, and what does not</figcaption>
-</figure>
-<h2 id="what-should-the-model-never-be-told">What should the model never be told?</h2>
-<div class="cap" id="agent.boundary"><div class="cap-head"><code class="cap-id">agent.boundary</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Keep hover, scroll, and sort out of the model&#x27;s context.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-approval">lab-approval</a></dd></dl></div>
-<div class="principle">
-<p><strong>The Context Boundary.</strong> UI state is not automatically model context.</p>
-<p>Hover, scroll position, open menus, focus, local sort order and transient selection stay private to the interface. None of them changes what a reasonable answer to the next question would be.</p>
-<p>Only state that changes what a reasonable next answer would be should cross, and it crosses explicitly through <code>ui/update-model-context</code> rather than by accident. Explicitly is the operative word: nothing about your interface is published unless a line of your code publishes it.</p>
-</div>
-<p>The demo has two counters: local events, and <code>ui/update-model-context</code> calls. Move the mouse over the card. The first passes a thousand; the second stays at the number of decisions you made.</p>
-<p><strong>Why the default is silence.</strong> Three reasons, and only the first is about cost.</p>
-<p>Context is finite and shared with the conversation, so anything you publish displaces something else. Published state is <em>not</em> deletable in the way it feels: hosts may hold the last update until the next user message, and the model may reason from it for several turns. And some UI state is information the user did not intend to disclose. What somebody hovered over before deciding is a record of their hesitation, and a view that publishes it has told the model something the user would not have said.</p>
-<p><strong>The test.</strong> Would this change a reasonable answer to the next question?</p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>State</th>
-<th>Publish?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Selection</td>
-<td>Yes. It answers “why are these slow”.</td>
-</tr>
-<tr>
-<td>Decision made</td>
-<td>Yes. Recipe 10 publishes approve or deny.</td>
-</tr>
-<tr>
-<td>Sort order</td>
-<td>Only if the user may ask “what is at the top”.</td>
-</tr>
-<tr>
-<td>Hover, scroll, focus</td>
-<td>Never.</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Two failures.</strong> Under-publish and the assistant does not know what “these” means, which reads as stupidity. Over-publish and the window fills with near-identical snapshots, and answers degrade as the session runs. The second is harder to spot because nothing looks broken.</p>
-<h2 id="why-the-view-cannot-enforce-it">Why the view cannot enforce it</h2>
-<p>Be precise about this, because the queue-and-perform pattern looks like security and is only a convention. Knowing exactly what it does and does not buy is the difference between using it correctly and trusting it too far.</p>
-<p>The view is HTML from a server, running in a sandbox, and its Approve button is an ordinary button. Nothing signs the click. Nothing attests that a human made it. A compromised view, or a view whose server was compromised, can call the performing tool directly without rendering anything at all, and the server cannot tell the difference because the call arrives over the same channel with the same credentials.</p>
-<p>What the pattern does buy is real and worth having, and it is worth listing so that the part it does not buy is equally clear:</p>
-<p>The <strong>model</strong> cannot approve, because the performing tool is <code>visibility: ["app"]</code> and the host must not put it in the agent’s tool list. That closes the case where a model talks itself into an action.</p>
-<p>The <strong>audit trail</strong> is coherent, because queueing and performing are separate server-side events sharing an id, so the record shows what was requested, when it was authorised, and by which path it executed.</p>
-<p>The <strong>user</strong> sees provenance, which is the difference between an approval and a reflex. Five fields naming who asked, on whose behalf, using which tool, with what arguments, and what was approved before, is enough for somebody to notice that this is the first refund ever issued to this customer.</p>
-<p>What it does not buy is protection from a hostile view, and that requires the host to render the consent surface, which requires a message that does not exist. That is the finding, and it belongs upstream rather than in a private extension.</p>
+<p>The alternative, not registering the tool at all, is worse. A model that cannot find a way to write the note will try adjacent tools, or will tell the user it has updated the note when it has not. An explicit refusal that names the correct route is a better interface for a model in exactly the way it is for a person.</p>
+<h2 id="what-about-optimistic-updates">What about optimistic updates?</h2>
+<p>The other concurrency problem has nothing to do with the agent. It is between your view and the server, and it appears the moment you show a change before the call that makes it has returned.</p>
+<p>A view that applies a change locally and then calls a tool has committed to an outcome it does not have yet. When the call fails, or is cancelled, or the frame is torn down mid-flight, the interface is showing something that never happened.</p>
+<p><strong>The rule.</strong> Optimistic updates need a compensating action recorded at the same moment they are applied, which is the same transaction shape as Chapter 16’s undo. On failure, apply the compensation and say why. On cancellation, apply the compensation only for steps that did not complete, and say how far it got: Recipe 11 reports “stopped after three of five steps, completed steps were not rolled back”, which is unglamorous and true.</p>
+<p><strong>The unrecoverable case.</strong> If the frame is torn down while a write is in flight, nobody rolls anything back. The server may have applied it. This is why writes that matter should be idempotent and keyed, so the next render can ask what actually happened.</p>
+<h2 id="put-the-agent-on-the-undo-stack">Put the agent on the undo stack</h2>
+<p>The single most important rule in this chapter, and mechanically it costs nothing, because it belongs to Chapter 16’s transaction stack and that stack already exists. Every agent write goes through the same <code>apply</code> path a human edit goes through, carrying a label that names the agent, and Ctrl+Z reverses it like anything else.</p>
+<p>Every agent write goes onto the same undo stack as the user’s own edits, as one transaction, with a label that names the agent. One Cmd+Z restores the human’s words. Recipe 4 does this for accepted rewrites, and the whole safety argument for agent-assisted editing rests on it: a change you can take back in one keystroke is a change you can afford to let a model make.</p>
+<p>An agent whose changes are outside the undo stack is an agent whose changes are permanent, and users respond to permanent changes by not using the feature. This is the cheapest trust mechanism in the book and the one most often skipped, because agent writes usually arrive through a different code path than user edits and joining the two paths is a refactor nobody scheduled.</p>
+<h2 id="picking-a-policy-fast">Picking a policy, fast</h2>
+<p>A shortcut for picking one, since this choice is usually made under time pressure and the wrong default is expensive to unwind once views depend on it. Four questions, in order, and the first one that gets a yes decides it. Write the answer next to the region in the code, because the next person to touch it will otherwise re-derive it from the behaviour and get it wrong.</p>
+<p><strong>Is losing this write cheap?</strong> Reject. The tool says no with a reason and the agent can relay it.</p>
+<p><strong>Is the region a field?</strong> Merge, if writes touch different fields, and last-writer-wins with a notice if they do not.</p>
+<p><strong>Is a human likely to be editing it right now?</strong> Ask, as defined above. This is the default for anything a person types into, and the cost of getting it wrong is somebody watching their sentence disappear as they write it.</p>
+<p><strong>Is the region computed?</strong> Agent-owned. There is no conflict, because the user does not write it; if they disagree they change the inputs.</p>
+<p>The demonstration implements Ask with a 1.5 second idle timer, which is crude and works. A more careful version would key on whether the field has focus, and would still need the timer for the case where somebody types and then looks away.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li>A view’s approval control has no protocol effect, and the enforcing gate is on the server.</li>
-<li>The tool that performs a gated action carries <code>visibility: ["app"]</code>.</li>
-<li>An approval tool exposed to the agent refuses rather than approving.</li>
-<li>No credentials are collected in a view.</li>
-<li>Context updates carry decisions and outcomes, not interaction traces.</li>
-<li>Hover, scroll and sort produce no messages.</li>
+<li>An agent write to a user-owned region returns <code>isError: true</code> with a reason.</li>
+<li>An agent write to a shared region while the user is typing is held.</li>
+<li>A held write is offered to the user rather than dropped.</li>
+<li>The tool result distinguishes held, offered and applied.</li>
+<li>Every applied agent write is one undo transaction.</li>
+<li>A failed optimistic update is rolled back and the reason is shown.</li>
+<li>A cancelled multi-step operation reports how far it got.</li>
 </ol>
-<h2 id="what-to-remember-from-part-iii">What to remember from Part III</h2>
-<p>Both parties can act and neither can see the other. The view cannot read the conversation. The host cannot read the view’s DOM. The agent cannot see the screen.</p>
-<p>Every capability in Part III passes a small, explicit, auditable amount of information across that gap: <code>ui/message</code>, <code>ui/update-model-context</code>, <code>tools/call</code> in both directions, <code>sampling/createMessage</code>.</p>
-<p><code>approval.request</code> and <code>elicit.request</code> did not get one, because both need the host to render a consent surface and nobody has specified that yet.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>Three labels, four policies, and a decision made before the code. Keep the shared set small, hold agent writes while a human is typing, tell the agent what actually happened, and put everything the agent does on the undo stack. That is the entire chapter, and every part of it is cheaper to build than the merge algorithm you were considering.</p>
 
-<div class="pager"><a href="ch20.html"><span class="dir">Previous</span>20. State Ownership and Concurrency</a><a href="ch22.html" style="text-align:right"><span class="dir">Next</span>22. Components I: Overlays, Controls and Text</a></div>
+<div class="pager"><a href="ch20.html"><span class="dir">Previous</span>20. Tool Invocation and Streaming</a><a href="ch22.html" style="text-align:right"><span class="dir">Next</span>22. Approval, Elicitation and the Context Boundary</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

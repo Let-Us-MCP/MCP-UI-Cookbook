@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,7 +74,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Recipe 10</p><h1>Approval Center</h1><p class="summary">A queue of actions waiting for a person, with the provenance that makes approval meaningful and a tool interface that refuses to approve anything.</p><div class="cap recipe" id="r10"><div class="cap-head"><code class="cap-id">r10</code><span class="cap-tag core">Approval Center</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Human review of queued sensitive actions.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch21.html#approval.request">approval.request</a></code><code><a href="ch21.html#agent.boundary">agent.boundary</a></code><code><a href="ch21.html#elicit.request">elicit.request</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch21.html#approval.request">approval.request</a></code><code><a href="ch08.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch17.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch21.html#agent.boundary">agent.boundary</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch08.html#notify.banner">notify.banner</a></code><code><a href="ch13.html#a11y.announce">a11y.announce</a></code><code><a href="ch21.html#elicit.request">elicit.request</a></code><code><a href="ch10.html#link.open">link.open</a></code></dd></dl></div>
+<p class="eyebrow">Recipe 10</p><h1>Approval Center</h1><p class="summary">A queue of actions waiting for a person, with the provenance that makes approval meaningful and a tool interface that refuses to approve anything.</p><div class="cap recipe" id="r10"><div class="cap-head"><code class="cap-id">r10</code><span class="cap-tag core">Approval Center</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Human review of queued sensitive actions.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch22.html#approval.request">approval.request</a></code><code><a href="ch22.html#agent.boundary">agent.boundary</a></code><code><a href="ch22.html#elicit.request">elicit.request</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch22.html#approval.request">approval.request</a></code><code><a href="ch09.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch18.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch22.html#agent.boundary">agent.boundary</a></code><code><a href="ch17.html#op.error">op.error</a></code><code><a href="ch09.html#notify.banner">notify.banner</a></code><code><a href="ch14.html#a11y.announce">a11y.announce</a></code><code><a href="ch22.html#elicit.request">elicit.request</a></code><code><a href="ch11.html#link.open">link.open</a></code></dd></dl></div>
 <p>The recipe built on a capability that does not exist. There is no <code>approval.request</code> message, so this recipe is an argument about where the enforcement has to live and what the interface owes the person making the decision.</p>
 <div class="demo" data-demo="r10-approval-center" id="r10-approval-center"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
@@ -102,11 +103,11 @@
 <p>Approving is local. A person presses a button; the <code>approve</code> tool exists only to refuse the agent.</p>
 <h2 id="provenance-or-it-is-not-an-approval">Provenance, or it is not an approval</h2>
 <p>Every card carries five fields: who asked, on whose behalf, which tool, which arguments, and what has been approved before.</p>
-<p>Chapter 21 argues that a card without them is a dialog with a lever attached, and that people learn to pull levers. The version with them lets a reviewer notice that this is the first refund ever approved for this customer, which is the fact that changes the decision.</p>
+<p>Chapter 22 argues that a card without them is a dialog with a lever attached, and that people learn to pull levers. The version with them lets a reviewer notice that this is the first refund ever approved for this customer, which is the fact that changes the decision.</p>
 <h2 id="where-the-gate-actually-is">Where the gate actually is</h2>
 <p>The view cannot enforce anything. It is untrusted HTML in a sandbox and its Approve button is an ordinary button. The enforceable arrangement is:</p>
-<p>The server queues rather than acts. A refund tool returns a queue id and does nothing else. A second tool performs the refund, requires the queue id, and is <code>visibility: ["app"]</code> so the model cannot call it. The view calls it after a human presses Approve.</p>
-<p>That is a convention rather than a mechanism, and its weakness is that a compromised view could call the second tool without a human. Closing that needs <code>ui/request-approval</code>, which is in Appendix B.</p>
+<p>The server queues. A refund tool returns a queue id and does nothing else. A second tool performs the refund, requires the queue id, and is <code>visibility: ["app"]</code> so the model cannot call it. The view calls it after a human presses Approve.</p>
+<p>That is a convention, and its weakness is that a compromised view could call the second tool without a human. Closing that needs <code>ui/request-approval</code>, which is in Appendix B.</p>
 <h2 id="the-tool-that-refuses">The tool that refuses</h2>
 <p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>bridge.registerTool({
   name: &quot;approve&quot;,
@@ -187,5 +188,6 @@
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

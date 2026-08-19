@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -80,7 +81,7 @@
 <p class="sub">From atomic UI capabilities to native-like applications</p>
 <p>An MCP application is a sandboxed iframe that speaks JSON-RPC to a host it
 does not trust, on behalf of a user it can see and a model it cannot. This
-book takes that surface apart: 85 atomic capabilities, the components
+book takes that surface apart: 87 atomic capabilities, the components
 they compose into, 13 application recipes that put them
 under load, and a conformance suite that decides whether a host really supports
 what it claims.</p>
@@ -89,7 +90,7 @@ what it claims.</p>
 4 come from core MCP,
 20 are the browser inside the sandbox,
 19 are yours to build, and
-14 have no standard mechanism at all. The last group is the most
+16 have no standard mechanism at all. The last group is the most
 interesting part of the book.</p>
 <p>Pinned to core protocol <code>2026-07-28</code>, the MCP
 Apps extension <code>io.modelcontextprotocol/ui</code>, and SDK
@@ -98,36 +99,37 @@ running, not recorded. <a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">R
 </div>
 </div>
 <h2>Front matter</h2>
-<div class="cards"><a href="preface.html"><span class="n">&nbsp;</span><div class="t">What This Book Is</div><div class="s">85 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.</div></a>
+<div class="cards"><a href="preface.html"><span class="n">&nbsp;</span><div class="t">What This Book Is</div><div class="s">87 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.</div></a>
 <a href="how-to-read.html"><span class="n">&nbsp;</span><div class="t">How to Read This Book</div><div class="s">The four layers, the vocabulary, the labels on every entry, and the one question the whole book is trying to answer.</div></a></div>
 <h2>Part I - Foundations</h2>
-<div class="cards"><a href="ch01.html"><span class="n">Chapter 1</span><div class="t">The Capability Model</div><div class="s">Eighty-five named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</div></a>
+<div class="cards"><a href="ch01.html"><span class="n">Chapter 1</span><div class="t">The Capability Model</div><div class="s">Eighty-seven named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</div></a>
 <a href="ch02.html"><span class="n">Chapter 2</span><div class="t">What Crosses the Boundary</div><div class="s">The whole wire protocol in one chapter: the handshake, the twenty messages, the double iframe, and the four ways a view finds out what it was rendered for.</div></a>
-<a href="ch03.html"><span class="n">Chapter 3</span><div class="t">The Local-First Principle</div><div class="s">Sorting a column is not a conversation. Where the agent boundary goes, why it goes there, and what it costs when it goes somewhere else.</div></a>
-<a href="ch04.html"><span class="n">Chapter 4</span><div class="t">The Sandbox and What It Costs You</div><div class="s">An opaque origin, a content security policy your server declares and the host enforces, four permissions, and the surprising consequences of all of it.</div></a>
-<a href="ch05.html"><span class="n">Chapter 5</span><div class="t">Entries, Recipes, and the Discipline of Degradation</div><div class="s">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</div></a></div>
+<a href="ch03.html"><span class="n">Chapter 3</span><div class="t">One View at a Time</div><div class="s">The unit of rendering is the tool call. There is no page, nothing owns a screen, and two views cannot share one. Most of the hard problems in this book descend from that.</div></a>
+<a href="ch04.html"><span class="n">Chapter 4</span><div class="t">The Local-First Principle</div><div class="s">Sorting a column is not a conversation. Where the agent boundary goes, why it goes there, and what it costs when it goes somewhere else.</div></a>
+<a href="ch05.html"><span class="n">Chapter 5</span><div class="t">The Sandbox and What It Costs You</div><div class="s">An opaque origin, a content security policy your server declares and the host enforces, four permissions, and the surprising consequences of all of it.</div></a>
+<a href="ch06.html"><span class="n">Chapter 6</span><div class="t">Entries, Recipes, and the Discipline of Degradation</div><div class="s">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</div></a></div>
 <h2>Part II - Atomic UI capabilities</h2>
-<div class="cards"><a href="ch06.html"><span class="n">Chapter 6</span><div class="t">Surfaces and Geometry</div><div class="s">How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.</div></a>
-<a href="ch07.html"><span class="n">Chapter 7</span><div class="t">Focus and Scroll</div><div class="s">Inside the frame, focus and scrolling work exactly as they always have. Across the frame boundary, neither of them works at all, and the protocol has nothing to say about it.</div></a>
-<a href="ch08.html"><span class="n">Chapter 8</span><div class="t">Dialogs and Attention</div><div class="s">Six capabilities, no messages, one broken browser API, and a decision procedure for how loudly to interrupt somebody.</div></a>
-<a href="ch09.html"><span class="n">Chapter 9</span><div class="t">Keyboard, Pointer and Selection</div><div class="s">Nine capabilities, one message between them. The browser does almost all of this, which is why the two places it stops are worth naming.</div></a>
-<a href="ch10.html"><span class="n">Chapter 10</span><div class="t">Clipboard, Files and System Integration</div><div class="s">Two messages that exist because the sandbox closed a door, one permission, and three capabilities with no route at all.</div></a>
-<a href="ch11.html"><span class="n">Chapter 11</span><div class="t">Pickers and Dropzones</div><div class="s">Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.</div></a>
-<a href="ch12.html"><span class="n">Chapter 12</span><div class="t">Host Environment and Theming</div><div class="s">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</div></a>
-<a href="ch13.html"><span class="n">Chapter 13</span><div class="t">Accessibility</div><div class="s">Three preferences the host never sends, one live region you have to build, and the reason an embedded frame makes all of this harder than a page.</div></a>
-<a href="ch14.html"><span class="n">Chapter 14</span><div class="t">Lifecycle and Connectivity</div><div class="s">Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.</div></a>
-<a href="ch15.html"><span class="n">Chapter 15</span><div class="t">Persistence and History</div><div class="s">The sandbox took away your storage and the extension has not replaced it. Undo, on the other hand, was always yours, and in an agentic application it matters more than it ever did in a page.</div></a>
-<a href="ch16.html"><span class="n">Chapter 16</span><div class="t">Media, Progress, Cancellation and Errors</div><div class="s">Playback the platform gives you, immersion the host gives you, and four capabilities about work that takes long enough for somebody to change their mind.</div></a></div>
+<div class="cards"><a href="ch07.html"><span class="n">Chapter 7</span><div class="t">Surfaces and Geometry</div><div class="s">How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.</div></a>
+<a href="ch08.html"><span class="n">Chapter 8</span><div class="t">Focus and Scroll</div><div class="s">Inside the frame, focus and scrolling work exactly as they always have. Across the frame boundary, neither of them works at all, and the protocol has nothing to say about it.</div></a>
+<a href="ch09.html"><span class="n">Chapter 9</span><div class="t">Dialogs and Attention</div><div class="s">Six capabilities, no messages, one broken browser API, and a decision procedure for how loudly to interrupt somebody.</div></a>
+<a href="ch10.html"><span class="n">Chapter 10</span><div class="t">Keyboard, Pointer and Selection</div><div class="s">Nine capabilities, one message between them. The browser does almost all of this, which is why the two places it stops are worth naming.</div></a>
+<a href="ch11.html"><span class="n">Chapter 11</span><div class="t">Clipboard, Files and System Integration</div><div class="s">Two messages that exist because the sandbox closed a door, one permission, and three capabilities with no route at all.</div></a>
+<a href="ch12.html"><span class="n">Chapter 12</span><div class="t">Pickers and Dropzones</div><div class="s">Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.</div></a>
+<a href="ch13.html"><span class="n">Chapter 13</span><div class="t">Host Environment and Theming</div><div class="s">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</div></a>
+<a href="ch14.html"><span class="n">Chapter 14</span><div class="t">Accessibility</div><div class="s">Three preferences the host never sends, one live region you have to build, and the reason an embedded frame makes all of this harder than a page.</div></a>
+<a href="ch15.html"><span class="n">Chapter 15</span><div class="t">Lifecycle and Connectivity</div><div class="s">Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.</div></a>
+<a href="ch16.html"><span class="n">Chapter 16</span><div class="t">Persistence and History</div><div class="s">The sandbox took away your storage and the extension has not replaced it. Undo, on the other hand, was always yours, and in an agentic application it matters more than it ever did in a page.</div></a>
+<a href="ch17.html"><span class="n">Chapter 17</span><div class="t">Media, Progress, Cancellation and Errors</div><div class="s">Playback the platform gives you, immersion the host gives you, and four capabilities about work that takes long enough for somebody to change their mind.</div></a></div>
 <h2>Part III - Agent and UI</h2>
-<div class="cards"><a href="ch17.html"><span class="n">Chapter 17</span><div class="t">UI to Agent</div><div class="s">Three ways for a view to reach the conversation, one of which is quiet, one of which starts a turn, and one of which skips the conversation entirely.</div></a>
-<a href="ch18.html"><span class="n">Chapter 18</span><div class="t">Agent to UI</div><div class="s">The host cannot see inside your frame, so an agent that wants to act on your interface has to be given a vocabulary. Registering tools is that vocabulary, and it turns out to be the same mechanism accessibility and testing need.</div></a>
-<a href="ch19.html"><span class="n">Chapter 19</span><div class="t">Tool Invocation and Streaming</div><div class="s">The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.</div></a>
-<a href="ch20.html"><span class="n">Chapter 20</span><div class="t">State Ownership and Concurrency</div><div class="s">Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.</div></a>
-<a href="ch21.html"><span class="n">Chapter 21</span><div class="t">Approval, Elicitation and the Context Boundary</div><div class="s">Two capabilities the extension does not have, one principle it depends on, and an argument about what the model should never be told.</div></a></div>
+<div class="cards"><a href="ch18.html"><span class="n">Chapter 18</span><div class="t">UI to Agent</div><div class="s">Three ways for a view to reach the conversation, one of which is quiet, one of which starts a turn, and one of which skips the conversation entirely.</div></a>
+<a href="ch19.html"><span class="n">Chapter 19</span><div class="t">Agent to UI</div><div class="s">The host cannot see inside your frame, so an agent that wants to act on your interface has to be given a vocabulary. Registering tools is that vocabulary, and it turns out to be the same mechanism accessibility and testing need.</div></a>
+<a href="ch20.html"><span class="n">Chapter 20</span><div class="t">Tool Invocation and Streaming</div><div class="s">The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.</div></a>
+<a href="ch21.html"><span class="n">Chapter 21</span><div class="t">State Ownership and Concurrency</div><div class="s">Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.</div></a>
+<a href="ch22.html"><span class="n">Chapter 22</span><div class="t">Approval, Elicitation and the Context Boundary</div><div class="s">Two capabilities the extension does not have, one principle it depends on, and an argument about what the model should never be told.</div></a></div>
 <h2>Part IV - Reusable components</h2>
-<div class="cards"><a href="ch22.html"><span class="n">Chapter 22</span><div class="t">Components I: Overlays, Controls and Text</div><div class="s">What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.</div></a>
-<a href="ch23.html"><span class="n">Chapter 23</span><div class="t">Components II: Navigation, Data and Visualization</div><div class="s">Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.</div></a>
-<a href="ch24.html"><span class="n">Chapter 24</span><div class="t">Components III: Spatial, Media and Agent-Native</div><div class="s">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</div></a></div>
+<div class="cards"><a href="ch23.html"><span class="n">Chapter 23</span><div class="t">Components I: Overlays, Controls and Text</div><div class="s">What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.</div></a>
+<a href="ch24.html"><span class="n">Chapter 24</span><div class="t">Components II: Navigation, Data and Visualization</div><div class="s">Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.</div></a>
+<a href="ch25.html"><span class="n">Chapter 25</span><div class="t">Components III: Spatial, Media and Agent-Native</div><div class="s">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</div></a></div>
 <h2>Part V - Application recipes</h2>
 <div class="cards"><a href="r01.html"><span class="n">Recipe 1</span><div class="t">Data Explorer</div><div class="s">The baseline recipe. A table you can sort, filter, page and select, and one button that turns a selection into a question.</div></a>
 <a href="r02.html"><span class="n">Recipe 2</span><div class="t">Dashboard</div><div class="s">Tiles, sparklines, drill-down, and values that keep changing while you look at them.</div></a>
@@ -143,12 +145,12 @@ running, not recorded. <a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">R
 <a href="r12.html"><span class="n">Recipe 12</span><div class="t">Media Viewer</div><div class="s">A transport, a caption track, an immersion request that goes through the host, and a share button for a capability that does not exist.</div></a>
 <a href="r13.html"><span class="n">Recipe 13</span><div class="t">Settings and Preferences</div><div class="s">A form, done properly. Native pickers, validation that waits until you have finished typing, save and discard that mean what they say, and a dirty guard on teardown.</div></a></div>
 <h2>Part VI - Verification and conformance</h2>
-<div class="cards"><a href="ch25.html"><span class="n">Chapter 25</span><div class="t">Why Recipes Are the Test Suite</div><div class="s">Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.</div></a>
-<a href="ch26.html"><span class="n">Chapter 26</span><div class="t">The Verification Layers</div><div class="s">Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.</div></a>
-<a href="ch27.html"><span class="n">Chapter 27</span><div class="t">The Coverage Matrix and the Checklists</div><div class="s">What eighty-five capabilities by thirteen recipes actually shows, why the matrix is generated rather than maintained, and what a host is claiming when it claims a level.</div></a>
-<a href="ch28.html"><span class="n">Chapter 28</span><div class="t">The Missing Primitive Loop, and the Live Book</div><div class="s">How a gap gets found, what a good proposal looks like, and how a static site runs thirty applications next to their own source without hosting anything.</div></a></div>
+<div class="cards"><a href="ch26.html"><span class="n">Chapter 26</span><div class="t">Why Recipes Are the Test Suite</div><div class="s">Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.</div></a>
+<a href="ch27.html"><span class="n">Chapter 27</span><div class="t">The Verification Layers</div><div class="s">Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.</div></a>
+<a href="ch28.html"><span class="n">Chapter 28</span><div class="t">The Coverage Matrix and the Checklists</div><div class="s">What eighty-seven capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.</div></a>
+<a href="ch29.html"><span class="n">Chapter 29</span><div class="t">The Missing Primitive Loop, and the Live Book</div><div class="s">How a gap gets found, what a good proposal looks like, and how a static site runs thirty applications next to their own source without hosting anything.</div></a></div>
 <h2>Appendices</h2>
-<div class="cards"><a href="appendix-a.html"><span class="n">Appendix A</span><div class="t">Capability Index</div><div class="s">All eighty-five identifiers with level, tag, ground, the specification messages behind them, and how many recipes exercise each.</div></a>
+<div class="cards"><a href="appendix-a.html"><span class="n">Appendix A</span><div class="t">Capability Index</div><div class="s">All eighty-seven identifiers with level, tag, ground, the specification messages behind them, and how many recipes exercise each.</div></a>
 <a href="appendix-b.html"><span class="n">Appendix B</span><div class="t">The Gaps</div><div class="s">Fourteen capabilities with no standard mechanism, what each one costs, and the shape a proposal would take.</div></a>
 <a href="appendix-c.html"><span class="n">Appendix C</span><div class="t">Conformance Checklists</div><div class="s">What a host is claiming when it claims a level, phrased as things a test can assert.</div></a>
 <a href="appendix-d.html"><span class="n">Appendix D</span><div class="t">Glossary</div><div class="s">The terms this book uses in a specific way, each with the message, field or file it corresponds to.</div></a>
@@ -157,5 +159,6 @@ running, not recorded. <a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">R
 </main>
 </div>
 
+<script src="copy.js"></script>
 </body>
 </html>

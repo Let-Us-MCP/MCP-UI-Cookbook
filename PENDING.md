@@ -37,13 +37,13 @@ capability, in the manner of the public web platform test dashboards.
 
 **Why it matters most after render conformance.** One host running thirteen
 recipes proves the recipes work. Several hosts running them unmodified is the
-only evidence that would answer the completeness test in Chapter 25.
+only evidence that would answer the completeness test in Chapter 26.
 
 ## 3. Component layer checks
 
 **The gap.** Part IV components are a shared stylesheet and helper file rather
 than a library with stories, and no `axe-core` run is wired into the build.
-The accessibility claims come from the Chapter 13 checklist applied by hand.
+The accessibility claims come from the Chapter 14 checklist applied by hand.
 
 **What would close it.** Each component in isolation with interaction tests, an
 automated accessibility audit, and the ARIA Authoring Practices keyboard
@@ -55,7 +55,7 @@ checklists transcribed into executable assertions.
 argument with reasoning behind it, and arguments about interfaces are wrong
 more often than their authors expect.
 
-**Most exposed claim.** Chapter 3's local-first principle. If it is wrong, the
+**Most exposed claim.** Chapter 4's local-first principle. If it is wrong, the
 recipes are overbuilt in a way no automated check would ever detect.
 
 ## 5. Keyboard routes in two recipes

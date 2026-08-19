@@ -70,6 +70,11 @@ function draw() {
   $("#clock").textContent = `${clock(at)} / ${clock(clip.seconds)}`;
   $("#seek").max = String(clip.seconds);
   $("#seek").value = String(at);
+  // A range input announces its raw value, so a seek bar reads as "1601" to a
+  // screen reader unless you say what the number means. This is the most
+  // common defect in custom transports.
+  $("#seek").setAttribute("aria-valuetext",
+    `${clock(at)} of ${clock(clip.seconds)}`);
   $("#strip").replaceChildren(...clips.map((c, i) =>
     h("button", { role: "tab", "aria-current": i === current ? "true" : "false",
       "aria-label": c.title, onclick: () => { current = i; at = 0; draw(); } },

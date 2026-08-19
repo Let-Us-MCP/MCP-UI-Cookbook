@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,18 +74,18 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Appendix D</p><h1>Glossary</h1><p class="summary">The terms this book uses in a specific way, each with the message, field or file it corresponds to.</p><p><strong>Agent.</strong> The model-driven participant. It calls server tools through the host, and it calls <em>your</em> tools through <code>tools/call</code> when you declare <code>appCapabilities.tools</code>. It never sees your pixels or your DOM. Chapter 18.</p>
-<p><strong>Agent boundary.</strong> The line between what runs locally and what crosses to the model. Chapter 3 puts sorting, filtering and selection on the local side.</p>
-<p><strong>Atomic capability.</strong> The smallest independently useful operation, with a namespaced identifier such as <code>surface.resize</code>. All 85 are in Appendix A.</p>
+<p class="eyebrow">Appendix D</p><h1>Glossary</h1><p class="summary">The terms this book uses in a specific way, each with the message, field or file it corresponds to.</p><p><strong>Agent.</strong> The model-driven participant. It calls server tools through the host, and it calls <em>your</em> tools through <code>tools/call</code> when you declare <code>appCapabilities.tools</code>. It never sees your pixels or your DOM. Chapter 19.</p>
+<p><strong>Agent boundary.</strong> The line between what runs locally and what crosses to the model. Chapter 4 puts sorting, filtering and selection on the local side.</p>
+<p><strong>Atomic capability.</strong> The smallest independently useful operation, with a namespaced identifier such as <code>surface.resize</code>. All 87 are in Appendix A.</p>
 <p><strong>Capability delta.</strong> The capabilities a recipe exercises that no earlier recipe does, generated into each recipe entry. Recipe 1 claims 16; by Recipe 13 they are down to a handful.</p>
-<p><strong>Conformance level.</strong> One of four cumulative tiers: 1 Embedded, 2 Interactive, 3 Native-Like, 4 Agentic. 9 capabilities sit at level 1, 41 at level 2, 17 at level 3 and 18 at level 4. Appendix C is the checklist.</p>
-<p><strong>Core.</strong> Mandatory at its level. 67 of the 85 are Core.</p>
-<p><strong>Extended.</strong> Optional at any level, so your view must work without it. 18 of the 85.</p>
+<p><strong>Conformance level.</strong> One of four cumulative tiers: 1 Embedded, 2 Interactive, 3 Native-Like, 4 Agentic. 9 capabilities sit at level 1, 41 at level 2, 19 at level 3 and 18 at level 4. Appendix C is the checklist.</p>
+<p><strong>Core.</strong> Mandatory at its level. 68 of the 87 are Core.</p>
+<p><strong>Extended.</strong> Optional at any level, so your view must work without it. 19 of the 87.</p>
 <p><strong>Golden transcript.</strong> The recorded JSON-RPC log for one demonstration, in <code>conformance/transcripts/</code>. <code>node tools/check_demos.mjs</code> replays and diffs all 30 of them.</p>
-<p><strong>Ground.</strong> Where a capability’s behaviour comes from: <code>wire</code> (28), <code>core</code> (4), <code>platform</code> (20), <code>app</code> (19) or <code>gap</code> (14). The badge on every entry.</p>
+<p><strong>Ground.</strong> Where a capability’s behaviour comes from: <code>wire</code> (28), <code>core</code> (4), <code>platform</code> (20), <code>app</code> (19) or <code>gap</code> (16). The badge on every entry.</p>
 <p><strong>Host.</strong> The chat client, IDE or console the user is in. It connects to servers, allocates surfaces and mediates every privileged operation. It needs no model to do any of that.</p>
 <p><strong>Host context.</strong> The object in the <code>ui/initialize</code> result: <code>theme</code>, <code>styles</code>, <code>locale</code>, <code>timeZone</code>, <code>displayMode</code>, <code>containerDimensions</code>, <code>safeAreaInsets</code>, <code>deviceCapabilities</code>, <code>platform</code>, <code>userAgent</code>, <code>toolInfo</code>. Updated by <code>ui/notifications/host-context-changed</code>, which carries only changed keys.</p>
-<p><strong>Ownership map.</strong> Each region of state labelled user-owned, agent-owned or shared, written down before the code. Chapter 20; Recipe 4 declares one.</p>
+<p><strong>Ownership map.</strong> Each region of state labelled user-owned, agent-owned or shared, written down before the code. Chapter 21; Recipe 4 declares one.</p>
 <p><strong>Recipe.</strong> A reference application that is also an integration test. Thirteen of them, in <code>apps/recipes/</code>, each with an MCP server that runs over stdio.</p>
 <p><strong>Sandbox proxy.</strong> The outer cross-origin iframe a web host must wrap your view in, so the host’s origin never shares a document with server-delivered content. It relays every message except <code>ui/notifications/sandbox-*</code>.</p>
 <p><strong>Structured content.</strong> The <code>structuredContent</code> field of a <code>CallToolResult</code>. Your view reads it; it never enters the model’s context. Distinct from <code>content</code>, which is what the model reads.</p>
@@ -95,5 +96,6 @@
 </main>
 </div>
 
+<script src="copy.js"></script>
 </body>
 </html>

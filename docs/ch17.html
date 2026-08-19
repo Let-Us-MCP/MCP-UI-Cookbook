@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>17. UI to Agent &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Three ways for a view to reach the conversation, one of which is quiet, one of which starts a turn, and one of which skips the conversation entirely.">
-<meta property="og:title" content="17. UI to Agent">
-<meta property="og:description" content="Three ways for a view to reach the conversation, one of which is quiet, one of which starts a turn, and one of which skips the conversation entirely.">
+<title>17. Media, Progress, Cancellation and Errors &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Playback the platform gives you, immersion the host gives you, and four capabilities about work that takes long enough for somebody to change their mind.">
+<meta property="og:title" content="17. Media, Progress, Cancellation and Errors">
+<meta property="og:description" content="Playback the platform gives you, immersion the host gives you, and four capabilities about work that takes long enough for somebody to change their mind.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html" class="current">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html" class="current">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,83 +74,85 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 17</p><h1>UI to Agent</h1><p class="summary">Three ways for a view to reach the conversation, one of which is quiet, one of which starts a turn, and one of which skips the conversation entirely.</p><p>Three ways to reach outward, and they are roughly an order of magnitude apart in cost from each other. Choosing between them is the main design decision in this part of the protocol, and the cost that matters is not tokens: it is whether the user sees it happen and whether it can be taken back.</p>
-<p>Publish state quietly. Ask for a turn in the conversation. Or call a model directly and keep the answer. Picking the wrong one is the most common design error in this part of the protocol.</p>
-<div class="demo" data-demo="lab-agent" id="lab-agent"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="which-one-do-i-want">Which one do I want?</h2>
-<p><strong>Context update</strong> is push, and it is quiet. The view says what is currently true. Nobody is asked to do anything, no turn starts, and the fact is available when the <em>next</em> thing the user says needs it.</p>
-<p><strong>Message</strong> is a turn. The view puts content into the conversation and expects the agent to respond. This is heavy and should be traceable to a deliberate user action.</p>
-<p><strong>Sampling</strong> skips the conversation. The view asks the host’s model for a completion and gets a result back privately. No turn, no visible exchange, and the answer belongs to the view.</p>
-<p>Reaching for the wrong one is the most common design error in this part of the protocol. A view that sends a message every time a selection changes has turned a mouse into a conversation partner. A view that only ever publishes context and never offers a way to ask about it has built something the user cannot get an answer out of.</p>
-<h2 id="how-do-i-tell-the-model-what-is-on-screen">How do I tell the model what is on screen?</h2>
-<div class="cap" id="agent.contextUpdate"><div class="cap-head"><code class="cap-id">agent.contextUpdate</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Publish the part of view state the model should reason over.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/update-model-context</code><code>updateModelContext</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r08.html">Code and Diff Reviewer</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-agent">lab-agent</a></dd></dl></div>
-<p>Send <code>ui/update-model-context</code>, carrying <code>content</code>, <code>structuredContent</code>, or both. It <em>replaces</em> whatever you published before rather than adding to it, which is the single most important thing to know about this message: the model sees one payload from your view, not a history of them.</p>
-<p>Replacement is the important word. The specification is explicit: each request overwrites the previous context from this view, hosts may deduplicate identical updates, and if several arrive before the next user message the host should send only the last. The design assumes a view that publishes a <em>current state</em>, not a stream of events.</p>
-<p class="provenance extracted">Extracted from from <code>apps/labs/lab-agent/index.html</code></p><pre class="js"><code>function update() {
-  if (!bridge?.hostCapabilities.updateModelContext) return;
-  if (!selected.size) return;
-  const payload = {
-    content: [{ type: &quot;text&quot;, text:
-      `The user has ${selected.size} ticket(s) selected:\n${selectionText()}` }],
-    structuredContent: {
-      selected: [...selected].map((i) =&gt; ({ id: ROWS[i][0], owner: ROWS[i][1],
-                                            ageDays: ROWS[i][2], state: ROWS[i][3] })),
-    },
-  };
-  bridge.updateModelContext(payload);
+<p class="eyebrow">Chapter 17</p><h1>Media, Progress, Cancellation and Errors</h1><p class="summary">Playback the platform gives you, immersion the host gives you, and four capabilities about work that takes long enough for somebody to change their mind.</p><p>Two groups joined by one theme: the user is waiting, may stop waiting, and is owed an accurate account either way. Media takes time and the platform handles almost all of it for you. A tool call takes time and the protocol handles some of it, leaving the interface to cover the rest.</p>
+<div class="demo" data-demo="lab-media" id="lab-media"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="how-do-i-play-audio-or-video">How do I play audio or video?</h2>
+<div class="cap" id="media.playback"><div class="cap-head"><code class="cap-id">media.playback</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Play, pause, seek, rate, volume, captions.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p><code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code> work inside the sandbox with no host involvement at all. Controls, seeking, playback rate, volume and caption tracks through <code>&lt;track&gt;</code> are platform behaviour, and the accessibility of the native control set is better than anything you will write in an afternoon.</p>
+<p>Three embedded-specific notes.</p>
+<p><strong>Media has to come from somewhere.</strong> The restrictive default CSP is <code>media-src 'self' data:</code>, so a view loading video from a CDN must declare that origin in <code>resourceDomains</code>, and a host may decline it. Data URIs work and are impractical past a few hundred kilobytes.</p>
+<p><strong>Autoplay will not work, and should not.</strong> Autoplay policies require a user gesture or a muted element, and a view that starts playing sound inside somebody’s conversation without being asked is an actively bad citizen. Start paused, always.</p>
+<p><strong>Custom transports need the keyboard.</strong> If you replace the native controls, you inherit the accessibility contract: Space to play and pause, arrows to seek, a labelled slider with a real <code>aria-valuetext</code>, and a caption toggle with <code>aria-pressed</code>. Recipe 12 does this, and the honest note is that the native controls do it better with less code, so replace them only when you have a reason.</p>
+<h2 id="how-do-i-go-fullscreen-for-media">How do I go fullscreen for media?</h2>
+<div class="cap" id="media.fullscreen"><div class="cap-head"><code class="cap-id">media.fullscreen</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Go immersive through the host, not through the Fullscreen API.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/request-display-mode</code><code>fullscreen</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>Through <code>ui/request-display-mode</code>, not <code>Element.requestFullscreen()</code>.</p>
+<p>The obvious API is the wrong one here. <code>requestFullscreen</code> needs the <code>fullscreen</code> permission policy, and the extension’s permission set is exactly <code>camera</code>, <code>microphone</code>, <code>geolocation</code> and <code>clipboardWrite</code>. A host has no defined way to grant it.</p>
+<p>The supported route is <code>ui/request-display-mode</code> with <code>"fullscreen"</code>, which is the same mechanism Chapter 7 describes. The host takes over its own window and tells you the resulting mode. That is better in an embedded context: the host knows what “fullscreen” means in its own chrome, and your view stays a view.</p>
+<p><strong>Application behaviour.</strong> Declare <code>fullscreen</code> in <code>appCapabilities.availableDisplayModes</code>, check the host’s list before asking, and re-layout on the mode you actually get. A player at 200 pixels tall and one at 800 need different control sizes, and the host tells you which you are in through <code>ui/notifications/host-context-changed</code>.</p>
+<h2 id="how-do-i-show-progress">How do I show progress?</h2>
+<div class="cap" id="op.progress"><div class="cap-head"><code class="cap-id">op.progress</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground core">Core MCP</span></div><p class="cap-summary">Determinate and indeterminate progress with a phase name.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>notifications/progress</code><code>progressToken</code></dd><dt>Ground</dt><dd>Core MCP defines it; the view inherits it.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>Core MCP defines <code>notifications/progress</code>, carrying a <code>progressToken</code>, a <code>progress</code> number, an optional <code>total</code> and an optional <code>message</code>. The token is what ties a stream of these to the specific request they describe, which matters as soon as two calls are in flight: without it a view has no way to know which task advanced.</p>
+<p><strong>The catch.</strong> The extension’s list of messages a view may receive does not name <code>notifications/progress</code>. In practice hosts that proxy <code>tools/call</code> can forward it, and the demonstration’s fixture host does, but you cannot rely on it. Treat progress as an enhancement, not as the basis of your interface.</p>
+<p><strong>Application behaviour.</strong> Determinate when you have a <code>total</code>, indeterminate when you do not, and a phase name in both cases. “Building the index” is worth more than a percentage, because it tells the user whether the thing that is slow is the thing they expected to be slow. The demonstration shows four named phases moving a bar, and the phase text is what makes the wait legible.</p>
+<p><strong>Accessibility.</strong> <code>role="progressbar"</code> with <code>aria-valuenow</code>, or a live region that announces phase changes only. Not both, and not every tick. Chapter 14 has the reasoning.</p>
+<h2 id="how-do-i-cancel">How do I cancel?</h2>
+<div class="cap" id="op.cancel"><div class="cap-head"><code class="cap-id">op.cancel</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground core">Core MCP</span></div><p class="cap-summary">Interrupt work that is still running.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>notifications/cancelled</code><code>requestId</code></dd><dt>Ground</dt><dd>Core MCP defines it; the view inherits it.</dd><dt>Recipes</dt><dd><a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>Core MCP again: <code>notifications/cancelled</code> with the <code>requestId</code> of the request you are abandoning and an optional reason. The SDK sends it when you abort the <code>AbortSignal</code> you passed to a request, so cancellation costs you an <code>AbortController</code> and nothing else. What it does not buy is a guarantee: the notification is advisory, the server may already have committed the work, and your interface has to say “stopping” until a result or an error actually arrives.</p>
+<p><strong>The part people get wrong is the interface, not the message.</strong> Cancelling is easy. Returning the view to a state that matches reality is not.</p>
+<p>If a tool call was cancelled after three of five steps, the correct interface does not show a progress bar at zero and does not show one at sixty percent either. It says the operation stopped after three steps, and it says whether those three steps changed anything.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r11-agent-control/index.html</code></p><pre class="js"><code>function cancel(task) {
+  task.controller?.abort();
+  task.state = &quot;cancelled&quot;;
+  task.steps.push(&quot;cancelled by the user&quot;);
+  task.error = `Stopped after ${task.done} of ${task.total} steps. `
+    + &quot;Completed steps were not rolled back.&quot;;
+  draw();
+  bridge.notify(&quot;notifications/cancelled&quot;,
+    { requestId: task.requestId, reason: &quot;The user cancelled&quot; });
 }</code></pre>
-<p><strong>Publish state, not events.</strong> “Three tickets are selected, here they are” is state. “The user clicked row 4” is an event, and by the time the model reads it the user has clicked six other things.</p>
-<p><strong>Publish the minimum that changes an answer.</strong> The demonstration has a control that starts publishing hover position, which is the reductio: it works, the host accepts it, and it makes every answer worse by burying the selection under noise.</p>
-<p><strong>Failure modes.</strong> Unsupported when <code>updateModelContext</code> is absent, which is a real Level 1 host, so the interface must still be usable: the escalation button carries the selection in its text instead. Denied comes back as a JSON-RPC error and should not be fatal; the view keeps working, the model knows less.</p>
-<h2 id="how-do-i-put-something-in-the-conversation">How do I put something in the conversation?</h2>
-<div class="cap" id="agent.escalate"><div class="cap-head"><code class="cap-id">agent.escalate</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Put the current selection into the conversation as a request.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/message</code><code>message</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-agent">lab-agent</a></dd></dl></div>
-<p><code>ui/message</code> puts content into the conversation with a role. This is how the user says “talk about this”, and the important design property is that it is a <em>user action</em> with a visible consequence.</p>
-<p><strong>Application behaviour.</strong> Carry the selection and the question, and stop. Recipe 8’s “Explain this change” sends the selected diff lines. Recipe 1’s “Ask about these” sends the selected deployments as CSV. Neither summarises the whole view, because the whole view is not what the user pointed at.</p>
-<p><strong>Say what will happen.</strong> A button labelled “Ask about these” is honest about starting a turn. A view that quietly sends a message when a row is clicked has taken an action on the user’s behalf in a conversation they are reading.</p>
-<p><strong>Host behaviour.</strong> The host should add the message with the role given, and may ask for consent. That last clause is worth designing for: your promise may sit in front of a confirmation dialog for a second or two.</p>
-<p><strong>Failure modes.</strong> Unsupported when <code>hostCapabilities.message</code> is absent, and this one hurts, because escalation is the main route from a view back into the conversation. The fallback is to make the selection copyable, so the user can paste it themselves. It is worse, and it is not nothing.</p>
-<h2 id="can-i-send-a-verb-and-a-target">Can I send a verb and a target?</h2>
-<div class="cap" id="agent.intent"><div class="cap-head"><code class="cap-id">agent.intent</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Name a semantic action rather than describing it in prose.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-agent">lab-agent</a></dd></dl></div>
-<p>No. You can send a sentence through <code>ui/message</code>, and the agent parses a verb and a target back out of it with whatever accuracy that model has on that phrasing. The loss is real and it varies between models, which also means it varies between hosts and between days.</p>
-<p>When a user clicks “Explain this node” your view knows two things exactly: <code>{"intent": "explain", "target": "node-17"}</code>. What you can put on the wire is prose.</p>
-<p>That round trip through prose is lossy, and it is lossy in a way that varies between models. It also makes the interaction untestable: an assertion about “the agent understood the user wanted to explain node 17” is an assertion about a sampled token.</p>
-<p><strong>The workaround that almost works.</strong> Register a tool. A view that exposes <code>explain_node(id)</code> gives the agent a precise entry point, and Chapter 18 is about exactly that. What tools cannot express is the <em>direction</em>: tools are the agent calling the view, and intent is the view telling the agent what the user just meant. In practice, views send a message with a structured payload alongside the prose and hope the model reads it.</p>
-<p><strong>What a mechanism would look like.</strong> <code>ui/intent</code> with a verb, a target and arguments, delivered to the agent as a structured turn rather than as text. Appendix B has it.</p>
-<h2 id="can-i-call-a-model-directly">Can I call a model directly?</h2>
-<div class="cap" id="agent.sampling"><div class="cap-head"><code class="cap-id">agent.sampling</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Ask the host&#x27;s model for a completion from inside the view.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>sampling/createMessage</code><code>sampling</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-agent">lab-agent</a></dd></dl></div>
-<p>Yes, with <code>sampling/createMessage</code>, when <code>hostCapabilities.sampling</code> is present. You send messages and get a completion back, and the conversation never sees it. That privacy is the whole distinction from escalation: the user does not watch the question being asked and does not get the chance to correct it before the answer lands in your interface.</p>
-<p>This is genuinely different from the other two. Escalation asks the user’s agent, in front of the user, and the answer appears in the chat. Sampling asks <em>a</em> model, privately, and the answer comes back to your code.</p>
-<p><strong>When it is right.</strong> Work that belongs to the view rather than to the conversation. Drafting a suggestion into a text field. Classifying a free-text field. Summarising a selection for a label. Recipe 4 uses it to draft a rewrite, which is then shown as a proposal rather than applied.</p>
-<p><strong>When it is wrong.</strong> Anything the user should see being asked. If the answer is going to be the substance of what the user does next, it belongs in the conversation where they can push back on it.</p>
-<p><strong>Host behaviour.</strong> The host chooses the model, and should rate limit, apply cost controls, and involve a human. Your call may be slow, may be refused, and may return something from a smaller model than the conversation uses.</p>
-<p><strong>Failure modes.</strong> Check <code>hostCapabilities.sampling</code> before offering the feature, and <code>hostCapabilities.sampling.tools</code> before including tools in the request. Press “Withdraw sampling” in the demonstration: the button stays, and explains that the view cannot reach a model on its own and that escalation is the alternative. That is the honest degradation, because the underlying user need has not gone away.</p>
-<h2 id="what-a-good-context-payload-looks-like">What a good context payload looks like</h2>
-<p>Three properties, and the demonstration has a control that breaks each one so you can watch what the model actually receives when it goes wrong. Getting them right costs nothing at write time and is very hard to diagnose afterwards, because a badly shaped payload produces worse answers rather than errors.</p>
-<p><strong>It is a state, not an event.</strong> Present tense, complete, and true right now. “Three tickets are selected, here they are” survives being read two turns later; “the user clicked row 4” does not.</p>
-<p><strong>It has both halves.</strong> <code>content</code> for the model to read as language, and <code>structuredContent</code> for anything the model may need to quote back exactly. Identifiers, numbers and dates belong in the structured half, because a model copying an identifier out of prose is a model that occasionally copies it wrong.</p>
-<p><strong>It is small.</strong> Not because there is a limit, but because it is displacing conversation. Publishing four selected rows is proportionate. Publishing the whole table on the grounds that the model might want it is spending somebody else’s context window on a table the view has already rendered.</p>
-<h2 id="failure-modes-across-the-group">Failure modes across the group</h2>
-<p><strong>Unsupported.</strong> Check <code>hostCapabilities</code> for <code>message</code>, <code>updateModelContext</code> and <code>sampling</code> separately; a host may have any combination. The demonstration withdraws each one so you can watch the view rearrange itself.</p>
-<p><strong>Denied.</strong> All three can return a JSON-RPC error, and none of them should be fatal. A view whose escalation was refused still has a selection the user can copy.</p>
-<p><strong>Deferred.</strong> Specific to context updates, and easy to mistake for a failure. The host may hold your update until the next user message, so a model that “does not know” about a selection published half a second ago may simply not have been asked anything yet.</p>
-<p><strong>Slow.</strong> Specific to sampling. The host chooses the model, applies rate limits, and may involve a human, so a sampling call is not a function call with a predictable latency. Show that something is happening and offer a way out.</p>
+<p><strong>The other direction.</strong> The host can cancel you, through <code>ui/notifications/tool-cancelled</code> with a reason. That happens when the user asks the agent something else, when a classifier intervenes, or when sampling fails. Your view must handle it, and the right handling is almost always to keep the last good state and explain, rather than to blank the view.</p>
+<div class="cap" id="op.pause"><div class="cap-head"><code class="cap-id">op.pause</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Suspend and continue long work.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd>no live demo</dd></dl></div>
+<p>Extended, yours to build, and rarer than it looks. Most long operations cannot be paused, only cancelled and restarted. Offer pause only when the underlying work genuinely supports resumption, because a pause button that quietly means cancel is worse than no pause button.</p>
+<h2 id="how-do-i-offer-a-retry">How do I offer a retry?</h2>
+<div class="cap" id="op.retry"><div class="cap-head"><code class="cap-id">op.retry</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Retry without making the user rebuild the interaction.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>The measure of a retry is whether the user has to rebuild the interaction. A button next to the failure that repeats the same call with the same arguments, against a form still holding what they typed, costs nothing to build and saves everything they did. A failure that clears the form is the same failure with a punishment attached.</p>
+<p>A retry button next to the failure, which repeats the same call with the same arguments and the same form still filled in, costs nothing and saves the user’s work. A failure that clears the form and returns the user to the start is the same failure plus a punishment.</p>
+<p><strong>Application behaviour.</strong> Keep the arguments. Keep the last good data on screen. Make the retry idempotent, or make it obvious that it is not. For automatic retries, back off exponentially and cap it, and stop after a small number, because hammering a service that has told you it is unwell.</p>
+<h2 id="how-do-i-report-a-failure">How do I report a failure?</h2>
+<div class="cap" id="op.error"><div class="cap-head"><code class="cap-id">op.error</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground core">Core MCP</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Structured errors: what failed, whether to retry, what to do.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>isError</code><code>isError</code></dd><dt>Ground</dt><dd>Core MCP defines it; the view inherits it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r05.html">Spreadsheet</a>, <a href="r07.html">Workflow Builder</a>, <a href="r10.html">Approval Center</a>, <a href="r11.html">Agent Control Center</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-media">lab-media</a></dd></dl></div>
+<p>A tool result can fail in two different ways, and the difference is worth knowing. A JSON-RPC error means the call did not happen: unknown tool, bad arguments, host refused. A result with <code>isError: true</code> means the tool ran and failed, and its <code>content</code> is a message intended to be read.</p>
+<p><strong>A structured error carries three facts.</strong> What failed, whether retrying could help, and what the recovery action is. The fixture in the demonstration returns this:</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-media/demo.js</code></p><pre class="js"><code>return { isError: true, content: [{ type: &quot;text&quot;,
+  text: &quot;The index volume is full, so nothing was written. &quot;
+      + &quot;Free space and retry.&quot; }] };</code></pre>
+<p>Three facts in nineteen words: what happened, what the consequence was (nothing was written, so no partial state to worry about), and what to do. Compare it with “Error: operation failed”, which has none of them and is what most tools return.</p>
+<p><strong>Show it where the action was.</strong> An error about an export belongs next to the export button, not in a toast that vanishes and not in a banner at the top of a view the user has scrolled past.</p>
+<p><strong>Keep the last good state.</strong> Recipe 1’s table keeps its rows when a reload fails and says the data is from the previous successful call. An empty table with an error above it has thrown away information the user still needed.</p>
+<h2 id="the-four-states-of-a-long-operation">The four states of a long operation</h2>
+<p>Every operation in this chapter moves through the same small state machine, and naming it is what stops each application in a product inventing a slightly different one. Users learn a state machine once; they do not learn it four times.</p>
+<p><strong>Idle.</strong> No work in flight. The control that starts it is enabled, and whatever the last run produced is still on screen.</p>
+<p><strong>Running.</strong> Determinate or indeterminate progress, a phase name, and a cancel control that is enabled. The control that started it is disabled or idempotent.</p>
+<p><strong>Settled.</strong> Done, failed, or cancelled. All three are terminal, all three leave something on screen, and the difference between them is what the interface says. Done keeps the new result. Failed keeps the previous one and explains. Cancelled keeps the previous one and says how far the work got.</p>
+<p><strong>Retrying.</strong> A distinct state, because it is not idle: the arguments are still there, the failure is still visible, and the user is deciding.</p>
+<p>Recipe 11 renders all four states with a chip whose text is simply the state name. It is unglamorous, it survives forced colours because the state is in words, and in practice it is the most legible thing in that interface.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li>A selection change sends exactly one <code>ui/update-model-context</code>.</li>
-<li>A second change replaces the first rather than appending to it.</li>
-<li>Nothing is published for hover, scroll or sort.</li>
-<li><code>ui/message</code> is sent only in response to a deliberate user action.</li>
-<li>With <code>message</code> absent, the escalation control is not rendered.</li>
-<li>With <code>sampling</code> absent, no <code>sampling/createMessage</code> is sent.</li>
-<li><code>sampling/createMessage</code> includes <code>tools</code> only when <code>hostCapabilities.sampling.tools</code> is present.</li>
+<li><code>notifications/progress</code> from a server reaches the view, or the view degrades to indeterminate progress.</li>
+<li><code>notifications/cancelled</code> from the view carries the id of the request being abandoned.</li>
+<li><code>ui/notifications/tool-cancelled</code> from the host leaves the last good state on screen.</li>
+<li>A tool result with <code>isError: true</code> is rendered as a readable message.</li>
+<li>A retry re-sends the same arguments without the user re-entering them.</li>
+<li><code>ui/request-display-mode</code> with <code>fullscreen</code> is the route a media view takes, and <code>requestFullscreen</code> is not called.</li>
+<li>Media never autoplays.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>Three routes, and the cost rises steeply along them. A context update is a line of JSON that might improve the next answer. A message is a turn with a model behind it. Sampling is a model call your view pays for and the user never sees.</p>
-<p>Most applications need the first constantly, the second on a button, and the third rarely. An application that has reached for the third for something the first would have handled is an application that has misunderstood what the conversation is for.</p>
+<p>Four obligations while somebody waits, and each is a different message. Progress says how far it has got. <code>notifications/cancelled</code> says where it stopped and whether anything was left behind. A result with <code>isError: true</code> says what failed and what to do about it. Retry re-sends the same arguments without making anyone retype them.</p>
+<p>Do all four and the application feels reliable when the server is not, because every state the user can be in has a sentence attached and a control that still responds. Do none and it feels broken when everything worked: the same slow tool call reads as a hang, the same transient error reads as data loss, and the user’s next move is a reload that throws away state the server had already accepted.</p>
 
-<div class="pager"><a href="ch16.html"><span class="dir">Previous</span>16. Media, Progress, Cancellation and Errors</a><a href="ch18.html" style="text-align:right"><span class="dir">Next</span>18. Agent to UI</a></div>
+<div class="pager"><a href="ch16.html"><span class="dir">Previous</span>16. Persistence and History</a><a href="ch18.html" style="text-align:right"><span class="dir">Next</span>18. UI to Agent</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

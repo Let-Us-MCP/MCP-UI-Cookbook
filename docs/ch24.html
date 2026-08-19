@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>24. Components III: Spatial, Media and Agent-Native &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.">
-<meta property="og:title" content="24. Components III: Spatial, Media and Agent-Native">
-<meta property="og:description" content="Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.">
+<title>24. Components II: Navigation, Data and Visualization &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.">
+<meta property="og:title" content="24. Components II: Navigation, Data and Visualization">
+<meta property="og:description" content="Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.">
 <link rel="stylesheet" href="book.css">
 
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html" class="current">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html" class="current">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,8 +74,8 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 24</p><h1>Components III: Spatial, Media and Agent-Native</h1><p class="summary">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</p><p>Two familiar groups, then five components with no precedent anywhere in web design. Spatial and media components you have built before and mostly port unchanged. The last five could not have existed before there was a second party acting on the interface, so there is no established pattern to copy and every agentic application ends up inventing them badly at least once.</p>
-<h2 id="spatial">Spatial</h2>
+<p class="eyebrow">Chapter 24</p><h1>Components II: Navigation, Data and Visualization</h1><p class="summary">Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.</p><p>These are the components that carry data, and all three groups run into the same two walls. There is no address bar, so nothing about navigation state can live in a URL and the back button belongs to somebody else. And there is very little room, so the column budget runs out long before the data does.</p>
+<h2 id="navigation">Navigation</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -85,38 +86,54 @@
 </thead>
 <tbody>
 <tr>
-<td>Canvas</td>
-<td><code>input.pointer</code>, <code>input.zoompan</code>, <code>surface.viewport</code></td>
-<td>(application)</td>
+<td>Tabs</td>
+<td><code>input.keyboard</code>, <code>surface.focus</code>, <code>ui.navigate</code></td>
+<td>Tabs</td>
 </tr>
 <tr>
-<td>Node graph</td>
-<td><code>input.dragdrop</code>, <code>input.selection</code>, <code>input.zoompan</code></td>
-<td>(application)</td>
+<td>Breadcrumbs</td>
+<td><code>input.keyboard</code></td>
+<td>Breadcrumb</td>
 </tr>
 <tr>
-<td>Bounding box editor</td>
-<td><code>input.pointer</code>, <code>input.zoompan</code>, <code>history.transaction</code></td>
-<td>(application)</td>
+<td>Tree</td>
+<td><code>input.keyboard</code>, <code>input.selection</code>, <code>input.contextmenu</code></td>
+<td>Tree View</td>
 </tr>
 <tr>
-<td>Image annotation</td>
-<td><code>input.pointer</code>, <code>file.dropzone</code>, <code>file.export</code></td>
-<td>(application)</td>
+<td>Accordion</td>
+<td><code>input.keyboard</code>, <code>surface.resize</code></td>
+<td>Accordion</td>
 </tr>
 <tr>
-<td>Minimap</td>
+<td>Sidebar</td>
+<td><code>input.keyboard</code>, <code>surface.viewport</code></td>
+<td>(layout)</td>
+</tr>
+<tr>
+<td>Toolbar</td>
+<td><code>input.keyboard</code>, <code>env.inputMode</code></td>
+<td>Toolbar</td>
+</tr>
+<tr>
+<td>Command palette</td>
+<td><code>input.shortcut</code>, <code>surface.focus</code>, <code>input.keyboard</code></td>
+<td>Combobox</td>
+</tr>
+<tr>
+<td>Split view</td>
 <td><code>input.pointer</code>, <code>surface.viewport</code></td>
-<td>(decorative)</td>
+<td>(layout)</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Report a fixed height and scroll inside it.</strong> Recipe 6 uses 260px, Recipe 7 uses 280px, both chosen to work at 380px wide. A canvas that grows with its content fights <code>surface.resize</code> and loses.</p>
-<p><strong>Pointer capture, <code>touch-action: none</code>, and zoom about the cursor.</strong> All three in Chapter 9, and all three are the difference between a canvas that feels right and one that fights.</p>
-<p><strong>Add a minimap.</strong> Recipe 7 draws one into a 220 by 148 <code>&lt;canvas&gt;</code> in eleven lines: <code>fillRect</code> per node, <code>strokeRect</code> for the viewport.</p>
-<p><strong>Every gesture needs a button.</strong> Zoom in, zoom out, reset, fit, and arrow keys to pan. A canvas operable only by dragging cannot be operated at all by a significant number of people, and this is the component group where that failure is both most common and least noticed, because the developer testing it always has a pointer.</p>
-<p><strong>Undo per gesture, not per frame.</strong> A drag produces one transaction on pointerup, not sixty during pointermove. Recipe 7 records the start position on pointerdown and pushes a single transaction at the end.</p>
-<h2 id="media">Media</h2>
+<p><strong>There is no URL.</strong> Everything a URL normally does has to be done some other way. You cannot deep link into a view. The user cannot bookmark a state. The back button belongs to the host and does not know your tabs exist. Pressing it leaves the conversation, which is a considerably worse outcome than going back one tab.</p>
+<p>Three consequences. Navigation state has to be shallow, because there is no history to unwind. Every panel needs a visible way back, because the browser’s is not available. And navigation state is one of the few things worth publishing to the model, because “the user is looking at the line items panel” changes what a good answer looks like.</p>
+<p><strong>Tabs are the default and the tree is the exception.</strong> In four hundred pixels, a tab strip with more than four labels wraps or scrolls, and both look like a mistake. If you need more than four, you probably need a different structure.</p>
+<p><strong>A tree is one tab stop.</strong> <code>role="tree"</code> with roving tabindex, arrows to move and expand, Home and End, and typeahead if the tree is large. Recipe 3 builds one, and the roving tabindex is what keeps a hundred-file tree from being a hundred tab stops.</p>
+<p><strong>Toolbars overflow.</strong> A wrapped toolbar changes the height of the view on a resize, which triggers <code>surface.resize</code>, which changes the frame, which can change the wrap. Put the extras behind a menu.</p>
+<p><strong>A command palette is the best answer to a narrow surface</strong>, and it is also the component most likely to lose its shortcut to the host. Give it a visible entry point.</p>
+<h2 id="structured-data">Structured data</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -127,100 +144,134 @@
 </thead>
 <tbody>
 <tr>
-<td>Player transport</td>
-<td><code>media.playback</code>, <code>input.keyboard</code></td>
-<td>Toolbar, Slider</td>
-</tr>
-<tr>
-<td>Scrubber</td>
-<td><code>media.playback</code>, <code>input.pointer</code></td>
-<td>Slider</td>
-</tr>
-<tr>
-<td>Caption selector</td>
-<td><code>media.playback</code>, <code>input.keyboard</code></td>
+<td>List</td>
+<td><code>input.selection</code>, <code>input.keyboard</code></td>
 <td>Listbox</td>
 </tr>
 <tr>
-<td>Thumbnail strip</td>
-<td><code>input.selection</code>, <code>input.keyboard</code></td>
-<td>Tabs, Listbox</td>
+<td>Virtual list</td>
+<td><code>surface.scroll</code>, <code>input.selection</code></td>
+<td>Listbox</td>
+</tr>
+<tr>
+<td>Table</td>
+<td><code>input.selection</code>, <code>input.keyboard</code>, <code>clipboard.write</code></td>
+<td>Grid</td>
+</tr>
+<tr>
+<td>Editable grid</td>
+<td><code>input.selection</code>, <code>history.transaction</code>, <code>clipboard.write</code></td>
+<td>Grid</td>
+</tr>
+<tr>
+<td>Pagination</td>
+<td><code>input.keyboard</code></td>
+<td>(native)</td>
+</tr>
+<tr>
+<td>Comparison grid</td>
+<td><code>input.selection</code></td>
+<td>Grid</td>
+</tr>
+<tr>
+<td>Property list</td>
+<td><code>input.selection</code>, <code>clipboard.write</code></td>
+<td>(definition list)</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Use the native controls unless you have a reason.</strong> <code>&lt;video controls&gt;</code> handles keyboard, screen readers, captions, picture-in-picture and playback rate in zero lines.</p>
-<p>Replace them and you inherit the contract: Space to play, arrows to seek, <code>aria-valuetext</code> on the slider in minutes and seconds rather than raw seconds, and <code>aria-pressed</code> on the caption toggle. Recipe 12 does all of that in about 40 lines and is still worse than the native set.</p>
-<p><strong>Pause when hidden.</strong> Chapter 14. Audio continuing from a frame nobody can see is genuinely alarming, and it is the fastest way to make a user close a conversation.</p>
-<p><strong>Fullscreen goes through the host.</strong> <code>ui/request-display-mode</code>, not the Fullscreen API, because <code>fullscreen</code> is not in the extension’s permission set. Chapter 16.</p>
-<p><strong>A thumbnail strip is a tab list.</strong> Give it roving tabindex, <code>aria-current</code> on the selected item, and real labels rather than image alt text that says “thumbnail”.</p>
-<h2 id="agent-native">Agent-native</h2>
-<p>These five have no conventional web precedent because the situation they address is new: an interface with a second actor in it that the user cannot see and cannot interrupt. Each one exists to make some invisible part of that situation visible.</p>
+<p>This is the group most MCP applications are actually made of, and it has the most predictable failures of anything in Part IV. Four of them account for nearly everything that goes wrong, and all four are about what survives an update.</p>
+<p><strong>Column budget.</strong> Four columns is comfortable at 380 pixels, six is the ceiling, and beyond that the answer is a property list per row. Recipe 1 shows six and drops to a card layout under 480 pixels.</p>
+<p><strong>Sort, filter and page locally.</strong> Chapter 4. All three are answerable from data already in the frame.</p>
+<p><strong>Selection is the unit of conversation.</strong> Chapter 10 has the gesture model, Chapter 18 has what to do with it. A table without a selection model gives its users nothing precise to ask about.</p>
+<p><strong>Streaming updates must not rebuild the list.</strong> Appending a row is fine. Replacing the container’s children destroys selection, focus and scroll position at the same time, and the user notices all three. Recipe 9 appends and trims, never redraws, which is what makes selecting a log line survive a thousand lines arriving after it.</p>
+<p><strong>Virtualise past a few thousand rows</strong>, and be aware that virtualisation and <code>surface.resize</code> interact badly: a virtual list has a fixed height by design, so it wants a fixed container, which means telling the host a stable size and scrolling inside it.</p>
+<p><strong>Copy as the destination wants it.</strong> TSV for the clipboard, CSV for a file. Chapter 11.</p>
+<h3 id="the-column-budget">The column budget</h3>
+<p>Six columns at 380 pixels is the practical ceiling, and getting there takes deliberate work. Each of the following buys you roughly half a column, and you need all of them.</p>
+<p>Right-align every number and use tabular figures, which buys a character of width per column and makes outliers scannable. Put units in the header: “p95 ms” once beats “412ms” eight times. Use chips for enumerated values, because a chip reads at a glance and a word does not. Format dates to the shortest form that is still unambiguous, which usually means dropping the year for anything inside the current one. And put anything that is only occasionally needed behind row expansion.</p>
+<p>When that is not enough, the answer is not a horizontal scrollbar. It is a different component: a property list per row, which turns a wide table into a tall list and is what every mobile client does with the same problem. Recipe 1 switches at 480 pixels.</p>
+<h2 id="visualisation">Visualisation</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Component</th>
 <th>Composes</th>
-<th>Where it appears</th>
+<th>APG pattern</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Approval card</td>
-<td><code>approval.request</code>, <code>dialog.confirm</code>, <code>agent.contextUpdate</code></td>
-<td>Recipe 10</td>
+<td>Chart</td>
+<td><code>surface.viewport</code>, <code>env.theme</code>, <code>input.pointer</code></td>
+<td>(image or table)</td>
 </tr>
 <tr>
-<td>Tool status chip</td>
-<td><code>tool.invoke</code>, <code>op.progress</code>, <code>op.cancel</code>, <code>op.error</code></td>
-<td>Recipes 9, 11</td>
+<td>Timeline</td>
+<td><code>input.zoompan</code>, <code>input.selection</code></td>
+<td>(image or table)</td>
 </tr>
 <tr>
-<td>Streaming log</td>
-<td><code>tool.partialOutput</code>, <code>input.selection</code>, <code>a11y.announce</code></td>
-<td>Recipe 9</td>
+<td>Heatmap</td>
+<td><code>input.pointer</code>, <code>env.contrast</code></td>
+<td>(image or table)</td>
 </tr>
 <tr>
-<td>Context inspector</td>
-<td><code>agent.contextUpdate</code>, <code>agent.boundary</code></td>
-<td>Every demonstration</td>
+<td>Progress visualization</td>
+<td><code>op.progress</code>, <code>env.reducedMotion</code></td>
+<td>Progressbar</td>
 </tr>
 <tr>
-<td>Proposal card</td>
-<td><code>ui.prefill</code>, <code>history.transaction</code>, <code>state.ownership</code></td>
-<td>Recipes 4, 7</td>
+<td>Status indicator</td>
+<td><code>env.contrast</code></td>
+<td>(status)</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>The approval card</strong> is a heading, a consequence sentence, a <code>&lt;dl&gt;</code> of five provenance fields, and two buttons. Recipe 10 renders “asked by”, “on behalf of”, “tool”, “arguments” and “prior approvals”. High risk adds a second <code>confirmDialog</code>. Without those fields users learn to click through it.</p>
-<p><strong>The tool status chip</strong> carries a name, one of five states, a progress value and exactly the controls that state allows. Queued has none. Running has Cancel. Failed has Retry. Cancelled and Done have neither. Recipe 11 puts the state name in text, not only in colour.</p>
-<p><strong>The streaming log</strong> is the append-only list from Chapter 23 with the selection and follow behaviour that terminals taught everybody: follow the tail until the user scrolls up, then stop following and say so. Recipe 9 turns following off automatically when the user scrolls away from the bottom, which is the behaviour nobody notices when it is right.</p>
-<p><strong>The context inspector</strong> shows what the view has published to the model. It is a debugging tool that deserves to ship. A user who can see that the assistant knows about three selected rows and nothing else can predict what it will say, and the same panel is how a developer finds out that their view has been publishing hover state for a week. Every demonstration in this book has one, in the form of the “Show what the model was told” control.</p>
-<p><strong>The proposal card</strong> is the shape that makes agent editing safe. The agent’s version, visible next to the current one, with Accept and Decline, and accepting recorded as one undo transaction. Chapters 18 and 20 both arrive at it, from prefill and from conflict policy respectively, which is a decent sign that it is the right primitive.</p>
-<h3 id="definition-of-done-for-each">Definition of done, for each</h3>
-<p>No reference implementation exists for any of these five, and no design system has a page about them, so here is a definition of done for each. They are all small; the difficulty is knowing what to include rather than how to build it.</p>
-<p><strong>Approval card.</strong> Renders a title, a risk level, a consequence sentence, and a provenance list of at least four fields. Approve and Deny are both single actions; high risk adds a confirmation. Every decision produces exactly one context update carrying the outcome and nothing else. It never accepts an approval over its own tool interface.</p>
-<p><strong>Tool status chip.</strong> Carries a name, one of five states, a progress value when it has one, and exactly the controls that state allows. Queued has none. Running has Cancel. Failed has Retry. Cancelled and Done have neither. The state name is visible as text, not only as a colour.</p>
-<p><strong>Streaming log.</strong> Appends, trims to a cap, and never rebuilds. Follows the tail until the user scrolls away, then stops and shows that it has stopped. Selection is by identifier so it survives the next thousand lines.</p>
-<p><strong>Context inspector.</strong> Shows the last payload published to the model, verbatim, and says when nothing has been published. It is one control and about ten lines, and it is the fastest way to find out that a view has been leaking hover state for a week.</p>
-<p><strong>Proposal card.</strong> Shows the agent’s version next to what is currently there, with Accept and Decline. Accepting is one undo transaction. The tool that created it returns “proposed, not applied”, so the agent does not report a change that has not happened.</p>
-<h2 id="what-all-five-have-in-common">What all five have in common</h2>
-<p>Every agent-native component makes an invisible thing visible. What the model was told. What it is doing. What it is proposing. What it wants permission for. What it has been told before.</p>
-<p>That is the design brief for this whole layer, and it comes out of the same constraint the rest of the book keeps hitting: the two parties cannot see each other. The user cannot see the model’s context. The model cannot see the screen. Components that surface one to the other are the ones that make an agentic interface feel like a place rather than a slot machine.</p>
-<h2 id="conformance-checks">Conformance checks</h2>
-<ol type="1">
-<li>A spatial surface reports a stable height rather than growing with its content.</li>
-<li>Every pointer gesture has a button or key equivalent.</li>
-<li>A drag produces one undo transaction, not one per pointer event.</li>
-<li>Media pauses when the frame is hidden.</li>
-<li>Immersive playback goes through <code>ui/request-display-mode</code>.</li>
-<li>An approval card renders provenance, and its decision produces exactly one context update.</li>
-<li>A streaming log appends and trims, and never rebuilds its container.</li>
-<li>Every agent-initiated change is announced once and is reversible.</li>
-</ol>
+<p><strong>You probably cannot load a charting library.</strong> The default CSP is <code>default-src 'none'</code>. A CDN means declaring that origin in <code>resourceDomains</code>, and a host that declines leaves you with no chart. Bundling means a few hundred kilobytes of JavaScript in an HTML string on every <code>resources/read</code>.</p>
+<p>Inline SVG is the answer for most of what embedded applications actually need. A sparkline is nine lines. A bar chart is fifteen. Recipe 2’s sparklines are generated with <code>createElementNS</code> and no dependency at all, and Recipe 12 draws its media thumbnails the same way, which is also how the demonstrations avoid declaring any external origin.</p>
+<p><strong>Theme through variables, not through constants.</strong> A chart with <code>#0f5c8c</code> baked in is invisible in a dark theme. <code>stroke="var(--color-text-info)"</code> works inside SVG and follows the host.</p>
+<p><strong>Colour alone is never the encoding.</strong> Forced-colors mode replaces your palette. A status that is only a green dot becomes a dot. Pair every colour with a shape, a label, or text.</p>
+<p><strong>Charts need a text equivalent.</strong> A <code>&lt;table&gt;</code> behind a disclosure, or an <code>aria-label</code> carrying the figures. Recipe 2 writes “Checkout p95, 412 milliseconds, up 18 percent since the 4.18.2 deploy” under each tile, which more readers use than the sparkline.</p>
+<p><strong>Progress that never moves is worse than no progress.</strong> An indeterminate spinner with a phase name beats a determinate bar whose number is invented. Chapter 17.</p>
+<h3 id="a-table-that-survives-updates">A table that survives updates</h3>
+<p>Selection state lives on the row as <code>aria-selected</code>, so one attribute drives both the screen reader announcement and the highlight, and neither can drift from the other:</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>tbody tr[aria-selected=&quot;true&quot;] { background: var(--color-background-info); }
+tbody tr:hover { background: var(--color-background-secondary); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }</code></pre>
+<p><code>font-variant-numeric: tabular-nums</code> is the line that makes a column of latencies scannable. Without it the digits have proportional widths, so 412 and 1290 do not line up and the eye cannot compare them down the column.</p>
+<p>The four properties that separate a table people can work in from a table people take screenshots of. All four appear in Recipe 1, and none of them is more than a few lines.</p>
+<p><strong>Selection survives updates.</strong> Keyed by identifier, not by row index. A table that re-sorts and keeps three rows selected is behaving; one that keeps rows three, four and five selected is not.</p>
+<p><strong>Scroll survives updates.</strong> Append and patch. Recipe 9 appends up to a cap and never rebuilds, which is what makes a log tail usable at five lines a second.</p>
+<p><strong>Focus survives updates.</strong> The consequence of the first two, and the one users feel most sharply. A grid that rebuilds on every tick moves focus to the document body twice a second, which makes keyboard operation impossible.</p>
+<p><strong>Numbers are aligned and tabular.</strong> <code>text-align: right</code> and <code>font-variant-numeric: tabular-nums</code>. Two declarations, and they turn a column of figures into something you can scan for an outlier. This is not accessibility and it is not decoration; it is the reason the table exists.</p>
+<h3 id="charts-with-no-dependency">Charts with no dependency</h3>
+<p>A bar is two elements and eleven lines of CSS, and it is the entire visualisation layer behind Recipe 2’s tiles:</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>.bar {
+  height: 6px;
+  border-radius: var(--border-radius-full);
+  background: var(--color-background-tertiary);
+  overflow: hidden;
+}
+.bar &gt; span {
+  display: block;
+  height: 100%;
+  background: var(--color-text-info);
+  transition: width .2s ease;
+}</code></pre>
+<p>Both colours come from the host’s variables, so the bar re-themes with everything else and needs no branch for dark mode. The transition is suppressed wholesale by the reduced-motion rule at the foot of the same file, which is why no chart in this book animates for a user who asked it not to.</p>
+<p>Three shapes cover most of what an embedded view actually needs, and all three are cheap enough in inline SVG that a dependency is hard to justify.</p>
+<p>A <strong>sparkline</strong> is a <code>polyline</code> whose points are the series scaled to the box. Nine lines, no axes, no labels, and it belongs next to a number, never in place of one. Recipe 2 builds one per tile.</p>
+<p>A <strong>bar chart</strong> is a loop of rects with a shared scale. Fifteen lines. The work is in the labels, not the bars, and in a narrow frame the labels usually have to go under the bars.</p>
+<p>A <strong>status strip</strong> is not a chart at all: a row of chips with text in them. It is what most dashboards actually need, it is legible at any size, and it survives forced colours because the state is in the words.</p>
+<p>Beyond those three, ask whether the view is the right place. A six-series chart at 380px is unreadable; a table plus a <code>ui/open-link</code> to the real dashboard is usually better.</p>
+<h2 id="what-to-remember">What to remember</h2>
+<p>The URL bar and the CDN are the two things this chapter keeps running into, and they are the two things a page has that a view does not. Design navigation that does not need history, and visualisation that does not need a dependency, and most of the rest of your components will port over unchanged.</p>
 
-<div class="pager"><a href="ch23.html"><span class="dir">Previous</span>23. Components II: Navigation, Data and Visualization</a><a href="r01.html" style="text-align:right"><span class="dir">Next</span>Recipe 1. Data Explorer</a></div>
+<div class="pager"><a href="ch23.html"><span class="dir">Previous</span>23. Components I: Overlays, Controls and Text</a><a href="ch25.html" style="text-align:right"><span class="dir">Next</span>25. Components III: Spatial, Media and Agent-Native</a></div>
 </main>
 </div>
 
+<script src="copy.js"></script>
 </body>
 </html>

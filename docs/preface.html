@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>What This Book Is &middot; The MCP UI Cookbook</title>
-<meta name="description" content="85 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.">
+<meta name="description" content="87 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.">
 <meta property="og:title" content="What This Book Is">
-<meta property="og:description" content="85 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.">
+<meta property="og:description" content="87 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.">
 <link rel="stylesheet" href="book.css">
 
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,12 +74,12 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<h1>What This Book Is</h1><p class="summary">85 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.</p><p>An MCP application is HTML in a sandboxed iframe that speaks JSON-RPC to a host over <code>postMessage</code>. About twenty methods, four permissions, no storage, no address bar.</p>
+<h1>What This Book Is</h1><p class="summary">87 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.</p><p>An MCP application is HTML in a sandboxed iframe that speaks JSON-RPC to a host over <code>postMessage</code>. About twenty methods, four permissions, no storage, no address bar.</p>
 <p>You write that HTML. The model does not generate it. Your server registers it as a predeclared <code>ui://</code> resource, your tools point at it with <code>_meta.ui.resourceUri</code>, and the model’s only job is deciding when to call the tool and with what arguments. The interface is a file in your repository, which is what makes everything in Part VI possible.</p>
-<p>This book cuts that surface into 85 named capabilities, then builds 13 applications out of nothing but those pieces. If the pieces are enough, the applications work. If one is missing, an application breaks in a specific place, and Appendix B lists the 14 places where that happened.</p>
+<p>This book cuts that surface into 87 named capabilities, then builds 13 applications out of nothing but those pieces. If the pieces are enough, the applications work. If one is missing, an application breaks in a specific place, and Appendix B lists the 16 places where that happened.</p>
 <h2 id="who-is-this-for">Who is this for?</h2>
 <p><strong>You are writing a view.</strong> Start at Appendix A, find the capability, and read its ground badge first. It tells you in one line whether <code>input.contextmenu</code> is a protocol message, a browser feature, or your afternoon.</p>
-<p><strong>You are writing a host.</strong> Chapter 2 is the entire wire protocol. Appendix C is a checklist of what each conformance level obliges you to do. Chapter 27 says which three to implement first.</p>
+<p><strong>You are writing a host.</strong> Chapter 2 is the entire wire protocol. Appendix C is a checklist of what each conformance level obliges you to do. Chapter 28 says which three to implement first.</p>
 <h2 id="what-actually-runs">What actually runs</h2>
 <p>Every demonstration on this site is a real application in a real sandboxed iframe, driven by a host emulator that implements the host half of the bridge. The panel underneath prints the JSON-RPC traffic as it happens. The source drawer shows the same file the frame is running, fetched from the same URL, so the two cannot drift.</p>
 <p>Thirteen of them have a working MCP server behind them. Run <code>node apps/recipes/r01-data-explorer/server.js</code> and it speaks stdio to any MCP client. The numbers in the Data Explorer come out of that server, recorded by <code>make fixtures</code>.</p>
@@ -121,8 +122,8 @@
 </table></div>
 <p><code>check_web_claims.py</code> earned itself immediately. The draft said hit targets need 44 CSS pixels; WCAG 2.2 requires 24 at AA, and 44 is the AAA criterion.</p>
 <h2 id="what-this-book-gets-wrong">What this book gets wrong</h2>
-<p><strong>It runs against one host.</strong> The emulator here was written by the same person as the applications, which is the condition under which a capability model looks more general than it is. Chapter 26 calls cross-host conformance the missing layer.</p>
-<p><strong>No usability sessions were run.</strong> Chapter 3’s local-first principle is an argument, not a finding.</p>
+<p><strong>It runs against one host.</strong> The emulator here was written by the same person as the applications, which is the condition under which a capability model looks more general than it is. Chapter 27 calls cross-host conformance the missing layer.</p>
+<p><strong>No usability sessions were run.</strong> Chapter 4’s local-first principle is an argument, not a finding.</p>
 <p><strong>Eight message names are draft-only.</strong> <code>ui/download-file</code>, <code>sampling/createMessage</code>, <code>updateModelContext</code>, <code>ui/notifications/request-teardown</code>, <code>notifications/tools/list_changed</code>, <code>downloadFile</code>, <code>resource_link</code> and <code>isError</code> are in the current draft and not in the <code>2026-01-26</code> release. Those entries carry a badge.</p>
 <h2 id="conventions">Conventions</h2>
 <p>Every code block says where it came from: <em>extracted</em> from a file the tests run, <em>captured</em> from a real run, or <em>illustrative</em> and executed by nothing.</p>
@@ -133,5 +134,6 @@
 </main>
 </div>
 
+<script src="copy.js"></script>
 </body>
 </html>

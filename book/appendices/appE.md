@@ -77,10 +77,10 @@ Design Tokens Community Group, Design Tokens Format Module.
 
 Listed because the outline this book was planned from assumed the host theme
 would arrive as DTCG tokens. It does not. The MCP Apps extension sends plain
-CSS custom properties with standardised names, which Chapter 12 documents, and
+CSS custom properties with standardised names, which Chapter 13 documents, and
 no conversion step exists in either direction. The DTCG format remains the
 right thing if you are generating those variables from a design system, which
-is a build-time concern rather than a wire one.
+is a build-time concern.
 
 Google, Material Design 3. <https://m3.material.io/>
 

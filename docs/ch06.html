@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>6. Surfaces and Geometry &middot; The MCP UI Cookbook</title>
-<meta name="description" content="How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.">
-<meta property="og:title" content="6. Surfaces and Geometry">
-<meta property="og:description" content="How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.">
+<title>6. Entries, Recipes, and the Discipline of Degradation &middot; The MCP UI Cookbook</title>
+<meta name="description" content="The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.">
+<meta property="og:title" content="6. Entries, Recipes, and the Discipline of Degradation">
+<meta property="og:description" content="The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.">
 <link rel="stylesheet" href="book.css">
-<link rel="stylesheet" href="demos/demo.css">
+
 </head>
 <body>
 <div class="layout">
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html" class="current">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html" class="current">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,107 +74,125 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 6</p><h1>Surfaces and Geometry</h1><p class="summary">How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.</p><p>You do not own the rectangle you render into. The host decides how wide it is, whether it may grow, and when it stops existing, and it makes those decisions without ever seeing your content. Four capabilities cover that negotiation, and between them they account for most of what looks like a broken embedded application: a scrollbar inside a scrollbar, a view six pixels tall, a fullscreen button that does nothing.</p>
-<div class="demo" data-demo="lab-surface" id="lab-surface"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="how-do-i-make-the-frame-fit-my-content">How do I make the frame fit my content?</h2>
-<p>Send <code>ui/notifications/size-changed</code> whenever your content resizes. This is the only channel that exists for it. The host has rendered your HTML into an iframe it cannot read, so it knows the frame’s dimensions and nothing about what is inside; you know your content’s dimensions and nothing about the frame. Neither side can measure what the other has, and one notification closes that gap.</p>
-<p class="provenance extracted">Extracted from from <code>emulator/app-bridge.js</code></p><pre class="js"><code>autoResize(element = document.documentElement) {
-  let last = { width: 0, height: 0 };
-  const report = () =&gt; {
-    const width = Math.ceil(element.scrollWidth);
-    const height = Math.ceil(element.scrollHeight);
-    if (width === last.width &amp;&amp; height === last.height) return;
-    last = { width, height };
-    this.notify(&quot;ui/notifications/size-changed&quot;, { width, height });
-  };
-  new ResizeObserver(report).observe(element);
-  report();
-  return this;
+<p class="eyebrow">Chapter 6</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>Two shapes, repeated throughout. Parts II and III are capability entries and Part V is recipes. Both templates are set out below so you can hold the rest of the book to them and see where it falls short. Where an entry says nothing about a section, the omission is deliberate: <code>picker.color</code> has no interesting lifecycle, and inventing a paragraph about one would be worse than the silence.</p>
+<h2 id="what-is-in-a-capability-entry">What is in a capability entry?</h2>
+<p>Each entry answers eleven questions in the same order, so that a reader who has read one entry knows where to look in all eighty-seven. The order is not arbitrary: it runs from why you would want the capability, through what the user sees, to what your code and the host each owe, and ends at the two sections that decide whether it works in a host you have never opened, which are failure modes and conformance tests.</p>
+<p><strong>Capability.</strong> Identifier, level, tag, and ground. Generated from the registry, so the prose cannot contradict it.</p>
+<p><strong>Motivation.</strong> Why an application needs it. Where the answer is “it does not, but users expect it”, the entry says so: <code>dialog.alert</code> is one.</p>
+<p><strong>User experience.</strong> What the person sees and does, from the outside. For <code>file.export</code>: a button appears, they press it, the host asks where to save.</p>
+<p><strong>Application behaviour.</strong> What your code does, including at startup. For <code>file.export</code>: check <code>hostCapabilities.downloadFile</code> in the initialize result, and render the button only if it is there.</p>
+<p><strong>Host behaviour.</strong> What the host owes you. For <code>file.export</code>: confirm with the user, derive the filename from the last segment of <code>resource.uri</code>, sanitise it against path traversal. Most documents omit this half, and it is the half that decides whether you work in an untested host.</p>
+<p><strong>Lifecycle.</strong> Initialisation, execution, cancellation, completion, destruction. Most entries have nothing to say. <code>lifecycle.beforeClose</code> and <code>tool.invoke</code> have all of it.</p>
+<p><strong>Security.</strong> Which boundary it crosses and what the host may do about it. For <code>file.export</code>: bytes leave the sandbox, so the host may refuse on size or policy.</p>
+<p><strong>Accessibility.</strong> Keyboard, focus, name and role, scaling, motion. Not a section at the end of the book. A section in every entry, because that is the only way it survives contact with a deadline.</p>
+<p><strong>Failure modes.</strong> Unsupported, denied, cancelled, timeout, failed. Five of them, always, in that order.</p>
+<p><strong>Minimal example.</strong> The smallest running demonstration. <code>file.export</code> is in <code>lab-clipboard</code>, three buttons and about 20 lines.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-clipboard/index.html</code></p><pre class="js"><code>  $(&quot;#export&quot;).onclick = async () =&gt; {
+    if (!bridge.hostCapabilities.downloadFile) {
+      say(&quot;This host has no downloadFile capability, so there is nothing to &quot;
+        + &quot;fall back to: a sandboxed frame cannot save a file on its own.&quot;);
+      return;
+    }
+    await bridge.downloadFile([{
+      type: &quot;resource&quot;,
+      resource: { uri: &quot;file:///regions.csv&quot;, mimeType: &quot;text/csv&quot;, text: csv() },
+    }]);
+    say(&quot;Handed the file to the host. The host decides where it lands.&quot;);
+  };</code></pre>
+<p>That is the <em>unsupported</em> and the happy path in one handler, and the shape generalises: check the capability, say something true when it is absent, and otherwise hand the host a standard MCP content block and let it decide where the bytes land. Nothing here reaches the filesystem, because nothing in a sandboxed frame can.</p>
+<p><strong>Conformance tests.</strong> The assertions that decide whether an implementation has it. For <code>file.export</code>: <code>ui/download-file</code> is sent when <code>downloadFile</code> is present, and never sent when it is absent.</p>
+<p>Not every entry uses all eleven. <code>picker.color</code> has nothing to say about lifecycle, because a native colour input opens and closes without the protocol learning anything about it. The template is a checklist for the author, not a quota, and silence means the content was one sentence long and the sentence was obvious. Padding those sections would make the book longer and the template useless, because a heading that is always present stops being a signal.</p>
+<h2 id="the-five-failure-modes">The five failure modes</h2>
+<p>This is the part to internalise, because it is where the difference between a demonstration and an application lives. A demonstration handles the path where everything works. An application handles five, and four of them are more likely than the first on any given day in a host you have not tested.</p>
+<p><strong>Unsupported.</strong> <code>hostCapabilities.downloadFile</code> was absent at <code>ui/initialize</code>. Do not render the export button at all. Not disabled with a tooltip, not showing an error when pressed: absent.</p>
+<p><strong>Denied.</strong> <code>ui/open-link</code> came back with a JSON-RPC error. Show the host’s message next to the control and leave the control enabled: “The host declined to open that link” says what happened and what to try. “Error” says neither.</p>
+<p><strong>Cancelled.</strong> Someone sent <code>notifications/cancelled</code>, or the host sent <code>ui/notifications/tool-cancelled</code>. Report where it stopped. Recipe 11 writes “Stopped after 3 of 5 steps. Completed steps were not rolled back.” Resetting the bar to zero claims nothing happened, and three steps happened.</p>
+<p><strong>Timeout.</strong> No answer at all. Give every request a deadline, 8 seconds is a reasonable default, and treat expiry as a failure with a retry. Skip this and you ship a spinner that runs until the user reloads the host.</p>
+<p><strong>Failed.</strong> The tool ran and returned <code>isError: true</code>. Its <code>content</code> carries three facts: what failed, what state that leaves, and what to do. “The index volume is full, so nothing was written. Free space and retry.” is 14 words carrying all three.</p>
+<p>On the wire that is an ordinary tool result with a flag, which is why it reaches your code as data and never as a thrown exception:</p>
+<p class="provenance illustrative">Illustrative, not run</p><pre class="json"><code>{
+  &quot;isError&quot;: true,
+  &quot;content&quot;: [{ &quot;type&quot;: &quot;text&quot;, &quot;text&quot;:
+    &quot;The index volume is full, so nothing was written. Free space and retry.&quot; }]
 }</code></pre>
-<div class="cap" id="surface.resize"><div class="cap-head"><code class="cap-id">surface.resize</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Report content size so the host can size the frame around it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/size-changed</code><code>containerDimensions</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
-<p>The <code>last</code> comparison is the part that matters. A <code>ResizeObserver</code> fires during layout, and layout runs more often than content actually changes: a font loading, a scrollbar appearing, an image decoding, all of them produce a callback with dimensions identical to the previous one. Sending each of those turns a resize into a flood, and because the host resizes the frame on each message, the flood feeds itself. Comparing against the last reported size costs two integers and removes the whole class of problem. The SDK does the same thing when <code>autoResize</code> is left on, which it is by default, so unless you have a reason to hand-roll this you should not.</p>
-<p>What the host owes you in return depends on which mode the dimension is in. If it is flexible, the host must listen and apply your size within a frame or two, because your content is the authority. If it is fixed, the host is entitled to ignore you completely, and your content has to fit or scroll inside itself.</p>
-<h2 id="how-much-room-do-i-actually-have">How much room do I actually have?</h2>
-<p>Read <code>hostContext.containerDimensions</code> from the initialize result. Each axis is independently in one of three modes, and the field that is present tells you which:</p>
+<p>The distinction that matters is between this and a JSON-RPC error object. A JSON-RPC error means the request was never processed. <code>isError: true</code> means the tool ran and reported a failure, and the difference decides whether a retry is safe.</p>
+<figure>
+<img src="figures/diag-failures.png" alt="The five failure modes, and the moment each one is discoverable" />
+<figcaption aria-hidden="true">The five failure modes, and the moment each one is discoverable</figcaption>
+</figure>
+<p>They become discoverable at different moments, which is why naming all five matters. Unsupported is known at <code>ui/initialize</code>. Denied and failed arrive with the response. Cancelled arrives at any time, from either side. Timeout you decide yourself.</p>
+<p>An application that handles only “failed” and calls it error handling has covered one case in five, and not the most common one. Unsupported happens on every host that is a level below you, which over a product’s life is most of them.</p>
+<h2 id="what-is-in-a-recipe-entry">What is in a recipe entry?</h2>
+<p>Part V uses a different template, because a recipe is an argument. A capability entry claims that one operation behaves a certain way. A recipe claims that a recognisable application can be built out of those operations and names exactly which ones it needed, so its template is organised around evidence: what it reproduces, what it exercises that nothing before it did, and what it does when the host says no.</p>
+<p><strong>Goal.</strong> The conventional application being reproduced, in one line. Recipe 5: “editable grid computation”.</p>
+<p><strong>Capability delta.</strong> The primitives this recipe exercises that no earlier one does, generated from the registry. Recipe 1 claims 16; Recipe 13 claims 4. An empty delta means the recipe gets merged or deleted.</p>
+<p><strong>Surface.</strong> What it looks like and how much room it needs. Recipe 1 is one column at any width and asks for <code>maxHeight: 620</code>.</p>
+<p><strong>Components.</strong> Which Part IV components it composes, all from <code>apps/lib/view.css</code>.</p>
+<p><strong>Atomic capabilities.</strong> The full list, generated from the registry.</p>
+<p><strong>Local and agentic interactions.</strong> The Chapter 4 split, as a table, before any code. Recipe 1 lists 6 local and 4 crossings.</p>
+<p><strong>Host dependencies.</strong> What it needs by level, so you can tell whether it runs in your host. Every recipe here renders at level 1 with reduced function.</p>
+<p><strong>Failure cases.</strong> What happens when each dependency is absent. Recipe 6 sends its export to the clipboard when <code>downloadFile</code> is missing, and says so in a toast.</p>
+<p><strong>Accessibility.</strong> The keyboard-only path through the application. Recipes 6 and 7 say where theirs is incomplete.</p>
+<p><strong>Conformance checks.</strong> The observable behaviours, phrased as the harness asserts them. <code>make render</code> runs 88 of these against real servers.</p>
+<h2 id="why-every-listing-has-a-tag">Why every listing has a tag</h2>
+<p>One more convention, visible on every code block in this book. A tag above each listing says where the code came from, because a reader who cannot tell which listings are load-bearing has to treat all of them as suspect:</p>
+<p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
+<p><em>Captured</em> means real output from a real run, quoted verbatim, including the parts that are inconvenient. Four listings in this book are captured, and one of them is a test run reporting its own failures.</p>
+<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 24 of the 86 listings.</p>
+<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 58 extracted listings against their files line by line.</p>
+<h2 id="a-worked-failure-table">A worked failure table</h2>
+<p>Here is the same capability, <code>file.export</code>, written out as the template asks, so that the shape is concrete before Part II starts using it eighty-seven times. Read the middle column first. Knowing <em>when</em> you learn about a failure determines where the handling code goes: an initialisation-time answer belongs in the code that decides what to render at all, and a click-time answer belongs next to the control.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Field present</th>
 <th>Mode</th>
-<th>What you do</th>
+<th>When you learn</th>
+<th>What the interface does</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>height</code> or <code>width</code></td>
-<td>Fixed</td>
-<td>Fill it. Scroll inside.</td>
+<td>Unsupported</td>
+<td>Initialisation</td>
+<td>No export control is rendered. Copy is offered instead.</td>
 </tr>
 <tr>
-<td><code>maxHeight</code> or <code>maxWidth</code></td>
-<td>Flexible</td>
-<td>Size yourself, up to the limit.</td>
+<td>Denied</td>
+<td>The click</td>
+<td>“The host declined to save that file.” The control stays.</td>
 </tr>
 <tr>
-<td>Neither</td>
-<td>Unbounded</td>
-<td>Size yourself. No limit.</td>
+<td>Cancelled</td>
+<td>The click</td>
+<td>Nothing. The user changed their mind and the interface is unchanged.</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>Your deadline</td>
+<td>“No answer from the host.” The control returns to idle.</td>
+</tr>
+<tr>
+<td>Failed</td>
+<td>The click</td>
+<td>The host’s message, verbatim, next to the button.</td>
 </tr>
 </tbody>
 </table></div>
-<div class="cap" id="surface.viewport"><div class="cap-head"><code class="cap-id">surface.viewport</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Read the space actually available: fixed, flexible, or unbounded.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>containerDimensions</code><code>safeAreaInsets</code><code>deviceCapabilities</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
-<p>The two axes are decided separately and commonly differ. A fixed width with a flexible height is the standard inline card: the host has a column of known width in its conversation, and it will let your card be as tall as it needs within reason. A side panel is often the reverse. Writing code that assumes both axes match is writing code that works in one host.</p>
-<p class="provenance extracted">Extracted from from <code>apps/labs/lab-surface/index.html</code></p><pre class="js"><code>function describe(dimensions) {
-  if (!dimensions) return &quot;Unbounded in both directions.&quot;;
-  const axis = (fixed, max, name) =&gt;
-    fixed != null ? `${name} is fixed at ${fixed}px`
-    : max != null ? `${name} is flexible up to ${max}px`
-    : `${name} is unbounded`;
-  return [
-    axis(dimensions.width, dimensions.maxWidth, &quot;Width&quot;),
-    axis(dimensions.height, dimensions.maxHeight, &quot;Height&quot;),
-  ].join(&quot;. &quot;) + &quot;.&quot;;
-}</code></pre>
-<p>Guessing wrong is expensive in both directions. Assume fixed when the host gave you flexible and you build an inner scroller inside a frame that would happily have grown, so the user scrolls a 200-pixel window through 900 pixels of table for no reason. Assume flexible when the host gave you fixed and your content overflows a frame that will never move, so the bottom of your interface is simply gone. Press “Fix the height at 200px” in the demonstration and watch the view switch behaviour: it stops asking to grow and starts scrolling inside what it has.</p>
-<p>Read the field in a function rather than in a constant at startup. Everything in <code>hostContext</code> can change through <code>ui/notifications/host-context-changed</code>, and a container change is one of the commonest: the user drags the divider on a side panel, or rotates a phone, or the host collapses its own sidebar. The same object also carries <code>safeAreaInsets</code>, <code>platform</code> and <code>deviceCapabilities</code>, which Chapter 12 covers.</p>
-<p>WCAG’s Reflow criterion asks that content stay usable at 320 CSS pixels wide without two-dimensional scrolling, and a host on a phone will hand you close to that. It is worth testing at 320 deliberately rather than discovering it: most layouts that survive 380 also survive 320, and the ones that do not usually fail on a single fixed-width element you can find in a minute.</p>
-<figure>
-<img src="figures/diag-geometry.png" alt="Fixed, flexible and unbounded, decided per axis" />
-<figcaption aria-hidden="true">Fixed, flexible and unbounded, decided per axis</figcaption>
-</figure>
-<h2 id="how-do-i-go-fullscreen">How do I go fullscreen?</h2>
-<p>Send <code>ui/request-display-mode</code>, and then use the mode that comes back rather than the one you asked for.</p>
-<p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>const { mode } = await bridge.requestDisplayMode(&quot;fullscreen&quot;);
-// mode may still be &quot;inline&quot;. The host is allowed to say no.</code></pre>
-<div class="cap" id="surface.displayMode"><div class="cap-head"><code class="cap-id">surface.displayMode</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Move between inline, fullscreen, and picture-in-picture.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/request-display-mode</code><code>availableDisplayModes</code><code>ui/notifications/host-context-changed</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r06.html">Image Annotator</a>, <a href="r08.html">Code and Diff Reviewer</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
-<p>The negotiation has four steps. You declare which modes you support in <code>appCapabilities.availableDisplayModes</code> during initialisation. The host declares which it supports in <code>hostContext.availableDisplayModes</code>. You check its list before asking, because a host may refuse a mode purely on the grounds that you never declared it. And the host answers with the mode it actually set, which it may also change later, without being asked, through <code>ui/notifications/host-context-changed</code>.</p>
-<p>Three of those four get skipped, and each produces a different failure. Assuming the request succeeded gives you an interface convinced it is fullscreen while sitting in a 380-pixel card, with controls sized for a screen it does not have. Asking for a mode you never declared gives you a refusal you did not plan for. Ignoring a change you did not request means the user presses the host’s own fullscreen control and your layout stays inline.</p>
-<p>The rule that covers all three is to lay out for the mode you got, from a single function that reads <code>hostContext.displayMode</code>, called both after the request resolves and on every context change. Press “Withdraw fullscreen” in the demonstration and then press the view’s own button: the view checks the list, finds fullscreen gone, and says so rather than firing a request that would fail.</p>
-<h2 id="how-do-i-close-myself">How do I close myself?</h2>
-<p>Send <code>ui/notifications/request-teardown</code>. It is a notification, so it has no id, gets no answer, and carries no guarantee: the host may act on it, defer it, or ignore it entirely, and you will not be told which.</p>
-<div class="cap" id="surface.close"><div class="cap-head"><code class="cap-id">surface.close</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Ask the host to dismiss this view.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/request-teardown</code><code>ui/resource-teardown</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
-<p>If the host does agree, it sends you <code>ui/resource-teardown</code>, which is a request with an id and a reason, and it should wait for your response before removing the frame. That gap between the request arriving and your response leaving is the only interval in the entire protocol where a view is guaranteed to still exist and to have the host’s attention. Everything you were about to lose has to be flushed inside it, which is why Chapter 14 spends a whole section on what belongs there and how small it has to be.</p>
-<p>Two host failures are worth knowing about because you cannot work around either. A host that removes the frame without sending <code>ui/resource-teardown</code> takes your unsaved work with it, and nothing in your code runs. A host that sends the request and does not wait for the answer looks identical from the inside: you begin your flush, the frame disappears mid-write, and no error is raised anywhere. The only defence against both is to keep the amount of unflushed state small at all times, which in practice means autosaving on a short timer rather than relying on the handshake.</p>
-<h2 id="three-geometry-bugs">Three geometry bugs</h2>
-<p><strong>The six-pixel view.</strong> A frame that has just been appended has no layout yet, so the first <code>ResizeObserver</code> callback can report a height of zero or a handful of pixels. A host that believes it sets the frame to that height, and now the view has almost no viewport, so its content reflows to almost nothing, so the next report confirms the tiny size. The collapse is self-reinforcing and the view never recovers. Both sides have to be defensive: views send only positive sizes, and hosts treat a zero as “not yet” rather than as “empty”. This one survives manual testing, because the first frame on a page usually lays out before the observer fires and the second one does not.</p>
-<p><strong>The nested scrollbar.</strong> You set <code>height: 100%</code> on a container while the host gave you a flexible height. Now the container’s height is derived from the frame, and the frame’s height is derived from the container, and the two settle wherever the first measurement happened to land, which is usually too short. The user gets your scrollbar inside the host’s scrollbar. The rule that prevents it is narrow enough to remember: in a flexible dimension, nothing in the chain the observer measures may have a percentage size. Let content decide the height, and put the scroll on an inner element with an explicit <code>max-height</code> in pixels or <code>rem</code>.</p>
-<p><strong>The oscillating frame.</strong> A hover effect changes an element’s height by a few pixels. You report the new size, the host resizes the frame, the layout shifts, the pointer is now over a different element, the first element un-hovers, and you report again. The frame twitches for as long as the pointer sits near the boundary. Reserve the hovered dimensions up front and change only colour, border or shadow on hover.</p>
-<h2 id="conformance-checks">Conformance checks</h2>
-<ol type="1">
-<li>A size reported in a flexible dimension resizes the frame within one animation frame.</li>
-<li>A reported size of zero does not collapse the frame.</li>
-<li><code>containerDimensions</code> is in the initialize result and describes each axis independently.</li>
-<li>A container change sends <code>ui/notifications/host-context-changed</code> with only the changed keys.</li>
-<li><code>ui/request-display-mode</code> returns the resulting mode, and the host never switches a view to a mode absent from its <code>appCapabilities</code>.</li>
-<li><code>ui/notifications/request-teardown</code> is honoured with <code>ui/resource-teardown</code> or ignored, never acted on silently.</li>
-<li>The host waits for the teardown response before removing the frame.</li>
-</ol>
+<p>Five rows, and notice that three of them leave the interface in a different state and two leave it identical. Cancelled and unsupported both produce no error and no message, for opposite reasons: one because nothing was attempted, the other because nothing was ever offered.</p>
+<p>The row people skip is timeout, and skipping it is what produces the single most common defect in embedded applications: a spinner with no end, in a frame whose host stopped listening, that only a reload will clear.</p>
+<h2 id="where-the-templates-came-from">Where the templates came from</h2>
+<p>Both are adapted from how specification-anchored test suites describe web platform features, and the borrowing is deliberate. A capability entry that names its host behaviour and its failure modes can be turned into assertions mechanically, which is what Appendix C does. An entry that describes only the happy path cannot, which is why so much interface documentation is unfalsifiable and therefore ages without anybody noticing.</p>
 <h2 id="what-to-remember">What to remember</h2>
-<p>Both parties are guessing at the same number from opposite sides, and the protocol gives each of them exactly one way to tell the other what it knows: you send <code>ui/notifications/size-changed</code>, the host sends <code>containerDimensions</code>. Get those two right, keep percentage heights out of the measured chain, and treat every display mode answer as authoritative rather than as confirmation, and the layout problems in this chapter stop happening.</p>
+<p>If you take one thing from Part I into the rest of the book, take the failure section. Every capability entry from here on has one, and in almost every case it is longer than the section describing the happy path. That ratio is the point. The happy path is a few lines of code you would have written anyway. The rest is what makes an application survive a host that says no.</p>
+<h2 id="reading-an-entry-critically">Reading an entry critically</h2>
+<p>Not every entry deserves equal trust. Two habits:</p>
+<p><strong>Check the ground badge against your own experience.</strong> A <em>platform</em> entry is a claim about browsers, and browsers differ. A <em>wire</em> entry is a claim about a specification that is still moving, and eight of them carry a draft badge. A <em>gap</em> entry is the strongest claim in the book, because it asserts that something does not exist, and absence is the hardest thing to verify.</p>
+<p><strong>Ask what the failure section leaves out.</strong> The template asks for five modes and most entries have something to say about three. Where an entry is silent on cancelled or timeout, it is usually because the capability is synchronous and local, and that reasoning should be visible in the code. Where it is silent and the capability is neither, the entry is thin and you should treat it as a starting point rather than as a specification.</p>
 
-<div class="pager"><a href="ch05.html"><span class="dir">Previous</span>5. Entries, Recipes, and the Discipline of Degradation</a><a href="ch07.html" style="text-align:right"><span class="dir">Next</span>7. Focus and Scroll</a></div>
+<div class="pager"><a href="ch05.html"><span class="dir">Previous</span>5. The Sandbox and What It Costs You</a><a href="ch07.html" style="text-align:right"><span class="dir">Next</span>7. Surfaces and Geometry</a></div>
 </main>
 </div>
-<script type="module" src="demos/demo.js"></script>
+
+<script src="copy.js"></script>
 </body>
 </html>

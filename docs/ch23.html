@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>23. Components II: Navigation, Data and Visualization &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.">
-<meta property="og:title" content="23. Components II: Navigation, Data and Visualization">
-<meta property="og:description" content="Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.">
+<title>23. Components I: Overlays, Controls and Text &middot; The MCP UI Cookbook</title>
+<meta name="description" content="What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.">
+<meta property="og:title" content="23. Components I: Overlays, Controls and Text">
+<meta property="og:description" content="What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.">
 <link rel="stylesheet" href="book.css">
 
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html" class="current">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html" class="current">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,8 +74,11 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 23</p><h1>Components II: Navigation, Data and Visualization</h1><p class="summary">Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.</p><p>These are the components that carry data, and all three groups run into the same two walls. There is no address bar, so nothing about navigation state can live in a URL and the back button belongs to somebody else. And there is very little room, so the column budget runs out long before the data does.</p>
-<h2 id="navigation">Navigation</h2>
+<p class="eyebrow">Chapter 23</p><h1>Components I: Overlays, Controls and Text</h1><p class="summary">What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.</p><p>Capabilities are too small to build an interface out of and applications are too large to reuse, so components are the layer in between: the pieces with names a designer already uses, assembled from capabilities and assembled into recipes.</p>
+<p>Every entry answers three questions: what it composes, which Authoring Practices Guide pattern governs its keyboard behaviour, and what changes because it lives in someone else’s window. The third question is the one that makes this part worth writing. The first two are answered better by the APG itself, and every entry here links to it instead of paraphrasing it.</p>
+<p>The third question is the only reason these chapters exist. Plenty of references tell you how to build a combobox. None tell you how to build one that is four hundred pixels wide, inside an opaque origin, next to a model that may fill it in.</p>
+<p>The recipes are built from two files: <code>apps/lib/view.css</code> and <code>apps/lib/view.js</code>, about 500 lines together, and all thirteen share them. That is small enough to read in a sitting and is the whole component layer behind every demonstration on this site. There is no framework underneath it and no build step over it, which is a claim you can check by viewing source on any recipe.</p>
+<h2 id="overlays">Overlays</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -85,54 +89,73 @@
 </thead>
 <tbody>
 <tr>
-<td>Tabs</td>
-<td><code>input.keyboard</code>, <code>surface.focus</code>, <code>ui.navigate</code></td>
-<td>Tabs</td>
+<td>Alert</td>
+<td><code>dialog.alert</code>, <code>surface.focus</code></td>
+<td>Alert Dialog</td>
 </tr>
 <tr>
-<td>Breadcrumbs</td>
-<td><code>input.keyboard</code></td>
-<td>Breadcrumb</td>
+<td>Confirmation</td>
+<td><code>dialog.confirm</code>, <code>surface.focus</code>, <code>input.keyboard</code></td>
+<td>Alert Dialog</td>
 </tr>
 <tr>
-<td>Tree</td>
-<td><code>input.keyboard</code>, <code>input.selection</code>, <code>input.contextmenu</code></td>
-<td>Tree View</td>
+<td>Modal</td>
+<td><code>surface.displayMode</code>, <code>surface.focus</code>, <code>input.keyboard</code></td>
+<td>Dialog (Modal)</td>
 </tr>
 <tr>
-<td>Accordion</td>
-<td><code>input.keyboard</code>, <code>surface.resize</code></td>
-<td>Accordion</td>
+<td>Sheet, drawer</td>
+<td><code>surface.focus</code>, <code>input.pointer</code>, <code>env.reducedMotion</code></td>
+<td>Dialog (Modal)</td>
 </tr>
 <tr>
-<td>Sidebar</td>
-<td><code>input.keyboard</code>, <code>surface.viewport</code></td>
-<td>(layout)</td>
+<td>Popover</td>
+<td><code>surface.focus</code>, <code>input.keyboard</code></td>
+<td>Disclosure</td>
 </tr>
 <tr>
-<td>Toolbar</td>
-<td><code>input.keyboard</code>, <code>env.inputMode</code></td>
-<td>Toolbar</td>
+<td>Tooltip</td>
+<td><code>input.pointer</code>, <code>env.inputMode</code></td>
+<td>Tooltip</td>
 </tr>
 <tr>
-<td>Command palette</td>
-<td><code>input.shortcut</code>, <code>surface.focus</code>, <code>input.keyboard</code></td>
-<td>Combobox</td>
-</tr>
-<tr>
-<td>Split view</td>
-<td><code>input.pointer</code>, <code>surface.viewport</code></td>
-<td>(layout)</td>
+<td>Context menu</td>
+<td><code>input.contextmenu</code>, <code>input.longpress</code>, <code>surface.focus</code></td>
+<td>Menu</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>There is no URL.</strong> Everything a URL normally does has to be done some other way. You cannot deep link into a view. The user cannot bookmark a state. The back button belongs to the host and does not know your tabs exist. Pressing it leaves the conversation, which is a considerably worse outcome than going back one tab.</p>
-<p>Three consequences. Navigation state has to be shallow, because there is no history to unwind. Every panel needs a visible way back, because the browser’s is not available. And navigation state is one of the few things worth publishing to the model, because “the user is looking at the line items panel” changes what a good answer looks like.</p>
-<p><strong>Tabs are the default and the tree is the exception.</strong> In four hundred pixels, a tab strip with more than four labels wraps or scrolls, and both look like a mistake. If you need more than four, you probably need a different structure rather than a scrolling tab strip.</p>
-<p><strong>A tree is one tab stop.</strong> <code>role="tree"</code> with roving tabindex, arrows to move and expand, Home and End, and typeahead if the tree is large. Recipe 3 builds one, and the roving tabindex is what keeps a hundred-file tree from being a hundred tab stops.</p>
-<p><strong>Toolbars overflow rather than wrap.</strong> A wrapped toolbar changes the height of the view on a resize, which triggers <code>surface.resize</code>, which changes the frame, which can change the wrap. Put the extras behind a menu.</p>
-<p><strong>A command palette is the best answer to a narrow surface</strong>, and it is also the component most likely to lose its shortcut to the host. Give it a visible entry point.</p>
-<h2 id="structured-data">Structured data</h2>
+<p><strong>Use <code>&lt;dialog&gt;</code> and <code>showModal()</code>.</strong> It gives you the focus trap, the inert background, the Escape handling and the <code>aria-modal</code> semantics. A hand-rolled overlay gives you none of them, and in a frame a keyboard user cannot escape from, the difference is not cosmetic.</p>
+<p>This is the whole confirmation component the thirteen recipes share. Every behaviour a hand-rolled overlay would have to reimplement is inherited from the element, and the promise makes it usable from an <code>await</code>:</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>  // window.confirm is blocked in a sandbox without allow-modals, and blocking
+  // the thread would freeze the bridge anyway. This is the in-view version:
+  // same semantics, one promise, focus trapped by &lt;dialog&gt;.
+  function confirmDialog({ title, body, confirm = &quot;Confirm&quot;, cancel = &quot;Cancel&quot;,
+                           destructive = false }) {
+    return new Promise((resolve) =&gt; {
+      const dialog = h(&quot;dialog&quot;, {},
+        h(&quot;h2&quot;, { text: title }),
+        body ? h(&quot;p&quot;, { class: &quot;muted&quot;, text: body }) : null,
+        h(&quot;div&quot;, { class: &quot;row&quot;, style: &quot;justify-content:flex-end&quot; },
+          h(&quot;button&quot;, { class: &quot;quiet&quot;, text: cancel,
+            onclick: () =&gt; { dialog.close(); resolve(false); } }),
+          h(&quot;button&quot;, { class: destructive ? &quot;danger&quot; : &quot;primary&quot;, text: confirm,
+            onclick: () =&gt; { dialog.close(); resolve(true); } })));
+      dialog.addEventListener(&quot;cancel&quot;, () =&gt; resolve(false));
+      dialog.addEventListener(&quot;close&quot;, () =&gt; dialog.remove());
+      document.body.append(dialog);
+      dialog.showModal();
+    });
+  }</code></pre>
+<p>The <code>cancel</code> listener is the one people leave out. It fires when the user presses Escape, and without it the promise never settles and the code awaiting the answer waits forever in a frame that looks fine.</p>
+<p><strong>Everything is clipped by the frame.</strong> A popover that would overflow the viewport in a page just overflows; here it is cut off by the iframe’s edge and there is no way to render outside it. Position with the frame’s bounds, not the screen’s, and prefer flipping to a different side over letting the content extend past the boundary. A dropdown that opens downward at the bottom of the frame is a dropdown nobody can read.</p>
+<p><strong>Tooltips need a second route.</strong> They are hover-only by construction, and <code>hostContext.deviceCapabilities.hover</code> tells you when hover does not exist. On a touch device, move the content into the label, a popover triggered by tap, or a description that is always visible.</p>
+<p><strong>Context menus need a keyboard route.</strong> Shift+F10, a visible button, or both. Chapter 10 has the details.</p>
+<h4 id="why-dialog-and-not-a-div">Why <code>&lt;dialog&gt;</code> and not a div</h4>
+<p>The list of what a hand-rolled overlay loses is longer than people expect, and hand-rolled overlays are still the common case, usually because somebody needed one animation the native element did not offer. Each item below is a behaviour you are then committing to re-implement, and most of them are invisible until somebody uses a keyboard or a screen reader.</p>
+<p><code>showModal()</code> puts the dialog in the top layer, which means it renders above everything regardless of stacking context, and no <code>z-index</code> arms race is needed. It makes the rest of the document inert, so clicks and focus cannot reach it. It gives you <code>::backdrop</code> as a real pseudo-element. It handles Escape, firing a <code>cancel</code> event you can intercept. It restores focus to the previously focused element on close. And it carries the modal semantics assistive technology needs without a single ARIA attribute.</p>
+<p>A div with <code>position: fixed</code> gives you none of those, and the versions people write typically reimplement two of them badly. The one thing to remember is the <code>cancel</code> event: a dialog whose promise is only resolved by its buttons hangs forever when the user presses Escape, and in an application that awaits the answer, a hung promise is a frozen interface.</p>
+<h2 id="controls">Controls</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -143,114 +166,189 @@
 </thead>
 <tbody>
 <tr>
-<td>List</td>
-<td><code>input.selection</code>, <code>input.keyboard</code></td>
-<td>Listbox</td>
+<td>Button</td>
+<td><code>input.pointer</code>, <code>input.keyboard</code></td>
+<td>Button</td>
 </tr>
 <tr>
-<td>Virtual list</td>
-<td><code>surface.scroll</code>, <code>input.selection</code></td>
-<td>Listbox</td>
+<td>Checkbox, radio</td>
+<td><code>input.keyboard</code>, <code>input.selection</code></td>
+<td>Checkbox, Radio Group</td>
 </tr>
 <tr>
-<td>Table</td>
-<td><code>input.selection</code>, <code>input.keyboard</code>, <code>clipboard.write</code></td>
-<td>Grid</td>
-</tr>
-<tr>
-<td>Editable grid</td>
-<td><code>input.selection</code>, <code>history.transaction</code>, <code>clipboard.write</code></td>
-<td>Grid</td>
-</tr>
-<tr>
-<td>Pagination</td>
+<td>Toggle</td>
 <td><code>input.keyboard</code></td>
+<td>Switch</td>
+</tr>
+<tr>
+<td>Slider</td>
+<td><code>input.pointer</code>, <code>input.keyboard</code></td>
+<td>Slider</td>
+</tr>
+<tr>
+<td>Stepper</td>
+<td><code>input.keyboard</code></td>
+<td>Spinbutton</td>
+</tr>
+<tr>
+<td>Segmented control</td>
+<td><code>input.keyboard</code>, <code>input.selection</code></td>
+<td>Radio Group</td>
+</tr>
+<tr>
+<td>Filter chip</td>
+<td><code>input.selection</code>, <code>input.keyboard</code></td>
+<td>Checkbox</td>
+</tr>
+<tr>
+<td>Dropdown</td>
+<td><code>input.keyboard</code>, <code>surface.focus</code></td>
+<td>Listbox</td>
+</tr>
+<tr>
+<td>Combobox</td>
+<td><code>input.keyboard</code>, <code>input.selection</code>, <code>surface.focus</code></td>
+<td>Combobox</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Start from the native element.</strong> <code>&lt;button&gt;</code>, <code>&lt;input type="checkbox"&gt;</code>, <code>&lt;input type="range"&gt;</code>, <code>&lt;select&gt;</code> all work, all come with keyboard and screen reader support, and all are one CSS file away from matching your design. The recipes use native elements everywhere except the combobox, which does not exist natively.</p>
+<p><strong>Target size is a host-dependent decision.</strong> WCAG 2.2 requires 24 by 24 CSS pixels at AA and 44 by 44 at AAA, and <code>deviceCapabilities</code> is where you find out whether you are on touch. A toolbar designed at 28 pixels clears AA and is still unpleasant on a phone, and you cannot detect a phone by width when the same width is a side panel on a desktop.</p>
+<p><strong>Disabled controls carry an obligation.</strong> A disabled button is a promise that something could enable it, and the user is entitled to know what. If the reason is a missing host capability, do not disable, omit: Chapter 1’s argument. If the reason is state, say so.</p>
+<p><strong>The combobox is the one worth buying.</strong> It is the most complex pattern in the APG, it involves a listbox that must be positioned within the frame, and getting the <code>aria-activedescendant</code> and expanded state right takes longer than any other component here. If a plain <code>&lt;select&gt;</code> or a text input with a datalist will do, take it.</p>
+<h2 id="text-input">Text input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text field</td>
+<td><code>input.keyboard</code>, <code>surface.focus</code></td>
 <td>(native)</td>
 </tr>
 <tr>
-<td>Comparison grid</td>
-<td><code>input.selection</code></td>
-<td>Grid</td>
+<td>Search field</td>
+<td><code>input.keyboard</code>, <code>input.shortcut</code></td>
+<td>(native)</td>
 </tr>
 <tr>
-<td>Property list</td>
-<td><code>input.selection</code>, <code>clipboard.write</code></td>
-<td>(definition list)</td>
+<td>Multiline editor</td>
+<td><code>input.keyboard</code>, <code>history.transaction</code></td>
+<td>(native)</td>
+</tr>
+<tr>
+<td>Autocomplete</td>
+<td><code>input.keyboard</code>, <code>input.selection</code></td>
+<td>Combobox</td>
+</tr>
+<tr>
+<td>Token input</td>
+<td><code>input.keyboard</code>, <code>input.selection</code>, <code>clipboard.write</code></td>
+<td>Combobox</td>
+</tr>
+<tr>
+<td>Rich text editor</td>
+<td><code>history.transaction</code>, <code>input.selection</code>, <code>ui.prefill</code></td>
+<td>(none)</td>
+</tr>
+<tr>
+<td>Code editor</td>
+<td><code>input.keyboard</code>, <code>clipboard.write</code>, <code>input.selection</code></td>
+<td>(none)</td>
 </tr>
 </tbody>
 </table></div>
-<p>This is the group most MCP applications are actually made of, and it has the most predictable failures of anything in Part IV. Four of them account for nearly everything that goes wrong, and all four are about what survives an update.</p>
-<p><strong>Column budget.</strong> Four columns is comfortable at 380 pixels, six is the ceiling, and beyond that the answer is a property list per row rather than a wider table. Recipe 1 shows six and drops to a card layout under 480 pixels.</p>
-<p><strong>Sort, filter and page locally.</strong> Chapter 3. All three are answerable from data already in the frame.</p>
-<p><strong>Selection is the unit of conversation.</strong> Chapter 9 has the gesture model, Chapter 17 has what to do with it. A table without a selection model gives its users nothing precise to ask about.</p>
-<p><strong>Streaming updates must not rebuild the list.</strong> Appending a row is fine. Replacing the container’s children destroys selection, focus and scroll position at the same time, and the user notices all three. Recipe 9 appends and trims, never redraws, which is what makes selecting a log line survive a thousand lines arriving after it.</p>
-<p><strong>Virtualise past a few thousand rows</strong>, and be aware that virtualisation and <code>surface.resize</code> interact badly: a virtual list has a fixed height by design, so it wants a fixed container, which means telling the host a stable size and scrolling inside it.</p>
-<p><strong>Copy as the destination wants it.</strong> TSV for the clipboard, CSV for a file. Chapter 10.</p>
-<h3 id="the-column-budget">The column budget</h3>
-<p>Six columns at 380 pixels is the practical ceiling, and getting there takes deliberate work rather than restraint alone. Each of the following buys you roughly half a column, and you need all of them.</p>
-<p>Right-align every number and use tabular figures, which buys a character of width per column and makes outliers scannable. Put units in the header rather than in every cell: “p95 ms” once beats “412ms” eight times. Use chips for enumerated values, because a chip reads at a glance and a word does not. Format dates to the shortest form that is still unambiguous, which usually means dropping the year for anything inside the current one. And put anything that is only occasionally needed behind row expansion rather than in a column.</p>
-<p>When that is not enough, the answer is not a horizontal scrollbar. It is a different component: a property list per row, which turns a wide table into a tall list and is what every mobile client does with the same problem. Recipe 1 switches at 480 pixels.</p>
-<h2 id="visualisation">Visualisation</h2>
+<p><strong>Validate on blur and on submit, never on keystroke.</strong> Telling somebody their email is invalid while they are typing the at sign is the fastest way to make a form feel hostile. Recipe 13 tracks a <code>touched</code> flag per field and only shows an error after the field has been left once.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r13-settings/index.html</code></p><pre class="js"><code>  if (!email &amp;&amp; (!live || $(&quot;#email&quot;).dataset.touched)) {
+    $(&quot;#email&quot;).setAttribute(&quot;aria-invalid&quot;, &quot;true&quot;);
+    $(&quot;#email-err&quot;).hidden = false;
+    $(&quot;#email-err&quot;).textContent = &quot;That is not an address this will reach.&quot;;
+    ok = false;
+  } else {
+    $(&quot;#email&quot;).removeAttribute(&quot;aria-invalid&quot;);
+    $(&quot;#email-err&quot;).hidden = true;
+  }</code></pre>
+<p>Two attributes do the accessibility work. <code>aria-invalid</code> is what a screen reader announces when focus lands back on the field, and the error element is referenced by <code>aria-describedby</code> so the message is read as part of the field and not as a stray paragraph. Toggling <code>hidden</code> on the message rather than emptying its text keeps the layout from jumping as the user moves through the form.</p>
+<p><strong>Undo grouping is per pause, not per keystroke.</strong> Chapter 16. In a rich text editor this is the difference between an undo stack somebody can use and one that steps back a character at a time.</p>
+<p><strong>Search fields want a shortcut and cannot safely have one.</strong> Cmd/Ctrl+F is the convention and the host may own it. Bind it, expect to lose it sometimes, and always provide the visible field.</p>
+<p><strong>Rich text is where the agent shows up.</strong> A text field can be prefilled and the user sees the value change. A document cannot: the agent’s rewrite has to appear as a proposal, with the original still visible, and accepting it has to be one undo transaction. Recipe 4 is the worked example, and the proposal card is a component in its own right that Chapter 25 lists.</p>
+<p><strong>Code editors are a decision about weight.</strong> A real editor is a large dependency inside a frame with a restrictive CSP and no CDN unless the server declares one. A <code>&lt;pre&gt;</code> with syntax highlighting done server-side covers reading, which is most of what a review interface does. Recipe 8 renders a diff with no editor at all.</p>
+<h3 id="what-each-overlay-costs">What each overlay costs</h3>
+<p>A quick reference, because the trade is genuinely different from a page. In a page an overlay costs the user a moment; in a 380 pixel frame it costs them the entire interface for as long as it is open.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Component</th>
-<th>Composes</th>
-<th>APG pattern</th>
+<th>Cost in a four hundred pixel frame</th>
+<th>Use when</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Chart</td>
-<td><code>surface.viewport</code>, <code>env.theme</code>, <code>input.pointer</code></td>
-<td>(image or table)</td>
+<td>Alert</td>
+<td>Blocks everything, clipped by the frame</td>
+<td>Almost never; usually a toast</td>
 </tr>
 <tr>
-<td>Timeline</td>
-<td><code>input.zoompan</code>, <code>input.selection</code></td>
-<td>(image or table)</td>
+<td>Confirmation</td>
+<td>Blocks, but small</td>
+<td>The action is destructive and not undoable</td>
 </tr>
 <tr>
-<td>Heatmap</td>
-<td><code>input.pointer</code>, <code>env.contrast</code></td>
-<td>(image or table)</td>
+<td>Modal</td>
+<td>Covers the whole view</td>
+<td>The task genuinely needs the whole surface</td>
 </tr>
 <tr>
-<td>Progress visualization</td>
-<td><code>op.progress</code>, <code>env.reducedMotion</code></td>
-<td>Progressbar</td>
+<td>Sheet or drawer</td>
+<td>Covers most of the view, animates</td>
+<td>A secondary task the user returns from</td>
 </tr>
 <tr>
-<td>Status indicator</td>
-<td><code>env.contrast</code></td>
-<td>(status)</td>
+<td>Popover</td>
+<td>Clipped at the frame edge</td>
+<td>Short content anchored to a control</td>
+</tr>
+<tr>
+<td>Tooltip</td>
+<td>Unreachable without hover</td>
+<td>Never the only route to information</td>
+</tr>
+<tr>
+<td>Context menu</td>
+<td>Clipped, needs a keyboard route</td>
+<td>Per-item actions, with a visible alternative</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>You probably cannot load a charting library.</strong> The default CSP is <code>default-src 'none'</code>. A CDN means declaring that origin in <code>resourceDomains</code>, and a host that declines leaves you with no chart. Bundling means a few hundred kilobytes of JavaScript in an HTML string on every <code>resources/read</code>.</p>
-<p>Inline SVG is the answer for most of what embedded applications actually need. A sparkline is nine lines. A bar chart is fifteen. Recipe 2’s sparklines are generated with <code>createElementNS</code> and no dependency at all, and Recipe 12 draws its media thumbnails the same way, which is also how the demonstrations avoid declaring any external origin.</p>
-<p><strong>Theme through variables, not through constants.</strong> A chart with <code>#0f5c8c</code> baked in is invisible in a dark theme. <code>stroke="var(--color-text-info)"</code> works inside SVG and follows the host.</p>
-<p><strong>Colour alone is never the encoding.</strong> Forced-colors mode replaces your palette. A status that is only a green dot becomes a dot. Pair every colour with a shape, a label, or text.</p>
-<p><strong>Charts need a text equivalent.</strong> A <code>&lt;table&gt;</code> behind a disclosure, or an <code>aria-label</code> carrying the figures. Recipe 2 writes “Checkout p95, 412 milliseconds, up 18 percent since the 4.18.2 deploy” under each tile, which more readers use than the sparkline.</p>
-<p><strong>Progress that never moves is worse than no progress.</strong> An indeterminate spinner with a phase name beats a determinate bar whose number is invented. Chapter 16.</p>
-<h3 id="a-table-that-survives-updates">A table that survives updates</h3>
-<p>The four properties that separate a table people can work in from a table people take screenshots of. All four appear in Recipe 1, and none of them is more than a few lines.</p>
-<p><strong>Selection survives updates.</strong> Keyed by identifier, not by row index. A table that re-sorts and keeps three rows selected is behaving; one that keeps rows three, four and five selected is not.</p>
-<p><strong>Scroll survives updates.</strong> Append and patch rather than replace. Recipe 9 appends up to a cap and never rebuilds, which is what makes a log tail usable at five lines a second.</p>
-<p><strong>Focus survives updates.</strong> The consequence of the first two, and the one users feel most sharply. A grid that rebuilds on every tick moves focus to the document body twice a second, which makes keyboard operation impossible.</p>
-<p><strong>Numbers are aligned and tabular.</strong> <code>text-align: right</code> and <code>font-variant-numeric: tabular-nums</code>. Two declarations, and they turn a column of figures into something you can scan for an outlier. This is not accessibility and it is not decoration; it is the reason the table exists.</p>
-<h3 id="charts-with-no-dependency">Charts with no dependency</h3>
-<p>Three shapes cover most of what an embedded view actually needs, and all three are cheap enough in inline SVG that a dependency is hard to justify.</p>
-<p>A <strong>sparkline</strong> is a <code>polyline</code> whose points are the series scaled to the box. Nine lines, no axes, no labels, and it belongs next to a number rather than instead of one. Recipe 2 builds one per tile.</p>
-<p>A <strong>bar chart</strong> is a loop of rects with a shared scale. Fifteen lines. The work is in the labels, not the bars, and in a narrow frame the labels usually have to go under the bars rather than beside them.</p>
-<p>A <strong>status strip</strong> is not a chart at all: a row of chips with text in them. It is what most dashboards actually need, it is legible at any size, and it survives forced colours because the state is in the words.</p>
-<p>Beyond those three, ask whether the view is the right place. A six-series chart at 380px is unreadable; a table plus a <code>ui/open-link</code> to the real dashboard is usually better.</p>
-<h2 id="what-to-remember">What to remember</h2>
-<p>The URL bar and the CDN are the two things this chapter keeps running into, and they are the two things a page has that a view does not. Design navigation that does not need history, and visualisation that does not need a dependency, and most of the rest of your components will port over unchanged.</p>
+<p>The pattern in the right-hand column is that the answer is almost always “smaller than you think”. A modal inside a card is a card that has become unusable for the duration; a sheet that covers eighty percent of a small frame is a modal wearing a different animation.</p>
+<h3 id="the-one-component-worth-not-building">The one component worth not building</h3>
+<p>The combobox, and it is worth being specific about why. It is the most complex pattern in the Authoring Practices Guide. It needs a listbox positioned within a frame that clips it. It needs <code>aria-activedescendant</code>, an expanded state, a value that may or may not be one of the options, and typeahead that does not fight the input. And it needs all of that to work with a virtual list once the option count passes a few hundred.</p>
+<p>Recipe 1 uses a plain <code>&lt;select&gt;</code> for its environment filter for exactly this reason. The filter has four options. A combobox would be worse in every dimension including the one it exists to improve, because typing to filter four items is slower than reading four items, and the native control already opens above or below depending on where the frame sits in the host’s window.</p>
+<h2 id="design-at-your-narrowest-width">Design at your narrowest width</h2>
+<p>Every component in this chapter is smaller than the version you have built before, and the reduction is not proportional. Halving the width does not halve what fits, because labels, padding and touch targets do not scale down with it.</p>
+<p>A toolbar of nine buttons becomes four and an overflow menu. A three-column form becomes one column. A 600 pixel modal has to work at 380. None of that is new to anyone who has built a responsive layout; what is new is that the narrow case is the <em>common</em> case here, because an inline card in a chat transcript is narrower than a phone and the host chose the width, not the user.</p>
+<p>The useful discipline is to design at the narrowest width you will accept, and to let <code>surface.resize</code> report the height. Everything in this book is built at 380 pixels first, and the recipes look the same at 900 because the layout only ever had one column to lose.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>Every overlay traps focus while open and restores it on close.</li>
+<li>Escape closes any overlay and resolves whatever was awaiting it.</li>
+<li>No overlay renders outside the frame’s bounds.</li>
+<li>Native controls are used where they exist, and replacements carry the same keyboard behaviour.</li>
+<li>Hit targets clear 24 by 24 CSS pixels everywhere, and 44 by 44 when <code>deviceCapabilities.touch</code> is set.</li>
+<li>Validation errors appear on blur and on submit, not on keystroke.</li>
+<li>Every error is associated with its field through <code>aria-describedby</code>.</li>
+</ol>
 
-<div class="pager"><a href="ch22.html"><span class="dir">Previous</span>22. Components I: Overlays, Controls and Text</a><a href="ch24.html" style="text-align:right"><span class="dir">Next</span>24. Components III: Spatial, Media and Agent-Native</a></div>
+<div class="pager"><a href="ch22.html"><span class="dir">Previous</span>22. Approval, Elicitation and the Context Boundary</a><a href="ch24.html" style="text-align:right"><span class="dir">Next</span>24. Components II: Navigation, Data and Visualization</a></div>
 </main>
 </div>
 
+<script src="copy.js"></script>
 </body>
 </html>

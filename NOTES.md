@@ -81,7 +81,7 @@ evaluate inside it. The shipped sandbox is unchanged.
 with an opaque origin cannot be driven from outside, which is the same property
 that stops a host reading it. Recipes that register tools are driven deeply;
 the rest are checked for handshake, render and host-side flows. This is the
-same mechanism Chapter 18 recommends for accessibility, which is a decent sign
+same mechanism Chapter 19 recommends for accessibility, which is a decent sign
 it is the right one.
 
 ## What building it found
@@ -119,7 +119,7 @@ it is the right one.
 - **A specification and SDK divergence.** The extension's list of standard MCP
   messages available to a view names only `resources/read`, while the SDK ships
   `listServerResources()` and documents building a picker with it, and
-  `hostCapabilities.serverResources.listChanged` exists. Chapter 11 reports it
+  `hostCapabilities.serverResources.listChanged` exists. Chapter 12 reports it
   as a documentation gap rather than asserting a design one.
 - **Eight message names are draft-only.** `ui/download-file`, `downloadFile`,
   `ui/notifications/request-teardown`, `updateModelContext`,
@@ -131,15 +131,15 @@ it is the right one.
 ## Open items
 
 - **One host.** Everything runs against hosts written in this repository: the
-  browser emulator and the render driver. Layer 5 of Chapter 26, the same suite
+  browser emulator and the render driver. Layer 5 of Chapter 27, the same suite
   against `basic-host` and against production hosts, is the check that would
   turn the completeness argument into evidence. It is now the largest gap in
   the book's own verification.
 - **No component layer tests.** Part IV components are a shared stylesheet and
   helper file rather than a library with stories, and no `axe-core` run is
-  wired in. Accessibility claims come from the Chapter 13 checklist applied by
+  wired in. Accessibility claims come from the Chapter 14 checklist applied by
   hand.
-- **No usability sessions.** Every design claim is an argument. Chapter 3's
+- **No usability sessions.** Every design claim is an argument. Chapter 4's
   local-first principle is the one most exposed to being wrong in a way no
   automated check would detect.
 - **Two recipes have a weak keyboard story.** The image annotator has no

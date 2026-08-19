@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html" class="current">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,8 +74,8 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Recipe 13</p><h1>Settings and Preferences</h1><p class="summary">A form, done properly. Native pickers, validation that waits until you have finished typing, save and discard that mean what they say, and a dirty guard on teardown.</p><div class="cap recipe" id="r13"><div class="cap-head"><code class="cap-id">r13</code><span class="cap-tag core">Settings and Preferences</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Forms, done properly.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch11.html#picker.date">picker.date</a></code><code><a href="ch11.html#picker.time">picker.time</a></code><code><a href="ch13.html#env.textScale">env.textScale</a></code><code><a href="ch12.html#env.inputMode">env.inputMode</a></code><code><a href="ch12.html#env.fonts">env.fonts</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch11.html#picker.date">picker.date</a></code><code><a href="ch11.html#picker.time">picker.time</a></code><code><a href="ch11.html#picker.color">picker.color</a></code><code><a href="ch13.html#env.textScale">env.textScale</a></code><code><a href="ch13.html#env.contrast">env.contrast</a></code><code><a href="ch13.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch13.html#a11y.announce">a11y.announce</a></code><code><a href="ch07.html#surface.focus">surface.focus</a></code><code><a href="ch14.html#lifecycle.dirty">lifecycle.dirty</a></code><code><a href="ch08.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch15.html#state.save">state.save</a></code><code><a href="ch12.html#env.inputMode">env.inputMode</a></code><code><a href="ch12.html#env.fonts">env.fonts</a></code></dd></dl></div>
-<p>The last recipe is the most ordinary and the one most applications need. Its delta is the full picker set and the accessibility requirements of Chapter 13 as the primary subject rather than as a section at the end.</p>
+<p class="eyebrow">Recipe 13</p><h1>Settings and Preferences</h1><p class="summary">A form, done properly. Native pickers, validation that waits until you have finished typing, save and discard that mean what they say, and a dirty guard on teardown.</p><div class="cap recipe" id="r13"><div class="cap-head"><code class="cap-id">r13</code><span class="cap-tag core">Settings and Preferences</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Forms, done properly.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch12.html#picker.date">picker.date</a></code><code><a href="ch12.html#picker.time">picker.time</a></code><code><a href="ch14.html#env.textScale">env.textScale</a></code><code><a href="ch13.html#env.inputMode">env.inputMode</a></code><code><a href="ch13.html#env.fonts">env.fonts</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch12.html#picker.date">picker.date</a></code><code><a href="ch12.html#picker.time">picker.time</a></code><code><a href="ch12.html#picker.color">picker.color</a></code><code><a href="ch14.html#env.textScale">env.textScale</a></code><code><a href="ch14.html#env.contrast">env.contrast</a></code><code><a href="ch14.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch14.html#a11y.announce">a11y.announce</a></code><code><a href="ch08.html#surface.focus">surface.focus</a></code><code><a href="ch15.html#lifecycle.dirty">lifecycle.dirty</a></code><code><a href="ch09.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch17.html#op.error">op.error</a></code><code><a href="ch16.html#state.save">state.save</a></code><code><a href="ch13.html#env.inputMode">env.inputMode</a></code><code><a href="ch13.html#env.fonts">env.fonts</a></code></dd></dl></div>
+<p>The last recipe is the most ordinary and the one most applications need. Its delta is the full picker set and the accessibility requirements of Chapter 14 as the primary subject.</p>
 <div class="demo" data-demo="r13-settings" id="r13-settings"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
@@ -102,7 +103,7 @@
 <p>Almost nothing crosses. A settings form that consults a model is a settings form with a latency problem.</p>
 <h2 id="native-pickers-host-formatting">Native pickers, host formatting</h2>
 <p><code>&lt;input type="date"&gt;</code>, <code>type="time"&gt;</code> and <code>type="color"&gt;</code> do the collecting. <code>Intl</code> with <code>hostContext.locale</code> and <code>hostContext.timeZone</code> does the displaying. Press “Switch to ja-JP / Tokyo”: the stored values do not change and everything rendered does.</p>
-<p>That separation is the whole of Chapter 11. The picker’s value is an ISO string; the user’s understanding of it is a formatted one; the host is the only source for which format is right.</p>
+<p>That separation is the whole of Chapter 12. The picker’s value is an ISO string; the user’s understanding of it is a formatted one; the host is the only source for which format is right.</p>
 <h2 id="validation-that-waits">Validation that waits</h2>
 <p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>const email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(values.email);
 if (!email &amp;&amp; (!live || $(&quot;#email&quot;).dataset.touched)) { /* show the error */ }</code></pre>
@@ -111,14 +112,14 @@ if (!email &amp;&amp; (!live || $(&quot;#email&quot;).dataset.touched)) { /* sho
 <p>Both are disabled until something changes. Discard confirms, because it destroys work. Save validates first, focuses the first invalid field if there is one, and announces the failure so a screen reader user learns about it at the same moment a sighted user does.</p>
 <p>The server validates again and can reject. Press Save with a bad address after editing it past the client check: the server’s message is shown and the form stays dirty. Client-side validation is a courtesy; the server’s is the rule.</p>
 <h2 id="the-dirty-guard">The dirty guard</h2>
-<p>On <code>ui/resource-teardown</code>, if the form is dirty, it saves before answering. Chapter 14 explains why that window is the only chance, and Recipe 4 explains why the flush has to be small enough to finish.</p>
+<p>On <code>ui/resource-teardown</code>, if the form is dirty, it saves before answering. Chapter 15 explains why that window is the only chance, and Recipe 4 explains why the flush has to be small enough to finish.</p>
 <h2 id="live-preview-without-commitment">Live preview without commitment</h2>
 <p>Changing the accent colour or the density updates the view immediately, and the change is not saved until Save is pressed. Preview is not commitment, and a form that saves as you type has no discard.</p>
 <h2 id="try-this">Try this</h2>
 <p><strong>Clear the email field and click away.</strong> The error appears on blur, not on the keystroke that made it invalid.</p>
 <p><strong>Type an obviously invalid address and press Save.</strong> Focus moves to the field, the error is announced, and no tool call is sent.</p>
 <p><strong>Edit something, then press “Close with unsaved changes”.</strong> The form saves inside the teardown window before answering the host.</p>
-<p><strong>Press “Switch to ja-JP / Tokyo”.</strong> The stored values do not change and everything rendered does, which is the whole of Chapter 11 in one button.</p>
+<p><strong>Press “Switch to ja-JP / Tokyo”.</strong> The stored values do not change and everything rendered does, which is the whole of Chapter 12 in one button.</p>
 <h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -156,7 +157,7 @@ if (!email &amp;&amp; (!live || $(&quot;#email&quot;).dataset.touched)) { /* sho
 <p><strong>Teardown with unsaved changes.</strong> The view saves inside the teardown window and then answers.</p>
 <p><strong>A host that sends no locale.</strong> <code>Intl</code> falls back to the machine’s default, which is wrong but functional, and the note in the view says which timezone it is using so the discrepancy is at least visible.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
-<p>Every field has a real <code>&lt;label&gt;</code> with a <code>for</code>. Errors are associated through <code>aria-describedby</code> and marked with <code>aria-invalid</code>, so a screen reader reads the error as part of the field rather than as a stray paragraph. Fieldsets group related controls with legends. Save failure moves focus to the first invalid field and announces the reason. The whole form is operable from the keyboard, which for a form built from native elements means it was operable from the keyboard before anybody thought about it.</p>
+<p>Every field has a real <code>&lt;label&gt;</code> with a <code>for</code>. Errors are associated through <code>aria-describedby</code> and marked with <code>aria-invalid</code>, so a screen reader reads the error as part of the field. Fieldsets group related controls with legends. Save failure moves focus to the first invalid field and announces the reason. The whole form is operable from the keyboard, which for a form built from native elements means it was operable from the keyboard before anybody thought about it.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li><code>load_preferences</code> populates every field.</li>
@@ -169,9 +170,10 @@ if (!email &amp;&amp; (!live || $(&quot;#email&quot;).dataset.touched)) { /* sho
 <li>Changing the host locale re-renders the formatted values.</li>
 </ol>
 
-<div class="pager"><a href="r12.html"><span class="dir">Previous</span>Recipe 12. Media Viewer</a><a href="ch25.html" style="text-align:right"><span class="dir">Next</span>25. Why Recipes Are the Test Suite</a></div>
+<div class="pager"><a href="r12.html"><span class="dir">Previous</span>Recipe 12. Media Viewer</a><a href="ch26.html" style="text-align:right"><span class="dir">Next</span>26. Why Recipes Are the Test Suite</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

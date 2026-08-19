@@ -118,7 +118,7 @@
           "anchor": "containerDimensions"
         }
       ],
-      "chapter": "ch06",
+      "chapter": "ch07",
       "lab": "lab-surface",
       "summary": "Report content size so the host can size the frame around it.",
       "recipes": [
@@ -146,7 +146,7 @@
           "anchor": "deviceCapabilities"
         }
       ],
-      "chapter": "ch06",
+      "chapter": "ch07",
       "lab": "lab-surface",
       "summary": "Read the space actually available: fixed, flexible, or unbounded.",
       "recipes": [
@@ -173,7 +173,7 @@
           "anchor": "ui/notifications/host-context-changed"
         }
       ],
-      "chapter": "ch06",
+      "chapter": "ch07",
       "lab": "lab-surface",
       "summary": "Move between inline, fullscreen, and picture-in-picture.",
       "recipes": [
@@ -182,6 +182,30 @@
         "r08",
         "r12"
       ]
+    },
+    {
+      "id": "surface.compose",
+      "level": 3,
+      "tag": "core",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch03",
+      "lab": null,
+      "summary": "Put more than one view on the same surface, arranged.",
+      "recipes": [
+        "r02"
+      ]
+    },
+    {
+      "id": "surface.viewMessage",
+      "level": 3,
+      "tag": "extended",
+      "ground": "gap",
+      "wire": [],
+      "chapter": "ch03",
+      "lab": null,
+      "summary": "Let two views on one surface exchange anything at all.",
+      "recipes": []
     },
     {
       "id": "surface.close",
@@ -198,7 +222,7 @@
           "anchor": "ui/resource-teardown"
         }
       ],
-      "chapter": "ch06",
+      "chapter": "ch07",
       "lab": "lab-surface",
       "summary": "Ask the host to dismiss this view.",
       "recipes": [
@@ -211,7 +235,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch07",
+      "chapter": "ch08",
       "lab": "lab-focus",
       "summary": "Move, trap, and restore focus inside the view.",
       "recipes": [
@@ -225,7 +249,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch07",
+      "chapter": "ch08",
       "lab": "lab-focus",
       "summary": "Hand focus across the host boundary in either direction.",
       "recipes": []
@@ -236,7 +260,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch07",
+      "chapter": "ch08",
       "lab": "lab-focus",
       "summary": "Scroll to a position or bring an element into view inside the frame.",
       "recipes": [
@@ -249,7 +273,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch07",
+      "chapter": "ch08",
       "lab": "lab-focus",
       "summary": "Ask the host to scroll the conversation until this view is visible.",
       "recipes": []
@@ -260,7 +284,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch08",
+      "chapter": "ch09",
       "lab": "lab-dialogs",
       "summary": "Block on an acknowledgement the user cannot miss.",
       "recipes": []
@@ -271,7 +295,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch08",
+      "chapter": "ch09",
       "lab": "lab-dialogs",
       "summary": "Take an explicit binary decision before acting.",
       "recipes": [
@@ -286,7 +310,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch08",
+      "chapter": "ch09",
       "lab": "lab-dialogs",
       "summary": "Collect one small value without leaving the surface.",
       "recipes": []
@@ -297,7 +321,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch08",
+      "chapter": "ch09",
       "lab": "lab-dialogs",
       "summary": "Say saved, copied, failed, and get out of the way.",
       "recipes": [
@@ -310,7 +334,7 @@
       "tag": "extended",
       "ground": "app",
       "wire": [],
-      "chapter": "ch08",
+      "chapter": "ch09",
       "lab": "lab-dialogs",
       "summary": "Hold a persistent, non-modal status in view.",
       "recipes": [
@@ -324,7 +348,7 @@
       "tag": "extended",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch08",
+      "chapter": "ch09",
       "lab": "lab-dialogs",
       "summary": "Signal from a backgrounded view that a human is needed.",
       "recipes": [
@@ -338,7 +362,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Click, hover, drag, and capture across mouse, touch, and pen.",
       "recipes": [
@@ -352,7 +376,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Keys, modifiers, and the platform conventions users already have.",
       "recipes": [
@@ -367,7 +391,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Own an accelerator without fighting the host for it.",
       "recipes": [
@@ -381,7 +405,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Touch equivalent of a right click.",
       "recipes": [
@@ -394,7 +418,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Contextual actions on right click or long press.",
       "recipes": [
@@ -408,7 +432,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Single, additive, range, and select-all over text and objects.",
       "recipes": [
@@ -426,7 +450,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Drag and drop inside the view, with structured transfer data.",
       "recipes": [
@@ -441,7 +465,7 @@
       "tag": "extended",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Drag something out of the view and into the host, or the reverse.",
       "recipes": []
@@ -452,7 +476,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch09",
+      "chapter": "ch10",
       "lab": "lab-input",
       "summary": "Wheel and pinch zoom, pan, reset, fit to content.",
       "recipes": [
@@ -476,7 +500,7 @@
           "anchor": "permissions"
         }
       ],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": "lab-clipboard",
       "summary": "Copy text or structured content, with a fallback when denied.",
       "recipes": [
@@ -492,7 +516,7 @@
       "tag": "extended",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": "lab-clipboard",
       "summary": "Read what the user has on the clipboard.",
       "recipes": [
@@ -505,7 +529,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": "lab-clipboard",
       "summary": "Open the system file picker and read what comes back.",
       "recipes": [
@@ -518,7 +542,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": "lab-clipboard",
       "summary": "Accept dropped files with validation, preview, and progress.",
       "recipes": [
@@ -541,7 +565,7 @@
           "anchor": "downloadFile"
         }
       ],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": "lab-clipboard",
       "summary": "Hand a generated artifact to the host to save.",
       "recipes": [
@@ -565,7 +589,7 @@
           "anchor": "resource_link"
         }
       ],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": "lab-clipboard",
       "summary": "Persist app-generated content through the host.",
       "recipes": []
@@ -585,7 +609,7 @@
           "anchor": "openLinks"
         }
       ],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": "lab-clipboard",
       "summary": "Delegate external navigation instead of attempting it.",
       "recipes": [
@@ -599,7 +623,7 @@
       "tag": "extended",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": null,
       "summary": "Invoke the operating system share sheet.",
       "recipes": [
@@ -612,7 +636,7 @@
       "tag": "extended",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch10",
+      "chapter": "ch11",
       "lab": null,
       "summary": "Request host-mediated printing.",
       "recipes": []
@@ -623,7 +647,7 @@
       "tag": "extended",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch11",
+      "chapter": "ch12",
       "lab": "lab-pickers",
       "summary": "Native date selection, localised by the host locale.",
       "recipes": [
@@ -636,7 +660,7 @@
       "tag": "extended",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch11",
+      "chapter": "ch12",
       "lab": "lab-pickers",
       "summary": "Native time selection in the host timezone.",
       "recipes": [
@@ -649,7 +673,7 @@
       "tag": "extended",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch11",
+      "chapter": "ch12",
       "lab": "lab-pickers",
       "summary": "Native colour selection.",
       "recipes": [
@@ -672,7 +696,7 @@
           "anchor": "serverResources"
         }
       ],
-      "chapter": "ch11",
+      "chapter": "ch12",
       "lab": "lab-pickers",
       "summary": "Pick from resources the server exposes, through the host.",
       "recipes": [
@@ -698,7 +722,7 @@
           "anchor": "light-dark"
         }
       ],
-      "chapter": "ch12",
+      "chapter": "ch13",
       "lab": "lab-theme",
       "summary": "Take the host's tokens and follow them when they change.",
       "recipes": [
@@ -718,7 +742,7 @@
           "anchor": "locale"
         }
       ],
-      "chapter": "ch12",
+      "chapter": "ch13",
       "lab": "lab-theme",
       "summary": "Format numbers, dates, and text for the user's region.",
       "recipes": [
@@ -736,7 +760,7 @@
           "anchor": "timeZone"
         }
       ],
-      "chapter": "ch12",
+      "chapter": "ch13",
       "lab": "lab-theme",
       "summary": "Render instants in the timezone the user is actually in.",
       "recipes": []
@@ -756,7 +780,7 @@
           "anchor": "userAgent"
         }
       ],
-      "chapter": "ch12",
+      "chapter": "ch13",
       "lab": "lab-theme",
       "summary": "Coarse platform shape, used sparingly.",
       "recipes": []
@@ -780,7 +804,7 @@
           "anchor": "hover"
         }
       ],
-      "chapter": "ch12",
+      "chapter": "ch13",
       "lab": "lab-theme",
       "summary": "Size targets for the modality actually in use.",
       "recipes": [
@@ -798,7 +822,7 @@
           "anchor": "safeAreaInsets"
         }
       ],
-      "chapter": "ch12",
+      "chapter": "ch13",
       "lab": "lab-theme",
       "summary": "Keep content out of regions the host has spoken for.",
       "recipes": []
@@ -818,7 +842,7 @@
           "anchor": "--font-sans"
         }
       ],
-      "chapter": "ch12",
+      "chapter": "ch13",
       "lab": "lab-theme",
       "summary": "Load the host's typeface without loading anything else.",
       "recipes": [
@@ -831,7 +855,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch13",
+      "chapter": "ch14",
       "lab": "lab-a11y",
       "summary": "Respect a stated preference for less movement.",
       "recipes": [
@@ -846,7 +870,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch13",
+      "chapter": "ch14",
       "lab": "lab-a11y",
       "summary": "Survive forced colours and high contrast.",
       "recipes": [
@@ -860,7 +884,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch13",
+      "chapter": "ch14",
       "lab": "lab-a11y",
       "summary": "Stay usable when text is two sizes larger than you designed for.",
       "recipes": [
@@ -873,7 +897,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch13",
+      "chapter": "ch14",
       "lab": "lab-a11y",
       "summary": "Tell assistive technology that something changed.",
       "recipes": [
@@ -889,7 +913,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch14",
+      "chapter": "ch15",
       "lab": "lab-lifecycle",
       "summary": "Know when the view is on screen and when it is not.",
       "recipes": [
@@ -904,7 +928,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch14",
+      "chapter": "ch15",
       "lab": "lab-lifecycle",
       "summary": "Stop doing work nobody is looking at.",
       "recipes": [
@@ -918,7 +942,7 @@
       "tag": "core",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch14",
+      "chapter": "ch15",
       "lab": "lab-lifecycle",
       "summary": "Show online, offline, and reconnecting honestly.",
       "recipes": [
@@ -931,7 +955,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch14",
+      "chapter": "ch15",
       "lab": "lab-lifecycle",
       "summary": "Track uncommitted local state and say so.",
       "recipes": [
@@ -954,7 +978,7 @@
           "anchor": "reason"
         }
       ],
-      "chapter": "ch14",
+      "chapter": "ch15",
       "lab": "lab-lifecycle",
       "summary": "Get one chance to finish before the frame goes away.",
       "recipes": [
@@ -967,7 +991,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch15",
+      "chapter": "ch16",
       "lab": "lab-state",
       "summary": "Persist view state keyed to the view's identity.",
       "recipes": [
@@ -982,7 +1006,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch15",
+      "chapter": "ch16",
       "lab": "lab-state",
       "summary": "Come back up where the user left off.",
       "recipes": [
@@ -995,7 +1019,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch15",
+      "chapter": "ch16",
       "lab": "lab-state",
       "summary": "Group mutations into one undoable unit.",
       "recipes": [
@@ -1011,7 +1035,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch15",
+      "chapter": "ch16",
       "lab": "lab-state",
       "summary": "Revert the last transaction, including the agent's.",
       "recipes": [
@@ -1028,7 +1052,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch15",
+      "chapter": "ch16",
       "lab": "lab-state",
       "summary": "Reapply what was reverted.",
       "recipes": [
@@ -1041,7 +1065,7 @@
       "tag": "extended",
       "ground": "platform",
       "wire": [],
-      "chapter": "ch16",
+      "chapter": "ch17",
       "lab": "lab-media",
       "summary": "Play, pause, seek, rate, volume, captions.",
       "recipes": [
@@ -1063,7 +1087,7 @@
           "anchor": "fullscreen"
         }
       ],
-      "chapter": "ch16",
+      "chapter": "ch17",
       "lab": "lab-media",
       "summary": "Go immersive through the host, not through the Fullscreen API.",
       "recipes": [
@@ -1085,7 +1109,7 @@
           "anchor": "progressToken"
         }
       ],
-      "chapter": "ch16",
+      "chapter": "ch17",
       "lab": "lab-media",
       "summary": "Determinate and indeterminate progress with a phase name.",
       "recipes": [
@@ -1108,7 +1132,7 @@
           "anchor": "requestId"
         }
       ],
-      "chapter": "ch16",
+      "chapter": "ch17",
       "lab": "lab-media",
       "summary": "Interrupt work that is still running.",
       "recipes": [
@@ -1121,7 +1145,7 @@
       "tag": "extended",
       "ground": "app",
       "wire": [],
-      "chapter": "ch16",
+      "chapter": "ch17",
       "lab": null,
       "summary": "Suspend and continue long work.",
       "recipes": []
@@ -1132,7 +1156,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch16",
+      "chapter": "ch17",
       "lab": "lab-media",
       "summary": "Retry without making the user rebuild the interaction.",
       "recipes": [
@@ -1156,7 +1180,7 @@
           "anchor": "isError"
         }
       ],
-      "chapter": "ch16",
+      "chapter": "ch17",
       "lab": "lab-media",
       "summary": "Structured errors: what failed, whether to retry, what to do.",
       "recipes": [
@@ -1183,7 +1207,7 @@
           "anchor": "message"
         }
       ],
-      "chapter": "ch17",
+      "chapter": "ch18",
       "lab": "lab-agent",
       "summary": "Put the current selection into the conversation as a request.",
       "recipes": [
@@ -1206,7 +1230,7 @@
           "anchor": "updateModelContext"
         }
       ],
-      "chapter": "ch17",
+      "chapter": "ch18",
       "lab": "lab-agent",
       "summary": "Publish the part of view state the model should reason over.",
       "recipes": [
@@ -1222,7 +1246,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch17",
+      "chapter": "ch18",
       "lab": "lab-agent",
       "summary": "Name a semantic action rather than describing it in prose.",
       "recipes": [
@@ -1244,7 +1268,7 @@
           "anchor": "sampling"
         }
       ],
-      "chapter": "ch17",
+      "chapter": "ch18",
       "lab": "lab-agent",
       "summary": "Ask the host's model for a completion from inside the view.",
       "recipes": [
@@ -1270,7 +1294,7 @@
           "anchor": "notifications/tools/list_changed"
         }
       ],
-      "chapter": "ch18",
+      "chapter": "ch19",
       "lab": "lab-apptools",
       "summary": "Expose the view's operations as tools the agent can call.",
       "recipes": [
@@ -1284,7 +1308,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch18",
+      "chapter": "ch19",
       "lab": "lab-apptools",
       "summary": "Let the agent point at a row, a node, or a hunk.",
       "recipes": [
@@ -1299,7 +1323,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch18",
+      "chapter": "ch19",
       "lab": "lab-apptools",
       "summary": "Let the agent open the panel it is talking about.",
       "recipes": [
@@ -1313,7 +1337,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch18",
+      "chapter": "ch19",
       "lab": "lab-apptools",
       "summary": "Let the agent propose values, never submit them.",
       "recipes": [
@@ -1339,7 +1363,7 @@
           "anchor": "visibility"
         }
       ],
-      "chapter": "ch19",
+      "chapter": "ch20",
       "lab": "lab-tools",
       "summary": "Call a server tool from a button, through the host.",
       "recipes": [
@@ -1359,7 +1383,7 @@
           "anchor": "notifications/cancelled"
         }
       ],
-      "chapter": "ch19",
+      "chapter": "ch20",
       "lab": "lab-tools",
       "summary": "Cancel a call the user has stopped caring about.",
       "recipes": [
@@ -1381,7 +1405,7 @@
           "anchor": "ui/notifications/tool-input"
         }
       ],
-      "chapter": "ch19",
+      "chapter": "ch20",
       "lab": "lab-tools",
       "summary": "Render something useful while arguments are still streaming.",
       "recipes": [
@@ -1403,7 +1427,7 @@
           "anchor": "ui/notifications/tool-cancelled"
         }
       ],
-      "chapter": "ch19",
+      "chapter": "ch20",
       "lab": "lab-tools",
       "summary": "Take delivery of the result that this view was rendered for.",
       "recipes": [
@@ -1418,7 +1442,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch19",
+      "chapter": "ch20",
       "lab": "lab-tools",
       "summary": "Update stable elements as results arrive, not after.",
       "recipes": [
@@ -1432,7 +1456,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch20",
+      "chapter": "ch21",
       "lab": "lab-ownership",
       "summary": "Declare who owns each region when both parties can write.",
       "recipes": [
@@ -1446,7 +1470,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch20",
+      "chapter": "ch21",
       "lab": "lab-ownership",
       "summary": "Decide what happens when they both do.",
       "recipes": [
@@ -1459,7 +1483,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch21",
+      "chapter": "ch22",
       "lab": "lab-approval",
       "summary": "Require a human signature on a sensitive action.",
       "recipes": [
@@ -1472,7 +1496,7 @@
       "tag": "core",
       "ground": "gap",
       "wire": [],
-      "chapter": "ch21",
+      "chapter": "ch22",
       "lab": "lab-approval",
       "summary": "Ask the user a structured question mid-operation.",
       "recipes": [
@@ -1485,7 +1509,7 @@
       "tag": "core",
       "ground": "app",
       "wire": [],
-      "chapter": "ch21",
+      "chapter": "ch22",
       "lab": "lab-approval",
       "summary": "Keep hover, scroll, and sort out of the model's context.",
       "recipes": [
@@ -1540,6 +1564,7 @@
       "name": "Dashboard",
       "goal": "At-a-glance monitoring with drill-down.",
       "capabilities": [
+        "surface.compose",
         "surface.resize",
         "surface.viewport",
         "surface.displayMode",
@@ -1554,6 +1579,7 @@
         "ui.navigate"
       ],
       "delta": [
+        "surface.compose",
         "surface.displayMode",
         "env.reducedMotion",
         "op.progress",

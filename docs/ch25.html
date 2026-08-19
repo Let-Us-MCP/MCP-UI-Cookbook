@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>25. Why Recipes Are the Test Suite &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.">
-<meta property="og:title" content="25. Why Recipes Are the Test Suite">
-<meta property="og:description" content="Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.">
+<title>25. Components III: Spatial, Media and Agent-Native &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.">
+<meta property="og:title" content="25. Components III: Spatial, Media and Agent-Native">
+<meta property="og:description" content="Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.">
 <link rel="stylesheet" href="book.css">
 
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html" class="current">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html" class="current">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,62 +74,171 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 25</p><h1>Why Recipes Are the Test Suite</h1><p class="summary">Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.</p><p>The recipes are the test suite, and being illustrations is a side effect rather than the purpose. That ordering is the decision the rest of Part VI follows from, and it constrains what a recipe is allowed to be. A recipe whose behaviour depends on what a model happened to say cannot assert anything, so none of them depend on that: the model decides <em>when</em> a tool is called, and the recipe decides what the tool does.</p>
-<h2 id="why-testing-capabilities-alone-is-not-enough">Why testing capabilities alone is not enough</h2>
-<p>A host can implement every capability in Parts II and III correctly, one at a time, and still fail to run any of the recipes. Composition is where the failures live, and they are specific and repeatable:</p>
-<ul>
-<li><strong>Focus fails inside fullscreen</strong>, because the mode change re-parented the frame and the browser dropped focus with it.</li>
-<li><strong>Drag and drop conflicts with host scrolling</strong>, because the conversation scroller and your drag gesture want the same pointer.</li>
-<li><strong>Shortcuts collide</strong>, because the host bound Cmd+F before your view existed and Chapter 9 has no mechanism to find out.</li>
-<li><strong>Streaming updates destroy selection</strong>, because a view that rebuilds its list on each batch has a selection that lasts one batch.</li>
-<li><strong>Resizing loses scroll position</strong>, because the frame changed height and the scroll container was measured against the old one.</li>
-<li><strong>Cancellation leaves optimistic state behind</strong>, because the compensating action was never recorded.</li>
-</ul>
-<p>Every one of those is two capabilities that both work correctly on their own. A capability harness cannot find any of them, because it exercises one capability at a time and none of these failures exists inside one. Only a recipe puts two of them in the same frame, at the same moment, with a user in the middle doing something ordinary.</p>
-<figure>
-<img src="figures/xkcd-blank.png" alt="The failure that reports nothing" />
-<figcaption aria-hidden="true">The failure that reports nothing</figcaption>
-</figure>
-<h2 id="the-question-the-recipes-answer">The question the recipes answer</h2>
-<div class="principle">
-<p><strong>The question the recipes answer.</strong> Can a host construct conventional, native-like applications entirely from a small, well defined set of reusable UI capabilities?</p>
-</div>
-<p>There are only two ways a recipe can fail, and both produce a finding rather than a defect report. That is the property that makes the exercise worth the effort of building thirteen applications.</p>
-<p>If a recipe cannot be built from the primitives in Parts II and III, it has found a missing capability. Appendix B is where the fourteen current findings live, and Chapter 28 describes what turning one into a proposal involves.</p>
-<p>If a recipe can be built but does not run in a particular host, it has found a conformance failure. That is a finding about an implementation, and the checklist in Appendix C is what turns it into a bug report with a specific line in it.</p>
-<p>No third outcome exists. A recipe either cannot be expressed, which indicts the capability model, or can be expressed and does not run, which indicts an implementation. Both answers are more useful than a chapter arguing about whether the model is complete.</p>
-<h2 id="why-an-empty-delta-is-fatal">Why an empty delta is fatal</h2>
-<p>Every recipe carries a delta: the capabilities it exercises that no earlier recipe does, generated from the registry rather than asserted in prose. A recipe whose delta comes out empty gets merged or deleted, because it is teaching nothing and testing nothing that is not already covered. Thirteen recipes that each exercised the same twelve capabilities would demonstrate nothing about whether the model is sufficient.</p>
-<p>That rule is what stops thirteen recipes from being thirteen views of the same six capabilities. It is also what determined the order: the Data Explorer is first because its delta is the baseline, and Settings is last because its delta is the picker set and the accessibility requirements, which need everything before them to be in place.</p>
-<p>The deltas are generated from the registry rather than asserted in prose, so a recipe whose delta becomes empty because an earlier recipe grew will show it in the build output rather than in a reviewer’s memory.</p>
-<h2 id="what-a-recipe-test-asserts">What a recipe test asserts</h2>
-<p>Three kinds of assertion, in increasing order of what they catch and of how much work they are to write.</p>
-<p><strong>The handshake happened.</strong> <code>ui/initialize</code> went out, a result came back, <code>ui/notifications/initialized</code> followed. This is the cheapest check in the whole suite and it catches the worst failure: a view with a syntax error never runs, so it never sends anything, so the frame sits there empty with nothing logged anywhere. Every demonstration in this book is checked for it, and it is the reason a missing handshake is a hard failure in the harness rather than a warning.</p>
-<p><strong>The observable behaviour is right.</strong> The table has eight rows. Sorting changes the order. Undo restores the node at its original index. These are ordinary assertions about a running application.</p>
-<p><strong>The transcript is right.</strong> Selecting a row sent exactly one <code>ui/update-model-context</code>. Selecting a second one replaced rather than appended. Withdrawing <code>downloadFile</code> means no <code>ui/download-file</code> is ever sent. This is the layer that catches protocol regressions, and it is the layer that only exists because the whole conversation is JSON-RPC over <code>postMessage</code> and therefore recordable.</p>
-<h2 id="how-is-any-of-this-deterministic">How is any of this deterministic?</h2>
-<p>An agentic application looks untestable at first glance. A model is involved, models are stochastic, and an assertion about a sampled token is not an assertion at all. Every test in this repository would be flaky if the model were in the loop.</p>
-<p>The way out is that the model is never in the loop of a recipe test. Every tool result is a recorded fixture. Every stream is a scripted sequence. Every failure is injected on purpose. The agent’s side is played by the harness calling the view’s registered tools, which is exactly what an agent would do and is completely deterministic.</p>
-<p>That is a design constraint on the recipes themselves, not just on the tests. A recipe whose behaviour depends on what a model happened to say cannot be a test, so the recipes are built so that it does not. The model decides <em>when</em> to call <code>connect_steps</code>; the recipe decides what <code>connect_steps</code> does. Chapter 3’s local-first principle turns out to be the same rule as testability, which is a good sign that it is the right rule.</p>
-<h2 id="what-building-them-actually-found">What building them actually found</h2>
-<p>The exercise is only worth anything if it produced findings, so here are the ones building thirteen applications against eighty-five capabilities turned up. None of them was predicted from reading the specification.</p>
-<p><strong>An empty red banner, visible in the Data Explorer.</strong> The error element had the <code>hidden</code> attribute set and was displayed anyway, because an author rule with a class selector beats the user agent’s <code>[hidden]</code> rule. Every component in the shared stylesheet that sets <code>display</code> had the same defect. Found by looking at a screenshot, fixed with one declaration, and the comment explaining it is still in <code>apps/lib/view.css</code>.</p>
-<p><strong>A transcript that changed on every run.</strong> The workflow builder minted node ids from <code>Date.now()</code>, and those ids travel to the agent in a tool result, so the recorded transcript differed every time the suite ran. The fix was a counter. The finding is that anything reaching the wire has to be deterministic or the whole of Layer 1 is noise.</p>
-<p><strong>Module scripts do not load from an opaque origin.</strong> The first version of the view bridge was an ES module, which is a CORS request from a sandboxed frame, which a static file host will not answer. It is a classic script now, and the reason is a comment at the top of the file.</p>
-<p><strong>Dynamic import resolves against the module, not the page.</strong> The demo widget loaded each demonstration’s fixture with a relative specifier and got a 404 on every page except the harness. Both of these are the kind of thing that is obvious once seen and costs an hour when not.</p>
-<p><strong>Half a theme is worse than none.</strong> Applying host style variables without removing the ones the host has stopped sending leaves the previous theme’s overrides in place, so a view that switches from a dark host to a bare one is unreadable. The specification warns about partial variable sets; this is the same hazard from the view’s side, and the bridge now tracks and clears what it applied.</p>
-<p><strong>A spreadsheet full of <code>#VALUE</code>.</strong> Every text cell rendered as an error, because the evaluator passed its contents through <code>Number()</code> and the view rendered the resulting <code>NaN</code>. It had been that way in every screenshot and nobody had looked at the top-left cell.</p>
-<p><strong>Accepting the agent’s rewrite could not be undone.</strong> Recipe 4 recorded its transaction by comparing the document against itself, which it did before replacing the text, so the comparison found no change and pushed nothing. One undo did not restore the human’s words. This is the safety property Chapters 15 and 20 both argue is the whole reason it is acceptable to let a model edit a document, and the recipe asserting it did not have it.</p>
-<p><strong>The monitoring console showed every line twice.</strong> It received the tool result it was rendered for and also called the tool itself on mount, so two rows shared an identifier and selecting one selected both.</p>
-<p>Eight findings, seven of them in shipped code. The last three are the interesting ones, because they were invisible to every check that existed before: the messages were all correct, and the interface was wrong. They came from the layer described in the next chapter, which starts a real server, renders the view that server delivers, and then looks at the result.</p>
-<h2 id="what-this-cannot-do">What this cannot do</h2>
-<p>Two things this suite cannot do, both of which limit what the rest of Part VI is entitled to claim.</p>
-<p>It cannot drive the view’s own interface from outside. The frame is sandboxed with an opaque origin and the harness cannot reach its DOM, which is the same property that stops a host reading it. So view-initiated behaviour is driven through the tools a view registers, which covers the recipes that register tools and does not cover the ones that do not. Chapter 26 says exactly which.</p>
-<p>And it cannot tell you whether an application is any good. Every check in this book is about whether a thing works, not about whether it should exist. Chapter 3 is the only defence against building a well tested application that nobody wants, and it is not a test.</p>
+<p class="eyebrow">Chapter 25</p><h1>Components III: Spatial, Media and Agent-Native</h1><p class="summary">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</p><p>Two familiar groups, then five components with no precedent anywhere in web design. Spatial and media components you have built before and mostly port unchanged. The last five could not have existed before there was a second party acting on the interface, so there is no established pattern to copy and every agentic application ends up inventing them badly at least once.</p>
+<h2 id="spatial">Spatial</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Canvas</td>
+<td><code>input.pointer</code>, <code>input.zoompan</code>, <code>surface.viewport</code></td>
+<td>(application)</td>
+</tr>
+<tr>
+<td>Node graph</td>
+<td><code>input.dragdrop</code>, <code>input.selection</code>, <code>input.zoompan</code></td>
+<td>(application)</td>
+</tr>
+<tr>
+<td>Bounding box editor</td>
+<td><code>input.pointer</code>, <code>input.zoompan</code>, <code>history.transaction</code></td>
+<td>(application)</td>
+</tr>
+<tr>
+<td>Image annotation</td>
+<td><code>input.pointer</code>, <code>file.dropzone</code>, <code>file.export</code></td>
+<td>(application)</td>
+</tr>
+<tr>
+<td>Minimap</td>
+<td><code>input.pointer</code>, <code>surface.viewport</code></td>
+<td>(decorative)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Report a fixed height and scroll inside it.</strong> Recipe 6 uses 260px, Recipe 7 uses 280px, both chosen to work at 380px wide. A canvas that grows with its content fights <code>surface.resize</code> and loses.</p>
+<p><strong>Pointer capture, <code>touch-action: none</code>, and zoom about the cursor.</strong> All three in Chapter 10, and all three are the difference between a canvas that feels right and one that fights.</p>
+<p><strong>Add a minimap.</strong> Recipe 7 draws one into a 220 by 148 <code>&lt;canvas&gt;</code> in eleven lines: <code>fillRect</code> per node, <code>strokeRect</code> for the viewport.</p>
+<p><strong>Every gesture needs a button.</strong> Zoom in, zoom out, reset, fit, and arrow keys to pan. A canvas operable only by dragging cannot be operated at all by a significant number of people, and this is the component group where that failure is both most common and least noticed, because the developer testing it always has a pointer.</p>
+<p><strong>Undo per gesture, not per frame.</strong> A drag produces one transaction on pointerup, not sixty during pointermove. Recipe 7 records the start position on pointerdown and pushes a single transaction at the end.</p>
+<h2 id="media">Media</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>APG pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Player transport</td>
+<td><code>media.playback</code>, <code>input.keyboard</code></td>
+<td>Toolbar, Slider</td>
+</tr>
+<tr>
+<td>Scrubber</td>
+<td><code>media.playback</code>, <code>input.pointer</code></td>
+<td>Slider</td>
+</tr>
+<tr>
+<td>Caption selector</td>
+<td><code>media.playback</code>, <code>input.keyboard</code></td>
+<td>Listbox</td>
+</tr>
+<tr>
+<td>Thumbnail strip</td>
+<td><code>input.selection</code>, <code>input.keyboard</code></td>
+<td>Tabs, Listbox</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Use the native controls unless you have a reason.</strong> <code>&lt;video controls&gt;</code> handles keyboard, screen readers, captions, picture-in-picture and playback rate in zero lines.</p>
+<p>Replace them and you inherit the contract: Space to play, arrows to seek, <code>aria-valuetext</code> on the slider in minutes and seconds, and <code>aria-pressed</code> on the caption toggle. Recipe 12 does all of that in about 40 lines and is still worse than the native set.</p>
+<p>The <code>aria-valuetext</code> line is the one that is always missing:</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r12-media-viewer/index.html</code></p><pre class="js"><code>  $(&quot;#seek&quot;).max = String(clip.seconds);
+  $(&quot;#seek&quot;).value = String(at);
+  // A range input announces its raw value, so a seek bar reads as &quot;1601&quot; to a
+  // screen reader unless you say what the number means. This is the most
+  // common defect in custom transports.
+  $(&quot;#seek&quot;).setAttribute(&quot;aria-valuetext&quot;,
+    `${clock(at)} of ${clock(clip.seconds)}`);</code></pre>
+<p>A <code>&lt;input type="range"&gt;</code> announces its numeric value and nothing else, so a seek bar at eighty seconds reads as “80” with no unit and no total. The render harness asserts the announced string, which is the only way this stays fixed: the visible clock and the announced text are computed from the same <code>clock</code> function, so they cannot disagree.</p>
+<p><strong>Pause when hidden.</strong> Chapter 15. Audio continuing from a frame nobody can see is genuinely alarming, and it is the fastest way to make a user close a conversation.</p>
+<p><strong>Fullscreen goes through the host.</strong> <code>ui/request-display-mode</code>, not the Fullscreen API, because <code>fullscreen</code> is not in the extension’s permission set. Chapter 17.</p>
+<p><strong>A thumbnail strip is a tab list.</strong> Give it roving tabindex, <code>aria-current</code> on the selected item, and real labels, and no image alt text that says “thumbnail”.</p>
+<h2 id="agent-native">Agent-native</h2>
+<p>An approval card is a rendering problem with a content problem underneath it. Recipe 10’s server sends five fields per request, and the card’s whole job is to make them readable in the order a person decides in:</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r10-approval-center/server.js</code></p><pre class="js"><code>    id: &quot;refund-8841&quot;, title: &quot;Refund 1,240.00 USD&quot;, risk: &quot;high&quot;,
+    at: &quot;2026-08-18T09:12:00Z&quot;,
+    description: &quot;Refund invoice 2026-0814 to Meridian Systems in full.&quot;,
+    consequence: &quot;The money leaves today and cannot be recalled from here.&quot;,
+    question: &quot;Which invoices does this refund cover?&quot;,</code></pre>
+<p><code>consequence</code> and <code>question</code> are the two that separate this from a notification. The first says what becomes true and whether it is reversible; the second is a prompt the card can hand to the conversation, so a user who is not ready to approve has somewhere to go other than Deny.</p>
+<p>These five have no conventional web precedent because the situation they address is new: an interface with a second actor in it that the user cannot see and cannot interrupt. Each one exists to make some invisible part of that situation visible.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Composes</th>
+<th>Where it appears</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Approval card</td>
+<td><code>approval.request</code>, <code>dialog.confirm</code>, <code>agent.contextUpdate</code></td>
+<td>Recipe 10</td>
+</tr>
+<tr>
+<td>Tool status chip</td>
+<td><code>tool.invoke</code>, <code>op.progress</code>, <code>op.cancel</code>, <code>op.error</code></td>
+<td>Recipes 9, 11</td>
+</tr>
+<tr>
+<td>Streaming log</td>
+<td><code>tool.partialOutput</code>, <code>input.selection</code>, <code>a11y.announce</code></td>
+<td>Recipe 9</td>
+</tr>
+<tr>
+<td>Context inspector</td>
+<td><code>agent.contextUpdate</code>, <code>agent.boundary</code></td>
+<td>Every demonstration</td>
+</tr>
+<tr>
+<td>Proposal card</td>
+<td><code>ui.prefill</code>, <code>history.transaction</code>, <code>state.ownership</code></td>
+<td>Recipes 4, 7</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>The approval card</strong> is a heading, a consequence sentence, a <code>&lt;dl&gt;</code> of five provenance fields, and two buttons. Recipe 10 renders “asked by”, “on behalf of”, “tool”, “arguments” and “prior approvals”. High risk adds a second <code>confirmDialog</code>. Without those fields users learn to click through it.</p>
+<p><strong>The tool status chip</strong> carries a name, one of five states, a progress value and exactly the controls that state allows. Queued has none. Running has Cancel. Failed has Retry. Cancelled and Done have neither. Recipe 11 puts the state name in text, not only in colour.</p>
+<p><strong>The streaming log</strong> is the append-only list from Chapter 24 with the selection and follow behaviour that terminals taught everybody: follow the tail until the user scrolls up, then stop following and say so. Recipe 9 turns following off automatically when the user scrolls away from the bottom, which is the behaviour nobody notices when it is right.</p>
+<p><strong>The context inspector</strong> shows what the view has published to the model. It is a debugging tool that deserves to ship. A user who can see that the assistant knows about three selected rows and nothing else can predict what it will say, and the same panel is how a developer finds out that their view has been publishing hover state for a week. Every demonstration in this book has one, in the form of the “Show what the model was told” control.</p>
+<p><strong>The proposal card</strong> is the shape that makes agent editing safe. The agent’s version, visible next to the current one, with Accept and Decline, and accepting recorded as one undo transaction. Chapters 19 and 21 both arrive at it, from prefill and from conflict policy respectively, which is a decent sign that it is the right primitive.</p>
+<h3 id="definition-of-done-for-each">Definition of done, for each</h3>
+<p>No reference implementation exists for any of these five, and no design system has a page about them, so here is a definition of done for each. They are all small; the difficulty is knowing what to include.</p>
+<p><strong>Approval card.</strong> Renders a title, a risk level, a consequence sentence, and a provenance list of at least four fields. Approve and Deny are both single actions; high risk adds a confirmation. Every decision produces exactly one context update carrying the outcome and nothing else. It never accepts an approval over its own tool interface.</p>
+<p><strong>Tool status chip.</strong> Carries a name, one of five states, a progress value when it has one, and exactly the controls that state allows. Queued has none. Running has Cancel. Failed has Retry. Cancelled and Done have neither. The state name is visible as text, not only as a colour.</p>
+<p><strong>Streaming log.</strong> Appends, trims to a cap, and never rebuilds. Follows the tail until the user scrolls away, then stops and shows that it has stopped. Selection is by identifier so it survives the next thousand lines.</p>
+<p><strong>Context inspector.</strong> Shows the last payload published to the model, verbatim, and says when nothing has been published. It is one control and about ten lines, and it is the fastest way to find out that a view has been leaking hover state for a week.</p>
+<p><strong>Proposal card.</strong> Shows the agent’s version next to what is currently there, with Accept and Decline. Accepting is one undo transaction. The tool that created it returns “proposed, not applied”, so the agent does not report a change that has not happened.</p>
+<h2 id="what-all-five-have-in-common">What all five have in common</h2>
+<p>Every agent-native component makes an invisible thing visible. What the model was told. What it is doing. What it is proposing. What it wants permission for. What it has been told before.</p>
+<p>That is the design brief for this whole layer, and it comes out of the same constraint the rest of the book keeps hitting: the two parties cannot see each other. The user cannot see the model’s context. The model cannot see the screen. Components that surface one to the other are the ones that make an agentic interface feel like a place.</p>
+<h2 id="conformance-checks">Conformance checks</h2>
+<ol type="1">
+<li>A spatial surface reports a stable height rather than growing with its content.</li>
+<li>Every pointer gesture has a button or key equivalent.</li>
+<li>A drag produces one undo transaction, not one per pointer event.</li>
+<li>Media pauses when the frame is hidden.</li>
+<li>Immersive playback goes through <code>ui/request-display-mode</code>.</li>
+<li>An approval card renders provenance, and its decision produces exactly one context update.</li>
+<li>A streaming log appends and trims, and never rebuilds its container.</li>
+<li>Every agent-initiated change is announced once and is reversible.</li>
+</ol>
 
-<div class="pager"><a href="r13.html"><span class="dir">Previous</span>Recipe 13. Settings and Preferences</a><a href="ch26.html" style="text-align:right"><span class="dir">Next</span>26. The Verification Layers</a></div>
+<div class="pager"><a href="ch24.html"><span class="dir">Previous</span>24. Components II: Navigation, Data and Visualization</a><a href="r01.html" style="text-align:right"><span class="dir">Next</span>Recipe 1. Data Explorer</a></div>
 </main>
 </div>
 
+<script src="copy.js"></script>
 </body>
 </html>

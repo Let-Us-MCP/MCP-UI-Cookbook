@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html" class="current">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,7 +74,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Recipe 2</p><h1>Dashboard</h1><p class="summary">Tiles, sparklines, drill-down, and values that keep changing while you look at them.</p><div class="cap recipe" id="r02"><div class="cap-head"><code class="cap-id">r02</code><span class="cap-tag core">Dashboard</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">At-a-glance monitoring with drill-down.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch13.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch16.html#op.progress">op.progress</a></code><code><a href="ch16.html#op.retry">op.retry</a></code><code><a href="ch14.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch18.html#ui.navigate">ui.navigate</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch06.html#surface.resize">surface.resize</a></code><code><a href="ch06.html#surface.viewport">surface.viewport</a></code><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch12.html#env.theme">env.theme</a></code><code><a href="ch13.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch19.html#tool.invoke">tool.invoke</a></code><code><a href="ch19.html#tool.result">tool.result</a></code><code><a href="ch16.html#op.progress">op.progress</a></code><code><a href="ch16.html#op.retry">op.retry</a></code><code><a href="ch14.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch17.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch18.html#ui.navigate">ui.navigate</a></code></dd></dl></div>
+<p class="eyebrow">Recipe 2</p><h1>Dashboard</h1><p class="summary">Tiles, sparklines, drill-down, and values that keep changing while you look at them.</p><div class="cap recipe" id="r02"><div class="cap-head"><code class="cap-id">r02</code><span class="cap-tag core">Dashboard</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">At-a-glance monitoring with drill-down.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch03.html#surface.compose">surface.compose</a></code><code><a href="ch07.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch14.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch17.html#op.progress">op.progress</a></code><code><a href="ch17.html#op.retry">op.retry</a></code><code><a href="ch15.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch19.html#ui.navigate">ui.navigate</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch03.html#surface.compose">surface.compose</a></code><code><a href="ch07.html#surface.resize">surface.resize</a></code><code><a href="ch07.html#surface.viewport">surface.viewport</a></code><code><a href="ch07.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch13.html#env.theme">env.theme</a></code><code><a href="ch14.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch20.html#tool.invoke">tool.invoke</a></code><code><a href="ch20.html#tool.result">tool.result</a></code><code><a href="ch17.html#op.progress">op.progress</a></code><code><a href="ch17.html#op.retry">op.retry</a></code><code><a href="ch15.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch18.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch19.html#ui.navigate">ui.navigate</a></code></dd></dl></div>
 <p>A dashboard is a data explorer that will not hold still. Its capability delta is entirely about that: values updating in place, a drill-down that does not lose them, and a motion preference that has to be respected by something other than a CSS rule.</p>
 <div class="demo" data-demo="r02-dashboard" id="r02-dashboard"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
@@ -105,7 +106,7 @@
 </table></div>
 <p>Refresh looks like a crossing and is not. The view calls <code>service_health</code> itself through <code>tools/call</code>; no model is involved in a button meaning “get the current numbers”.</p>
 <h2 id="what-it-looks-like">What it looks like</h2>
-<p>A responsive grid of tiles, minimum 150 pixels each, so the same view is one column in a narrow panel and four across in a wide one. A drill-down panel opens under the grid rather than as a modal, because a modal in a four hundred pixel frame covers everything.</p>
+<p>A responsive grid of tiles, minimum 150 pixels each, so the same view is one column in a narrow panel and four across in a wide one. A drill-down panel opens under the grid, because a modal in a four hundred pixel frame covers everything.</p>
 <h2 id="updating-in-place">Updating in place</h2>
 <p>The tile is not rebuilt when its value changes. The text node and the sparkline are replaced; the tile element, its focus and its position stay.</p>
 <p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>const tile = $(&quot;#tiles&quot;).firstChild;
@@ -113,10 +114,10 @@ tile.querySelector(&quot;.v&quot;).textContent = `${format.number(m.value)} ${m.
 tile.querySelector(&quot;svg&quot;)?.replaceWith(spark(m.series));</code></pre>
 <p>Rebuilding the grid on every tick would move focus out of whatever the user was on, twice a second. This is the same discipline Recipe 9 needs at a hundred times the rate.</p>
 <h2 id="sparklines-with-no-dependency">Sparklines with no dependency</h2>
-<p>The chart is inline SVG built with <code>createElementNS</code>, eleven lines, stroked with <code>var(--color-text-info)</code> so it follows the host’s theme. The view declares an empty CSP, because it loads nothing. Chapter 23 has the argument for why this is usually the right answer in an embedded frame.</p>
+<p>The chart is inline SVG built with <code>createElementNS</code>, eleven lines, stroked with <code>var(--color-text-info)</code> so it follows the host’s theme. The view declares an empty CSP, because it loads nothing. Chapter 24 has the argument for why this is usually the right answer in an embedded frame.</p>
 <h2 id="reduced-motion-changes-the-poll-not-just-the-transition">Reduced motion changes the poll, not just the transition</h2>
 <p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>setInterval(() =&gt; { /* ... */ }, reduced.matches ? 4000 : 1400);</code></pre>
-<p>A stylesheet rule that disables transitions does nothing for a value that repaints continuously. Under a reduced motion preference the dashboard slows down, which is a different response from removing an animation and the correct one for something that is moving rather than animating.</p>
+<p>A stylesheet rule that disables transitions does nothing for a value that repaints continuously. Under a reduced motion preference the dashboard slows down, which is a different response from removing an animation and the correct one for something that is moving.</p>
 <h2 id="try-this">Try this</h2>
 <p><strong>Watch the first tile for ten seconds.</strong> The value and the sparkline change; the tile element does not. Tab to it while it is updating and the focus stays put, which is the entire reason it patches instead of rebuilding.</p>
 <p><strong>Open a tile, then press “Show the model context”.</strong> The model is told which panel is open, not which tiles were hovered on the way there.</p>
@@ -154,10 +155,10 @@ tile.querySelector(&quot;svg&quot;)?.replaceWith(spark(m.series));</code></pre>
 </tbody>
 </table></div>
 <h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
-<p><strong>Fullscreen withdrawn mid-session.</strong> Press “Withdraw fullscreen”. The next press of Expand finds the mode absent from <code>availableDisplayModes</code> and says so rather than sending a request that would be refused.</p>
+<p><strong>Fullscreen withdrawn mid-session.</strong> Press “Withdraw fullscreen”. The next press of Expand finds the mode absent from <code>availableDisplayModes</code> and says so, and sends no request that would be refused.</p>
 <p><strong>The refresh fails.</strong> The tiles keep their last values and the freshness chip stops advancing, which is the honest signal: a dashboard whose numbers are wrong is worse than one that admits its numbers are old.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
-<p>Each tile is a button with an <code>aria-label</code> that states the metric and its value, so a screen reader user gets “Checkout p95, 412 milliseconds” rather than a heading and a number in separate nodes. Sparklines are <code>aria-hidden="true"</code> and the note under each tile carries the trend in words. Opening a drill-down announces it. The grid is keyboard navigable by tab, and Enter opens.</p>
+<p>Each tile is a button with an <code>aria-label</code> that states the metric and its value, so a screen reader user gets “Checkout p95, 412 milliseconds” in one node. Sparklines are <code>aria-hidden="true"</code> and the note under each tile carries the trend in words. Opening a drill-down announces it. The grid is keyboard navigable by tab, and Enter opens.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li>Handshake completes and a size is reported.</li>
@@ -173,5 +174,6 @@ tile.querySelector(&quot;svg&quot;)?.replaceWith(spark(m.series));</code></pre>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

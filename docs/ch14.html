@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>14. Lifecycle and Connectivity &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.">
-<meta property="og:title" content="14. Lifecycle and Connectivity">
-<meta property="og:description" content="Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.">
+<title>14. Accessibility &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Three preferences the host never sends, one live region you have to build, and the reason an embedded frame makes all of this harder than a page.">
+<meta property="og:title" content="14. Accessibility">
+<meta property="og:description" content="Three preferences the host never sends, one live region you have to build, and the reason an embedded frame makes all of this harder than a page.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html" class="current">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html" class="current">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,77 +74,78 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 14</p><h1>Lifecycle and Connectivity</h1><p class="summary">Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.</p><p>Assume you will be destroyed at any moment, with one request of warning, and assume the warning may not arrive. Every design decision in this chapter falls out of that: autosave rather than save, server state rather than view state, and cheap by default rather than suspending on a signal you may never receive.</p>
-<p>A page gets <code>beforeunload</code>. You get <code>ui/resource-teardown</code>, if the host is well behaved, and the interval before you answer it is the only time you are guaranteed to still exist.</p>
-<div class="demo" data-demo="lab-lifecycle" id="lab-lifecycle"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="can-i-tell-when-nobody-is-looking">Can I tell when nobody is looking?</h2>
-<div class="cap" id="lifecycle.visibility"><div class="cap-head"><code class="cap-id">lifecycle.visibility</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Know when the view is on screen and when it is not.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
-<p>Partly, and the part it misses is the one that happens. The Page Visibility API fires inside your frame when the host’s whole tab or window is hidden, which is real and worth handling, and covers none of the cases where the tab stays visible.</p>
-<p>It does not cover the case that actually happens: the tab is visible and your frame has scrolled out of the conversation. <code>document.hidden</code> stays false, and your sparkline repaints every 1.4 seconds for nobody.</p>
-<p>Press “Hide the frame” in the demonstration and watch all three panes. The frame disappears from the page, the transcript records nothing at all, and the poll counter inside the view keeps climbing. Nothing told the view it had stopped being visible, because from its own point of view nothing changed.</p>
-<p><strong>Workaround.</strong> <code>IntersectionObserver</code> against the view’s own viewport does not help either, because the clipping is happening in a document you cannot see. What does help is being cheap by default: poll on demand rather than on a timer, coalesce updates, and let the server push through <code>ui/notifications/tool-result</code> instead of asking repeatedly.</p>
-<p><strong>What a mechanism would look like.</strong> The host already sends <code>ui/notifications/host-context-changed</code> for display mode. A <code>visibility</code> field in the same notification would cost nothing and would let a view suspend honestly. This is the third variation of the same missing signal, after <code>surface.reveal</code> and <code>notify.attention</code>, and they may all be one feature.</p>
-<h2 id="how-do-i-stop-doing-work-nobody-sees">How do I stop doing work nobody sees?</h2>
-<div class="cap" id="lifecycle.suspend"><div class="cap-head"><code class="cap-id">lifecycle.suspend</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Stop doing work nobody is looking at.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
-<p>Yours to build, and worth building even though the signal you would trigger it from is unreliable. The discipline that survives a missing signal is to be cheap by default: poll on demand rather than on a timer, coalesce updates, and let the server push through <code>ui/notifications/tool-result</code> rather than asking repeatedly.</p>
-<p><strong>Application behaviour.</strong> Keep a list of the things that consume resources while nobody is looking: timers, animations, observers, in-flight polling. Have one function that stops them and one that restarts them, and call the stop from <code>visibilitychange</code> and from <code>ui/resource-teardown</code>. Recipe 12’s player pauses on hide, which is both a resource decision and a courtesy: audio continuing from an invisible frame is genuinely alarming.</p>
-<p>The general principle is that a view should be able to do nothing. A view that requires a heartbeat to stay correct will be wrong every time it is backgrounded, and it will be wrong silently.</p>
-<h2 id="am-i-online">Am I online?</h2>
-<div class="cap" id="lifecycle.connectivity"><div class="cap-head"><code class="cap-id">lifecycle.connectivity</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Show online, offline, and reconnecting honestly.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
-<p><code>navigator.onLine</code> and the <code>online</code> and <code>offline</code> events work inside the frame. They tell you whether the <em>browser</em> thinks it has a network, which is weaker than it sounds and still worth using.</p>
-<p>What they cannot tell you is whether the host still has its connection to the server. That connection is the host’s, and there is no message reporting its state. Your evidence is indirect: a <code>tools/call</code> that fails, or one that never answers.</p>
-<p><strong>Application behaviour.</strong> Three states, honestly labelled. <em>Live</em> means something arrived recently. <em>Reconnecting</em> means a call failed and a retry is scheduled. <em>Offline</em> means the browser says so or retries have run out.</p>
-<p>The crucial part is what the data looks like in the last two states. Recipe 9 keeps the last lines it received and says so in a banner, because a monitoring console that clears its screen when the connection drops has destroyed the evidence at the exact moment somebody needs it. Stale data with a timestamp is more useful than no data, as long as the interface never lets the user mistake one for the other.</p>
-<h2 id="how-do-i-track-unsaved-work">How do I track unsaved work?</h2>
-<div class="cap" id="lifecycle.dirty"><div class="cap-head"><code class="cap-id">lifecycle.dirty</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Track uncommitted local state and say so.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
-<p>Yours to track, and it costs a boolean and a chip. What you can do with it inside the view is the obvious part: enable Save, enable Discard, show a marker. What you cannot do is tell the host, which is why the teardown handshake below matters more here than anywhere else.</p>
-<p>Inside the view, a dirty flag drives the obvious things: enabling Save, disabling Discard, showing a marker. The chip in the demonstration goes from “saved” to “unsaved changes” on the first keystroke and back on save.</p>
-<p>Across the boundary, there is nothing. No message tells the host that this view has unsaved work, so the host cannot warn the user before switching conversations, and cannot include the view in its own “you have unsaved changes” logic if it has any.</p>
-<p><strong>Workaround.</strong> Autosave, so that dirty is a state that lasts seconds rather than minutes. Then the teardown handshake below is enough to close the gap.</p>
-<figure>
-<img src="figures/diag-lifecycle.png" alt="The lifecycle, as a sequence" />
-<figcaption aria-hidden="true">The lifecycle, as a sequence</figcaption>
-</figure>
-<h2 id="what-do-i-do-when-the-host-closes-me">What do I do when the host closes me?</h2>
-<div class="cap" id="lifecycle.beforeClose"><div class="cap-head"><code class="cap-id">lifecycle.beforeClose</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Get one chance to finish before the frame goes away.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/resource-teardown</code><code>reason</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
-<p>The one guarantee in the whole lifecycle, and the reason the missing dirty signal is survivable rather than fatal. The host cannot know you have unsaved work, but it does have to ask before it takes the frame away, and that question is your opportunity.</p>
-<p>Chapter 6 introduced this message from the view’s side of the pair. Here is what it is worth: the interval between the host asking and your code answering is the only interval in the whole protocol during which a view is guaranteed to still exist and to have the host’s attention. Everything you were going to lose has to be flushed inside it.</p>
-<p class="provenance extracted">Extracted from from <code>apps/recipes/r04-document-editor/index.html</code></p><pre class="js"><code>bridge.on(&quot;teardown&quot;, async ({ reason }) =&gt; {
-  $(&quot;#log&quot;).textContent = `Host is closing this view: ${reason}`;
-  if (dirty) {
-    $(&quot;#log&quot;).textContent += &quot; Flushing unsaved changes first.&quot;;
-    await save();
+<p class="eyebrow">Chapter 14</p><h1>Accessibility</h1><p class="summary">Three preferences the host never sends, one live region you have to build, and the reason an embedded frame makes all of this harder than a page.</p><p>Accessibility is a section in every entry of this book, because that is the only arrangement that survives a deadline. A chapter at the end gets read once and cut first; a section in the entry you are already reading gets implemented while you are implementing the entry.</p>
+<p>This chapter carries the four capabilities that fit nowhere else, and the problems that come specifically from running inside someone else’s window.</p>
+<div class="demo" data-demo="lab-a11y" id="lab-a11y"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="what-is-harder-inside-a-frame">What is harder inside a frame?</h2>
+<p>Four things, none of which are your fault and all of which are your problem. They come from the frame boundary, and knowing them changes what you build rather than merely what you test.</p>
+<p><strong>Your view is a document inside a document.</strong> A screen reader user reaches it by moving into the frame, and inside it your headings start again at whatever level you chose. Use a sensible internal hierarchy and give the frame a meaningful title, because the title is what the host can expose as the frame’s accessible name.</p>
+<p><strong>You cannot see the host’s landmarks.</strong> You do not know whether the conversation is a <code>main</code>, whether there is already an <code>h1</code>, or what else has <code>role="status"</code>. Assume your announcements are competing with the host’s.</p>
+<p><strong>Focus cannot cross the boundary.</strong> A keyboard user who tabs in must be able to tab out, so no focus traps outside <code>&lt;dialog&gt;</code> and no roving list that cycles forever. Chapter 8 has the gap.</p>
+<p><strong>The user’s preferences reach you by a different route than the theme.</strong> The host sends colours. The operating system sends motion, contrast and text size, through media queries. Those two can disagree, and the demonstration above has a control that makes them disagree on purpose.</p>
+<h2 id="how-do-i-respect-reduced-motion">How do I respect reduced motion?</h2>
+<div class="cap" id="env.reducedMotion"><div class="cap-head"><code class="cap-id">env.reducedMotion</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Respect a stated preference for less movement.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r12.html">Media Viewer</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-a11y">lab-a11y</a></dd></dl></div>
+<p><code>prefers-reduced-motion: reduce</code> works inside the sandbox and reflects the operating system setting directly. Nothing is proxied and no host involvement is needed, which also means the host cannot override it for you: if the user asked their machine for less motion, that preference reaches your frame whatever the host thinks.</p>
+<p><strong>Application behaviour.</strong> The blunt instrument is a stylesheet rule that collapses every animation and transition, and it is the right default:</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
   }
-});</code></pre>
-<p><strong>Rules for the window.</strong> Do the smallest possible thing. This is a flush, not a save dialog: you cannot ask the user a question, because the host is waiting and the user is already leaving. Bound it. A host that waits forever for a view that never answers is a host that will stop waiting, and different hosts will stop at different times. And answer even on failure, because an unanswered request is indistinguishable from a hung view.</p>
-<p><strong>Failure modes.</strong> A host that does not send the request at all takes your work with it, which is why autosave matters more here than in a page. A host that sends it and does not wait looks identical from the inside, and the only way to know is to measure. The demonstration’s teardown control reports how long the view took to answer, which is the same measurement a conformance test makes.</p>
-<h2 id="how-do-i-ask-to-be-closed">How do I ask to be closed?</h2>
-<p>The other direction is <code>ui/notifications/request-teardown</code>, covered as <code>surface.close</code> in Chapter 6. It is worth restating the asymmetry here, because the pair is the whole lifecycle contract: the view <em>asks</em> with a notification that may be ignored, and the host <em>tells</em> with a request that must be answered. Neither side can force the other, and the protocol is deliberately arranged so that the party who owns the window has the last word.</p>
-<h2 id="worked-example-one-second-in-the-document-editor">Worked example: one second in the document editor</h2>
-<p>Recipe 4’s document editor is the clearest illustration of this whole chapter, because every decision in it is a response to not being able to rely on a signal. It cannot know when it is invisible, it cannot tell the host it has unsaved work, and it may be destroyed at any moment. What it does instead is keep the window of loss short and bounded by a constant it chose itself.</p>
-<p>The user types. A timer starts. After 900 milliseconds of quiet the view commits an undo transaction and calls <code>save_document</code>, which is an app-only tool, so the model neither sees the save nor can trigger one. The chip goes from amber to green.</p>
-<p>Now the host tears the view down. <code>ui/resource-teardown</code> arrives with a reason. If the chip is green, the view answers immediately and the frame goes away with nothing lost. If it is amber, the view saves first and then answers, and the demonstration reports how many milliseconds that took, because that number is the thing a host either waits for or does not.</p>
-<p>Worst case you lose 900ms of typing, and that bound is a constant the view chose rather than anything the protocol promises. Pick a bound, keep it small, and assume the teardown warning may not arrive.</p>
-<h2 id="host-behaviour-in-detail">Host behaviour, in detail</h2>
-<p>Send <code>ui/resource-teardown</code> before removing a frame, for any reason, including reasons the user initiated. Give the reason, because a view can behave differently for “the user closed the conversation” and “this view is being replaced by a newer result”.</p>
-<p>Wait for the response, with a deadline that is generous rather than tight. A view flushing to a server needs a network round trip, and a host that waits 200 milliseconds has effectively not waited.</p>
-<p>Answer <code>ping</code>. It is the only way a view can check that the channel is still there, and a host that ignores it leaves the view unable to distinguish a slow call from a dead one.</p>
-<p>Do not send anything before <code>ui/notifications/initialized</code> arrives. A host that sends <code>ui/notifications/tool-input</code> early is talking to a view that has not registered its handlers yet, so the notification is dropped on the floor and no error is raised on either side. The view then renders empty and waits forever for data that has already been sent.</p>
+}</code></pre>
+<p>The finer instrument is to check the query in JavaScript where motion is functional. A dashboard that repaints a sparkline every 1.4 seconds is not decorating; it is moving, continuously, in somebody’s peripheral vision. Recipe 2 slows its polling to four seconds under a reduced motion preference, which is a different response from removing an animation and a more honest one.</p>
+<p><strong>What to keep.</strong> Reduced motion does not mean no feedback. Replace slides with crossfades, replace crossfades with instant changes, and keep the state change legible. A toast that appears instantly is fine; a toast that never appears is a regression.</p>
+<h2 id="what-breaks-under-forced-colours">What breaks under forced colours?</h2>
+<div class="cap" id="env.contrast"><div class="cap-head"><code class="cap-id">env.contrast</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Survive forced colours and high contrast.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r06.html">Image Annotator</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-a11y">lab-a11y</a></dd></dl></div>
+<p><code>prefers-contrast: more</code> and forced-colors mode both work inside the frame without the host’s involvement, and forced colours is the one that breaks views. It replaces the entire palette, including the host’s variables, so any state you signalled with a background colour stops being visible at the exact moment the user most needs contrast.</p>
+<p><strong>The embedded-specific trap.</strong> In forced colours, the operating system replaces the palette. Anything you drew with a background image, a gradient, or a <code>box-shadow</code> to indicate state loses that indication entirely, because those properties are not overridden and the colours around them are. State has to be carried by something that survives: a border, an outline, text, or an icon.</p>
+<p>The same applies to your own custom properties. A view that indicates selection only by <code>background: var(--color-background-info)</code> shows no selection at all under forced colours. Recipe 1 sets both a background and an <code>aria-selected</code> attribute, and the attribute is what makes it survive.</p>
+<h2 id="what-happens-when-text-doubles">What happens when text doubles?</h2>
+<div class="cap" id="env.textScale"><div class="cap-head"><code class="cap-id">env.textScale</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Stay usable when text is two sizes larger than you designed for.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-a11y">lab-a11y</a></dd></dl></div>
+<p>Size in relative units so the root scale carries through, never fix a pixel height on anything containing text, and let the frame grow through <code>surface.resize</code>. The third one is the embedded-specific part: a page reflows into the space it already has, while your view has to ask for more, and a view that reports a stale height at 200% zoom clips its own content.</p>
+<p>The difference from a page is the width you have to work with. In a page, enlarged text reflows into a column that is usually still comfortable. In a 380 pixel frame at 200% zoom you have the effective width of a phone held sideways, and a two-column layout gets about three words per line before it becomes unreadable.</p>
+<p>WCAG 2.2 asks for usability at 200% zoom and reflow at 320 CSS pixels of width. Both are testable with the browser’s own zoom, and a four hundred pixel card at 200% is roughly a phone, so testing one gets you most of the other.</p>
+<h2 id="how-do-i-announce-a-change-nobody-caused">How do I announce a change nobody caused?</h2>
+<div class="cap" id="a11y.announce"><div class="cap-head"><code class="cap-id">a11y.announce</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Tell assistive technology that something changed.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r05.html">Spreadsheet</a>, <a href="r10.html">Approval Center</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-a11y">lab-a11y</a></dd></dl></div>
+<p>One polite live region, created once and reused, updated by setting its text. Creating a region per announcement does not work, because a screen reader announces <em>changes</em> to a region it already knows about, and a freshly inserted element is often missed entirely.</p>
+<p>Everything in an agentic application is a change nobody caused. A tool result arrives. The agent highlights a row. A log gains forty lines. A sighted user notices; nobody else does unless you say so.</p>
+<p>Use <code>polite</code>, not <code>assertive</code>. Assertive interrupts whatever is being read, and in an application where results arrive continuously that is unusable.</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>function announce(text) {
+  let region = $(&quot;#live-region&quot;);
+  if (!region) {
+    region = h(&quot;div&quot;, { id: &quot;live-region&quot;, class: &quot;sr-only&quot;,
+                        role: &quot;status&quot;, &quot;aria-live&quot;: &quot;polite&quot; });
+    document.body.append(region);
+  }
+  region.textContent = &quot;&quot;;
+  setTimeout(() =&gt; { region.textContent = text; }, 30);
+}</code></pre>
+<p>The clear-then-set with a small delay is not superstition. Screen readers announce <em>changes</em> to a live region, and setting the same string twice is not a change, so the second identical event is silent without it.</p>
+<p><strong>Announce the outcome, not the event.</strong> “Six of forty selected” rather than one announcement per row. “Import failed. Row 812 has a malformed date.” rather than “error”. The demonstration announces at phase boundaries only, which is what a sighted user actually perceives from a progress bar.</p>
+<p><strong>What not to announce.</strong> Hover. Scroll position. Anything the user did deliberately and can already feel. A live region that narrates the mouse is worse than no live region.</p>
+<h2 id="two-things-this-environment-makes-harder">Two things this environment makes harder</h2>
+<p><strong>Announcing agent activity.</strong> In an ordinary application, changes the user did not cause are rare enough to be exceptional. Here they are the normal case: a tool result arrives, the agent highlights a row, a proposal appears. Each one needs an announcement, and together they need a budget, or the live region becomes a narration nobody can follow.</p>
+<p>The rule that works is to announce <em>outcomes that change what the user can do</em> and to stay silent about everything else. An agent proposing a rewrite is worth announcing, because there is now a decision to make. An agent highlighting a row is worth announcing once, briefly. A tool result that only refreshes numbers already on screen is not.</p>
+<p><strong>Naming things the user did not name.</strong> A screen reader reads names, and in an agentic interface many elements exist because a model produced them. A row labelled only by its data reads as a string of values; the same row with an <code>aria-label</code> that names what it is reads as a thing. Recipe 2’s tiles carry “Checkout p95, 412 milliseconds” rather than a heading and a number in separate nodes, and that single change is the difference between a dashboard that can be listened to and one that cannot.</p>
+<h2 id="the-checklist-that-fits-on-a-card">The checklist that fits on a card</h2>
+<p>Every recipe in Part V is built against this list, and Appendix C turns it into assertions.</p>
+<p>Every interactive element is reachable by Tab and operable by Enter or Space. Every composite widget is one tab stop with arrow key navigation inside it. Every control has a name, and the name is what a person would call it. State changes that were not caused by focus are announced. Focus is visible, and the ring is not clipped by an <code>overflow: hidden</code> ancestor. Nothing depends on colour alone. Nothing depends on hover alone. Every spatial gesture has a button or a key equivalent. Text stays usable at 200%. Motion respects the preference.</p>
+<p>Ten lines, and running <code>axe-core</code> against your view will confirm perhaps half of them. The other half need a keyboard and five minutes, which is a cheaper test than most of the automated ones in Part VI and catches more.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li><code>ui/resource-teardown</code> is sent before the frame is removed, with a reason.</li>
-<li>The host waits for the response, and a view that takes 600 milliseconds is not cut off.</li>
-<li>Nothing is sent to the view before <code>ui/notifications/initialized</code>.</li>
-<li><code>ping</code> is answered.</li>
-<li>Hiding the host’s tab fires <code>visibilitychange</code> inside the frame.</li>
-<li>A view that is scrolled out of view receives no signal, which is the gap in Appendix B rather than a conformance failure.</li>
+<li>Tab order covers the view and leaves it, with no element skipped and none reachable only by pointer.</li>
+<li>A list of N rows presents one tab stop for all N.</li>
+<li><code>prefers-reduced-motion</code> suppresses animation and slows anything that repaints continuously.</li>
+<li>Under forced colours, selection and status remain distinguishable without relying on background colour.</li>
+<li>Text at 200% remains usable, and the view reports its new height.</li>
+<li>A change the user did not cause is announced once into a polite live region.</li>
+<li>No announcement is produced by hover or scroll.</li>
 </ol>
-<h2 id="what-to-remember">What to remember</h2>
-<p>Assume you will be destroyed at any moment with one request of warning, and that the warning may not come. Every design decision in this group follows from that: autosave rather than save, server state rather than view state, cheap by default rather than suspend on a signal you may not receive.</p>
 
-<div class="pager"><a href="ch13.html"><span class="dir">Previous</span>13. Accessibility</a><a href="ch15.html" style="text-align:right"><span class="dir">Next</span>15. Persistence and History</a></div>
+<div class="pager"><a href="ch13.html"><span class="dir">Previous</span>13. Host Environment and Theming</a><a href="ch15.html" style="text-align:right"><span class="dir">Next</span>15. Lifecycle and Connectivity</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

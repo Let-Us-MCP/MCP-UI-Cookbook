@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html" class="current">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,7 +74,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Recipe 12</p><h1>Media Viewer</h1><p class="summary">A transport, a caption track, an immersion request that goes through the host, and a share button for a capability that does not exist.</p><div class="cap recipe" id="r12"><div class="cap-head"><code class="cap-id">r12</code><span class="cap-tag core">Media Viewer</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Inspect and present media.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch16.html#media.playback">media.playback</a></code><code><a href="ch16.html#media.fullscreen">media.fullscreen</a></code><code><a href="ch10.html#system.share">system.share</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch16.html#media.playback">media.playback</a></code><code><a href="ch16.html#media.fullscreen">media.fullscreen</a></code><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch14.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch14.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch10.html#system.share">system.share</a></code><code><a href="ch13.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch09.html#input.zoompan">input.zoompan</a></code><code><a href="ch10.html#file.export">file.export</a></code></dd></dl></div>
+<p class="eyebrow">Recipe 12</p><h1>Media Viewer</h1><p class="summary">A transport, a caption track, an immersion request that goes through the host, and a share button for a capability that does not exist.</p><div class="cap recipe" id="r12"><div class="cap-head"><code class="cap-id">r12</code><span class="cap-tag core">Media Viewer</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Inspect and present media.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch17.html#media.playback">media.playback</a></code><code><a href="ch17.html#media.fullscreen">media.fullscreen</a></code><code><a href="ch11.html#system.share">system.share</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch17.html#media.playback">media.playback</a></code><code><a href="ch17.html#media.fullscreen">media.fullscreen</a></code><code><a href="ch07.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch15.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch15.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch11.html#system.share">system.share</a></code><code><a href="ch14.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch10.html#input.zoompan">input.zoompan</a></code><code><a href="ch11.html#file.export">file.export</a></code></dd></dl></div>
 <p>The recipe with the most platform behaviour and the clearest example of a capability the sandbox simply does not have. It is also the recipe that most often should not be built: the native controls are better than the ones here.</p>
 <div class="demo" data-demo="r12-media-viewer" id="r12-media-viewer"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
@@ -114,11 +115,11 @@ $(&quot;#note&quot;).textContent = mode === target
 <p>Audio continuing from a frame nobody can see is genuinely alarming, and it is the fastest way to make somebody close a conversation. The player checks <code>document.hidden</code> on every tick and pauses with a note saying why.</p>
 <h2 id="a-share-button-with-nothing-behind-it">A share button with nothing behind it</h2>
 <p><code>navigator.share</code> needs the <code>web-share</code> permission policy, which the extension does not have. <code>system.share</code> is a gap. What the recipe does instead is ask the host to open a canonical link, and fall back to putting that link on the clipboard, and say which it did.</p>
-<p>That is the general shape for a missing capability with a real user need behind it: find the nearest thing the host will do, do that, and be explicit about the substitution rather than pretending.</p>
+<p>That is the general shape for a missing capability with a real user need behind it: find the nearest thing the host will do, do that, and be explicit about the substitution.</p>
 <h2 id="try-this">Try this</h2>
-<p><strong>Press Play, then press “Withdraw fullscreen” and the Fullscreen button.</strong> The view reports the mode the host actually kept, rather than assuming the request succeeded.</p>
+<p><strong>Press Play, then press “Withdraw fullscreen” and the Fullscreen button.</strong> The view reports the mode the host actually kept, having assumed nothing about the request.</p>
 <p><strong>Press Share with links allowed, then press “Refuse to open links” and press it again.</strong> The first goes through <code>ui/open-link</code>; the second falls back to the clipboard and says so. There is no share capability to fall back from.</p>
-<p><strong>Turn captions on and scrub.</strong> The caption line follows the position, and the toggle carries <code>aria-pressed</code> rather than a colour change.</p>
+<p><strong>Turn captions on and scrub.</strong> The caption line follows the position, and the toggle carries <code>aria-pressed</code> and no colour change.</p>
 <h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -164,10 +165,10 @@ $(&quot;#note&quot;).textContent = mode === target
 <h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>Fullscreen refused.</strong> The note reports the mode the host kept. The player keeps working at inline size.</p>
 <p><strong>Autoplay.</strong> The player never attempts it. Everything starts paused, which is both a policy requirement and good manners.</p>
-<p><strong>Captions with no track selected.</strong> The caption line is hidden rather than showing an empty box.</p>
+<p><strong>Captions with no track selected.</strong> The caption line is hidden.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>Play carries an <code>aria-label</code> that changes with state. The seek slider has a real name, the captions toggle has <code>aria-pressed</code>, the frame has an <code>aria-label</code> naming the clip, and the thumbnail strip is a tab list with <code>aria-current</code>.</p>
-<p>Missing: <code>aria-valuetext</code> on the slider, in minutes and seconds rather than raw seconds. That is the most common defect in custom transports.</p>
+<p>The seek bar carries <code>aria-valuetext</code> in minutes and seconds, so it announces “1:20 of 2:14” and never “80”. A range input announces its raw value otherwise, which is the most common defect in custom transports.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li><code>list_clips</code> returns three clips and the strip renders three thumbnails.</li>
@@ -182,5 +183,6 @@ $(&quot;#note&quot;).textContent = mode === target
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>11. Pickers and Dropzones &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.">
-<meta property="og:title" content="11. Pickers and Dropzones">
-<meta property="og:description" content="Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.">
+<title>11. Clipboard, Files and System Integration &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Two messages that exist because the sandbox closed a door, one permission, and three capabilities with no route at all.">
+<meta property="og:title" content="11. Clipboard, Files and System Integration">
+<meta property="og:description" content="Two messages that exist because the sandbox closed a door, one permission, and three capabilities with no route at all.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html" class="current">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html" class="current">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,106 +74,102 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 11</p><h1>Pickers and Dropzones</h1><p class="summary">Three inputs the browser has already built for every platform and locale, and one picker that has to come through the host because the view holds no connection.</p><p>Use the native inputs. Three of these four capabilities are HTML input types with a decade of platform work behind them, and the effort you would spend replacing one buys you a worse version. The fourth reaches into the server’s namespace rather than the user’s machine, and that one has to go through the host because your view holds no connection of its own.</p>
-<div class="demo" data-demo="lab-pickers" id="lab-pickers"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="which-picker-do-i-use">Which picker do I use?</h2>
-<div class="cap" id="picker.date"><div class="cap-head"><code class="cap-id">picker.date</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native date selection, localised by the host locale.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
-<div class="cap" id="picker.time"><div class="cap-head"><code class="cap-id">picker.time</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native time selection in the host timezone.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
-<div class="cap" id="picker.color"><div class="cap-head"><code class="cap-id">picker.color</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Native colour selection.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r06.html">Image Annotator</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
-<p><code>&lt;input type="date"&gt;</code>, <code>type="time"&gt;</code> and <code>type="color"&gt;</code>, all of which work inside the sandbox with no permission and no message. Nothing about the opaque origin interferes, because the picker is drawn by the browser rather than by your document, and the value arrives through an ordinary <code>input</code> event.</p>
-<p>You get keyboard support, screen reader support, the platform’s own calendar and colour panel, and localisation for every region the browser knows, which is more than your component library knows.</p>
-<p>The argument for replacing them is usually visual: they do not match the design. That is true, and the cost of replacing them is a component that has to reimplement date arithmetic, week-start conventions, month names in the user’s language, and a keyboard model, and that will still be wrong for the calendar systems you have not heard of. In a four hundred pixel card next to somebody’s conversation, the trade is not close.</p>
-<p><strong>The one thing you have to add.</strong> The picker collects a value; you have to <em>display</em> values in the user’s terms, and the browser’s idea of “the user” is the machine, not the person the host is serving. Formatting comes from <code>hostContext.locale</code> and <code>hostContext.timeZone</code>, through <code>Intl</code>.</p>
-<p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>function formatters(hostContext) {
-  const locale = hostContext?.locale || undefined;
-  const timeZone = hostContext?.timeZone || undefined;
-  return {
-    number: (n, options) =&gt; new Intl.NumberFormat(locale, options).format(n),
-    date: (value, options = { dateStyle: &quot;medium&quot; }) =&gt;
-      new Intl.DateTimeFormat(locale, { ...options, timeZone })
-        .format(value instanceof Date ? value : new Date(value)),
-    time: (value) =&gt; new Intl.DateTimeFormat(locale, {
-      timeStyle: &quot;medium&quot;, timeZone })
-      .format(value instanceof Date ? value : new Date(value)),
-  };
-}</code></pre>
-<p>Press “Switch to ja-JP / Tokyo” in the demonstration. The pickers keep their ISO values, which is correct, and everything the view renders changes, which is also correct. A view that formats with the default locale looks right on the developer’s machine and wrong for most of its users.</p>
-<p><strong>Accessibility.</strong> Native inputs come with the platform’s accessibility already wired. What they still need from you is a real <code>&lt;label&gt;</code> associated with the input, a hint about the expected format when there is one, and enough contrast on the border that the field is visible in a high contrast theme.</p>
-<h2 id="how-do-i-pick-something-the-server-owns">How do I pick something the server owns?</h2>
-<div class="cap" id="picker.resource"><div class="cap-head"><code class="cap-id">picker.resource</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Pick from resources the server exposes, through the host.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>resources/read</code><code>serverResources</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-pickers">lab-pickers</a></dd></dl></div>
-<p>Call <code>resources/read</code> when <code>hostCapabilities.serverResources</code> is present, and the host proxies it to the server and hands back the contents. The important difference from a file picker is whose namespace you are reaching into: a file picker touches the user’s machine and needs their consent, while a resource read touches the server your view came from and needs the host’s.</p>
-<p>This is different in kind from a file picker. A file picker reaches the user’s machine; a resource picker reaches the server’s namespace, and your view holds no connection to the server.</p>
-<p class="provenance extracted">Extracted from from <code>apps/labs/lab-pickers/index.html</code></p><pre class="js"><code>$(&quot;#load&quot;).onclick = async () =&gt; {
+<p class="eyebrow">Chapter 11</p><h1>Clipboard, Files and System Integration</h1><p class="summary">Two messages that exist because the sandbox closed a door, one permission, and three capabilities with no route at all.</p><p>A sandboxed frame cannot navigate the browser and cannot save a file, and both restrictions are deliberate: navigation would let a hostile view move the user somewhere convincing, and unmediated downloads would let it write to disk without anyone seeing. The two escape hatches the extension provides are both here, <code>ui/open-link</code> and <code>ui/download-file</code>, and they are shaped identically because they solve the same problem: put a human in the path.</p>
+<p>Both work the same way. The view asks, the host decides, and the human can see it happen. Everything else in this chapter is either the browser working normally or a door that is still shut.</p>
+<div class="demo" data-demo="lab-clipboard" id="lab-clipboard"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="how-do-i-copy-to-the-clipboard">How do I copy to the clipboard?</h2>
+<div class="cap" id="clipboard.write"><div class="cap-head"><code class="cap-id">clipboard.write</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Copy text or structured content, with a fallback when denied.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>clipboardWrite</code><code>permissions</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r03.html">File Explorer</a>, <a href="r05.html">Spreadsheet</a>, <a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p>Ship both paths, because copying is the only exit a sandboxed frame has that works without the host’s cooperation. It cannot save a file unaided, nothing can be dragged out of it, and there is no address bar to paste a URL into. The asynchronous Clipboard API is the better path when you have the permission; the <code>execCommand</code> fallback needs nothing but a user gesture and works in the host that granted you nothing.</p>
+<p>The asynchronous Clipboard API, <code>navigator.clipboard.writeText</code>, needs the <code>clipboardWrite</code> permission declared by your server in <code>_meta.ui.permissions</code> and granted by the host in the frame’s <code>allow</code> attribute. It is the better path: it handles multiple formats and does not touch the DOM.</p>
+<p>The <code>execCommand("copy")</code> fallback needs no permission at all, but it does need a user gesture and a focused selection, which is why it involves a temporary off-screen textarea. It is deprecated and it works everywhere.</p>
+<p class="provenance extracted">Extracted from from <code>apps/labs/lab-clipboard/index.html</code></p><pre class="js"><code>async function copyText(text) {
   try {
-    const result = await bridge.readServerResource($(&quot;#uri&quot;).value);
-    $(&quot;#out&quot;).textContent = result.contents?.[0]?.text ?? JSON.stringify(result);
-  } catch (error) {
-    $(&quot;#out&quot;).textContent = `Refused: ${error.message}`;
+    await navigator.clipboard.writeText(text);
+    return &quot;Clipboard API&quot;;
+  } catch {
+    const area = document.createElement(&quot;textarea&quot;);
+    area.value = text;
+    area.setAttribute(&quot;readonly&quot;, &quot;&quot;);
+    area.style.position = &quot;fixed&quot;;
+    area.style.opacity = &quot;0&quot;;
+    document.body.append(area);
+    area.select();
+    const ok = document.execCommand(&quot;copy&quot;);
+    area.remove();
+    if (!ok) throw new Error(&quot;both clipboard paths refused&quot;);
+    return &quot;execCommand fallback&quot;;
   }
-};</code></pre>
-<p><strong>The awkward part, and a live discrepancy.</strong> The specification’s list of standard MCP messages available to a view names exactly one resource method: <code>resources/read</code>. On a plain reading, a view can read a resource it already knows the URI of and cannot discover one.</p>
-<p>The SDK disagrees. <code>@modelcontextprotocol/ext-apps</code> ships <code>App.listServerResources()</code>, and its own documentation uses it to build a picker by filtering the returned list on MIME type. <code>hostCapabilities</code> also carries <code>serverResources.listChanged</code>, which only means something if listing is proxied at all.</p>
-<p>So the honest position is that <code>resources/list</code> from a view is supported by the reference implementation and unstated in the specification text, which means hosts may reasonably differ. Treat it as an enhancement: try the list, and have a fallback for a host that refuses. This book files it as a documentation gap rather than as a design one, because the SDK’s behaviour looks like the intended one.</p>
-<p>A picker can also learn its options without listing at all: from the tool result that rendered the view, from a server tool that returns a list, or from a namespace the server documents. The last two are worth preferring anyway, because a server tool returning a list also gets you filtering and pagination. In the demonstration the options come from the host fixture, and the “missing” entry is there so you can watch a refused read.</p>
-<p><strong>Security.</strong> This is the good path for reading server-side data, and it is worth choosing over a <code>fetch</code> to your own API even when you could declare the origin in <code>connectDomains</code>. A read through the host is visible to the host, subject to the host’s policy, and appears in the transcript. A direct fetch is a hole you asked the host to open and then used unobserved.</p>
-<p><strong>Failure modes.</strong> Unsupported when <code>serverResources</code> is absent: the picker should not appear, and whatever it was going to configure needs a different route. Denied and failed both come back as JSON-RPC errors, and the error message is the host’s, so display it rather than replacing it with your own guess.</p>
-<h2 id="what-about-dropzones">What about dropzones?</h2>
+}</code></pre>
+<p><strong>Copy what the destination wants.</strong> A table copied as a single string of text is useless in a spreadsheet. Tab-separated values with newlines paste into every spreadsheet ever written, and Recipe 5 copies ranges that way for exactly that reason. CSV for a file, TSV for the clipboard.</p>
+<p><strong>Failure modes.</strong> The whole point of the pair above is that failure is rare and recoverable. Show the confirmation once, after the copy succeeded, and do not show which path it took. The user does not care.</p>
+<h2 id="can-i-read-the-clipboard">Can I read the clipboard?</h2>
+<div class="cap" id="clipboard.read"><div class="cap-head"><code class="cap-id">clipboard.read</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Read what the user has on the clipboard.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r05.html">Spreadsheet</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p>No, and it is refused twice over. The extension’s permission set is exactly <code>camera</code>, <code>microphone</code>, <code>geolocation</code> and <code>clipboardWrite</code>, so there is nothing a host could grant you even if it wanted to. Independently, <code>navigator.clipboard.readText</code> from an opaque origin is refused by the browser regardless of policy. Press the button in the demonstration and read the <code>NotAllowedError</code> it produces.</p>
+<p><strong>What to do instead.</strong> Give the user somewhere to paste. A focused input, a textarea, or a drop zone that also handles the <code>paste</code> event. The browser delivers pasted content to a focused element without any permission at all, because the user’s Cmd+V <em>is</em> the consent. That covers the realistic use case, which is importing data, and it does not cover the unrealistic one, which is reading the clipboard without being asked.</p>
+<p><strong>Why the door is shut.</strong> A view that could read the clipboard silently could read whatever the user last copied, which is often a password. Any proposal here needs a user gesture and a host-mediated permission, and probably a visible indication in the host’s own chrome.</p>
+<h2 id="how-do-i-let-the-user-pick-a-file">How do I let the user pick a file?</h2>
+<div class="cap" id="file.open"><div class="cap-head"><code class="cap-id">file.open</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Open the system file picker and read what comes back.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p><code>&lt;input type="file"&gt;</code>, with no permission and no message. The sandbox does not interfere here for a reason worth understanding: the user picked the file themselves in a dialog the browser drew, so consent is unambiguous, and the bytes stay in your frame unless your code sends them somewhere. That is the same reasoning that lets paste work while clipboard reads are refused.</p>
+<p><strong>Application behaviour.</strong> Read with <code>FileReader</code> or <code>file.text()</code>. Validate type and size before reading, not after, because a 400MB file read into a string in a frame with a modest memory budget is a crash, and a crash is not an error you can catch. Say what you accept, in the interface, before the picker opens.</p>
+<h2 id="how-do-i-accept-a-dropped-file">How do I accept a dropped file?</h2>
 <div class="cap" id="file.dropzone"><div class="cap-head"><code class="cap-id">file.dropzone</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Accept dropped files with validation, preview, and progress.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r06.html">Image Annotator</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
-<p>Covered in Chapter 10, listed here because a dropzone and a picker are two routes to the same thing and an application that offers one should usually offer both. The picker is discoverable, the dropzone is fast, and users split roughly evenly between them.</p>
-<p>The one addition specific to this chapter: a dropzone that accepts a <em>type</em> of file should say so in its resting state, not only in its error state. “Drop a JSON annotation file” tells somebody what to look for. “Drop files here” followed by “wrong file type” tells them what they did wrong.</p>
-<h2 id="what-a-picker-costs-at-each-level">What a picker costs at each level</h2>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Level</th>
-<th>What you get</th>
-<th>What you build</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Native date, time and colour inputs</td>
-<td>Formatting through the host’s locale</td>
-</tr>
-<tr>
-<td>2</td>
-<td>The same, plus files through <code>file.open</code></td>
-<td>Validation and preview</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Resource reads through the host</td>
-<td>The list, and a fallback when reads fail</td>
-</tr>
-</tbody>
-</table></div>
-<p>The table is worth reading as a warning about the third row. A resource picker looks like a small feature and it is the only one here that depends on a host capability, a server round trip, and a listing mechanism the specification does not describe. Budget accordingly, and consider whether a server tool returning exactly the options you need would be simpler than a general picker.</p>
-<h2 id="failure-modes-across-the-group">Failure modes across the group</h2>
-<p><strong>Unsupported.</strong> The native inputs cannot be unsupported; every browser has them. <code>picker.resource</code> is unsupported when <code>serverResources</code> is absent, and the correct response is to omit the picker and configure the thing some other way, usually from the tool arguments that rendered the view.</p>
-<p><strong>Denied.</strong> Only <code>picker.resource</code> can be denied, as a JSON-RPC error from the host. Show the host’s message rather than replacing it with a guess.</p>
-<p><strong>Failed.</strong> A resource that does not exist returns an error with the URI in it. Say which resource, because a picker with three options and one broken one is a picker whose failure the user can work around.</p>
-<p><strong>Cancelled and timeout.</strong> The native pickers cannot be cancelled from outside, and a dismissed picker simply leaves the value unchanged, which needs no handling. A resource read has no timeout of its own, so give it one.</p>
+<p>The same input by another route, and the one users reach for first when they already have the file in a window. Offer both: the picker is discoverable and the drop zone is fast, and people split roughly evenly between them.</p>
+<p><strong>Application behaviour.</strong> Four events. <code>dragover</code> must call <code>preventDefault()</code> or the drop never fires, which is the single most common bug in every drop zone ever written. <code>dragenter</code> and <code>dragleave</code> drive the visual state, and <code>dragleave</code> fires when the pointer crosses onto a child element, so count depth or use <code>pointer-events: none</code> on the children. <code>drop</code> reads <code>event.dataTransfer.files</code>.</p>
+<p><strong>Validate visibly.</strong> Wrong type, too large, too many: say which, name the file, and leave the zone ready for another attempt. A drop zone that silently does nothing when a file is rejected is indistinguishable from a broken one.</p>
+<h2 id="how-do-i-save-a-file">How do I save a file?</h2>
+<div class="cap" id="file.export"><div class="cap-head"><code class="cap-id">file.export</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Hand a generated artifact to the host to save.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/download-file</code><code>downloadFile</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r06.html">Image Annotator</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<div class="cap" id="file.save"><div class="cap-head"><code class="cap-id">file.save</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Persist app-generated content through the host.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/download-file</code><code>resource_link</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p><code>allow-downloads</code> is not in the sandbox, so an anchor with a <code>download</code> attribute is inert and a blob URL goes nowhere. <code>ui/download-file</code> is the way out, and it takes standard MCP content types.</p>
+<p>The <code>contents</code> array takes standard MCP resource types rather than a bespoke download format, which means the same shapes you already use in tool results. For inline content, send an <code>EmbeddedResource</code>: its <code>resource.uri</code> supplies the suggested filename and its <code>text</code> or <code>blob</code> carries the bytes.</p>
+<p class="provenance illustrative">Illustrative, not run , quoted from the extension specification</p><pre class="json"><code>{ &quot;jsonrpc&quot;: &quot;2.0&quot;, &quot;id&quot;: 1, &quot;method&quot;: &quot;ui/download-file&quot;,
+  &quot;params&quot;: { &quot;contents&quot;: [ { &quot;type&quot;: &quot;resource&quot;, &quot;resource&quot;: {
+    &quot;uri&quot;: &quot;file:///deployments.csv&quot;,
+    &quot;mimeType&quot;: &quot;text/csv&quot;,
+    &quot;text&quot;: &quot;service,env,version\ncheckout,production,4.18.2\n&quot; } } ] } }</code></pre>
+<p>For something the host can fetch itself, send a <code>ResourceLink</code> with a URL instead. The difference matters for large files: an <code>EmbeddedResource</code> puts every byte through <code>postMessage</code>, while a <code>ResourceLink</code> lets the host fetch directly, with its own network identity and its own idea of what that URL is allowed to be.</p>
+<p><strong>Failure modes.</strong> This one has no fallback worth the name. If <code>hostCapabilities.downloadFile</code> is absent, a sandboxed frame genuinely cannot save a file. The honest response is to not show an export button, and to offer copy instead, which is what Recipe 6 does: press “Refuse downloads” in its demonstration and the export path switches to the clipboard with a sentence explaining why.</p>
+<h2 id="how-do-i-open-a-link">How do I open a link?</h2>
+<div class="cap" id="link.open"><div class="cap-head"><code class="cap-id">link.open</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Delegate external navigation instead of attempting it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/open-link</code><code>openLinks</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r08.html">Code and Diff Reviewer</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
+<p>Level 1, and the one capability in this chapter that a purely card-shaped view is likely to need. A summary card with no interaction at all still usually wants to link somewhere: to the ticket, the dashboard, the document it is summarising.</p>
+<p>An <code>&lt;a href&gt;</code> inside a sandboxed frame without <code>allow-top-navigation</code> cannot navigate, and <code>window.open</code> is blocked. <code>ui/open-link</code> asks the host to do it. The host should open in the user’s default browser or a new tab, and may refuse.</p>
+<p><strong>Application behaviour.</strong> Check <code>hostCapabilities.openLinks</code> at initialisation. If it is absent, do not render links as links: render them as text you can copy, or omit them. A blue underlined word that does nothing when clicked is worse than plain text.</p>
+<p>Handle the refusal at the moment of the click as well, because a host may allow links in general and decline a specific one on policy grounds. The demonstration has a control that removes the capability so you can see both paths.</p>
+<h2 id="can-i-share-or-print">Can I share or print?</h2>
+<div class="cap" id="system.share"><div class="cap-head"><code class="cap-id">system.share</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Invoke the operating system share sheet.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd>no live demo</dd></dl></div>
+<div class="cap" id="system.print"><div class="cap-head"><code class="cap-id">system.print</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Request host-mediated printing.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd>no live demo</dd></dl></div>
+<p>No, and for the same reason both times. <code>navigator.share</code> needs the <code>web-share</code> policy-controlled feature and <code>window.print</code> needs the <code>allow-modals</code> sandbox token; neither is in the extension’s permission set, and no message replaces either.</p>
+<p>The unpleasant part is that feature detection lies. <code>navigator.share</code> is a function on the object, so <code>if (navigator.share)</code> passes, and then the call either rejects or silently does nothing depending on the browser. Detect the capability from <code>hostCapabilities</code> and your own fallback plan, not from the presence of the API.</p>
+<p><code>navigator.share</code> needs the <code>web-share</code> permission policy. <code>window.print</code> needs <code>allow-modals</code>. Neither is granted. Feature detection reports them as present and then they fail or do nothing, which is worse than absent.</p>
+<p><strong>Workarounds.</strong> For sharing: <code>ui/open-link</code> with a canonical URL, or copy the URL to the clipboard. Recipe 12 does the first and falls back to the second, and says which it did. For printing: <code>ui/download-file</code> with a generated PDF, or accept that printing an embedded view is not a thing that happens.</p>
+<h2 id="worked-example-getting-a-table-out-of-a-frame">Worked example: getting a table out of a frame</h2>
+<p>The Data Explorer in Recipe 1 has eight rows the user might want elsewhere. Four routes exist and the recipe offers two of them, which is the right number.</p>
+<p><strong>Copy</strong> works everywhere, needs no capability, and puts the data where the user’s next action already expects it. It is the default and it should be the first thing you build.</p>
+<p><strong>Export</strong> through <code>ui/download-file</code> produces a file, needs <code>hostCapabilities.downloadFile</code>, and is the only way to move something too large to paste. The recipe omits the button when the capability is absent.</p>
+<p><strong>Drag out</strong> does not exist. Chapter 10 has the gap.</p>
+<p><strong>A link to the data on the server</strong> through <code>ui/open-link</code> is the fourth route, and it is worth considering before the other three: if the rows came from a system that has a URL for them, sending the user there gives them the data and the context, and costs one message.</p>
+<p>That ordering generalises. Ask what the user is going to do with the thing, then pick the route that lands closest to it, rather than picking the route that is easiest to build.</p>
+<h2 id="host-behaviour-in-detail">Host behaviour, in detail</h2>
+<p>For <code>ui/open-link</code>, the host opens in the user’s default browser or a new tab, and may refuse. A host that opens links in a frame inside its own window has missed the point of the message, which is to get the navigation out of the sandbox and somewhere the user can see an address bar.</p>
+<p>For <code>ui/download-file</code>, the host should confirm, derive the filename from the last segment of <code>resource.uri</code>, sanitise it against path traversal, and may refuse on size or policy grounds. For a <code>ResourceLink</code> it fetches the content itself, which means the fetch happens with the host’s network identity rather than the view’s, and the host should treat the URL accordingly.</p>
+<p>For <code>clipboardWrite</code>, the host maps your server’s requested permission onto the frame’s <code>allow</code> attribute and reports back what it actually granted in <code>hostCapabilities.sandbox.permissions</code>. Requested and granted are different fields for a reason, and a view that assumes the request was honoured is a view that breaks silently in the host that declined it.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li>Native date, time and colour inputs render and open their platform pickers inside the sandbox.</li>
-<li>Values are displayed using <code>hostContext.locale</code> and <code>hostContext.timeZone</code>, not the machine’s.</li>
-<li>Changing the host locale re-renders every formatted value without a reload.</li>
-<li><code>resources/read</code> through the host returns content for a known URI.</li>
-<li>A read for an unknown URI returns an error, and the view reports it.</li>
-<li>With <code>serverResources</code> absent, the view sends no <code>resources/read</code>.</li>
+<li>With <code>clipboardWrite</code> granted, <code>navigator.clipboard.writeText</code> succeeds inside the frame.</li>
+<li>Without it, the <code>execCommand</code> fallback still copies from a user gesture.</li>
+<li><code>ui/download-file</code> with an <code>EmbeddedResource</code> produces a file named from the last segment of its URI.</li>
+<li><code>ui/download-file</code> with <code>downloadFile</code> absent from <code>hostCapabilities</code> is never sent by a conforming view.</li>
+<li><code>ui/open-link</code> opens outside the sandbox, or returns an error.</li>
+<li>An <code>&lt;a download&gt;</code> inside the frame does nothing, and the view does not rely on it.</li>
+<li>A file chosen with <code>&lt;input type="file"&gt;</code> is readable in the view and is not transmitted anywhere the view did not send it.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>Two rules. Use the platform’s inputs, because they are better than the ones you would write and they are free. And format every value you display through the host’s locale and timezone rather than the browser’s, because in this environment the browser is not where the user is.</p>
-<h2 id="what-native-actually-buys-you">What “native” actually buys you</h2>
-<p>The date input deserves one more paragraph, because the same argument generalises to every native control in Chapter 22 and it is the argument people skip fastest when a design does not match.</p>
-<p>Ask what a replacement has to know. Which day the week starts on, in the user’s region. The names of the months, in the user’s language, in the correct grammatical case for a date rather than for a list. Whether the region uses a non-Gregorian calendar. How to type a date rather than pick one, because most people type. What a screen reader should say when the value changes. How the picker behaves at 200% zoom, and on a touch device, and under forced colours.</p>
-<p>The browser knows all of that, for every locale it supports, and it was paid for by somebody else. A component library knows some of it for the locales its authors tested. A component you write in a four hundred pixel frame at the end of a sprint knows the first two.</p>
-<p>The visual mismatch is real and it is the only cost. In an embedded view that is already visually distinct from its host by design, it is a smaller cost than it looks.</p>
+<p>Every capability here that reaches outside the frame either has a message (<code>ui/open-link</code>, <code>ui/download-file</code>) or is a gap (<code>clipboard.read</code>, <code>system.share</code>, <code>system.print</code>). Everything that stays inside works.</p>
+<p>That line is the sandbox boundary, and it is worth drawing on your own requirements before you write any code. Anything that stays inside the frame costs you an afternoon. Anything that reaches outside is either one of two messages or a gap you will be working around for the life of the product.</p>
 
-<div class="pager"><a href="ch10.html"><span class="dir">Previous</span>10. Clipboard, Files and System Integration</a><a href="ch12.html" style="text-align:right"><span class="dir">Next</span>12. Host Environment and Theming</a></div>
+<div class="pager"><a href="ch10.html"><span class="dir">Previous</span>10. Keyboard, Pointer and Selection</a><a href="ch12.html" style="text-align:right"><span class="dir">Next</span>12. Pickers and Dropzones</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

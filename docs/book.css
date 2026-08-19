@@ -174,3 +174,36 @@ div.principle{border:1px solid var(--accent);border-left-width:4px;
 div.principle p{margin:0 0 .7em}
 div.principle p:last-child{margin-bottom:0}
 div.principle strong:first-child{color:var(--accent)}
+
+
+/* A listing carries its own copy button, positioned inside the block so it
+ * travels with the code when the page scrolls sideways on a phone. */
+.listing { position: relative; }
+
+.listing-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  padding: 3px 9px;
+  font: inherit;
+  font-size: .78rem;
+  line-height: 1.6;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .12s ease;
+}
+
+.listing:hover .listing-copy,
+.listing-copy:focus-visible { opacity: 1; }
+
+/* Touch has no hover, so the control is always visible there. */
+@media (hover: none) {
+  .listing-copy { opacity: 1; }
+}
+
+.listing-copy:hover { color: var(--fg); border-color: var(--fg); }

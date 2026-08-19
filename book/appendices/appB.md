@@ -8,10 +8,9 @@ summary: Fourteen capabilities with no standard mechanism, what each one costs, 
 
 Every entry below is a capability that recognisable applications need and that
 no message, permission or platform feature currently provides. Nine of them
-are Core, which means they are needed at their conformance level rather than
-merely nice.
+are Core, which means they are needed at their conformance level.
 
-![Fourteen doors that are shut](figures/xkcd-doors.png)
+![Sixteen doors that are shut](figures/xkcd-doors.png)
 
 @gaps
 
@@ -38,8 +37,8 @@ should require a recent user gesture.
 A view scrolled out of the conversation cannot ask to be scrolled back into
 it. Anything that happens inside it is invisible until the user looks.
 
-*Workaround.* Design for being unobserved: legible state on return rather than
-announcements at the moment of change.
+*Workaround.* Design for being unobserved: legible state on return, once the
+change has already happened.
 
 *Shape.* `ui/request-reveal`, which the host may honour by scrolling, by
 badging, or by ignoring.
@@ -108,8 +107,8 @@ types, which would let the host present its own share surface.
 
 *Shape.* `ui/print` taking an embedded resource.
 
-*Reopens.* Modal blocking of the host's own window, which is why the request
-rather than the API is the right shape.
+*Reopens.* Modal blocking of the host's own window, which is why a request is
+the right shape.
 
 ### `notify.attention`
 

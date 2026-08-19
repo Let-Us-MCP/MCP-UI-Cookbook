@@ -332,6 +332,7 @@ def transform(body: str) -> str:
 # --- template -------------------------------------------------------------
 
 CSS = (ROOT / "tools" / "book.css").read_text(encoding="utf-8")
+COPY_JS = (ROOT / "tools" / "copy.js").read_text(encoding="utf-8")
 
 
 def sidebar(pages: list[Page], current: str) -> str:
@@ -390,6 +391,7 @@ def page_html(pages: list[Page], p: Page, body: str, extra_title: str = "",
 </main>
 </div>
 {demo_script}
+<script src="copy.js"></script>
 </body>
 </html>
 """
@@ -452,6 +454,7 @@ def main() -> int:
     pages = collect()
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "book.css").write_text(CSS, encoding="utf-8")
+    (OUT / "copy.js").write_text(COPY_JS, encoding="utf-8")
     (OUT / ".nojekyll").write_text("")
 
     seen_caps: set[str] = set()

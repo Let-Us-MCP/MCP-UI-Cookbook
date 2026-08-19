@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,7 +74,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Recipe 9</p><h1>Monitoring Console</h1><p class="summary">Sustained streaming, a selection that survives it, connectivity reported honestly, and an error that happens while nobody is looking.</p><div class="cap recipe" id="r09"><div class="cap-head"><code class="cap-id">r09</code><span class="cap-tag core">Monitoring Console</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Live operational awareness.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch19.html#tool.partialOutput">tool.partialOutput</a></code><code><a href="ch14.html#lifecycle.connectivity">lifecycle.connectivity</a></code><code><a href="ch14.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch08.html#notify.attention">notify.attention</a></code><code><a href="ch08.html#notify.banner">notify.banner</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch19.html#tool.partialOutput">tool.partialOutput</a></code><code><a href="ch19.html#tool.result">tool.result</a></code><code><a href="ch14.html#lifecycle.connectivity">lifecycle.connectivity</a></code><code><a href="ch14.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch14.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch08.html#notify.attention">notify.attention</a></code><code><a href="ch08.html#notify.banner">notify.banner</a></code><code><a href="ch16.html#op.retry">op.retry</a></code><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch06.html#surface.resize">surface.resize</a></code></dd></dl></div>
+<p class="eyebrow">Recipe 9</p><h1>Monitoring Console</h1><p class="summary">Sustained streaming, a selection that survives it, connectivity reported honestly, and an error that happens while nobody is looking.</p><div class="cap recipe" id="r09"><div class="cap-head"><code class="cap-id">r09</code><span class="cap-tag core">Monitoring Console</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Live operational awareness.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch20.html#tool.partialOutput">tool.partialOutput</a></code><code><a href="ch15.html#lifecycle.connectivity">lifecycle.connectivity</a></code><code><a href="ch15.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch09.html#notify.attention">notify.attention</a></code><code><a href="ch09.html#notify.banner">notify.banner</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch20.html#tool.partialOutput">tool.partialOutput</a></code><code><a href="ch20.html#tool.result">tool.result</a></code><code><a href="ch15.html#lifecycle.connectivity">lifecycle.connectivity</a></code><code><a href="ch15.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch15.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch09.html#notify.attention">notify.attention</a></code><code><a href="ch09.html#notify.banner">notify.banner</a></code><code><a href="ch17.html#op.retry">op.retry</a></code><code><a href="ch10.html#input.selection">input.selection</a></code><code><a href="ch07.html#surface.resize">surface.resize</a></code></dd></dl></div>
 <p>The recipe that runs over time, and the one that exposes <code>tool.partialOutput</code> as the most consequential gap in Part III. Everything in it is about staying correct while data keeps arriving.</p>
 <div class="demo" data-demo="r09-monitoring-console" id="r09-monitoring-console"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
@@ -112,9 +113,9 @@ if ($(&quot;#follow&quot;).checked) $(&quot;#log&quot;).scrollTop = $(&quot;#log
 <h2 id="following-and-stopping">Following, and stopping</h2>
 <p>Follow the tail until the user scrolls up, then stop and leave the checkbox unticked. Every terminal has taught people this behaviour, and it is the kind of thing nobody notices when it is right.</p>
 <h2 id="streaming-without-a-streaming-mechanism">Streaming without a streaming mechanism</h2>
-<p>There is no partial tool result. What this recipe does is receive repeated <code>ui/notifications/tool-result</code> notifications, each carrying a batch, which works and is not something the specification promises. Chapter 19 has the gap and the three workarounds. This recipe uses the one that produces the best interface and is the least portable, and says so.</p>
+<p>There is no partial tool result. What this recipe does is receive repeated <code>ui/notifications/tool-result</code> notifications, each carrying a batch, which works and is not something the specification promises. Chapter 20 has the gap and the three workarounds. This recipe uses the one that produces the best interface and is the least portable, and says so.</p>
 <h2 id="connectivity-honestly">Connectivity, honestly</h2>
-<p>Three states: live, reconnecting, offline. The critical design decision is what happens to the data in the last two. The console keeps the lines it has and raises a banner saying the view is showing the last lines that arrived rather than the current state.</p>
+<p>Three states: live, reconnecting, offline. The critical design decision is what happens to the data in the last two. The console keeps the lines it has and raises a banner saying the view is showing the last lines that arrived, which is not the current state.</p>
 <p>A console that clears itself when the connection drops has destroyed the evidence at the exact moment somebody needs it.</p>
 <h2 id="the-error-nobody-saw">The error nobody saw</h2>
 <p>When an error line arrives while <code>document.hidden</code> is true, the console raises a banner that survives until the user comes back, and publishes the alert to the model’s context. Neither is a substitute for <code>notify.attention</code>, which does not exist. Both are what you can do instead.</p>
@@ -165,10 +166,10 @@ if ($(&quot;#follow&quot;).checked) $(&quot;#log&quot;).scrollTop = $(&quot;#log
 </tbody>
 </table></div>
 <h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
-<p><strong>The frame is hidden by CSS.</strong> No <code>visibilitychange</code> fires, the console keeps rendering, and nothing tells it otherwise. Chapter 14 has this gap; the mitigation here is that rendering a log line is cheap.</p>
+<p><strong>The frame is hidden by CSS.</strong> No <code>visibilitychange</code> fires, the console keeps rendering, and nothing tells it otherwise. Chapter 15 has this gap; the mitigation here is that rendering a log line is cheap.</p>
 <p><strong>A burst larger than the buffer.</strong> The buffer is 220 lines, so a burst of a thousand loses the oldest. The rate chip is what tells the user this is happening.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
-<p>The log is <code>role="log"</code>, which is a live region with polite semantics, so new lines are announced without interrupting. At high rates that is unusable, which is a real tension: the correct behaviour at five lines a second is probably to announce a summary rather than each line, and this recipe does not do that. It is recorded as a known limitation rather than claimed as done. Lines carry their level in text as well as colour. Selection is by click and by keyboard.</p>
+<p>The log is <code>role="log"</code>, which is a live region with polite semantics, so new lines are announced without interrupting. At high rates that is unusable, which is a real tension: the correct behaviour at five lines a second is probably to announce a summary, and this recipe does not do that. It is recorded as a known limitation rather than claimed as done. Lines carry their level in text as well as colour. Selection is by click and by keyboard.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li><code>tail_logs</code> returns 24 lines and all render.</li>
@@ -183,5 +184,6 @@ if ($(&quot;#follow&quot;).checked) $(&quot;#log&quot;).scrollTop = $(&quot;#log
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>

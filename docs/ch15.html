@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>15. Persistence and History &middot; The MCP UI Cookbook</title>
-<meta name="description" content="The sandbox took away your storage and the extension has not replaced it. Undo, on the other hand, was always yours, and in an agentic application it matters more than it ever did in a page.">
-<meta property="og:title" content="15. Persistence and History">
-<meta property="og:description" content="The sandbox took away your storage and the extension has not replaced it. Undo, on the other hand, was always yours, and in an agentic application it matters more than it ever did in a page.">
+<title>15. Lifecycle and Connectivity &middot; The MCP UI Cookbook</title>
+<meta name="description" content="Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.">
+<meta property="og:title" content="15. Lifecycle and Connectivity">
+<meta property="og:description" content="Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -20,31 +20,32 @@
 <div class="part">Part I - Foundations</div>
 <a href="ch01.html">1. The Capability Model</a>
 <a href="ch02.html">2. What Crosses the Boundary</a>
-<a href="ch03.html">3. The Local-First Principle</a>
-<a href="ch04.html">4. The Sandbox and What It Costs You</a>
-<a href="ch05.html">5. Entries, Recipes, and the Discipline of Degradation</a>
+<a href="ch03.html">3. One View at a Time</a>
+<a href="ch04.html">4. The Local-First Principle</a>
+<a href="ch05.html">5. The Sandbox and What It Costs You</a>
+<a href="ch06.html">6. Entries, Recipes, and the Discipline of Degradation</a>
 <div class="part">Part II - Atomic UI capabilities</div>
-<a href="ch06.html">6. Surfaces and Geometry</a>
-<a href="ch07.html">7. Focus and Scroll</a>
-<a href="ch08.html">8. Dialogs and Attention</a>
-<a href="ch09.html">9. Keyboard, Pointer and Selection</a>
-<a href="ch10.html">10. Clipboard, Files and System Integration</a>
-<a href="ch11.html">11. Pickers and Dropzones</a>
-<a href="ch12.html">12. Host Environment and Theming</a>
-<a href="ch13.html">13. Accessibility</a>
-<a href="ch14.html">14. Lifecycle and Connectivity</a>
-<a href="ch15.html" class="current">15. Persistence and History</a>
-<a href="ch16.html">16. Media, Progress, Cancellation and Errors</a>
+<a href="ch07.html">7. Surfaces and Geometry</a>
+<a href="ch08.html">8. Focus and Scroll</a>
+<a href="ch09.html">9. Dialogs and Attention</a>
+<a href="ch10.html">10. Keyboard, Pointer and Selection</a>
+<a href="ch11.html">11. Clipboard, Files and System Integration</a>
+<a href="ch12.html">12. Pickers and Dropzones</a>
+<a href="ch13.html">13. Host Environment and Theming</a>
+<a href="ch14.html">14. Accessibility</a>
+<a href="ch15.html" class="current">15. Lifecycle and Connectivity</a>
+<a href="ch16.html">16. Persistence and History</a>
+<a href="ch17.html">17. Media, Progress, Cancellation and Errors</a>
 <div class="part">Part III - Agent and UI</div>
-<a href="ch17.html">17. UI to Agent</a>
-<a href="ch18.html">18. Agent to UI</a>
-<a href="ch19.html">19. Tool Invocation and Streaming</a>
-<a href="ch20.html">20. State Ownership and Concurrency</a>
-<a href="ch21.html">21. Approval, Elicitation and the Context Boundary</a>
+<a href="ch18.html">18. UI to Agent</a>
+<a href="ch19.html">19. Agent to UI</a>
+<a href="ch20.html">20. Tool Invocation and Streaming</a>
+<a href="ch21.html">21. State Ownership and Concurrency</a>
+<a href="ch22.html">22. Approval, Elicitation and the Context Boundary</a>
 <div class="part">Part IV - Reusable components</div>
-<a href="ch22.html">22. Components I: Overlays, Controls and Text</a>
-<a href="ch23.html">23. Components II: Navigation, Data and Visualization</a>
-<a href="ch24.html">24. Components III: Spatial, Media and Agent-Native</a>
+<a href="ch23.html">23. Components I: Overlays, Controls and Text</a>
+<a href="ch24.html">24. Components II: Navigation, Data and Visualization</a>
+<a href="ch25.html">25. Components III: Spatial, Media and Agent-Native</a>
 <div class="part">Part V - Application recipes</div>
 <a href="r01.html">Recipe 1. Data Explorer</a>
 <a href="r02.html">Recipe 2. Dashboard</a>
@@ -60,10 +61,10 @@
 <a href="r12.html">Recipe 12. Media Viewer</a>
 <a href="r13.html">Recipe 13. Settings and Preferences</a>
 <div class="part">Part VI - Verification and conformance</div>
-<a href="ch25.html">25. Why Recipes Are the Test Suite</a>
-<a href="ch26.html">26. The Verification Layers</a>
-<a href="ch27.html">27. The Coverage Matrix and the Checklists</a>
-<a href="ch28.html">28. The Missing Primitive Loop, and the Live Book</a>
+<a href="ch26.html">26. Why Recipes Are the Test Suite</a>
+<a href="ch27.html">27. The Verification Layers</a>
+<a href="ch28.html">28. The Coverage Matrix and the Checklists</a>
+<a href="ch29.html">29. The Missing Primitive Loop, and the Live Book</a>
 <div class="part">Appendices</div>
 <a href="appendix-a.html">Appendix A. Capability Index</a>
 <a href="appendix-b.html">Appendix B. The Gaps</a>
@@ -73,94 +74,93 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 15</p><h1>Persistence and History</h1><p class="summary">The sandbox took away your storage and the extension has not replaced it. Undo, on the other hand, was always yours, and in an agentic application it matters more than it ever did in a page.</p><p>You have no storage worth the name, so persist through a server tool instead. That is not a stylistic preference: the sandbox gives your document an opaque origin, and an opaque origin has no durable storage partition to write to.</p>
-<p>Undo is a different story: nobody can build it for you, and in an application where a model can also edit the document it is the mechanism that makes that acceptable.</p>
-<div class="demo" data-demo="lab-state" id="lab-state"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="where-do-i-keep-state">Where do I keep state?</h2>
-<div class="cap" id="state.save"><div class="cap-head"><code class="cap-id">state.save</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Persist view state keyed to the view&#x27;s identity.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r05.html">Spreadsheet</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
-<div class="cap" id="state.restore"><div class="cap-head"><code class="cap-id">state.restore</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Come back up where the user left off.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
-<p>On the server, through a tool call, keyed by something the server already knows: a conversation identifier, a document id, or the tool arguments that rendered the view. There is no other durable place, and pretending otherwise produces a view that appears to remember during development and forgets in production.</p>
-<p><code>localStorage.setItem</code> throws <code>SecurityError</code> inside the frame, or hands you a partition that is discarded along with the frame, and which of the two you get depends on the browser. Neither is usable. The demonstration probes it at startup and prints the result, which is a more reliable way to find this out than reading a specification, because the behaviour varies.</p>
-<p>There is no message either. No <code>ui/set-state</code>, no <code>ui/get-state</code>, nothing in <code>hostContext</code> that round-trips. The OpenAI Apps SDK has <code>setWidgetState</code>, which is exactly this feature, and the extension’s own “Future Considerations” lists state persistence as deferred.</p>
-<p><strong>The workaround is a server tool.</strong> Persist through <code>tools/call</code>, keyed by something stable that the server knows: a conversation identifier, a document id, the tool’s own arguments. Recipe 4 does this, with a <code>save_document</code> tool marked <code>visibility: ["app"]</code> so the model neither sees it nor can call it.</p>
-<p class="provenance extracted">Extracted from from <code>apps/recipes/r04-document-editor/server.js</code></p><pre class="js"><code>save_document: {
-  description: &quot;Persist the draft. Called by the view, not by the model.&quot;,
-  inputSchema: { type: &quot;object&quot;, properties: { html: { type: &quot;string&quot; } },
-                 required: [&quot;html&quot;] },
-  visibility: [&quot;app&quot;],
-  run: ({ html }) =&gt; {
-    document = html;
-    saves += 1;
-    return { content: [{ type: &quot;text&quot;,
-      text: `Saved revision ${saves} at the server.` }] };
-  },
-},</code></pre>
-<p><strong>What it costs.</strong> A round trip per save, so Recipe 4 debounces at 900ms rather than saving per keystroke. Scroll position and which panel is open end up on a server, which is absurd and is what the gap forces. And with <code>hostCapabilities.serverTools</code> absent you get no persistence at all.</p>
-<p><strong>What a mechanism would look like.</strong> <code>ui/set-view-state</code> from the view, and a <code>viewState</code> field in the initialize result coming back, scoped to the view identity the host already tracks and capped at a size the host enforces. It is cheap to specify, obviously useful, and already proven by prior art on both sides of this ecosystem.</p>
-<p><strong>Design around it in the meantime.</strong> Ask what genuinely has to survive a teardown. A document does. A sort order does not, and reconstructing it from the tool arguments costs nothing. The recipes here persist documents and preferences and deliberately forget everything else, which started as a compromise forced by the gap and turned out to be a better design than the one that saved everything.</p>
-<h2 id="how-do-i-build-undo">How do I build undo?</h2>
-<div class="cap" id="history.transaction"><div class="cap-head"><code class="cap-id">history.transaction</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Group mutations into one undoable unit.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r04.html">Document Editor</a>, <a href="r05.html">Spreadsheet</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
-<p>A stack of transactions rather than a stack of snapshots, where each transaction knows how to apply itself and how to reverse itself. The distinction sounds academic until an agent is editing the same document: a snapshot undo restores the whole document to an earlier moment and silently discards anything the agent contributed in between, while a transaction reverses exactly its own change and leaves the rest standing.</p>
-<p class="provenance extracted">Extracted from from <code>apps/labs/lab-state/index.html</code></p><pre class="js"><code>const past = [];
-const future = [];
-
-function apply({ label, forward, back }) {
-  forward();
-  past.push({ label, forward, back });
-  future.length = 0;
-  draw();
-  announce(label);
-}</code></pre>
-<p>Three properties of that shape carry the weight, and each shows up as a specific bug when it is missing rather than as a general degradation.</p>
-<p><strong><code>future.length = 0</code> on every new action.</strong> Keeps the history a line rather than a tree, which is what users expect.</p>
-<p><strong>A <code>label</code> per transaction.</strong> Lets you announce “Undid delete Contracts” rather than “Undid”. When an agent also writes, the label is how the user knows whose change they are reversing.</p>
-<p><strong>Closures, not snapshots.</strong> A snapshot undo restores the whole document and silently reverts anything the agent did in between. <code>back()</code> reverses exactly its own change.</p>
-<p><strong>Grouping.</strong> One transaction per meaningful unit, not per event. Typing gets grouped by pause: Recipe 4 commits a transaction after 900 milliseconds of inactivity. Dragging gets one transaction on drop, not one per pointermove. The test is whether a user pressing Undo once gets back to a state they recognise.</p>
+<p class="eyebrow">Chapter 15</p><h1>Lifecycle and Connectivity</h1><p class="summary">Your view will be destroyed without warning, hidden without notice, and disconnected without an event. One request in the whole protocol gives you time to react.</p><p>Assume you will be destroyed at any moment, with one request of warning, and assume the warning may not arrive. Every design decision in this chapter falls out of that: autosave rather than save, server state rather than view state, and cheap by default rather than suspending on a signal you may never receive.</p>
+<p>A page gets <code>beforeunload</code>. You get <code>ui/resource-teardown</code>, if the host is well behaved, and the interval before you answer it is the only time you are guaranteed to still exist.</p>
+<div class="demo" data-demo="lab-lifecycle" id="lab-lifecycle"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
+<h2 id="can-i-tell-when-nobody-is-looking">Can I tell when nobody is looking?</h2>
+<p>Every view in this book starts the same way, and the lifecycle wiring is four lines of it:</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>  async function boot(appInfo, appCapabilities, onReady) {
+    const bridge = new global.McpApp.AppBridge(appInfo, appCapabilities);
+    const result = await bridge.connect();
+    global.McpApp.applyHostStyles(bridge.hostContext);
+    applySafeArea(bridge.hostContext.safeAreaInsets);
+    bridge.autoResize(document.body);
+    bridge.on(&quot;hostcontextchanged&quot;, (patch) =&gt; {
+      global.McpApp.applyHostStyles(bridge.hostContext);
+      if (patch.safeAreaInsets) applySafeArea(patch.safeAreaInsets);
+    });
+    await onReady(bridge, result);
+    return bridge;
+  }</code></pre>
+<p><code>onReady</code> runs after <code>connect()</code> resolves, which is after the handshake, which is the earliest moment anything is allowed to happen. The <code>hostcontextchanged</code> listener is registered before the application’s own code runs, so a theme change arriving during the first render is still handled. Applying host styles in both places, once at boot and once per change, is what keeps the two paths from diverging.</p>
+<div class="cap" id="lifecycle.visibility"><div class="cap-head"><code class="cap-id">lifecycle.visibility</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Know when the view is on screen and when it is not.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p>Partly, and the part it misses is the one that happens. The Page Visibility API fires inside your frame when the host’s whole tab or window is hidden, which is real and worth handling, and covers none of the cases where the tab stays visible.</p>
+<p>It does not cover the case that actually happens: the tab is visible and your frame has scrolled out of the conversation. <code>document.hidden</code> stays false, and your sparkline repaints every 1.4 seconds for nobody.</p>
+<p>Press “Hide the frame” in the demonstration and watch all three panes. The frame disappears from the page, the transcript records nothing at all, and the poll counter inside the view keeps climbing. Nothing told the view it had stopped being visible, because from its own point of view nothing changed.</p>
+<p><strong>Workaround.</strong> <code>IntersectionObserver</code> against the view’s own viewport does not help either, because the clipping is happening in a document you cannot see. What does help is being cheap by default: poll on demand rather than on a timer, coalesce updates, and let the server push through <code>ui/notifications/tool-result</code> instead of asking repeatedly.</p>
+<p><strong>What a mechanism would look like.</strong> The host already sends <code>ui/notifications/host-context-changed</code> for display mode. A <code>visibility</code> field in the same notification would cost nothing and would let a view suspend honestly. This is the third variation of the same missing signal, after <code>surface.reveal</code> and <code>notify.attention</code>, and they may all be one feature.</p>
+<h2 id="how-do-i-stop-doing-work-nobody-sees">How do I stop doing work nobody sees?</h2>
+<div class="cap" id="lifecycle.suspend"><div class="cap-head"><code class="cap-id">lifecycle.suspend</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Stop doing work nobody is looking at.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p>Yours to build, and worth building even though the signal you would trigger it from is unreliable. The discipline that survives a missing signal is to be cheap by default: poll on demand rather than on a timer, coalesce updates, and let the server push through <code>ui/notifications/tool-result</code> rather than asking repeatedly.</p>
+<p><strong>Application behaviour.</strong> Keep a list of the things that consume resources while nobody is looking: timers, animations, observers, in-flight polling. Have one function that stops them and one that restarts them, and call the stop from <code>visibilitychange</code> and from <code>ui/resource-teardown</code>. Recipe 12’s player pauses on hide, which is both a resource decision and a courtesy: audio continuing from an invisible frame is genuinely alarming.</p>
+<p>The general principle is that a view should be able to do nothing. A view that requires a heartbeat to stay correct will be wrong every time it is backgrounded, and it will be wrong silently.</p>
+<h2 id="am-i-online">Am I online?</h2>
+<div class="cap" id="lifecycle.connectivity"><div class="cap-head"><code class="cap-id">lifecycle.connectivity</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground platform">Platform</span></div><p class="cap-summary">Show online, offline, and reconnecting honestly.</p><dl class="cap-facts"><dt>Ground</dt><dd>The browser inside the sandbox provides it. No host round trip.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p><code>navigator.onLine</code> and the <code>online</code> and <code>offline</code> events work inside the frame. They tell you whether the <em>browser</em> thinks it has a network, which is weaker than it sounds and still worth using.</p>
+<p>What they cannot tell you is whether the host still has its connection to the server. That connection is the host’s, and there is no message reporting its state. Your evidence is indirect: a <code>tools/call</code> that fails, or one that never answers.</p>
+<p><strong>Application behaviour.</strong> Three states, honestly labelled. <em>Live</em> means something arrived recently. <em>Reconnecting</em> means a call failed and a retry is scheduled. <em>Offline</em> means the browser says so or retries have run out.</p>
+<p>The crucial part is what the data looks like in the last two states. Recipe 9 keeps the last lines it received and says so in a banner, because a monitoring console that clears its screen when the connection drops has destroyed the evidence at the exact moment somebody needs it. Stale data with a timestamp is more useful than no data, as long as the interface never lets the user mistake one for the other.</p>
+<h2 id="how-do-i-track-unsaved-work">How do I track unsaved work?</h2>
+<div class="cap" id="lifecycle.dirty"><div class="cap-head"><code class="cap-id">lifecycle.dirty</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Track uncommitted local state and say so.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p>Yours to track, and it costs a boolean and a chip. What you can do with it inside the view is the obvious part: enable Save, enable Discard, show a marker. What you cannot do is tell the host, which is why the teardown handshake below matters more here than anywhere else.</p>
+<p>Inside the view, a dirty flag drives the obvious things: enabling Save, disabling Discard, showing a marker. The chip in the demonstration goes from “saved” to “unsaved changes” on the first keystroke and back on save.</p>
+<p>Across the boundary, there is nothing. No message tells the host that this view has unsaved work, so the host cannot warn the user before switching conversations, and cannot include the view in its own “you have unsaved changes” logic if it has any.</p>
+<p><strong>Workaround.</strong> Autosave, so that dirty is a state that lasts seconds rather than minutes. Then the teardown handshake below is enough to close the gap.</p>
 <figure>
-<img src="figures/xkcd-undo.png" alt="One undo stack, two authors" />
-<figcaption aria-hidden="true">One undo stack, two authors</figcaption>
+<img src="figures/diag-lifecycle.png" alt="The lifecycle, as a sequence" />
+<figcaption aria-hidden="true">The lifecycle, as a sequence</figcaption>
 </figure>
-<h2 id="what-belongs-in-the-undo-stack">What belongs in the undo stack?</h2>
-<div class="cap" id="history.undo"><div class="cap-head"><code class="cap-id">history.undo</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Revert the last transaction, including the agent&#x27;s.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r04.html">Document Editor</a>, <a href="r05.html">Spreadsheet</a>, <a href="r06.html">Image Annotator</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
-<div class="cap" id="history.redo"><div class="cap-head"><code class="cap-id">history.redo</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Reapply what was reverted.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
-<p>The operations themselves are four lines each once the transaction model exists, so the design effort goes entirely into deciding what belongs in the stack and what does not.</p>
-<p><strong>Include the agent’s changes.</strong> This is the argument of Chapter 20 arriving early. When an agent rewrites a paragraph, that rewrite goes on the same undo stack as the user’s own edits, so a single Cmd+Z takes it back. An agent whose changes cannot be undone is an agent people will not let near their document, and correctly so.</p>
-<p>Recipe 4 pushes exactly one transaction when the user accepts a proposed rewrite, so a single Cmd/Ctrl+Z restores the human’s words in one step rather than unwinding through the agent’s paragraph. It is nine lines of code, it is the entire safety argument for letting a model edit a document, and <code>check_render.mjs</code> asserts it: accept the proposal, press undo, expect the original text.</p>
-<p><strong>Do not include selection, scroll, or view state.</strong> Undo that restores a scroll position feels broken, because the user’s model of undo is about content. Some editors undo selection changes as part of restoring context, which is a defensible variant, but undoing a <em>pure</em> selection change as its own step is not.</p>
-<p><strong>Bind the shortcuts.</strong> Cmd/Ctrl+Z and Shift+Cmd/Ctrl+Z, with the caveats from Chapter 9 about the host possibly owning them. Provide visible buttons too, because a shortcut the user cannot see is a shortcut most users do not have.</p>
-<p><strong>Accessibility.</strong> Announce the label, both ways. A screen reader user pressing Undo needs to hear what was undone; a silent stack change is indistinguishable from a key that did nothing.</p>
-<h2 id="where-the-two-interact">Where the two interact</h2>
-<p>Undo depth is state that cannot survive a teardown, because <code>forward</code> and <code>back</code> are closures and closures do not serialise. A view that persists its document and not its history returns with a document it cannot un-edit.</p>
-<p>That is usually the right trade. Serialising a transaction stack means representing every operation as data rather than as a closure, which is a substantially larger design, and the value of undoing something from before a reload is low. But it should be a decision rather than a discovery. Recipe 4 persists the document, drops the history, and says so.</p>
-<h2 id="what-actually-has-to-survive">What actually has to survive?</h2>
-<p>Because every save costs a round trip, the useful discipline is to sort your state into three buckets before writing any persistence code at all. Two of the three buckets turn out to need nothing.</p>
-<p><strong>Reconstructible.</strong> Anything derivable from the tool arguments or the tool result. A sort order, a filter, which tab is open, the current page. All of it comes back for free on the next render, and persisting it is work that buys nothing.</p>
-<p><strong>Worth a round trip.</strong> Documents, drafts, annotations, preferences. Things a person made. These go to a server tool, and the cost is real, so debounce them and save on pause rather than on change.</p>
-<p><strong>Deliberately forgotten.</strong> Undo history, scroll position, transient selections. Losing them is mildly annoying and keeping them is disproportionate work, particularly for undo, where serialising a stack of closures means redesigning the whole transaction model as data.</p>
-<p>Recipes 4 and 13 persist exactly the second bucket and say so in their entries. The value of writing the buckets down is that it turns “we should save state” into three short lists, one of which is empty work.</p>
-<h2 id="a-transaction-in-full">A transaction, in full</h2>
-<p>The shape is small enough to state completely in a paragraph, and every recipe in this book that has undo uses exactly it without modification. There is no library involved and no reason to reach for one: the whole model is two arrays and three functions.</p>
-<p>A transaction is an object with a label, a <code>forward</code> closure and a <code>back</code> closure. <code>apply()</code> runs forward, pushes it onto the past, and clears the future. <code>undo()</code> pops the past, runs back, and pushes onto the future. <code>redo()</code> does the reverse. Four methods, about twenty lines, and no library.</p>
-<p>Three refinements the recipes add on top of that shape, each of which was added because its absence produced a specific bug rather than because it seemed tidier.</p>
-<p><strong>Coalescing by pause.</strong> Typing produces one transaction per quiet period rather than per keystroke, because undo that steps back a character at a time is undo nobody uses.</p>
-<p><strong>Capturing by value, not by reference.</strong> A <code>back</code> closure that restores an array must have captured a copy, or it restores a reference to the array that was mutated. This is the bug that makes undo appear to work and then not.</p>
-<p><strong>Recording the index.</strong> Removing an item and putting it back at the end is not an undo. Recipe 3’s move records where the node came from, which is the difference between reversing a change and approximating it.</p>
+<h2 id="what-do-i-do-when-the-host-closes-me">What do I do when the host closes me?</h2>
+<div class="cap" id="lifecycle.beforeClose"><div class="cap-head"><code class="cap-id">lifecycle.beforeClose</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Get one chance to finish before the frame goes away.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/resource-teardown</code><code>reason</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-lifecycle">lab-lifecycle</a></dd></dl></div>
+<p>The one guarantee in the whole lifecycle, and the reason the missing dirty signal is survivable. The host cannot know you have unsaved work, but it does have to ask before it takes the frame away, and that question is your opportunity.</p>
+<p>Chapter 7 introduced this message from the view’s side of the pair. Here is what it is worth: the interval between the host asking and your code answering is the only interval in the whole protocol during which a view is guaranteed to still exist and to have the host’s attention. Everything you were going to lose has to be flushed inside it.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r04-document-editor/index.html</code></p><pre class="js"><code>bridge.on(&quot;teardown&quot;, async ({ reason }) =&gt; {
+  $(&quot;#log&quot;).textContent = `Host is closing this view: ${reason}`;
+  if (dirty) {
+    $(&quot;#log&quot;).textContent += &quot; Flushing unsaved changes first.&quot;;
+    await save();
+  }
+});</code></pre>
+<p><strong>Rules for the window.</strong> Do the smallest possible thing. This is a flush, not a save dialog: you cannot ask the user a question, because the host is waiting and the user is already leaving. Bound it. A host that waits forever for a view that never answers is a host that will stop waiting, and different hosts will stop at different times. And answer even on failure, because an unanswered request is indistinguishable from a hung view.</p>
+<p><strong>Failure modes.</strong> A host that does not send the request at all takes your work with it, which is why autosave matters more here than in a page. A host that sends it and does not wait looks identical from the inside, and the only way to know is to measure. The demonstration’s teardown control reports how long the view took to answer, which is the same measurement a conformance test makes.</p>
+<h2 id="how-do-i-ask-to-be-closed">How do I ask to be closed?</h2>
+<p>The other direction is <code>ui/notifications/request-teardown</code>, covered as <code>surface.close</code> in Chapter 7. It is worth restating the asymmetry here, because the pair is the whole lifecycle contract: the view <em>asks</em> with a notification that may be ignored, and the host <em>tells</em> with a request that must be answered. Neither side can force the other, and the protocol is deliberately arranged so that the party who owns the window has the last word.</p>
+<h2 id="worked-example-one-second-in-the-document-editor">Worked example: one second in the document editor</h2>
+<p>Recipe 4’s document editor is the clearest illustration of this whole chapter, because every decision in it is a response to not being able to rely on a signal. It cannot know when it is invisible, it cannot tell the host it has unsaved work, and it may be destroyed at any moment. What it does instead is keep the window of loss short and bounded by a constant it chose itself.</p>
+<p>The user types. A timer starts. After 900 milliseconds of quiet the view commits an undo transaction and calls <code>save_document</code>, which is an app-only tool, so the model neither sees the save nor can trigger one. The chip goes from amber to green.</p>
+<p>Now the host tears the view down. <code>ui/resource-teardown</code> arrives with a reason. If the chip is green, the view answers immediately and the frame goes away with nothing lost. If it is amber, the view saves first and then answers, and the demonstration reports how many milliseconds that took, because that number is the thing a host either waits for or does not.</p>
+<p>Worst case you lose 900ms of typing, and that bound is a constant the view chose, and nothing the protocol promises. Pick a bound, keep it small, and assume the teardown warning may not arrive.</p>
+<h2 id="host-behaviour-in-detail">Host behaviour, in detail</h2>
+<p>Send <code>ui/resource-teardown</code> before removing a frame, for any reason, including reasons the user initiated. Give the reason, because a view can behave differently for “the user closed the conversation” and “this view is being replaced by a newer result”.</p>
+<p>Wait for the response, with a deadline that is generous. A view flushing to a server needs a network round trip, and a host that waits 200 milliseconds has effectively not waited.</p>
+<p>Answer <code>ping</code>. It is the only way a view can check that the channel is still there, and a host that ignores it leaves the view unable to distinguish a slow call from a dead one.</p>
+<p>Do not send anything before <code>ui/notifications/initialized</code> arrives. A host that sends <code>ui/notifications/tool-input</code> early is talking to a view that has not registered its handlers yet, so the notification is dropped on the floor and no error is raised on either side. The view then renders empty and waits forever for data that has already been sent.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
-<li><code>localStorage</code> inside the frame either throws or is discarded with the frame, and the view does not depend on it.</li>
-<li>A view’s persisted state survives a teardown and a re-render, through whatever server tool it uses.</li>
-<li>An app-only save tool is absent from the agent’s tool list.</li>
-<li>Undo reverses exactly the last transaction and leaves later changes alone.</li>
-<li>A new action clears the redo stack.</li>
-<li>An agent-initiated change is undone by one Cmd/Ctrl+Z.</li>
-<li>Undo and redo announce what they did.</li>
+<li><code>ui/resource-teardown</code> is sent before the frame is removed, with a reason.</li>
+<li>The host waits for the response, and a view that takes 600 milliseconds is not cut off.</li>
+<li>Nothing is sent to the view before <code>ui/notifications/initialized</code>.</li>
+<li><code>ping</code> is answered.</li>
+<li>Hiding the host’s tab fires <code>visibilitychange</code> inside the frame.</li>
+<li>A view that is scrolled out of view receives no signal, which is the gap in Appendix B.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>Persistence is a gap with a workable but heavy workaround, so keep the set of things that must survive as small as you can defend. Undo is not a gap, it is a design, and in an agentic application it is the mechanism that makes it safe for a model to touch a document at all.</p>
+<p>Assume you will be destroyed at any moment with one request of warning, and that the warning may not come. Every design decision in this group follows from that: autosave rather than save, server state rather than view state, cheap by default rather than suspend on a signal you may not receive.</p>
 
-<div class="pager"><a href="ch14.html"><span class="dir">Previous</span>14. Lifecycle and Connectivity</a><a href="ch16.html" style="text-align:right"><span class="dir">Next</span>16. Media, Progress, Cancellation and Errors</a></div>
+<div class="pager"><a href="ch14.html"><span class="dir">Previous</span>14. Accessibility</a><a href="ch16.html" style="text-align:right"><span class="dir">Next</span>16. Persistence and History</a></div>
 </main>
 </div>
 <script type="module" src="demos/demo.js"></script>
+<script src="copy.js"></script>
 </body>
 </html>
