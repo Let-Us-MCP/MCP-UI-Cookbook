@@ -86,12 +86,12 @@ class Demo {
 
     this.toggle = el("button", {
       class: "demo-toggle", type: "button",
-      "aria-expanded": "true", "aria-controls": `${this.id}-source`,
+      "aria-expanded": "false", "aria-controls": `${this.id}-source`,
       onclick: () => this.slide(),
     }, el("span", { class: "chev" }), el("span", { text: "Source" }));
 
     this.drawer = el("div", {
-      class: "demo-drawer", id: `${this.id}-source`,
+      class: "demo-drawer shut", id: `${this.id}-source`,
     }, el("div", { class: "demo-drawer-inner" },
         tabStrip, ...Object.values(this.panes)));
 

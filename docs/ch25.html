@@ -73,17 +73,18 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 25</p><h1>Why Recipes Are the Test Suite</h1><p class="summary">Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.</p><p>The recipes are the test suite. Being illustrations is a side effect.</p>
-<p>Part VI is about the difference between a book that asserts things and a book that checks them, and this is the decision everything else follows from.</p>
+<p class="eyebrow">Chapter 25</p><h1>Why Recipes Are the Test Suite</h1><p class="summary">Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.</p><p>The recipes are the test suite, and being illustrations is a side effect rather than the purpose. That ordering is the decision the rest of Part VI follows from, and it constrains what a recipe is allowed to be. A recipe whose behaviour depends on what a model happened to say cannot assert anything, so none of them depend on that: the model decides <em>when</em> a tool is called, and the recipe decides what the tool does.</p>
 <h2 id="why-testing-capabilities-alone-is-not-enough">Why testing capabilities alone is not enough</h2>
 <p>A host can implement every capability in Parts II and III correctly, one at a time, and still fail to run any of the recipes. Composition is where the failures live, and they are specific and repeatable:</p>
-<p>Focus fails inside fullscreen, because the mode change re-parented the frame and the browser dropped focus with it.</p>
-<p>Drag and drop conflicts with host scrolling, because the host’s conversation scroller and your drag gesture want the same pointer.</p>
-<p>Shortcuts collide, because the host bound Cmd+F before your view existed and Chapter 9 has no mechanism to find out.</p>
-<p>Streaming updates destroy selection, because a view that rebuilds its list on each batch is a view whose selection lasts one batch.</p>
-<p>Resizing loses scroll position, because the frame changed height and the scroll container was measured against the old one.</p>
-<p>Cancellation leaves optimistic state behind, because the compensating action was never recorded.</p>
-<p>Every one of those is two capabilities that work. Only a recipe finds them, because only a recipe puts two capabilities in the same frame at the same time with a user in the middle.</p>
+<ul>
+<li><strong>Focus fails inside fullscreen</strong>, because the mode change re-parented the frame and the browser dropped focus with it.</li>
+<li><strong>Drag and drop conflicts with host scrolling</strong>, because the conversation scroller and your drag gesture want the same pointer.</li>
+<li><strong>Shortcuts collide</strong>, because the host bound Cmd+F before your view existed and Chapter 9 has no mechanism to find out.</li>
+<li><strong>Streaming updates destroy selection</strong>, because a view that rebuilds its list on each batch has a selection that lasts one batch.</li>
+<li><strong>Resizing loses scroll position</strong>, because the frame changed height and the scroll container was measured against the old one.</li>
+<li><strong>Cancellation leaves optimistic state behind</strong>, because the compensating action was never recorded.</li>
+</ul>
+<p>Every one of those is two capabilities that both work correctly on their own. A capability harness cannot find any of them, because it exercises one capability at a time and none of these failures exists inside one. Only a recipe puts two of them in the same frame, at the same moment, with a user in the middle doing something ordinary.</p>
 <figure>
 <img src="figures/xkcd-blank.png" alt="The failure that reports nothing" />
 <figcaption aria-hidden="true">The failure that reports nothing</figcaption>
@@ -92,21 +93,21 @@
 <div class="principle">
 <p><strong>The question the recipes answer.</strong> Can a host construct conventional, native-like applications entirely from a small, well defined set of reusable UI capabilities?</p>
 </div>
-<p>There are only two ways for a recipe to fail, and both are informative.</p>
+<p>There are only two ways a recipe can fail, and both produce a finding rather than a defect report. That is the property that makes the exercise worth the effort of building thirteen applications.</p>
 <p>If a recipe cannot be built from the primitives in Parts II and III, it has found a missing capability. Appendix B is where the fourteen current findings live, and Chapter 28 describes what turning one into a proposal involves.</p>
 <p>If a recipe can be built but does not run in a particular host, it has found a conformance failure. That is a finding about an implementation, and the checklist in Appendix C is what turns it into a bug report with a specific line in it.</p>
-<p>Nothing else is a possible outcome, which is what makes the exercise worth doing.</p>
+<p>No third outcome exists. A recipe either cannot be expressed, which indicts the capability model, or can be expressed and does not run, which indicts an implementation. Both answers are more useful than a chapter arguing about whether the model is complete.</p>
 <h2 id="why-an-empty-delta-is-fatal">Why an empty delta is fatal</h2>
-<p>Every recipe carries a delta: the capabilities it exercises that no earlier recipe does. A recipe with an empty delta is merged or deleted.</p>
+<p>Every recipe carries a delta: the capabilities it exercises that no earlier recipe does, generated from the registry rather than asserted in prose. A recipe whose delta comes out empty gets merged or deleted, because it is teaching nothing and testing nothing that is not already covered. Thirteen recipes that each exercised the same twelve capabilities would demonstrate nothing about whether the model is sufficient.</p>
 <p>That rule is what stops thirteen recipes from being thirteen views of the same six capabilities. It is also what determined the order: the Data Explorer is first because its delta is the baseline, and Settings is last because its delta is the picker set and the accessibility requirements, which need everything before them to be in place.</p>
 <p>The deltas are generated from the registry rather than asserted in prose, so a recipe whose delta becomes empty because an earlier recipe grew will show it in the build output rather than in a reviewer’s memory.</p>
 <h2 id="what-a-recipe-test-asserts">What a recipe test asserts</h2>
-<p>Three kinds of thing, in increasing order of what they catch.</p>
+<p>Three kinds of assertion, in increasing order of what they catch and of how much work they are to write.</p>
 <p><strong>The handshake happened.</strong> <code>ui/initialize</code> went out, a result came back, <code>ui/notifications/initialized</code> followed. This is the cheapest check in the whole suite and it catches the worst failure: a view with a syntax error never runs, so it never sends anything, so the frame sits there empty with nothing logged anywhere. Every demonstration in this book is checked for it, and it is the reason a missing handshake is a hard failure in the harness rather than a warning.</p>
 <p><strong>The observable behaviour is right.</strong> The table has eight rows. Sorting changes the order. Undo restores the node at its original index. These are ordinary assertions about a running application.</p>
 <p><strong>The transcript is right.</strong> Selecting a row sent exactly one <code>ui/update-model-context</code>. Selecting a second one replaced rather than appended. Withdrawing <code>downloadFile</code> means no <code>ui/download-file</code> is ever sent. This is the layer that catches protocol regressions, and it is the layer that only exists because the whole conversation is JSON-RPC over <code>postMessage</code> and therefore recordable.</p>
 <h2 id="how-is-any-of-this-deterministic">How is any of this deterministic?</h2>
-<p>An agentic application looks untestable. A model is involved, models are stochastic, and an assertion about a sampled token is not an assertion.</p>
+<p>An agentic application looks untestable at first glance. A model is involved, models are stochastic, and an assertion about a sampled token is not an assertion at all. Every test in this repository would be flaky if the model were in the loop.</p>
 <p>The way out is that the model is never in the loop of a recipe test. Every tool result is a recorded fixture. Every stream is a scripted sequence. Every failure is injected on purpose. The agent’s side is played by the harness calling the view’s registered tools, which is exactly what an agent would do and is completely deterministic.</p>
 <p>That is a design constraint on the recipes themselves, not just on the tests. A recipe whose behaviour depends on what a model happened to say cannot be a test, so the recipes are built so that it does not. The model decides <em>when</em> to call <code>connect_steps</code>; the recipe decides what <code>connect_steps</code> does. Chapter 3’s local-first principle turns out to be the same rule as testability, which is a good sign that it is the right rule.</p>
 <h2 id="what-building-them-actually-found">What building them actually found</h2>
@@ -121,7 +122,7 @@
 <p><strong>The monitoring console showed every line twice.</strong> It received the tool result it was rendered for and also called the tool itself on mount, so two rows shared an identifier and selecting one selected both.</p>
 <p>Eight findings, seven of them in shipped code. The last three are the interesting ones, because they were invisible to every check that existed before: the messages were all correct, and the interface was wrong. They came from the layer described in the next chapter, which starts a real server, renders the view that server delivers, and then looks at the result.</p>
 <h2 id="what-this-cannot-do">What this cannot do</h2>
-<p>Two things this suite cannot do.</p>
+<p>Two things this suite cannot do, both of which limit what the rest of Part VI is entitled to claim.</p>
 <p>It cannot drive the view’s own interface from outside. The frame is sandboxed with an opaque origin and the harness cannot reach its DOM, which is the same property that stops a host reading it. So view-initiated behaviour is driven through the tools a view registers, which covers the recipes that register tools and does not cover the ones that do not. Chapter 26 says exactly which.</p>
 <p>And it cannot tell you whether an application is any good. Every check in this book is about whether a thing works, not about whether it should exist. Chapter 3 is the only defence against building a well tested application that nobody wants, and it is not a test.</p>
 

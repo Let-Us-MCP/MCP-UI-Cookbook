@@ -73,14 +73,14 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 2</p><h1>What Crosses the Boundary</h1><p class="summary">The whole wire protocol in one chapter: the handshake, the twenty messages, the double iframe, and the four ways a view finds out what it was rendered for.</p><p>JSON-RPC 2.0 over <code>postMessage</code>, both directions, about twenty methods. That is the entire protocol, and you can read it in an afternoon.</p>
-<p>No proprietary bridge object, no injected global, no framework to adopt. This chapter is the map every later chapter refers back to.</p>
+<p class="eyebrow">Chapter 2</p><h1>What Crosses the Boundary</h1><p class="summary">The whole wire protocol in one chapter: the handshake, the twenty messages, the double iframe, and the four ways a view finds out what it was rendered for.</p><p>JSON-RPC 2.0 over <code>postMessage</code>, in both directions, with about twenty methods. That is the entire protocol and you can read all of it in an afternoon, which is unusual enough to be the best thing about this extension.</p>
+<p>There is no proprietary bridge object, no injected global to wait for, and no framework you have to adopt to participate. A view that constructs its own JSON and calls <code>parent.postMessage</code> is a fully conformant view. This chapter is the map that every later chapter refers back to.</p>
 <figure>
 <img src="figures/diag-bridge.png" alt="The two halves of the bridge and the messages that cross it" />
 <figcaption aria-hidden="true">The two halves of the bridge and the messages that cross it</figcaption>
 </figure>
 <h2 id="why-are-there-two-iframes">Why are there two iframes?</h2>
-<p>In a web host, so the host’s origin never shares a document with content a server sent.</p>
+<p>In a web host, and the reason is that the host’s origin must never share a document with content a server sent. If it did, a view could reach the host’s own scripts and storage through ordinary same-origin access, and no amount of message validation would help.</p>
 <p>Desktop and native hosts render your HTML in one sandboxed iframe. Web hosts must use two: an outer <strong>sandbox proxy</strong> on a different origin, and your view inside it.</p>
 <p>The proxy sends <code>ui/notifications/sandbox-proxy-ready</code> when it can accept work. The host answers with <code>ui/notifications/sandbox-resource-ready</code>, which carries the raw HTML, the CSP configuration, and the permission set. The proxy builds the inner frame with those policies applied, then forwards every message in both directions except the ones whose method begins <code>ui/notifications/sandbox-</code>.</p>
 <p>You do not implement any of that. It matters for two reasons. First, your messages pass through a relay, which is why the specification tells the proxy never to originate a request of its own: it would have to synthesise request ids, and ids belong to the parties that own them. Second, your view’s origin is opaque. That single fact explains more surprising behaviour than anything else in this book, and Chapter 4 takes it apart.</p>
@@ -94,7 +94,7 @@
 <p>The host answers with four things: the negotiated <code>protocolVersion</code>, its own <code>hostInfo</code>, a <code>hostCapabilities</code> object, and a <code>hostContext</code> object. Then the view sends <code>ui/notifications/initialized</code>, and only after that notification is the host permitted to send anything at all.</p>
 <p>That ordering is a real constraint and the source of a genuinely nasty class of bug. A view with a syntax error never runs, so it never sends <code>ui/initialize</code>, so the host waits forever and the user sees an empty rectangle. Nothing errors. Nothing logs. The frame simply sits there. The conformance harness in this repository treats a missing handshake as a failing test for exactly that reason, and Chapter 26 explains why that is the single highest value check you can run.</p>
 <h2 id="what-will-the-host-do-for-me">What will the host do for me?</h2>
-<p><code>hostCapabilities</code> is the list of things the host is willing to do on your behalf. Every field is optional, and its absence is the answer.</p>
+<p><code>hostCapabilities</code> is the list of things the host is willing to do on your behalf, and every field in it is optional. The absence of a field is a complete answer rather than an omission to work around: no <code>openLinks</code> means links will not open, today, in this host, and there is no second route to try.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -216,9 +216,9 @@
 <p>Notifications the view can send, which get no answer: <code>ui/notifications/initialized</code>, <code>ui/notifications/size-changed</code>, <code>ui/notifications/request-teardown</code>, <code>notifications/message</code>, <code>notifications/tools/list_changed</code>, and core MCP’s <code>notifications/cancelled</code>.</p>
 <p>Notifications the host sends to the view: <code>ui/notifications/tool-input-partial</code>, <code>ui/notifications/tool-input</code>, <code>ui/notifications/tool-result</code>, <code>ui/notifications/tool-cancelled</code>, <code>ui/notifications/host-context-changed</code>, and <code>notifications/progress</code>.</p>
 <p>And two requests the host sends to the view, both of which need an answer: <code>ui/resource-teardown</code>, and <code>tools/call</code> with <code>tools/list</code> when the view has registered tools of its own.</p>
-<p>That is the entire protocol. Twenty-odd messages, and half of this book is about the things that are not in that list.</p>
+<p>That is the entire protocol. Twenty-odd messages, most of them optional, and half of this book is about the things that are not on that list: dialogs, undo, focus, persistence, and the fourteen capabilities in Appendix B that have no mechanism at all.</p>
 <h2 id="how-do-i-find-out-why-i-was-rendered">How do I find out why I was rendered?</h2>
-<p>A view is rendered because a tool was called. Finding out which tool, with which arguments, and what came back, happens in four steps that arrive in order.</p>
+<p>A view is rendered because a tool was called, and finding out which tool, with what arguments, and what it returned happens in four steps that arrive in a fixed order. Handling only the last one is the common shortcut, and it costs you the ability to render anything until the tool finishes.</p>
 <p><code>hostContext.toolInfo</code> arrives in the initialize result and names the tool. <code>ui/notifications/tool-input-partial</code> may arrive zero or more times while the model is still writing the arguments, carrying best-effort recovered JSON with unclosed brackets closed. <code>ui/notifications/tool-input</code> arrives exactly once with the complete arguments. <code>ui/notifications/tool-result</code> arrives when the tool finishes, carrying the standard <code>CallToolResult</code>, or <code>ui/notifications/tool-cancelled</code> arrives instead if it did not.</p>
 <p>Rendering something useful during the partial phase is the difference between an application that feels instant and a spinner that lasts as long as the model does. Chapter 19 has the demonstration.</p>
 <h2 id="how-do-i-read-a-transcript">How do I read a transcript?</h2>
@@ -232,7 +232,7 @@ app→host  ui/notifications/size-changed   { width: 836, height: 306 }</code></
 <p>The second size is not a bug. Every view draws asynchronously, so the first report measures an empty document. A host that acted only on the first would put a 147px frame around 306px of content.</p>
 <p>The absence of lines is as informative as their presence. No <code>ui/initialize</code> means the view’s script never ran. No <code>ui/notifications/initialized</code> means it threw between connecting and finishing. No <code>size-changed</code> means it never observed its own content, which in a flexible container means a frame that never grows.</p>
 <h2 id="content-or-structuredcontent">content or structuredContent?</h2>
-<p>A tool result has a <code>content</code> array and a <code>structuredContent</code> object, and they are for different readers.</p>
+<p>A tool result carries a <code>content</code> array and a <code>structuredContent</code> object, and they exist because there are two readers with completely different needs. Using one field for both is the most expensive mistake available in this extension, and the most invisible: everything works, it just costs several times more per turn and the model answers questions about the data less well than it would have from a summary.</p>
 <p><code>content</code> is what the model sees. It should be a sentence, not a data dump: if the model is going to read three hundred table rows it has just paid for, the view is about to render them anyway and the model gains nothing. <code>structuredContent</code> is what your view sees, and it never reaches the model’s context.</p>
 <p>Getting this backwards is the most expensive mistake in the whole extension, because it is invisible. Everything works; it just costs four times as much per turn and the model answers questions about the data less well than it would have from a summary.</p>
 <div class="cap" id="log.message"><div class="cap-head"><code class="cap-id">log.message</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Send a log line to the host for debugging and telemetry.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>notifications/message</code><code>logging</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-handshake">lab-handshake</a></dd></dl></div>
@@ -240,7 +240,7 @@ app→host  ui/notifications/size-changed   { width: 836, height: 306 }</code></
 <h2 id="which-bridge-should-i-use">Which bridge should I use?</h2>
 <p>Everything above is implemented by <code>@modelcontextprotocol/ext-apps</code>, which ships both halves: <code>App</code> for the view side and <code>AppBridge</code> for the host side. It handles schema validation, request timeouts, capability assertions, and the <code>ResizeObserver</code> wiring for size reporting. Use it.</p>
 <p>This book ships its own bridge instead, in about two hundred and forty lines, for one reason: the transcript pane on every page has to have nothing hidden behind it. When you press a button in a demonstration and see <code>ui/update-model-context</code> appear in the log, the path from the click to the message is short enough to read. That is a pedagogical choice, not a recommendation.</p>
-<p>Both are in the repository, and the code tab of every demonstration shows the one that is actually running.</p>
+<p>Both are in the repository, and the source drawer on every demonstration shows whichever one that page is actually running, so you can compare the two rather than take this paragraph’s word for it.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li><code>ui/initialize</code> receives a result carrying <code>protocolVersion</code>, <code>hostInfo</code>, <code>hostCapabilities</code> and <code>hostContext</code>.</li>

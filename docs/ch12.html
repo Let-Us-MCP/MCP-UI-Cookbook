@@ -73,7 +73,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 12</p><h1>Host Environment and Theming</h1><p class="summary">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</p><p>The host sends CSS custom properties in <code>hostContext.styles.variables</code>. You use them with your own fallback for every one. No component library is involved.</p>
+<p class="eyebrow">Chapter 12</p><h1>Host Environment and Theming</h1><p class="summary">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</p><p>The host sends CSS custom properties in <code>hostContext.styles.variables</code>, and you use them with your own fallback defined for every single one. No component library is involved anywhere in this, and that is deliberate: the specification rejected shipping one because no single library works across every host’s aesthetic, and rejected sending spacing tokens because layouts break when spacing varies from what they were designed against.</p>
 <p>Seven capabilities describe the environment. All arrive in <code>hostContext</code>, all can change through <code>ui/notifications/host-context-changed</code>, and the most common bug in this group is reading them once at startup.</p>
 <div class="demo" data-demo="lab-theme" id="lab-theme"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="what-does-the-host-actually-send">What does the host actually send?</h2>
@@ -84,8 +84,8 @@
 <p>Spacing is deliberately absent from the variable set, and the reason is worth repeating: layouts break when spacing varies from what they were designed against. A host can change your colours safely and cannot change your rhythm safely.</p>
 <h2 id="how-do-i-follow-the-hosts-theme">How do I follow the host’s theme?</h2>
 <div class="cap" id="env.theme"><div class="cap-head"><code class="cap-id">env.theme</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Take the host&#x27;s tokens and follow them when they change.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>styles</code><code>--color-background-primary</code><code>light-dark</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p>Apply the variables to the document root, and define a fallback for every one you use.</p>
-<p>Hosts may send all, some or none. The specification warns that partial sets clash, because views fall back per variable rather than wholesale.</p>
+<p>Apply the variables to the document root and define a fallback for every one you use, because a host is permitted to send all of them, some of them, or none. Falling back happens per variable rather than wholesale, which is what makes a partial set more dangerous than an empty one.</p>
+<p>The specification warns about partial sets specifically. If a host sends a dark background and no text colour, your light-mode text fallback lands on it and the result is unreadable, which is worse than either theme applied whole. Using role pairs consistently is the defence: take <code>--color-background-danger</code> and <code>--color-text-danger</code> together, so a missing pair fails as a pair.</p>
 <p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>:root {
   color-scheme: light dark;
   --color-background-primary: light-dark(#ffffff, #16181d);
@@ -137,7 +137,7 @@ bridge.on(&quot;hostcontextchanged&quot;, (patch) =&gt; {
 });</code></pre>
 <h2 id="what-are-safeareainsets-for">What are safeAreaInsets for?</h2>
 <div class="cap" id="env.safeArea"><div class="cap-head"><code class="cap-id">env.safeArea</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Keep content out of regions the host has spoken for.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>safeAreaInsets</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p>Four numbers in pixels. Add them to your outermost padding.</p>
+<p>Four numbers in pixels, which you add to your outermost padding. They describe regions of the host’s window that something else already occupies: a notch, a title bar, a home indicator, a floating toolbar.</p>
 <p>A native app would read <code>env(safe-area-inset-*)</code>. A view inside someone else’s window cannot, because the notch is not on its viewport, so the host sends the numbers instead.</p>
 <p><strong>Application behaviour.</strong> Turn them into custom properties and add them to your outermost padding. The view stylesheet in this repository does exactly that, which is why pressing “Add a notch” in the demonstration visibly moves the content in from every edge.</p>
 <p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>body {

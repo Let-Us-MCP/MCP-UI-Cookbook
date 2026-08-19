@@ -73,7 +73,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 23</p><h1>Components II: Navigation, Data and Visualization</h1><p class="summary">Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.</p><p>These carry data, and they all hit the same two walls: there is no address bar, and there is very little room.</p>
+<p class="eyebrow">Chapter 23</p><h1>Components II: Navigation, Data and Visualization</h1><p class="summary">Structure without a URL bar, tables that survive streaming, and charts in a frame that cannot load a charting library.</p><p>These are the components that carry data, and all three groups run into the same two walls. There is no address bar, so nothing about navigation state can live in a URL and the back button belongs to somebody else. And there is very little room, so the column budget runs out long before the data does.</p>
 <h2 id="navigation">Navigation</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -179,7 +179,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>This is the group most MCP applications are made of, and the group with the most predictable failures.</p>
+<p>This is the group most MCP applications are actually made of, and it has the most predictable failures of anything in Part IV. Four of them account for nearly everything that goes wrong, and all four are about what survives an update.</p>
 <p><strong>Column budget.</strong> Four columns is comfortable at 380 pixels, six is the ceiling, and beyond that the answer is a property list per row rather than a wider table. Recipe 1 shows six and drops to a card layout under 480 pixels.</p>
 <p><strong>Sort, filter and page locally.</strong> Chapter 3. All three are answerable from data already in the frame.</p>
 <p><strong>Selection is the unit of conversation.</strong> Chapter 9 has the gesture model, Chapter 17 has what to do with it. A table without a selection model gives its users nothing precise to ask about.</p>
@@ -187,7 +187,7 @@
 <p><strong>Virtualise past a few thousand rows</strong>, and be aware that virtualisation and <code>surface.resize</code> interact badly: a virtual list has a fixed height by design, so it wants a fixed container, which means telling the host a stable size and scrolling inside it.</p>
 <p><strong>Copy as the destination wants it.</strong> TSV for the clipboard, CSV for a file. Chapter 10.</p>
 <h3 id="the-column-budget">The column budget</h3>
-<p>Six columns at 380 pixels is the practical ceiling, and reaching it takes deliberate work rather than restraint alone.</p>
+<p>Six columns at 380 pixels is the practical ceiling, and getting there takes deliberate work rather than restraint alone. Each of the following buys you roughly half a column, and you need all of them.</p>
 <p>Right-align every number and use tabular figures, which buys a character of width per column and makes outliers scannable. Put units in the header rather than in every cell: “p95 ms” once beats “412ms” eight times. Use chips for enumerated values, because a chip reads at a glance and a word does not. Format dates to the shortest form that is still unambiguous, which usually means dropping the year for anything inside the current one. And put anything that is only occasionally needed behind row expansion rather than in a column.</p>
 <p>When that is not enough, the answer is not a horizontal scrollbar. It is a different component: a property list per row, which turns a wide table into a tall list and is what every mobile client does with the same problem. Recipe 1 switches at 480 pixels.</p>
 <h2 id="visualisation">Visualisation</h2>
@@ -240,7 +240,7 @@
 <p><strong>Focus survives updates.</strong> The consequence of the first two, and the one users feel most sharply. A grid that rebuilds on every tick moves focus to the document body twice a second, which makes keyboard operation impossible.</p>
 <p><strong>Numbers are aligned and tabular.</strong> <code>text-align: right</code> and <code>font-variant-numeric: tabular-nums</code>. Two declarations, and they turn a column of figures into something you can scan for an outlier. This is not accessibility and it is not decoration; it is the reason the table exists.</p>
 <h3 id="charts-with-no-dependency">Charts with no dependency</h3>
-<p>The three shapes that cover most of what an embedded view needs, and what each costs in inline SVG.</p>
+<p>Three shapes cover most of what an embedded view actually needs, and all three are cheap enough in inline SVG that a dependency is hard to justify.</p>
 <p>A <strong>sparkline</strong> is a <code>polyline</code> whose points are the series scaled to the box. Nine lines, no axes, no labels, and it belongs next to a number rather than instead of one. Recipe 2 builds one per tile.</p>
 <p>A <strong>bar chart</strong> is a loop of rects with a shared scale. Fifteen lines. The work is in the labels, not the bars, and in a narrow frame the labels usually have to go under the bars rather than beside them.</p>
 <p>A <strong>status strip</strong> is not a chart at all: a row of chips with text in them. It is what most dashboards actually need, it is legible at any size, and it survives forced colours because the state is in the words.</p>

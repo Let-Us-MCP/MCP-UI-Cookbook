@@ -73,11 +73,10 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 6</p><h1>Surfaces and Geometry</h1><p class="summary">How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.</p><p>You do not own the rectangle you render into. The host decides how wide it is, whether it may grow, and when it stops existing.</p>
-<p>Four capabilities cover that. Get them right and most embedded layout bugs go away. Get them wrong and you get a scrollbar inside a scrollbar, or a view six pixels tall.</p>
+<p class="eyebrow">Chapter 6</p><h1>Surfaces and Geometry</h1><p class="summary">How to size your view, read the space you were given, go fullscreen, and ask to be closed. Most embedded layout bugs are in this chapter.</p><p>You do not own the rectangle you render into. The host decides how wide it is, whether it may grow, and when it stops existing, and it makes those decisions without ever seeing your content. Four capabilities cover that negotiation, and between them they account for most of what looks like a broken embedded application: a scrollbar inside a scrollbar, a view six pixels tall, a fullscreen button that does nothing.</p>
 <div class="demo" data-demo="lab-surface" id="lab-surface"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="how-do-i-make-the-frame-fit-my-content">How do I make the frame fit my content?</h2>
-<p>Send <code>ui/notifications/size-changed</code> whenever your content resizes. The host cannot see inside your frame. If you do not tell it, nothing does.</p>
+<p>Send <code>ui/notifications/size-changed</code> whenever your content resizes. This is the only channel that exists for it. The host has rendered your HTML into an iframe it cannot read, so it knows the frame’s dimensions and nothing about what is inside; you know your content’s dimensions and nothing about the frame. Neither side can measure what the other has, and one notification closes that gap.</p>
 <p class="provenance extracted">Extracted from from <code>emulator/app-bridge.js</code></p><pre class="js"><code>autoResize(element = document.documentElement) {
   let last = { width: 0, height: 0 };
   const report = () =&gt; {
@@ -92,15 +91,10 @@
   return this;
 }</code></pre>
 <div class="cap" id="surface.resize"><div class="cap-head"><code class="cap-id">surface.resize</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Report content size so the host can size the frame around it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/size-changed</code><code>containerDimensions</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r09.html">Monitoring Console</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
-<p>Three rules:</p>
-<ul>
-<li><strong>Report on change only.</strong> A <code>ResizeObserver</code> fires during layout. Sending every callback floods the channel.</li>
-<li><strong>Never report a zero.</strong> A freshly appended frame measures zero before it lays out. See the six-pixel bug below.</li>
-<li><strong>Let the SDK do it.</strong> <code>@modelcontextprotocol/ext-apps</code> has this built in and turns it on by default.</li>
-</ul>
-<p>What the host owes you: if a dimension is flexible, it listens and resizes within a frame or two. If a dimension is fixed, it may ignore you entirely, and your content has to fit or scroll inside itself.</p>
+<p>The <code>last</code> comparison is the part that matters. A <code>ResizeObserver</code> fires during layout, and layout runs more often than content actually changes: a font loading, a scrollbar appearing, an image decoding, all of them produce a callback with dimensions identical to the previous one. Sending each of those turns a resize into a flood, and because the host resizes the frame on each message, the flood feeds itself. Comparing against the last reported size costs two integers and removes the whole class of problem. The SDK does the same thing when <code>autoResize</code> is left on, which it is by default, so unless you have a reason to hand-roll this you should not.</p>
+<p>What the host owes you in return depends on which mode the dimension is in. If it is flexible, the host must listen and apply your size within a frame or two, because your content is the authority. If it is fixed, the host is entitled to ignore you completely, and your content has to fit or scroll inside itself.</p>
 <h2 id="how-much-room-do-i-actually-have">How much room do I actually have?</h2>
-<p>Read <code>hostContext.containerDimensions</code>. Each axis is independently one of three modes.</p>
+<p>Read <code>hostContext.containerDimensions</code> from the initialize result. Each axis is independently in one of three modes, and the field that is present tells you which:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -128,8 +122,7 @@
 </tbody>
 </table></div>
 <div class="cap" id="surface.viewport"><div class="cap-head"><code class="cap-id">surface.viewport</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Read the space actually available: fixed, flexible, or unbounded.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>containerDimensions</code><code>safeAreaInsets</code><code>deviceCapabilities</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
-<p>A fixed width with a flexible height is the standard inline card, so do not assume the axes match.</p>
-<p>The usual mistake is assuming one mode and getting the other. Assume fixed and you scroll inside a frame that was happy to grow. Assume flexible and you overflow one that was not. The demo switches between them so you can watch the content react.</p>
+<p>The two axes are decided separately and commonly differ. A fixed width with a flexible height is the standard inline card: the host has a column of known width in its conversation, and it will let your card be as tall as it needs within reason. A side panel is often the reverse. Writing code that assumes both axes match is writing code that works in one host.</p>
 <p class="provenance extracted">Extracted from from <code>apps/labs/lab-surface/index.html</code></p><pre class="js"><code>function describe(dimensions) {
   if (!dimensions) return &quot;Unbounded in both directions.&quot;;
   const axis = (fixed, max, name) =&gt;
@@ -141,44 +134,30 @@
     axis(dimensions.height, dimensions.maxHeight, &quot;Height&quot;),
   ].join(&quot;. &quot;) + &quot;.&quot;;
 }</code></pre>
-<p>Read it in a function, not once at startup. Any of it can change through <code>ui/notifications/host-context-changed</code>.</p>
-<p>The same object carries <code>safeAreaInsets</code>, <code>platform</code> and <code>deviceCapabilities</code>, which Chapter 12 covers.</p>
-<p><strong>Accessibility.</strong> WCAG’s Reflow criterion wants your content usable at 320 CSS pixels wide with no two-dimensional scrolling. A host on a phone may hand you exactly that.</p>
+<p>Guessing wrong is expensive in both directions. Assume fixed when the host gave you flexible and you build an inner scroller inside a frame that would happily have grown, so the user scrolls a 200-pixel window through 900 pixels of table for no reason. Assume flexible when the host gave you fixed and your content overflows a frame that will never move, so the bottom of your interface is simply gone. Press “Fix the height at 200px” in the demonstration and watch the view switch behaviour: it stops asking to grow and starts scrolling inside what it has.</p>
+<p>Read the field in a function rather than in a constant at startup. Everything in <code>hostContext</code> can change through <code>ui/notifications/host-context-changed</code>, and a container change is one of the commonest: the user drags the divider on a side panel, or rotates a phone, or the host collapses its own sidebar. The same object also carries <code>safeAreaInsets</code>, <code>platform</code> and <code>deviceCapabilities</code>, which Chapter 12 covers.</p>
+<p>WCAG’s Reflow criterion asks that content stay usable at 320 CSS pixels wide without two-dimensional scrolling, and a host on a phone will hand you close to that. It is worth testing at 320 deliberately rather than discovering it: most layouts that survive 380 also survive 320, and the ones that do not usually fail on a single fixed-width element you can find in a minute.</p>
 <figure>
 <img src="figures/diag-geometry.png" alt="Fixed, flexible and unbounded, decided per axis" />
 <figcaption aria-hidden="true">Fixed, flexible and unbounded, decided per axis</figcaption>
 </figure>
 <h2 id="how-do-i-go-fullscreen">How do I go fullscreen?</h2>
-<p>Send <code>ui/request-display-mode</code>, then use the mode that comes back rather than the one you asked for.</p>
+<p>Send <code>ui/request-display-mode</code>, and then use the mode that comes back rather than the one you asked for.</p>
 <p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>const { mode } = await bridge.requestDisplayMode(&quot;fullscreen&quot;);
 // mode may still be &quot;inline&quot;. The host is allowed to say no.</code></pre>
 <div class="cap" id="surface.displayMode"><div class="cap-head"><code class="cap-id">surface.displayMode</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Move between inline, fullscreen, and picture-in-picture.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/request-display-mode</code><code>availableDisplayModes</code><code>ui/notifications/host-context-changed</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r06.html">Image Annotator</a>, <a href="r08.html">Code and Diff Reviewer</a>, <a href="r12.html">Media Viewer</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
-<p>Four steps, and three of them get skipped:</p>
-<ol type="1">
-<li>You declare <code>appCapabilities.availableDisplayModes</code> at startup.</li>
-<li>The host declares <code>hostContext.availableDisplayModes</code> in its answer.</li>
-<li>You check the host’s list <strong>before</strong> asking.</li>
-<li>The host answers with the mode it actually set, and may change it later through <code>ui/notifications/host-context-changed</code>.</li>
-</ol>
-<p>What goes wrong:</p>
-<ul>
-<li><strong>Assuming the request succeeded.</strong> You get an interface convinced it is fullscreen, sitting in a card.</li>
-<li><strong>Asking for a mode you never declared.</strong> The host may refuse on that alone.</li>
-<li><strong>Ignoring a change you did not request.</strong> The host may have its own fullscreen control.</li>
-<li><strong>Laying out for the mode you asked for.</strong> Lay out for the mode you got.</li>
-</ul>
-<p>Press “Withdraw fullscreen” in the demo, then press the view’s own button. The view checks the list, finds fullscreen gone, and says so instead of firing a request that would fail.</p>
+<p>The negotiation has four steps. You declare which modes you support in <code>appCapabilities.availableDisplayModes</code> during initialisation. The host declares which it supports in <code>hostContext.availableDisplayModes</code>. You check its list before asking, because a host may refuse a mode purely on the grounds that you never declared it. And the host answers with the mode it actually set, which it may also change later, without being asked, through <code>ui/notifications/host-context-changed</code>.</p>
+<p>Three of those four get skipped, and each produces a different failure. Assuming the request succeeded gives you an interface convinced it is fullscreen while sitting in a 380-pixel card, with controls sized for a screen it does not have. Asking for a mode you never declared gives you a refusal you did not plan for. Ignoring a change you did not request means the user presses the host’s own fullscreen control and your layout stays inline.</p>
+<p>The rule that covers all three is to lay out for the mode you got, from a single function that reads <code>hostContext.displayMode</code>, called both after the request resolves and on every context change. Press “Withdraw fullscreen” in the demonstration and then press the view’s own button: the view checks the list, finds fullscreen gone, and says so rather than firing a request that would fail.</p>
 <h2 id="how-do-i-close-myself">How do I close myself?</h2>
-<p>Send <code>ui/notifications/request-teardown</code>. It is a notification: no id, no answer, no guarantee.</p>
+<p>Send <code>ui/notifications/request-teardown</code>. It is a notification, so it has no id, gets no answer, and carries no guarantee: the host may act on it, defer it, or ignore it entirely, and you will not be told which.</p>
 <div class="cap" id="surface.close"><div class="cap-head"><code class="cap-id">surface.close</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Ask the host to dismiss this view.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/notifications/request-teardown</code><code>ui/resource-teardown</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-surface">lab-surface</a></dd></dl></div>
-<p>If the host agrees, it sends <code>ui/resource-teardown</code>, which <em>is</em> a request, and it should wait for your response before removing the frame. That wait is the only moment in the protocol where you can finish something. Chapter 14 is about what to do with it.</p>
-<p>A host that tears down without sending <code>ui/resource-teardown</code> takes your unsaved work with it. A host that sends it and does not wait is worse, because it looks correct from the outside. Press “Tear the view down” in the demo and read the last two transcript entries.</p>
+<p>If the host does agree, it sends you <code>ui/resource-teardown</code>, which is a request with an id and a reason, and it should wait for your response before removing the frame. That gap between the request arriving and your response leaving is the only interval in the entire protocol where a view is guaranteed to still exist and to have the host’s attention. Everything you were about to lose has to be flushed inside it, which is why Chapter 14 spends a whole section on what belongs there and how small it has to be.</p>
+<p>Two host failures are worth knowing about because you cannot work around either. A host that removes the frame without sending <code>ui/resource-teardown</code> takes your unsaved work with it, and nothing in your code runs. A host that sends the request and does not wait for the answer looks identical from the inside: you begin your flush, the frame disappears mid-write, and no error is raised anywhere. The only defence against both is to keep the amount of unflushed state small at all times, which in practice means autosaving on a short timer rather than relying on the handshake.</p>
 <h2 id="three-geometry-bugs">Three geometry bugs</h2>
-<p><strong>The six-pixel view.</strong> A frame that has just been appended has no layout yet, so the first <code>ResizeObserver</code> callback can report zero. A host that believes it collapses the frame. Now the view has nothing left to observe, so it never grows back.</p>
-<p>Fix on both sides: views send only positive sizes, hosts treat zero as “not yet”. This one survives manual testing, because the first frame on a page is usually fine and the second is not.</p>
-<p><strong>The nested scrollbar.</strong> You set <code>height: 100%</code> on a container while the host gave you a flexible height. The container fills a frame whose height is derived from the container, and the circularity settles wherever the first measurement landed.</p>
-<p>Rule: in a flexible dimension, never put a percentage height on anything in the chain the observer measures. Let content decide, and put the scroll on an inner element with an explicit <code>max-height</code>.</p>
-<p><strong>The oscillating frame.</strong> A hover effect changes an element’s height. You report a new size, the host resizes, the pointer is now over something else, and the layout bounces. Reserve the space up front and change only appearance on hover.</p>
+<p><strong>The six-pixel view.</strong> A frame that has just been appended has no layout yet, so the first <code>ResizeObserver</code> callback can report a height of zero or a handful of pixels. A host that believes it sets the frame to that height, and now the view has almost no viewport, so its content reflows to almost nothing, so the next report confirms the tiny size. The collapse is self-reinforcing and the view never recovers. Both sides have to be defensive: views send only positive sizes, and hosts treat a zero as “not yet” rather than as “empty”. This one survives manual testing, because the first frame on a page usually lays out before the observer fires and the second one does not.</p>
+<p><strong>The nested scrollbar.</strong> You set <code>height: 100%</code> on a container while the host gave you a flexible height. Now the container’s height is derived from the frame, and the frame’s height is derived from the container, and the two settle wherever the first measurement happened to land, which is usually too short. The user gets your scrollbar inside the host’s scrollbar. The rule that prevents it is narrow enough to remember: in a flexible dimension, nothing in the chain the observer measures may have a percentage size. Let content decide the height, and put the scroll on an inner element with an explicit <code>max-height</code> in pixels or <code>rem</code>.</p>
+<p><strong>The oscillating frame.</strong> A hover effect changes an element’s height by a few pixels. You report the new size, the host resizes the frame, the layout shifts, the pointer is now over a different element, the first element un-hovers, and you report again. The frame twitches for as long as the pointer sits near the boundary. Reserve the hovered dimensions up front and change only colour, border or shadow on hover.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li>A size reported in a flexible dimension resizes the frame within one animation frame.</li>
@@ -190,7 +169,7 @@
 <li>The host waits for the teardown response before removing the frame.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>Both parties are guessing at the same number. You know how tall your content is. The host knows how much room there is. Neither can see what the other knows, and one notification plus one context field is the entire bridge.</p>
+<p>Both parties are guessing at the same number from opposite sides, and the protocol gives each of them exactly one way to tell the other what it knows: you send <code>ui/notifications/size-changed</code>, the host sends <code>containerDimensions</code>. Get those two right, keep percentage heights out of the measured chain, and treat every display mode answer as authoritative rather than as confirmation, and the layout problems in this chapter stop happening.</p>
 
 <div class="pager"><a href="ch05.html"><span class="dir">Previous</span>5. Entries, Recipes, and the Discipline of Degradation</a><a href="ch07.html" style="text-align:right"><span class="dir">Next</span>7. Focus and Scroll</a></div>
 </main>

@@ -73,10 +73,9 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 5</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>Two shapes, repeated. Parts II and III are capability entries. Part V is recipes.</p>
-<p>Hold the rest of the book to them.</p>
+<p class="eyebrow">Chapter 5</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>Two shapes, repeated throughout. Parts II and III are capability entries and Part V is recipes. Both templates are set out below so you can hold the rest of the book to them and see where it falls short. Where an entry says nothing about a section, the omission is deliberate: <code>picker.color</code> has no interesting lifecycle, and inventing a paragraph about one would be worse than the silence.</p>
 <h2 id="what-is-in-a-capability-entry">What is in a capability entry?</h2>
-<p>Each entry answers eleven questions in the same order.</p>
+<p>Each entry answers eleven questions in the same order, so that a reader who has read one entry knows where to look in all eighty-five.</p>
 <p><strong>Capability.</strong> Identifier, level, tag, and ground. Generated from the registry, so the prose cannot contradict it.</p>
 <p><strong>Motivation.</strong> Why an application needs it. Where the answer is “it does not, but users expect it”, the entry says so: <code>dialog.alert</code> is one.</p>
 <p><strong>User experience.</strong> What the person sees and does, from the outside. For <code>file.export</code>: a button appears, they press it, the host asks where to save.</p>
@@ -90,7 +89,7 @@
 <p><strong>Conformance tests.</strong> The assertions that decide whether an implementation has it. For <code>file.export</code>: <code>ui/download-file</code> is sent when <code>downloadFile</code> is present, and never sent when it is absent.</p>
 <p>Not every entry uses all eleven. <code>picker.color</code> has nothing to say about lifecycle. The template is a checklist for the author, not a quota, and silence means the content was one sentence long.</p>
 <h2 id="the-five-failure-modes">The five failure modes</h2>
-<p>This is the part worth internalising, because it is where the difference between a demonstration and an application lives.</p>
+<p>This is the part to internalise, because it is where the difference between a demonstration and an application lives. A demonstration handles the path where everything works. An application handles five, and four of them are more likely than the first on any given day in a host you have not tested.</p>
 <p><strong>Unsupported.</strong> <code>hostCapabilities.downloadFile</code> was absent at <code>ui/initialize</code>. Do not render the export button at all. Not disabled with a tooltip, not showing an error when pressed: absent.</p>
 <p><strong>Denied.</strong> <code>ui/open-link</code> came back with a JSON-RPC error. Show the host’s message next to the control and leave the control enabled: “The host declined to open that link” says what happened and what to try. “Error” says neither.</p>
 <p><strong>Cancelled.</strong> Someone sent <code>notifications/cancelled</code>, or the host sent <code>ui/notifications/tool-cancelled</code>. Report where it stopped. Recipe 11 writes “Stopped after 3 of 5 steps. Completed steps were not rolled back.” Resetting the bar to zero claims nothing happened, and three steps happened.</p>
@@ -101,7 +100,7 @@
 <figcaption aria-hidden="true">The five failure modes, and the moment each one is discoverable</figcaption>
 </figure>
 <p>They become discoverable at different moments, which is why naming all five matters. Unsupported is known at <code>ui/initialize</code>. Denied and failed arrive with the response. Cancelled arrives at any time, from either side. Timeout you decide yourself.</p>
-<p>An application that handles only “failed” and calls it error handling has covered one case out of five.</p>
+<p>An application that handles only “failed” and calls it error handling has covered one case in five, and not the most common one. Unsupported happens on every host that is a level below you, which over a product’s life is most of them.</p>
 <h2 id="what-is-in-a-recipe-entry">What is in a recipe entry?</h2>
 <p>Part V uses a different template, because a recipe is an argument rather than a reference.</p>
 <p><strong>Goal.</strong> The conventional application being reproduced, in one line. Recipe 5: “editable grid computation”.</p>
@@ -115,9 +114,9 @@
 <p><strong>Accessibility.</strong> The keyboard-only path through the application. Recipes 6 and 7 say where theirs is incomplete.</p>
 <p><strong>Conformance checks.</strong> The observable behaviours, phrased as the harness asserts them. <code>make render</code> runs 88 of these against real servers.</p>
 <h2 id="why-every-listing-has-a-tag">Why every listing has a tag</h2>
-<p>One more convention, visible on every code block in the book. A tag above each listing says where it came from:</p>
+<p>One more convention, visible on every code block in this book. A tag above each listing says where the code came from, because a reader who cannot tell which listings are load-bearing has to treat all of them as suspect:</p>
 <p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
-<p><em>Captured</em> means it is real output from a real run, quoted verbatim, including the parts that are inconvenient.</p>
+<p><em>Captured</em> means real output from a real run, quoted verbatim, including the parts that are inconvenient. Three listings in this book are captured, and one of them is a test run reporting its own failures.</p>
 <p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 22 of the 55 listings.</p>
 <p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 30 extracted listings against their files line by line.</p>
 <h2 id="a-worked-failure-table">A worked failure table</h2>

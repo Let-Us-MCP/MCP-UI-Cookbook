@@ -73,8 +73,8 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 8</p><h1>Dialogs and Attention</h1><p class="summary">Six capabilities, no messages, one broken browser API, and a decision procedure for how loudly to interrupt somebody.</p><p><code>window.alert</code>, <code>window.confirm</code> and <code>window.prompt</code> do nothing. They need the <code>allow-modals</code> sandbox token, which MCP Apps does not grant. The demo has a button that proves it.</p>
-<p>So you build the attention system yourself. That is the better outcome anyway:</p>
+<p class="eyebrow">Chapter 8</p><h1>Dialogs and Attention</h1><p class="summary">Six capabilities, no messages, one broken browser API, and a decision procedure for how loudly to interrupt somebody.</p><p><code>window.alert</code>, <code>window.confirm</code> and <code>window.prompt</code> do nothing at all. All three need the <code>allow-modals</code> sandbox token, which the MCP Apps sandbox does not include, so the call returns immediately with a default value and your code carries on as though the user answered. That last part is what makes it dangerous rather than merely broken: <code>confirm()</code> returns <code>false</code>, which reads as “the user declined”, and a delete flow guarded by it silently stops working. The demonstration has a button that proves it.</p>
+<p>So you build the whole attention system yourself, which is the better outcome anyway. The browser’s versions were never appropriate here, for three reasons that all matter more inside a frame than they do in a page:</p>
 <ul>
 <li>They block the main thread, which would freeze your bridge and stop you answering <code>ui/resource-teardown</code>.</li>
 <li>They render outside your styling, so they look like the browser, not the host.</li>
@@ -82,7 +82,7 @@
 </ul>
 <div class="demo" data-demo="lab-dialogs" id="lab-dialogs"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="which-one-do-i-use">Which one do I use?</h2>
-<p>These six differ mainly in how much they interrupt. The implementations are all easy; picking the wrong volume is the actual failure.</p>
+<p>These six differ mainly in how much of the user’s attention they take, and the implementations are all easy. Picking the wrong volume is the actual failure, and it is a failure with a cost: every unnecessary interruption trains people to dismiss the next one without reading it, so a view that confirms trivial actions has spent the credibility it needed for the one confirmation that mattered.</p>
 <figure>
 <img src="figures/xkcd-attention.png" alt="The attention ladder: what each level costs the user" />
 <figcaption aria-hidden="true">The attention ladder: what each level costs the user</figcaption>
@@ -94,12 +94,13 @@
 <p>The mistake that shows up most is a modal dialog for a completion. “Export finished. OK.” blocks the user to tell them something they can see, and trains them to dismiss dialogs without reading, which then breaks the one dialog that mattered.</p>
 <h2 id="alert-an-acknowledgement-they-cannot-miss">Alert: an acknowledgement they cannot miss</h2>
 <div class="cap" id="dialog.alert"><div class="cap-head"><code class="cap-id">dialog.alert</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Block on an acknowledgement the user cannot miss.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>An acknowledgement the user cannot miss. In practice this is the rarest of the six and is usually a mis-specified toast. It earns its place only when the information changes what the user is about to do, and they are about to do it right now.</p>
+<p>An acknowledgement the user cannot miss. In practice this is the rarest of the six and nearly every instance in the wild is a mis-specified toast.</p>
+<p>It earns its place only when two things are true at once: the information changes what the user is about to do, and they are about to do it right now. “Your session expired, so the next save will fail” qualifies while they are typing. “Export finished” does not qualify at all, because nothing they were about to do has changed and the result is visible on screen anyway.</p>
 <p><strong>Application behaviour.</strong> A <code>&lt;dialog&gt;</code> with <code>showModal()</code>, one button, focus on that button. Escape closes it, because a dialog with a single acknowledgement has nothing to cancel.</p>
 <p><strong>Accessibility.</strong> <code>showModal()</code> gives you the focus trap, the inert background and the <code>aria-modal</code> semantics for free. A hand-rolled overlay gives you none of those and will be missed by a screen reader user entirely.</p>
 <h2 id="confirm-a-binary-decision">Confirm: a binary decision</h2>
 <div class="cap" id="dialog.confirm"><div class="cap-head"><code class="cap-id">dialog.confirm</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Take an explicit binary decision before acting.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a>, <a href="r10.html">Approval Center</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>The binary decision. Two rules, both about the words rather than the widget.</p>
+<p>The binary decision, and the two rules that matter are both about the words rather than the widget. Users read the buttons before they read the title, so the buttons have to carry the decision on their own.</p>
 <p>Label the buttons with the verb, not with “OK”. A user reading “Delete invoices?” with “OK” and “Cancel” has to reconstruct which button does what. The same dialog with “Delete” and “Keep” can be answered without reading the title.</p>
 <p>And prefer undo. A confirmation asks somebody to be careful <em>before</em> they know what happens; undo lets them find out and change their mind. The File Explorer in Recipe 3 does both, deliberately: destructive actions confirm, and the confirmation says the action can be undone, which is what makes the confirmation honest rather than ritual.</p>
 <p class="provenance extracted">Extracted from from <code>apps/lib/view.js</code></p><pre class="js"><code>function confirmDialog({ title, body, confirm = &quot;Confirm&quot;, cancel = &quot;Cancel&quot;,
@@ -122,17 +123,17 @@
 <p>The <code>cancel</code> event is the Escape key. Forgetting to resolve on it leaves a promise hanging forever, and in an application that awaits the answer before doing anything else, a hung promise is a frozen interface.</p>
 <h2 id="prompt-one-small-value">Prompt: one small value</h2>
 <div class="cap" id="dialog.prompt"><div class="cap-head"><code class="cap-id">dialog.prompt</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Collect one small value without leaving the surface.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>One small value, in place. Rename, name a new folder, add a label.</p>
+<p>One small value collected without leaving the surface: rename this, name that, add a label. The distinguishing test is whether the value needs validation beyond “not empty”. If it does, or if there are two of them, you have a form rather than a prompt, and Recipe 13 is the form.</p>
 <p><strong>Application behaviour.</strong> Focus and select the input on open, so typing replaces the existing value and Enter submits. Both are what the browser’s <code>prompt</code> did, and both are what people expect.</p>
 <p><strong>When not to.</strong> If the value needs validation with rules, or two fields, it is a form and not a prompt. Recipe 13 is a form.</p>
 <h2 id="toast-it-happened-carry-on">Toast: it happened, carry on</h2>
 <div class="cap" id="notify.toast"><div class="cap-head"><code class="cap-id">notify.toast</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Say saved, copied, failed, and get out of the way.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r03.html">File Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>Transient, non-blocking, gone in a couple of seconds. Saved, copied, completed, failed.</p>
+<p>Transient, non-blocking, gone in a couple of seconds: saved, copied, completed. A toast is the right answer whenever the user needs to know something happened and has no decision to make about it, which covers most of what an application wants to say.</p>
 <p><strong>Accessibility.</strong> A toast that is only a visual is invisible to a screen reader. <code>role="status"</code> on the toast, or a parallel announcement into a polite live region, makes it perceivable. The helper in this repository does the former; Chapter 13 covers the latter and explains when each is right.</p>
 <p><strong>Failure modes.</strong> Toasts for failures are a judgement call. A failed save is usually not a toast, because the toast will be gone before the user understands the consequence and there will be nothing left on screen to say that the document is unsaved. Toast the successes, banner the ongoing problems.</p>
 <h2 id="banner-true-until-it-isnt">Banner: true until it isn’t</h2>
 <div class="cap" id="notify.banner"><div class="cap-head"><code class="cap-id">notify.banner</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Hold a persistent, non-modal status in view.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
-<p>Persistent and non-modal. The distinguishing property is that a banner lasts as long as the condition does, which means something has to remove it when the condition ends.</p>
+<p>Persistent and non-modal. The distinguishing property is that a banner lasts exactly as long as its condition, which obliges the code that raises one to own the code that removes it. A banner nobody clears becomes furniture, and furniture is invisible: users stop reading a warning that has been there since Tuesday, including on the day it starts mattering.</p>
 <p>Good uses are all statements about the <em>state of the interface</em> rather than about an event: this data is four minutes stale, you are offline and looking at a cached copy, this document is read-only because somebody else has it open, this host does not support downloads so the export button is missing.</p>
 <p>The last row is the exception to Chapter 1. Normally you omit a control you cannot offer. When the user is hunting for it, a banner saying “this host cannot save files, use Copy” beats a mystery.</p>
 <h2 id="how-do-i-get-attention-from-a-hidden-view">How do I get attention from a hidden view?</h2>
@@ -142,7 +143,7 @@
 <p><strong>Workarounds.</strong> Make the state loud on return rather than at the moment it happens: the console raises a banner describing what happened while the view was hidden, which the user meets when they come back. Where the host supports it, <code>ui/update-model-context</code> puts the fact where the model can raise it in the next turn, which is indirect but real. And a view can send <code>notifications/message</code> at warning level, which lands in the host’s log and is at least auditable.</p>
 <p><strong>What a mechanism would look like.</strong> A <code>ui/request-attention</code> notification with a severity and a short label, and the host free to badge, chime, or ignore. The host has to stay in control, because the alternative is thirty embedded views competing for a notification badge. Appendix B has it, next to <code>surface.reveal</code>, which is the same problem seen from the other side.</p>
 <h2 id="what-is-the-host-doing-meanwhile">What is the host doing meanwhile?</h2>
-<p>Nothing. No message in this chapter exists, so the host cannot know your view has a modal open.</p>
+<p>Nothing, and it cannot. No message in this chapter exists, so the host has no way to learn that your view has a modal open, and no way to coordinate with it. That asymmetry produces three specific consequences, and none of them has a workaround worth the name.</p>
 <p>Three consequences.</p>
 <ul>
 <li><strong>Your dialog is clipped by the frame.</strong> A 500px dialog in a 380px view has its buttons off screen. Size to the container and scroll the body.</li>
@@ -160,7 +161,7 @@
 <li>A banner is removed when the condition it describes ends.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>All of it is yours to build, so all of it is yours to keep consistent. Pick one dialog, one toast, one banner and use them everywhere.</p>
+<p>All of it is yours to build, which means all of it is yours to keep consistent, and consistency is harder than any individual widget. A view with two dialog implementations has two focus behaviours, two escape behaviours and two visual languages, and the second one always gets less attention than the first. Pick one of each and use it everywhere.</p>
 <p>The 13 recipes share one of each, defined once in <code>apps/lib/view.js</code>: <code>confirmDialog</code>, <code>promptDialog</code>, <code>toast</code> and the <code>.banner</code> class.</p>
 
 <div class="pager"><a href="ch07.html"><span class="dir">Previous</span>7. Focus and Scroll</a><a href="ch09.html" style="text-align:right"><span class="dir">Next</span>9. Keyboard, Pointer and Selection</a></div>

@@ -73,8 +73,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 24</p><h1>Components III: Spatial, Media and Agent-Native</h1><p class="summary">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</p><p>Two familiar groups, then five components with no precedent anywhere.</p>
-<p>The last five could not have existed before there was a second party acting on the interface, and every agentic application ends up needing them.</p>
+<p class="eyebrow">Chapter 24</p><h1>Components III: Spatial, Media and Agent-Native</h1><p class="summary">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</p><p>Two familiar groups, then five components with no precedent anywhere in web design. Spatial and media components you have built before and mostly port unchanged. The last five could not have existed before there was a second party acting on the interface, so there is no established pattern to copy and every agentic application ends up inventing them badly at least once.</p>
 <h2 id="spatial">Spatial</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -115,7 +114,7 @@
 <p><strong>Report a fixed height and scroll inside it.</strong> Recipe 6 uses 260px, Recipe 7 uses 280px, both chosen to work at 380px wide. A canvas that grows with its content fights <code>surface.resize</code> and loses.</p>
 <p><strong>Pointer capture, <code>touch-action: none</code>, and zoom about the cursor.</strong> All three in Chapter 9, and all three are the difference between a canvas that feels right and one that fights.</p>
 <p><strong>Add a minimap.</strong> Recipe 7 draws one into a 220 by 148 <code>&lt;canvas&gt;</code> in eleven lines: <code>fillRect</code> per node, <code>strokeRect</code> for the viewport.</p>
-<p><strong>Every gesture needs a button.</strong> Zoom in, zoom out, reset, fit, and arrow keys to pan. A canvas that can only be operated by dragging cannot be operated at all by a significant number of people, and this is the group where that failure is most common.</p>
+<p><strong>Every gesture needs a button.</strong> Zoom in, zoom out, reset, fit, and arrow keys to pan. A canvas operable only by dragging cannot be operated at all by a significant number of people, and this is the component group where that failure is both most common and least noticed, because the developer testing it always has a pointer.</p>
 <p><strong>Undo per gesture, not per frame.</strong> A drag produces one transaction on pointerup, not sixty during pointermove. Recipe 7 records the start position on pointerdown and pushes a single transaction at the end.</p>
 <h2 id="media">Media</h2>
 <div class="table-wrap"><table>
@@ -155,7 +154,7 @@
 <p><strong>Fullscreen goes through the host.</strong> <code>ui/request-display-mode</code>, not the Fullscreen API, because <code>fullscreen</code> is not in the extension’s permission set. Chapter 16.</p>
 <p><strong>A thumbnail strip is a tab list.</strong> Give it roving tabindex, <code>aria-current</code> on the selected item, and real labels rather than image alt text that says “thumbnail”.</p>
 <h2 id="agent-native">Agent-native</h2>
-<p>These five have no conventional web precedent. They exist because of Part III.</p>
+<p>These five have no conventional web precedent because the situation they address is new: an interface with a second actor in it that the user cannot see and cannot interrupt. Each one exists to make some invisible part of that situation visible.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -198,7 +197,7 @@
 <p><strong>The context inspector</strong> shows what the view has published to the model. It is a debugging tool that deserves to ship. A user who can see that the assistant knows about three selected rows and nothing else can predict what it will say, and the same panel is how a developer finds out that their view has been publishing hover state for a week. Every demonstration in this book has one, in the form of the “Show what the model was told” control.</p>
 <p><strong>The proposal card</strong> is the shape that makes agent editing safe. The agent’s version, visible next to the current one, with Accept and Decline, and accepting recorded as one undo transaction. Chapters 18 and 20 both arrive at it, from prefill and from conflict policy respectively, which is a decent sign that it is the right primitive.</p>
 <h3 id="definition-of-done-for-each">Definition of done, for each</h3>
-<p>No reference implementation exists for these five, so here is a definition of done for each.</p>
+<p>No reference implementation exists for any of these five, and no design system has a page about them, so here is a definition of done for each. They are all small; the difficulty is knowing what to include rather than how to build it.</p>
 <p><strong>Approval card.</strong> Renders a title, a risk level, a consequence sentence, and a provenance list of at least four fields. Approve and Deny are both single actions; high risk adds a confirmation. Every decision produces exactly one context update carrying the outcome and nothing else. It never accepts an approval over its own tool interface.</p>
 <p><strong>Tool status chip.</strong> Carries a name, one of five states, a progress value when it has one, and exactly the controls that state allows. Queued has none. Running has Cancel. Failed has Retry. Cancelled and Done have neither. The state name is visible as text, not only as a colour.</p>
 <p><strong>Streaming log.</strong> Appends, trims to a cap, and never rebuilds. Follows the tail until the user scrolls away, then stops and shows that it has stopped. Selection is by identifier so it survives the next thousand lines.</p>

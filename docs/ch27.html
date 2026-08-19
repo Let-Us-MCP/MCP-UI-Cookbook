@@ -73,10 +73,10 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 27</p><h1>The Coverage Matrix and the Checklists</h1><p class="summary">What eighty-five capabilities by thirteen recipes actually shows, why the matrix is generated rather than maintained, and what a host is claiming when it claims a level.</p><p>Two artifacts come out of the registry on every build. Both are more useful as diagnostics of the book than as references for you.</p>
+<p class="eyebrow">Chapter 27</p><h1>The Coverage Matrix and the Checklists</h1><p class="summary">What eighty-five capabilities by thirteen recipes actually shows, why the matrix is generated rather than maintained, and what a host is claiming when it claims a level.</p><p>Two artifacts come out of the registry on every build, and both are more useful as diagnostics of the book than as references for a reader. A row of the matrix with no marks in it is a capability this book described and never demonstrated, which is a gap in the evidence rather than a fact about the protocol, and it is visible only because the matrix is generated rather than written.</p>
 <h2 id="what-the-matrix-shows">What the matrix shows</h2>
 <p>Appendix A carries the full capability by recipe matrix. It is generated from the registry, never hand-maintained, and reading down a column tells you what a recipe needs while reading across a row tells you how well covered a capability is.</p>
-<p>The interesting entries are the extremes.</p>
+<p>The extremes are where the matrix says something. The middle of it is unsurprising and mostly confirms that recipes use the capabilities their entries say they use.</p>
 <p><strong>Rows with no marks at all.</strong> A capability that no recipe exercises is a capability this book has described and not demonstrated. There are several, and they cluster: <code>op.pause</code>, <code>system.print</code>, and the environment signals that have no visible consequence in a small view. Each is either genuinely rare or a recipe that should exist and does not.</p>
 <p><strong>Rows with a mark everywhere.</strong> <code>surface.resize</code>, <code>env.theme</code> and <code>host.capabilities</code> are in every recipe, which is what “Level 1” means in practice. If a host gets those three wrong, nothing in Part V renders.</p>
 <p><strong>Columns that are unusually short.</strong> A recipe that touches few capabilities is either focused or thin. Recipe 5’s column is short and it is focused; Recipe 2’s is short and could carry more.</p>
@@ -97,10 +97,13 @@
 <p><strong>Level 4</strong> is the agentic set, and it has the largest gap between what the checklist asks and what the specification provides. Nine Core capabilities across all levels have no standard mechanism, and Appendix C marks each of them, because a checklist that asked hosts to implement something unspecified would be worthless.</p>
 <h2 id="if-you-are-building-a-host">If you are building a host</h2>
 <p>The useful order is not top to bottom. It is:</p>
-<p>Get the handshake truthful. Everything else in the book assumes it.</p>
-<p>Get <code>surface.resize</code> right, including the zero-height case on first render. More views look broken because of this than because of anything else.</p>
-<p>Get <code>ui/resource-teardown</code> right, including waiting for the response. This is the only data-loss bug in the protocol, and views cannot work around a host that does not wait.</p>
-<p>Then work down the levels in order, and publish which one you pass.</p>
+<ol type="1">
+<li><strong>Make the handshake truthful.</strong> Every other recommendation in this book assumes it. A capability listed in <code>hostCapabilities</code> and not implemented breaks precisely the views that checked properly and rewards the ones that never checked.</li>
+<li><strong>Get <code>surface.resize</code> right</strong>, including the zero-height first render. More views look broken because of this than because of anything else in the protocol.</li>
+<li><strong>Get <code>ui/resource-teardown</code> right</strong>, including waiting for the response. This is the only data-loss defect in the protocol that a view cannot work around.</li>
+<li><strong>Then work down the levels</strong>, and publish which one you pass with the date of the run.</li>
+</ol>
+<p>That order is not the order of the checklist, and it is deliberately not the order of the levels. Those three come first because a failure in any of them makes the levels above meaningless: a view that never sized itself correctly does not care how good your display mode support is.</p>
 <h2 id="if-you-are-building-an-application">If you are building an application</h2>
 <p>The order is different. Assume Level 1, check for everything above it, and make the check the thing that decides whether a control exists.</p>
 <p>Then use the failure column of the recipe entries in Part V as a design prompt. Every one of those tables was written by asking, for each capability, what the application looks like without it. That exercise takes an hour and produces most of the progressive enhancement work you were going to do anyway, before the code makes it expensive.</p>
@@ -117,7 +120,7 @@
 <p><strong>The host dependency list.</strong> Everything you mapped to a <em>wire</em> capability is something a host has to support, and the level column tells you which hosts those are. That list is what you test against, and it is usually shorter than people fear.</p>
 <p><strong>The gap list.</strong> Anything you mapped to a <em>not standardised</em> capability is a place where you are about to invent a private convention. Better to know before the code than after the second host.</p>
 <p><strong>The work list.</strong> Everything mapped to <em>yours to build</em> is real engineering that no protocol will do for you, and it is typically the largest of the three. Undo, dialogs, toasts and the whole attention system live here.</p>
-<p>If an interaction maps to nothing, that is the interesting case, and it is the one Chapter 28 is about.</p>
+<p>An interaction that maps to nothing is the interesting case. Either you have found something the eighty-five do not cover, which belongs upstream as a finding, or you have described an interaction in terms of your implementation rather than in terms of what the user does. Chapter 28 is about telling those two apart.</p>
 
 <div class="pager"><a href="ch26.html"><span class="dir">Previous</span>26. The Verification Layers</a><a href="ch28.html" style="text-align:right"><span class="dir">Next</span>28. The Missing Primitive Loop, and the Live Book</a></div>
 </main>

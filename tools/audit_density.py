@@ -61,6 +61,39 @@ META = re.compile(
 FLOOR = {"chapters": 0.28, "recipes": 0.30, "frontmatter": 0.16,
          "appendices": 0.20}
 
+# A paragraph that asserts a claim and stops has no room to say why the claim
+# holds or what happens when it does not. The framing volume in this series
+# runs 59 words per paragraph with 29% of paragraphs under 30 words; a chapter
+# far under that is a chapter of headlines. Enforced on chapters only, because
+# recipe entries and appendices are deliberately list-shaped.
+PARA_FLOOR = 45
+STUB_CEILING = 0.35
+
+PARA_SKIP = ("#", "|", "@", "<!--", "![", "-", "*", ">", "1.", "2.", "3.",
+             "4.", "5.", "6.", "7.", "8.")
+
+
+def paragraphs(path: Path) -> list[int]:
+    """Word counts of real prose paragraphs.
+
+    A short line that introduces a table, a list, a code block or a generated
+    marker is a label rather than a paragraph. Counting those as prose would
+    push an author to pad them, which is the opposite of the point.
+    """
+    raw = FENCE.sub("\n\nCODEBLOCK\n\n", FRONT.sub("", path.read_text(encoding="utf-8")))
+    blocks = [b.strip() for b in re.split(r"\n\s*\n", raw)]
+    out = []
+    for i, block in enumerate(blocks):
+        if len(block.split()) <= 4 or block.startswith(PARA_SKIP):
+            continue
+        nxt = blocks[i + 1] if i + 1 < len(blocks) else ""
+        introduces = (nxt.startswith(("|", "-", "*", "1.", "2.", "@", "CODEBLOCK"))
+                      or nxt.startswith("<!-- listing"))
+        if introduces and block.rstrip().endswith(":"):
+            continue
+        out.append(len(block.split()))
+    return out
+
 
 def sentences(path: Path) -> list[str]:
     """Prose sentences, with paragraphs unwrapped first.
@@ -124,6 +157,21 @@ def main() -> int:
             problems.append(
                 f"{path.relative_to(ROOT)}: writing about the book, not the "
                 f"subject: \"{s[:70]}\"")
+
+        if group == "chapters":
+            paras = paragraphs(path)
+            if paras:
+                mean = sum(paras) / len(paras)
+                stubs = sum(1 for w in paras if w < 30) / len(paras)
+                if mean < PARA_FLOOR:
+                    problems.append(
+                        f"{path.relative_to(ROOT)}: {mean:.0f} words per "
+                        f"paragraph, floor is {PARA_FLOOR}. Paragraphs this "
+                        "short assert without explaining")
+                elif stubs > STUB_CEILING:
+                    problems.append(
+                        f"{path.relative_to(ROOT)}: {stubs:.0%} of paragraphs "
+                        f"are under 30 words, ceiling is {STUB_CEILING:.0%}")
 
     rows.sort()
     for line in problems:

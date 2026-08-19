@@ -73,7 +73,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 18</p><h1>Agent to UI</h1><p class="summary">The host cannot see inside your frame, so an agent that wants to act on your interface has to be given a vocabulary. Registering tools is that vocabulary, and it turns out to be the same mechanism accessibility and testing need.</p><p>Register tools. <code>tools/list</code> and <code>tools/call</code>, in the host to app direction.</p>
+<p class="eyebrow">Chapter 18</p><h1>Agent to UI</h1><p class="summary">The host cannot see inside your frame, so an agent that wants to act on your interface has to be given a vocabulary. Registering tools is that vocabulary, and it turns out to be the same mechanism accessibility and testing need.</p><p>Register tools, and let the host call them through <code>tools/list</code> and <code>tools/call</code> in the host-to-app direction. That is the entire mechanism, and it exists because the alternative was rejected on security grounds: the host cannot read your DOM, and giving it a way to would hand every host a route into content that came from a server it does not trust.</p>
 <p>The host cannot read your DOM, and should not be able to. So an agent that wants to highlight a row or propose a value has no way to reach in. Instead the view reaches out: it registers tools, and the host calls them.</p>
 <div class="demo" data-demo="lab-apptools" id="lab-apptools"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="how-does-the-agent-act-on-my-view">How does the agent act on my view?</h2>
@@ -110,7 +110,7 @@
 <p><strong>Design the tool around the user’s vocabulary</strong>, not your component tree. <code>show_panel("items")</code> is a tool the model can use correctly from a description. <code>set_state({activeTabIndex: 1})</code> is one it will use wrongly, and one that breaks when you reorder the tabs.</p>
 <h2 id="prefill-propose-never-submit">Prefill: propose, never submit</h2>
 <div class="cap" id="ui.prefill"><div class="cap-head"><code class="cap-id">ui.prefill</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Let the agent propose values, never submit them.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-apptools">lab-apptools</a></dd></dl></div>
-<p>The agent proposes values into inputs. It never submits.</p>
+<p>The agent proposes values into inputs and never submits them. That distinction carries the whole entry, because prefilling is genuinely useful and submitting is genuinely dangerous: the agent has read the ticket and can fill six fields the user would have typed, but the signature at the bottom of the form has to be a human’s.</p>
 <p>That distinction is the whole entry. Prefilling a form is enormously useful: the agent has read the ticket, the invoice, the previous three messages, and can fill in six fields the user would have typed. Submitting the form is taking an action in the user’s name, and the signature on it has to be theirs.</p>
 <p><strong>Application behaviour.</strong> Fill the field, mark it visibly as proposed, focus it so the user’s next keystroke is in the right place, and leave the submit button alone. The demonstration shows “Proposed by the agent. Review before submitting.” next to the field until a human presses the button.</p>
 <p class="provenance extracted">Extracted from from <code>apps/labs/lab-apptools/index.html</code></p><pre class="js"><code>bridge.registerTool({
@@ -129,7 +129,7 @@
 <p>Note the return value. The tool tells the agent what actually happened, including the part the agent might otherwise assume: the user has not submitted it. An agent that receives “done” will report to the user that it has been done.</p>
 <p><strong>In a document rather than a form</strong>, the same rule produces a diff or a proposal card rather than a silent replacement. Recipe 4 shows the rewrite as a proposal with Accept and Decline, and accepting is one undo transaction.</p>
 <h2 id="let-the-agent-read-the-view">Let the agent read the view</h2>
-<p>The fourth thing to register is not an action at all. <code>get_state</code> lets the agent ask what is currently on screen.</p>
+<p>The fourth thing to register is not an action at all. <code>get_state</code> lets the agent ask what is currently on screen, which is the pull half of a pair whose push half is <code>ui/update-model-context</code>. Push keeps the model current on the facts that always matter; pull lets it ask about the ones that only occasionally do, without you spending context on them every turn.</p>
 <p class="provenance extracted">Extracted from from <code>apps/labs/lab-apptools/index.html</code></p><pre class="js"><code>bridge.registerTool({
   name: &quot;get_state&quot;,
   description: &quot;Read the view&#39;s current state&quot;,
@@ -144,7 +144,7 @@
 }));</code></pre>
 <p>This is the pull half of the pair whose push half is <code>ui/update-model-context</code>. Push keeps the model current on the things that always matter; pull lets it ask about the things that occasionally do. Most views want both, and the deciding question is whether a fact is worth spending context on every turn.</p>
 <h2 id="three-requirements-one-mechanism">Three requirements, one mechanism</h2>
-<p>The same four tools serve three callers, which is what justifies writing them.</p>
+<p>The same four tools serve three different callers, which is what justifies the effort of writing them at all. An agent uses them to act. An assistive technology or voice interface uses them to reach operations the pointer would otherwise own. And <code>tools/check_render.mjs</code> uses them to drive the view in tests, which is why Recipes 4, 7 and 10 are the ones checked most deeply.</p>
 <p><strong>Agent action.</strong> The subject of this chapter.</p>
 <p><strong>Accessibility and voice.</strong> A user who cannot point still needs to open the panel. An agent driving <code>show_panel</code> on their behalf is doing exactly what the mouse would have done, through an interface designed for it.</p>
 <p><strong>Testing.</strong> A sandboxed frame cannot be driven from outside by a test harness, because the harness cannot reach its DOM either. It can be driven through the same tools. The conformance harness in Part VI drives views this way, and the golden transcripts for this chapter’s demonstration are recordings of a test doing exactly what an agent would do.</p>
