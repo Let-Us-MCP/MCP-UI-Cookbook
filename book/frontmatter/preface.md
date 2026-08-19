@@ -9,6 +9,12 @@ An MCP application is HTML in a sandboxed iframe that speaks JSON-RPC to a host
 over `postMessage`. About twenty methods, four permissions, no storage, no
 address bar.
 
+You write that HTML. The model does not generate it. Your server registers it
+as a predeclared `ui://` resource, your tools point at it with
+`_meta.ui.resourceUri`, and the model's only job is deciding when to call the
+tool and with what arguments. The interface is a file in your repository, which
+is what makes everything in Part VI possible.
+
 This book cuts that surface into 85 named capabilities, then builds 13
 applications out of nothing but those pieces. If the pieces are enough, the
 applications work. If one is missing, an application breaks in a specific

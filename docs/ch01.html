@@ -74,7 +74,8 @@
 </nav>
 <main>
 <p class="eyebrow">Chapter 1</p><h1>The Capability Model</h1><p class="summary">Eighty-five named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</p><p>An MCP application is a web page with most of the web taken away. No storage. No address bar. No window.open, no print, no camera without permission it did not grant itself. Four hundred pixels wide, inside a document it cannot see.</p>
-<p>What it has instead is a message channel to the host, and anything the page cannot do alone it does by asking. That single arrangement explains most of what is strange about building here: the things you would normally call are now requests that can be refused, the refusals arrive asynchronously, and the party refusing them is one you cannot inspect.</p>
+<p>It is also a file you wrote. The model does not generate the view; your server predeclares it as a <code>ui://</code> resource and a tool points at it. What the model controls is when that tool runs and what arguments it carries.</p>
+<p>What the view has instead of the normal web is a message channel to the host, and anything the page cannot do alone it does by asking. That single arrangement explains most of what is strange about building here: the things you would normally call are now requests that can be refused, the refusals arrive asynchronously, and the party refusing them is one you cannot inspect.</p>
 <p>So the question is which of a table’s normal behaviours survive in here. Sorting does. Copying does, with a fallback. Dragging a row out does not. “It depends on the host” is true and useless, so this book breaks the surface into eighty-five named operations and attaches four facts to each.</p>
 <figure>
 <img src="figures/diag-capability.png" alt="The capability model: an identifier, a level, a tag, and a ground" />

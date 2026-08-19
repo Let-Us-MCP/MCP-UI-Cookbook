@@ -74,6 +74,7 @@
 </nav>
 <main>
 <h1>What This Book Is</h1><p class="summary">85 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.</p><p>An MCP application is HTML in a sandboxed iframe that speaks JSON-RPC to a host over <code>postMessage</code>. About twenty methods, four permissions, no storage, no address bar.</p>
+<p>You write that HTML. The model does not generate it. Your server registers it as a predeclared <code>ui://</code> resource, your tools point at it with <code>_meta.ui.resourceUri</code>, and the model’s only job is deciding when to call the tool and with what arguments. The interface is a file in your repository, which is what makes everything in Part VI possible.</p>
 <p>This book cuts that surface into 85 named capabilities, then builds 13 applications out of nothing but those pieces. If the pieces are enough, the applications work. If one is missing, an application breaks in a specific place, and Appendix B lists the 14 places where that happened.</p>
 <h2 id="who-is-this-for">Who is this for?</h2>
 <p><strong>You are writing a view.</strong> Start at Appendix A, find the capability, and read its ground badge first. It tells you in one line whether <code>input.contextmenu</code> is a protocol message, a browser feature, or your afternoon.</p>
