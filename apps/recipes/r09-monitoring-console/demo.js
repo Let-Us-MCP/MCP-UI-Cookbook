@@ -24,7 +24,8 @@ export const demo = {
       containerDimensions: { maxHeight: 460 } },
     resources: {
       "ui://cookbook/monitoring-console":
-        { href: new URL("index.html", import.meta.url).href },
+        { href: new URL("index.html", import.meta.url).href,
+          _meta: { ui: { csp: {}, prefersBorder: true } } },
     },
     serverTools: {
       tail_logs: {

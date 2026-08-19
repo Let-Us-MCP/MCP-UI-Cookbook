@@ -190,6 +190,9 @@ class Demo {
         const height = Math.min(params.height ?? 0, spec.maxHeight ?? 520);
         if (height > 0) this.frame.style.height = `${height}px`;
       }
+      if (event === "prefers-border") {
+        this.stage.classList.toggle("bordered", params.prefersBorder === true);
+      }
       if (event === "initialized" && spec.onReady) spec.onReady(this.host);
       this.note(event, params);
     };

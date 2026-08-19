@@ -15,7 +15,8 @@ export const demo = {
       deviceCapabilities: { hover: true, touch: false } },
     resources: {
       "ui://cookbook/settings":
-        { href: new URL("index.html", import.meta.url).href },
+        { href: new URL("index.html", import.meta.url).href,
+          _meta: { ui: { csp: {}, prefersBorder: true } } },
     },
     serverTools: {
       load_preferences: {

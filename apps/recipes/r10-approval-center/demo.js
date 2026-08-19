@@ -15,7 +15,8 @@ export const demo = {
       containerDimensions: { maxHeight: 540 } },
     resources: {
       "ui://cookbook/approval-center":
-        { href: new URL("index.html", import.meta.url).href },
+        { href: new URL("index.html", import.meta.url).href,
+          _meta: { ui: { csp: {}, prefersBorder: true } } },
     },
     serverTools: {
       pending_approvals: {

@@ -83,6 +83,23 @@ export class HostEmulator {
         _meta: entry._meta ?? { ui: { csp: {}, prefersBorder: true } },
       }] },
     });
+    // What the host granted, as opposed to what the server asked for. The
+    // specification keeps these separate on purpose, and a view that assumes
+    // its request was honoured breaks in the host that declined.
+    const asked = entry._meta?.ui ?? {};
+    this.hostCapabilities = {
+      ...this.hostCapabilities,
+      sandbox: {
+        permissions: asked.permissions ?? {},
+        csp: asked.csp ?? {},
+      },
+    };
+
+    // `prefersBorder` is how a view asks to be visibly separate from the host,
+    // which Chapter 4 treats as a defence against the phishing case rather
+    // than as decoration.
+    this.onEvent?.("prefers-border", { prefersBorder: asked.prefersBorder });
+
     return { uri, html, meta: entry._meta };
   }
 

@@ -90,6 +90,10 @@
       "payload": {
         "hostCapabilities": {
           "logging": {},
+          "sandbox": {
+            "csp": {},
+            "permissions": {}
+          },
           "serverTools": {}
         },
         "hostContext": {
@@ -124,7 +128,7 @@
       "id": null,
       "payload": {
         "height": 481,
-        "width": 836
+        "width": 834
       }
     },
     {
@@ -167,7 +171,7 @@
       "id": null,
       "payload": {
         "height": 499,
-        "width": 836
+        "width": 834
       }
     },
     {

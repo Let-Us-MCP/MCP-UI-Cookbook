@@ -80,6 +80,10 @@
       "payload": {
         "hostCapabilities": {
           "logging": {},
+          "sandbox": {
+            "csp": {},
+            "permissions": {}
+          },
           "serverTools": {}
         },
         "hostContext": {
@@ -110,7 +114,7 @@
       "id": null,
       "payload": {
         "height": 404,
-        "width": 836
+        "width": 834
       }
     },
     {

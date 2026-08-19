@@ -85,6 +85,10 @@
             "text": {}
           },
           "openLinks": {},
+          "sandbox": {
+            "csp": {},
+            "permissions": {}
+          },
           "serverTools": {},
           "updateModelContext": {
             "structuredContent": {},
@@ -119,7 +123,7 @@
       "id": null,
       "payload": {
         "height": 126,
-        "width": 836
+        "width": 834
       }
     },
     {
@@ -197,7 +201,7 @@
       "id": null,
       "payload": {
         "height": 265,
-        "width": 836
+        "width": 834
       }
     }
   ]

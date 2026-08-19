@@ -15,7 +15,8 @@ export const demo = {
       containerDimensions: { maxHeight: 480 } },
     resources: {
       "ui://cookbook/diff-reviewer":
-        { href: new URL("index.html", import.meta.url).href },
+        { href: new URL("index.html", import.meta.url).href,
+          _meta: { ui: { csp: {}, prefersBorder: true } } },
     },
     serverTools: {
       load_diff: {

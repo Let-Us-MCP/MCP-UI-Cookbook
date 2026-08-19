@@ -17,7 +17,8 @@ export const demo = {
     },
     resources: {
       "ui://cookbook/image-annotator":
-        { href: new URL("index.html", import.meta.url).href },
+        { href: new URL("index.html", import.meta.url).href,
+          _meta: { ui: { csp: {}, prefersBorder: true } } },
     },
     serverTools: {
       load_annotations: {

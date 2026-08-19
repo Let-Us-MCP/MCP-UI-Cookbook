@@ -83,6 +83,10 @@
         "hostCapabilities": {
           "logging": {},
           "openLinks": {},
+          "sandbox": {
+            "csp": {},
+            "permissions": {}
+          },
           "serverTools": {}
         },
         "hostContext": {
@@ -117,7 +121,7 @@
       "id": null,
       "payload": {
         "height": 301,
-        "width": 836
+        "width": 834
       }
     },
     {
@@ -234,7 +238,7 @@
       "id": null,
       "payload": {
         "height": 347,
-        "width": 836
+        "width": 834
       }
     },
     {

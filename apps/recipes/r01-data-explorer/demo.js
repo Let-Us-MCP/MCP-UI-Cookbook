@@ -27,7 +27,8 @@ export const demo = {
     },
     resources: {
       "ui://cookbook/data-explorer":
-        { href: new URL("index.html", import.meta.url).href },
+        { href: new URL("index.html", import.meta.url).href,
+          _meta: { ui: { csp: {}, prefersBorder: true } } },
     },
     serverTools: {
       list_deployments: {

@@ -250,3 +250,11 @@
 
 /* Line numbers make a scrolled file navigable. */
 .demo-pane code { counter-reset: line; }
+
+/* A view that set `prefersBorder: true` gets the visible boundary it asked
+   for. A host that ignores this leaves a server-delivered surface looking like
+   part of its own interface, which is the phishing case in Chapter 4. */
+.demo-stage.bordered iframe {
+  border: 2px solid var(--rule);
+  box-shadow: 0 1px 0 var(--rule);
+}

@@ -14,7 +14,8 @@ export const demo = {
                    containerDimensions: { maxHeight: 500 } },
     resources: {
       "ui://cookbook/spreadsheet":
-        { href: new URL("index.html", import.meta.url).href },
+        { href: new URL("index.html", import.meta.url).href,
+          _meta: { ui: { csp: {}, prefersBorder: true } } },
     },
     serverTools: {
       load_sheet: {

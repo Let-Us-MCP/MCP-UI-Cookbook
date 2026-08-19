@@ -83,6 +83,10 @@
           "message": {
             "text": {}
           },
+          "sandbox": {
+            "csp": {},
+            "permissions": {}
+          },
           "serverTools": {},
           "updateModelContext": {
             "structuredContent": {},
@@ -117,7 +121,7 @@
       "id": null,
       "payload": {
         "height": 87,
-        "width": 836
+        "width": 834
       }
     },
     {
@@ -202,7 +206,7 @@
       "id": null,
       "payload": {
         "height": 516,
-        "width": 836
+        "width": 834
       }
     },
     {
@@ -248,7 +252,7 @@
       "id": null,
       "payload": {
         "height": 735,
-        "width": 836
+        "width": 834
       }
     },
     {
