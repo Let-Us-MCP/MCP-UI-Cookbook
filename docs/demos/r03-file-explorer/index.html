@@ -37,10 +37,16 @@
 <script src="../lib/app-bridge.js"></script>
 <script src="../lib/view.js"></script>
 <script>
-const { h, $, toast, announce, confirmDialog, promptDialog } = View;
+const { h, $, toast, announce, confirmDialog, promptDialog,
+        preview, previewSizes } = View;
 
 let tree = null;
 let selected = null;
+// Previews are cached by file id. Selecting a file twice should not cost two
+// round trips, and moving between sizes should not cost any: the bytes are
+// already here and only the rendering changes.
+const previews = new Map();
+let previewSize = "md";
 const past = [];
 let bridge;
 
@@ -69,7 +75,8 @@ function undo() {
 function render() {
   const node = (n, depth) => {
     const item = h("li", { role: "none" },
-      h("div", { role: "treeitem", tabindex: n.id === selected ? "0" : "-1",
+      h("div", { role: "treeitem", "data-id": n.id,
+                 tabindex: n.id === selected ? "0" : "-1",
                  "aria-selected": n.id === selected ? "true" : "false",
                  "aria-expanded": n.children ? "true" : undefined,
                  draggable: "true",
@@ -103,7 +110,8 @@ function render() {
             .map(([k, v]) => h("tr", {}, h("td", { text: k }), h("td", { text: v }))))),
         h("button", { class: "quiet", text: "Copy path",
           onclick: () => { navigator.clipboard?.writeText(pathOf(current.id))
-            .catch(() => {}); toast("Path copied"); } }))
+            .catch(() => {}); toast("Path copied"); } }),
+        ...(current.children ? [] : previewFor(current)))
     : h("p", { class: "muted", text: "Select something." }));
 
   $("#rename").disabled = $("#delete").disabled = !selected;
@@ -115,6 +123,51 @@ function pathOf(id) {
   let node = find(id);
   while (node && node !== tree) { parts.unshift(node.name); node = parentOf(node.id); }
   return `/${parts.join("/")}`;
+}
+
+// The preview block for one file: the size control, and whatever state the
+// preview is in. A folder gets none, because there is nothing to preview.
+function previewFor(current) {
+  const held = previews.has(current.id) ? previews.get(current.id) : undefined;
+  const controls = h("div", { class: "row" },
+    h("span", { class: "muted", text: "Preview" }),
+    h("span", { class: "spacer" }),
+    previewSizes(previewSize, (size) => { previewSize = size; render(); }));
+
+  if (held === null) {
+    return [controls, h("p", { class: "muted", id: "preview-state",
+                               text: `Reading ${current.name}…` })];
+  }
+  if (held === undefined) {
+    // Not read yet. Ask, and show that something is happening; the tool call
+    // is a network round trip and pretending otherwise produces a view that
+    // looks broken for half a second.
+    loadPreview(current.id);
+    return [controls, h("p", { class: "muted", id: "preview-state",
+                               text: `Reading ${current.name}…` })];
+  }
+  if (held.error) {
+    return [controls, h("div", { class: "banner bad", id: "preview-state",
+                                 text: held.error })];
+  }
+  return [controls, preview({ ...held, name: current.name,
+                              bytes: current.size, size: previewSize })];
+}
+
+async function loadPreview(id) {
+  if (previews.has(id)) return;
+  previews.set(id, null);                     // in flight
+  try {
+    const result = await bridge.callServerTool("read_file", { id });
+    if (result.isError) {
+      previews.set(id, { error: result.content?.[0]?.text ?? "Could not read it." });
+    } else {
+      previews.set(id, result.structuredContent ?? {});
+    }
+  } catch (error) {
+    previews.set(id, { error: `Could not read it. ${error.message}` });
+  }
+  render();
 }
 
 function move(id, intoId) {

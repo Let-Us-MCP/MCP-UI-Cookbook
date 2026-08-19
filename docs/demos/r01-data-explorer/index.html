@@ -175,9 +175,13 @@ View.boot({ name: "data-explorer", version: "1.0.0" }, {}, async (instance) => {
   $("#reload").onclick = load;
 
   const picked = () => rows.filter((r) => selected.has(r.id));
-  const csv = () => ["service,env,version,p95,errors,deployed",
-    ...picked().map((r) => [r.service, r.env, r.version, r.p95, r.errors,
-                            r.at].join(","))].join("\n");
+  // Built through the shared helper, which quotes any field containing a
+  // comma, a quote or a newline. Joining with "," directly is the version that
+  // works until a service is called "checkout, eu" and then silently does not.
+  const csv = () => View.toCsv([
+    ["service", "env", "version", "p95", "errors", "deployed"],
+    ...picked().map((r) => [r.service, r.env, r.version, r.p95, r.errors, r.at]),
+  ]);
 
   $("#copy").onclick = async () => {
     try { await navigator.clipboard.writeText(csv()); }
@@ -185,20 +189,49 @@ View.boot({ name: "data-explorer", version: "1.0.0" }, {}, async (instance) => {
     toast(`${selected.size} rows copied`);
   };
 
+  // Two failures, not one. The capability can be absent at initialize, which
+  // is answered by offering something else, and the request can be refused at
+  // the moment it is made, which is answered by saying so. A control that is
+  // silent on the second is a control the user presses again.
   $("#export").onclick = async () => {
     if (!bridge.hostCapabilities.downloadFile) {
       toast("This host cannot save files. Copy instead.");
       return;
     }
-    await bridge.downloadFile([{ type: "resource", resource: {
-      uri: "file:///deployments.csv", mimeType: "text/csv", text: csv() } }]);
-    toast("Handed to the host");
+    // Two different failures, and only one of them throws.
+    //
+    // A host that declines, or a user who cancels the save dialog, answers
+    // with a result carrying `isError: true`. The promise resolves. Code that
+    // only catches reports success for a file that was never written. A throw
+    // means the request got no answer at all: a timeout, or the bridge going
+    // away.
+    try {
+      const result = await bridge.downloadFile({ contents: [{
+        type: "resource", resource: { uri: "file:///deployments.csv",
+          mimeType: "text/csv", text: csv() } }] });
+      if (result?.isError) {
+        toast("The host declined to save that file.");
+        return;
+      }
+      toast("Handed to the host");
+    } catch (error) {
+      toast(`No answer from the host. ${error.message}`);
+    }
   };
 
   $("#ask").onclick = async () => {
-    await bridge.sendMessage(
-      `Why is p95 high on these deployments?\n${csv()}`);
-    toast("Asked in the conversation");
+    try {
+      const result = await bridge.sendMessage({ role: "user",
+        content: { type: "text",
+          text: `Why is p95 high on these deployments?\n${csv()}` } });
+      if (result?.isError) {
+        toast("The host declined to start a turn.");
+        return;
+      }
+      toast("Asked in the conversation");
+    } catch (error) {
+      toast(`No answer from the host. ${error.message}`);
+    }
   };
 
   await load();

@@ -70,6 +70,11 @@ function draw() {
   $("#clock").textContent = `${clock(at)} / ${clock(clip.seconds)}`;
   $("#seek").max = String(clip.seconds);
   $("#seek").value = String(at);
+  // A range input announces its raw value, so a seek bar reads as "1601" to a
+  // screen reader unless you say what the number means. This is the most
+  // common defect in custom transports.
+  $("#seek").setAttribute("aria-valuetext",
+    `${clock(at)} of ${clock(clip.seconds)}`);
   $("#strip").replaceChildren(...clips.map((c, i) =>
     h("button", { role: "tab", "aria-current": i === current ? "true" : "false",
       "aria-label": c.title, onclick: () => { current = i; at = 0; draw(); } },
@@ -121,7 +126,7 @@ View.boot({ name: "media-viewer", version: "1.0.0" },
     // request is the supported path and the host answers it authoritatively.
     const target = bridge.hostContext.displayMode === "fullscreen"
       ? "inline" : "fullscreen";
-    const { mode } = await bridge.requestDisplayMode(target);
+    const { mode } = await bridge.requestDisplayMode({ mode: target });
     $("#full").textContent = mode === "fullscreen" ? "Exit fullscreen" : "Fullscreen";
     $("#note").textContent = mode === target
       ? `Host granted ${mode}.` : `Host refused and kept ${mode}.`;
@@ -132,9 +137,12 @@ View.boot({ name: "media-viewer", version: "1.0.0" },
     // permission in its permission set. The honest fallback is a link the
     // host can open, or text on the clipboard.
     if (bridge.hostCapabilities.openLinks) {
-      await bridge.openLink(`https://example.invalid/clips/${clips[current].id}`);
-      $("#note").textContent = "No share capability exists, so the view asked "
-        + "the host to open the clip's link instead.";
+      const result = await bridge.openLink(
+        { url: `https://example.invalid/clips/${clips[current].id}` });
+      $("#note").textContent = result?.isError
+        ? "No share capability exists, and the host declined the link too."
+        : "No share capability exists, so the view asked the host to open "
+          + "the clip's link instead.";
       return;
     }
     await navigator.clipboard.writeText(

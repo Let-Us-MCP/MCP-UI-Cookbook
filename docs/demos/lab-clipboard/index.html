@@ -20,6 +20,11 @@
     Drop a file here. Nothing leaves this frame.
   </div>
 
+  <label class="stack">Paste target: press Cmd+V or Ctrl+V here
+    <textarea id="pastehere" rows="2"
+      placeholder="The gesture is the permission."></textarea>
+  </label>
+
   <table>
     <thead><tr><th>Region</th><th class="num">Orders</th><th class="num">Revenue</th></tr></thead>
     <tbody id="body"></tbody>
@@ -40,8 +45,7 @@ const DATA = [
   ["West", 745, 51380],
 ];
 
-const csv = () => ["Region,Orders,Revenue",
-  ...DATA.map((r) => r.join(","))].join("\n");
+const csv = () => View.toCsv([["Region", "Orders", "Revenue"], ...DATA]);
 
 // Two clipboard paths, because the permission may not be there. The async
 // Clipboard API needs `permissions.clipboardWrite` in the resource metadata
@@ -93,17 +97,35 @@ View.boot({ name: "clipboard-lab", version: "1.0.0" }, {}, async (bridge) => {
     }
   };
 
+  // The workaround, built rather than described. A programmatic read needs a
+  // permission that does not exist here; a paste event needs nothing, because
+  // the user's own keystroke is the consent and the browser hands the data
+  // straight to the handler. This works inside the sandbox, and
+  // `tools/check_sandbox.mjs` proves it in a frame with an opaque origin.
+  $("#pastehere").addEventListener("paste", (event) => {
+    const data = event.clipboardData;
+    if (!data) return;
+    const text = data.getData("text/plain");
+    const types = [...data.types].join(", ") || "none";
+    say(`Paste delivered ${text.length} characters. Types offered: ${types}. `
+      + "No permission was requested and none exists.");
+  });
+
   $("#export").onclick = async () => {
     if (!bridge.hostCapabilities.downloadFile) {
       say("This host has no downloadFile capability, so there is nothing to "
         + "fall back to: a sandboxed frame cannot save a file on its own.");
       return;
     }
-    await bridge.downloadFile([{
+    const result = await bridge.downloadFile({ contents: [{
       type: "resource",
       resource: { uri: "file:///regions.csv", mimeType: "text/csv", text: csv() },
-    }]);
-    say("Handed the file to the host. The host decides where it lands.");
+    }] });
+    // The user cancelling the save dialog lands here, not in a catch. A view
+    // that skips this check tells them the file was written when it was not.
+    say(result?.isError
+      ? "The host declined to save it, or the user cancelled."
+      : "Handed the file to the host. The host decides where it lands.");
   };
 
   // A file input works inside the sandbox with no permission and no message.
@@ -122,10 +144,13 @@ View.boot({ name: "clipboard-lab", version: "1.0.0" }, {}, async (bridge) => {
 
   $("#link").onclick = async () => {
     try {
-      await bridge.openLink("https://modelcontextprotocol.io/specification");
-      say("Link handed to the host.");
+      const result = await bridge.openLink(
+        { url: "https://modelcontextprotocol.io/specification" });
+      say(result?.isError
+        ? "The host declined to open the link."
+        : "Link handed to the host.");
     } catch (error) {
-      say(`The host declined: ${error.message}`);
+      say(`No answer from the host: ${error.message}`);
     }
   };
 

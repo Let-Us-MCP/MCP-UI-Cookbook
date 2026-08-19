@@ -50,7 +50,7 @@
               }
             },
             "mimeType": "text/html;profile=mcp-app",
-            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 7463 characters",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 11603 characters",
             "uri": "ui://cookbook/image-annotator"
           }
         ]
@@ -119,7 +119,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 384,
+        "height": 402,
         "width": 834
       }
     },
@@ -214,7 +214,7 @@
               }
             },
             "mimeType": "text/html;profile=mcp-app",
-            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 7463 characters",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 11603 characters",
             "uri": "ui://cookbook/image-annotator"
           }
         ]
@@ -282,7 +282,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 384,
+        "height": 402,
         "width": 834
       }
     },

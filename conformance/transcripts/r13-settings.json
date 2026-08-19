@@ -64,7 +64,7 @@
               }
             },
             "mimeType": "text/html;profile=mcp-app",
-            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 6291 characters",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 7967 characters",
             "uri": "ui://cookbook/settings"
           }
         ]
@@ -75,7 +75,11 @@
       "method": "ui/initialize",
       "id": 1,
       "payload": {
-        "appCapabilities": {},
+        "appCapabilities": {
+          "tools": {
+            "listChanged": false
+          }
+        },
         "appInfo": {
           "name": "settings",
           "version": "1.0.0"

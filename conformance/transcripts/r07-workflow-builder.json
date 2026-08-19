@@ -50,7 +50,7 @@
               }
             },
             "mimeType": "text/html;profile=mcp-app",
-            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 9832 characters",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 11945 characters",
             "uri": "ui://cookbook/workflow-builder"
           }
         ]
@@ -113,7 +113,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 404,
+        "height": 422,
         "width": 834
       }
     },

@@ -290,10 +290,12 @@ export class HostEmulator {
         // harness started asking, because until then every check verified the
         // request and nothing verified that anything came out of it.
         //
-        // Off by default: the demonstrations on this site should not put files
-        // in a reader's downloads folder for clicking a button in a book. The
-        // harness turns it on and asserts the file that lands.
-        if (this.config.performDownloads) {
+        // On unless a configuration turns it off. It was off at first, on the
+        // reasoning that a book should not put files in a reader's downloads
+        // folder. That reasoning was wrong: the button says Export CSV, the
+        // reader pressed it, and a demonstration that narrates the save
+        // instead of performing it is the thing Part VI argues against.
+        if (this.config.performDownloads !== false) {
           try { this._writeDownload(params); }
           catch (error) { return { isError: true }; }
         }

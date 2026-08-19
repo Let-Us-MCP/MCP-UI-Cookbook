@@ -229,11 +229,17 @@ class Demo {
 
   note(event, params) {
     const interesting = {
-      "open-link": (p) => `Host would open ${p.url}`,
+      // Each of these says what this host actually did. The download really
+      // is saved, so it says so. The link really is not opened, because
+      // several demonstrations point at example.invalid on purpose, so it
+      // says that instead of claiming a tab appeared.
+      "open-link": (p) => `Host accepted the link and would open ${p.url} `
+        + "in your browser",
       message: (p) => `Host received a chat message: ${p.content?.text ?? ""}`,
       "model-context": () => "Host replaced the view's model context",
-      download: (p) => `Host would save ${
-        p.contents?.[0]?.resource?.uri ?? p.contents?.[0]?.uri ?? "a file"}`,
+      download: (p) => `Host saved ${
+        (p.contents?.[0]?.resource?.uri ?? p.contents?.[0]?.uri ?? "a file")
+          .split("/").pop()} to your downloads`,
       "display-mode": (p) => `Display mode is now ${p.mode}`,
       "request-teardown": () => "View asked to be torn down",
       log: (p) => `Log (${p.level}): ${

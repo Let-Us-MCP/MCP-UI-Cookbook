@@ -79,7 +79,10 @@ function evaluate(ref, seen = new Set()) {
 }
 
 function draw() {
-  $("#head").replaceChildren(h("tr", {}, h("th", {}),
+  // The corner cell of a sheet header looks empty and is announced as an
+  // empty column header. It names the column of row numbers.
+  $("#head").replaceChildren(h("tr", {}, h("th", {},
+      h("span", { class: "sr-only", text: "Row" })),
     ...COLS.map((c) => h("th", { text: c }))));
   $("#body").replaceChildren(...Array.from({ length: ROWS }, (_, r) =>
     h("tr", {}, h("th", { text: String(r + 1) }),

@@ -103,6 +103,36 @@ export class HostEmulator {
     return { uri, html, meta: entry._meta };
   }
 
+  // What a host does with the contents it was handed. `EmbeddedResource`
+  // carries the bytes inline as `text` or base64 `blob`; `ResourceLink` names
+  // a URL the host fetches with its own network identity, which this emulator
+  // does not do because it has no network.
+  //
+  // The suggested filename is the last segment of `resource.uri`, per the
+  // specification, sanitised: a server that names a file `../../etc/passwd`
+  // must not get one.
+  _writeDownload(params) {
+    for (const item of params?.contents ?? []) {
+      if (item.type !== "resource") continue;
+      const resource = item.resource ?? {};
+      const name = (resource.uri ?? "download").split("/").pop()
+        .replace(/[^A-Za-z0-9._-]/g, "_") || "download";
+      const type = resource.mimeType || "application/octet-stream";
+      const blob = typeof resource.text === "string"
+        ? new Blob([resource.text], { type })
+        : new Blob([Uint8Array.from(atob(resource.blob ?? ""),
+                                    (c) => c.charCodeAt(0))], { type });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = name;
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    }
+  }
+
   // --- transport --------------------------------------------------------
 
   _send(message, direction) {
@@ -199,9 +229,18 @@ export class HostEmulator {
         return { contents: [{ uri: params.uri, ...resource }] };
       }
 
+      // Refusal is a result, not an error.
+      //
+      // `McpUiOpenLinkResult`, `McpUiMessageResult` and
+      // `McpUiDownloadFileResult` each carry an optional `isError`, and the
+      // specification uses it for exactly this: the host declined, or the user
+      // cancelled. A JSON-RPC error means the request could not be processed
+      // at all. Getting this backwards is why a view's `catch` never fires and
+      // the user is told their file was saved when it was not.
       case "ui/open-link": {
         if (!this.hostCapabilities.openLinks) {
-          throw new Error("Link opening denied by user");
+          this.onEvent?.("open-link-denied", params);
+          return { isError: true };
         }
         this.onEvent?.("open-link", params);
         return {};
@@ -209,7 +248,8 @@ export class HostEmulator {
 
       case "ui/message": {
         if (!this.hostCapabilities.message) {
-          throw new Error("Message sending denied");
+          this.onEvent?.("message-denied", params);
+          return { isError: true };
         }
         this.onEvent?.("message", params);
         return {};
@@ -242,9 +282,23 @@ export class HostEmulator {
 
       case "ui/download-file": {
         if (!this.hostCapabilities.downloadFile) {
-          throw new Error("Download denied by user");
+          this.onEvent?.("download-denied", params);
+          return { isError: true };
         }
         this.onEvent?.("download", params);
+        // A real host writes a file. This one only did so once the render
+        // harness started asking, because until then every check verified the
+        // request and nothing verified that anything came out of it.
+        //
+        // On unless a configuration turns it off. It was off at first, on the
+        // reasoning that a book should not put files in a reader's downloads
+        // folder. That reasoning was wrong: the button says Export CSV, the
+        // reader pressed it, and a demonstration that narrates the save
+        // instead of performing it is the thing Part VI argues against.
+        if (this.config.performDownloads !== false) {
+          try { this._writeDownload(params); }
+          catch (error) { return { isError: true }; }
+        }
         return {};
       }
 

@@ -51,7 +51,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 201,
+        "height": 290,
         "width": 836
       }
     },
@@ -60,7 +60,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 318,
+        "height": 406,
         "width": 836
       }
     },
@@ -113,7 +113,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 201,
+        "height": 290,
         "width": 836
       }
     },
@@ -122,7 +122,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 318,
+        "height": 406,
         "width": 836
       }
     },
@@ -174,7 +174,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 201,
+        "height": 290,
         "width": 836
       }
     },
@@ -183,7 +183,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 318,
+        "height": 406,
         "width": 836
       }
     },
@@ -237,7 +237,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 201,
+        "height": 290,
         "width": 836
       }
     },
@@ -246,7 +246,7 @@
       "method": "ui/notifications/size-changed",
       "id": null,
       "payload": {
-        "height": 318,
+        "height": 406,
         "width": 836
       }
     }

@@ -132,7 +132,7 @@ View.boot({ name: "dashboard", version: "1.0.0" },
   $("#expand").onclick = async () => {
     const target = bridge.hostContext.displayMode === "fullscreen"
       ? "inline" : "fullscreen";
-    const { mode } = await bridge.requestDisplayMode(target);
+    const { mode } = await bridge.requestDisplayMode({ mode: target });
     $("#expand").textContent = mode === "fullscreen" ? "Collapse" : "Expand";
   };
 

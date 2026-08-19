@@ -90,9 +90,12 @@ async function decide(req, decision) {
 }
 
 async function ask(req) {
-  await bridge.sendMessage(
-    `Before I decide on ${req.title}: ${req.question}`);
-  toast("Asked in the conversation");
+  const result = await bridge.sendMessage({ role: "user",
+    content: { type: "text",
+      text: `Before I decide on ${req.title}: ${req.question}` } });
+  toast(result?.isError
+    ? "The host rejected the message."
+    : "Asked in the conversation");
 }
 
 View.boot({ name: "approval-center", version: "1.0.0" },

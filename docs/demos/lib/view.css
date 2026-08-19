@@ -287,3 +287,65 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
     transition-duration: .001ms !important;
   }
 }
+
+/* --- document preview -------------------------------------------------
+ *
+ * Three sizes, because "preview" means different things at different points
+ * in a task. Small answers "which file is this" in a list. Medium answers "is
+ * this the right one" beside a decision. Large answers "what does it say"
+ * when the answer is the point. The size is the caller's choice, not the
+ * document's.
+ */
+
+.preview { border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md); overflow: hidden; }
+
+.preview-head { display: flex; gap: 8px; align-items: baseline;
+  padding: 6px 8px; background: var(--color-background-secondary);
+  border-bottom: 1px solid var(--color-border-secondary); }
+
+.preview-name { font-weight: 600; }
+.preview-meta { color: var(--color-text-secondary);
+  font-size: var(--font-text-sm-size); }
+
+.preview-body { margin: 0; }
+
+/* The body is the only thing that changes between sizes. The header is the
+ * same at every size, because a preview whose name disappears when it shrinks
+ * is a thumbnail, not a preview. */
+.preview.sm .preview-body { max-height: 48px; }
+.preview.md .preview-body { max-height: 150px; }
+.preview.lg .preview-body { max-height: 360px; }
+
+.preview-body { overflow: auto; }
+
+.preview-text { margin: 0; padding: 8px;
+  font-family: var(--font-mono); font-size: var(--font-text-sm-size);
+  white-space: pre-wrap; word-break: break-word; }
+
+.preview.sm .preview-text { font-size: 10.5px; }
+
+.preview-image { display: block; margin: 0 auto;
+  max-width: 100%; height: auto;
+  /* A preview of an image is not a crop of it: the whole thing, letterboxed,
+   * or the reader is deciding from a corner. */
+  object-fit: contain;
+  background: var(--color-background-tertiary); }
+
+.preview.sm .preview-image { max-height: 48px; }
+.preview.md .preview-image { max-height: 150px; }
+.preview.lg .preview-image { max-height: 360px; }
+
+.preview-none { margin: 0; padding: 10px;
+  color: var(--color-text-secondary); font-size: var(--font-text-sm-size); }
+
+.preview-sizes { display: inline-flex; gap: 0; }
+.preview-sizes button { border-radius: 0; }
+.preview-sizes button:first-child {
+  border-top-left-radius: var(--border-radius-sm);
+  border-bottom-left-radius: var(--border-radius-sm); }
+.preview-sizes button:last-child {
+  border-top-right-radius: var(--border-radius-sm);
+  border-bottom-right-radius: var(--border-radius-sm); }
+.preview-sizes button[aria-pressed="true"] {
+  background: var(--color-background-info); color: var(--color-text-info); }

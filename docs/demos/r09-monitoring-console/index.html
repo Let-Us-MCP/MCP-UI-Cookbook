@@ -11,7 +11,7 @@
   #log div { padding:2px 8px; border-bottom:1px solid var(--color-border-secondary) }
   #log div.err { color:var(--color-text-danger) }
   #log div.warn { color:var(--color-text-warning) }
-  #log div[aria-selected="true"] { background:var(--color-background-info) }
+  #log div[aria-current="true"] { background:var(--color-background-info) }
 </style>
 </head>
 <body>
@@ -26,7 +26,13 @@
 
   <div id="banner" class="banner warn" hidden></div>
 
-  <div id="log" role="log" aria-label="Live log"></div>
+  <!-- role="log" is an implicit polite live region, so every appended line
+       would be announced. At five lines a second that is unusable, so the
+       region is silenced and a summary is announced on a timer instead. -->
+  <!-- tabindex because the region scrolls: a scrollable box that cannot be
+       focused cannot be scrolled by anyone using a keyboard. -->
+  <div id="log" role="log" aria-live="off" tabindex="0"
+       aria-label="Live log"></div>
 
   <p class="muted" id="hint">Selection survives new lines. Following stops when
     you scroll up, which is the behaviour every terminal has taught people.</p>
@@ -37,7 +43,14 @@
 <script>
 const { h, $, toast, announce } = View;
 
+// Five seconds is long enough that a burst becomes one sentence and short
+// enough that an error is not stale when it is read out.
+const SUMMARY_MS = 5000;
+
 let lines = 0, since = performance.now(), recent = 0;
+// Counted between summaries, not since the beginning: the announcement says
+// what arrived while the user was not being told.
+let unannounced = 0, unannouncedErrors = 0;
 let selectedId = null;
 let suspended = false;
 let bridge;
@@ -51,7 +64,7 @@ function append(entry) {
   if (seen.has(entry.id)) return;
   seen.add(entry.id);
   const node = h("div", { class: entry.level, "data-id": entry.id,
-    "aria-selected": entry.id === selectedId ? "true" : "false",
+    "aria-current": entry.id === selectedId ? "true" : "false",
     text: `${entry.at}  ${entry.service.padEnd(14)}  ${entry.text}`,
     onclick: () => {
       // Selecting a line must survive the next thousand lines arriving. The
@@ -59,7 +72,7 @@ function append(entry) {
       // selection and the scroll position together.
       selectedId = entry.id;
       for (const n of $("#log").children) {
-        n.setAttribute("aria-selected", n.dataset.id === entry.id ? "true" : "false");
+        n.setAttribute("aria-current", n.dataset.id === entry.id ? "true" : "false");
       }
     } });
   $("#log").append(node);
@@ -67,6 +80,8 @@ function append(entry) {
   if ($("#follow").checked) $("#log").scrollTop = $("#log").scrollHeight;
   lines += 1;
   recent += 1;
+  unannounced += 1;
+  if (entry.level === "err") unannouncedErrors += 1;
   if (entry.level === "err") attention(entry);
 }
 
@@ -111,6 +126,20 @@ View.boot({ name: "monitoring-console", version: "1.0.0" }, {}, async (instance)
     recent = 0;
     since = performance.now();
   }, 1000);
+
+  // The announcement rate is a property of the interface, not of the data.
+  // A summary every five seconds is legible at any arrival rate, and it says
+  // the thing a person actually wants to know: how much, and was any of it
+  // bad. Nothing is announced when nothing arrived.
+  setInterval(() => {
+    if (!unannounced) return;
+    const errors = unannouncedErrors
+      ? `, ${unannouncedErrors} error${unannouncedErrors === 1 ? "" : "s"}`
+      : "";
+    announce(`${unannounced} new line${unannounced === 1 ? "" : "s"}${errors}`);
+    unannounced = 0;
+    unannouncedErrors = 0;
+  }, SUMMARY_MS);
 
   // Work that nobody is watching is work that should not be running. The
   // console keeps the connection but stops rendering while hidden.

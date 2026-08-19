@@ -39,7 +39,9 @@
     <canvas id="mini" width="220" height="148"></canvas>
   </div>
 
-  <p class="muted" id="hint">Drag nodes. Select two and connect them. The agent
+  <p class="muted" id="hint">Drag nodes, or Tab to one and use the arrow keys
+    to move it. Enter selects, Shift+Enter adds to the selection; select two
+    and connect them. The agent
     can do both through tools, and every change it makes is undoable.</p>
 </div>
 
@@ -51,6 +53,52 @@ const { h, $, toast, announce } = View;
 let graph = { nodes: [], edges: [] };
 const past = [];
 let selected = [];
+
+// The keyboard equivalents of clicking a node and dragging it. Both existed
+// only as pointer gestures, which left the whole canvas unreachable without a
+// mouse and left the registered tools carrying work they should not have to.
+const NUDGE = 10, NUDGE_FINE = 1;
+const ARROWS = { ArrowLeft: [-1, 0], ArrowRight: [1, 0],
+                 ArrowUp: [0, -1], ArrowDown: [0, 1] };
+
+function pick(id, extend) {
+  selected = extend
+    ? [...new Set([...selected, id])].slice(-2) : [id];
+  draw();
+}
+
+function onNodeKey(event, node) {
+  const arrow = ARROWS[event.key];
+  if (arrow) {
+    event.preventDefault();
+    const by = event.shiftKey ? NUDGE_FINE : NUDGE;
+    const from = { x: node.x, y: node.y };
+    const to = { x: Math.max(0, node.x + arrow[0] * by),
+                 y: Math.max(0, node.y + arrow[1] * by) };
+    // One transaction per keypress would fill the undo stack with nudges, so
+    // a run of arrows in the same direction coalesces the way Chapter 16
+    // describes for typing.
+    const last = past[past.length - 1];
+    if (last?.nudge === node.id) {
+      last.forward = () => { node.x = to.x; node.y = to.y; };
+      node.x = to.x; node.y = to.y;
+      draw();
+      return;
+    }
+    apply({ label: `move ${node.name}`, nudge: node.id,
+            forward: () => { node.x = to.x; node.y = to.y; },
+            back: () => { node.x = from.x; node.y = from.y; } });
+    return;
+  }
+
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    pick(node.id, event.shiftKey);
+    announce(selected.includes(node.id)
+      ? `${node.name} selected, ${selected.length} of 2`
+      : `${node.name} deselected`);
+  }
+}
 let scale = 0.72, panX = 10, panY = 10;
 let bridge;
 
@@ -83,17 +131,21 @@ function draw() {
   const bad = new Set(problems.map((p) => p.id));
 
   for (const node of graph.nodes) {
+    // A div with tabindex is focusable and silent: Enter does not fire click
+    // the way it does on a button, so selection has to be handled explicitly.
+    // role="button" with aria-pressed is what makes the state audible.
     world.append(h("div", {
       class: `node ${selected.includes(node.id) ? "sel" : ""} `
         + `${bad.has(node.id) ? "bad" : ""} ${node.lit ? "lit" : ""}`,
       style: `left:${node.x}px;top:${node.y}px`,
       tabindex: "0",
+      role: "button",
+      "aria-pressed": selected.includes(node.id) ? "true" : "false",
+      "aria-label": `${node.name}, ${node.kind}`,
+      "data-node": node.id,
       onpointerdown: (e) => startDrag(e, node),
-      onclick: (e) => {
-        selected = e.shiftKey
-          ? [...new Set([...selected, node.id])].slice(-2) : [node.id];
-        draw();
-      },
+      onclick: (e) => pick(node.id, e.shiftKey),
+      onkeydown: (e) => onNodeKey(e, node),
     }, h("strong", { text: node.name }), h("small", { text: node.kind })));
   }
 

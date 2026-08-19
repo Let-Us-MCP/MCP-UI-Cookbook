@@ -174,24 +174,34 @@ class AppBridge {
     return this.request("resources/read", { uri });
   }
 
-  openLink(url) {
-    return this.request("ui/open-link", { url });
+  // Every one of these takes the request's `params` object, matching
+  // `App` in the extension SDK exactly.
+  //
+  // They used to take convenience arguments: `openLink(url)`,
+  // `downloadFile(contents)`. That was pleasant to write and wrong to publish,
+  // because the book extracts its listings from these files and a reader
+  // copying `downloadFile([...])` into an application built on the real SDK
+  // gets `params.contents === undefined` and a download that silently never
+  // happens. `tools/check_sdk_api.py` now compares the two.
+
+  openLink(params) {
+    return this.request("ui/open-link", params);
   }
 
-  sendMessage(text, role = "user") {
-    return this.request("ui/message", { role, content: { type: "text", text } });
+  sendMessage(params) {
+    return this.request("ui/message", params);
   }
 
   updateModelContext(params) {
     return this.request("ui/update-model-context", params);
   }
 
-  requestDisplayMode(mode) {
-    return this.request("ui/request-display-mode", { mode });
+  requestDisplayMode(params) {
+    return this.request("ui/request-display-mode", params);
   }
 
-  downloadFile(contents) {
-    return this.request("ui/download-file", { contents });
+  downloadFile(params) {
+    return this.request("ui/download-file", params);
   }
 
   createSamplingMessage(params) {

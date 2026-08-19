@@ -129,7 +129,8 @@ function refresh() {
     read().density === "compact" ? "6px" : "10px");
 }
 
-View.boot({ name: "settings", version: "1.0.0" }, {}, async (instance) => {
+View.boot({ name: "settings", version: "1.0.0" },
+  { tools: { listChanged: false } }, async (instance) => {
   bridge = instance;
   format = View.formatters(bridge.hostContext);
 
@@ -137,6 +138,41 @@ View.boot({ name: "settings", version: "1.0.0" }, {}, async (instance) => {
   original = result.structuredContent?.preferences ?? read();
   write(original);
   refresh();
+
+  // `surface.focusHandoff` is a gap: nothing in the protocol moves focus
+  // across the frame boundary in either direction. The workaround Appendix B
+  // prescribes is this tool, and prescribing it without building it would be
+  // the same as claiming a capability nobody tested.
+  //
+  // It is not a substitute for the missing message. A host cannot call this
+  // by itself; only an agent or an assistive technology driving through the
+  // agent can, so a user working entirely by keyboard is still unserved.
+  const FIELDS = ["digest", "from", "until", "email", "accent", "density",
+                  "renewal", "motion"];
+
+  bridge.registerTool({
+    name: "focus_field",
+    description: "Move keyboard focus to one field of the settings form. "
+      + "Names: " + FIELDS.join(", ") + ".",
+    inputSchema: { type: "object",
+      properties: { field: { type: "string", enum: FIELDS } },
+      required: ["field"] },
+    annotations: { readOnlyHint: true },
+  }, async ({ field }) => {
+    const node = FIELDS.includes(field) ? $(`#${field}`) : null;
+    if (!node) {
+      return { isError: true, content: [{ type: "text", text:
+        `There is no field called "${field}". The form has: ${FIELDS.join(", ")}.` }] };
+    }
+    node.focus();
+    // Scrolling is the view's own, which works. What cannot be done from here
+    // is scrolling the conversation so the view itself is visible, which is
+    // the separate `surface.reveal` gap.
+    node.scrollIntoView({ block: "nearest" });
+    announce(`Focus moved to ${field}`);
+    return { content: [{ type: "text", text:
+      `Focus is now on the ${field} field.` }] };
+  });
 
   $("#note").textContent =
     `Times are shown in ${bridge.hostContext.timeZone ?? "the machine timezone"} `
