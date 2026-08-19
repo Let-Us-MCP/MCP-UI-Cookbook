@@ -168,6 +168,31 @@
           "minCount": 1
         }
       ]
+    },
+    {
+      "label": "CSV quotes the values that would otherwise break it",
+      "evalExpect": [
+        {
+          "expression": "View.toCsv([['a','b'],['plain','has, comma']])",
+          "equals": "a,b\r\nplain,\"has, comma\""
+        },
+        {
+          "expression": "View.toCsv([['x'],['say \"hi\"']])",
+          "equals": "x\r\n\"say \"\"hi\"\"\""
+        },
+        {
+          "expression": "View.toCsv([['x'],['two\\nlines']])",
+          "equals": "x\r\n\"two\nlines\""
+        },
+        {
+          "expression": "View.toCsv([['x'],[null]])",
+          "equals": "x\r\n"
+        },
+        {
+          "expression": "View.toCsv([['n'],[0]])",
+          "equals": "n\r\n0"
+        }
+      ]
     }
   ]
 }

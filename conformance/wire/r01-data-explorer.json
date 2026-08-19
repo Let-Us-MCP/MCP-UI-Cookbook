@@ -74,7 +74,7 @@
           "uri": "ui://cookbook/data-explorer",
           "mimeType": "text/html;profile=mcp-app",
           "text": "<the view's HTML, elided>",
-          "textLength": 8454,
+          "textLength": 8677,
           "_meta": {
             "ui": {
               "csp": {},

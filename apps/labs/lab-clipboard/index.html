@@ -45,8 +45,7 @@ const DATA = [
   ["West", 745, 51380],
 ];
 
-const csv = () => ["Region,Orders,Revenue",
-  ...DATA.map((r) => r.join(","))].join("\n");
+const csv = () => View.toCsv([["Region", "Orders", "Revenue"], ...DATA]);
 
 // Two clipboard paths, because the permission may not be there. The async
 // Clipboard API needs `permissions.clipboardWrite` in the resource metadata

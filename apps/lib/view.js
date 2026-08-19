@@ -92,6 +92,23 @@
     });
   }
 
+  // CSV that survives its own data.
+  //
+  // `rows.map(r => r.join(","))` is what everybody writes and it is wrong the
+  // first time a value contains a comma, a quote or a newline: the row gains a
+  // column, or ends early, and the spreadsheet that opens it shows something
+  // plausible and false. RFC 4180 wants a field quoted when it contains any of
+  // those, with embedded quotes doubled.
+  //
+  // CRLF, also per RFC 4180. Excel needs it; everything else tolerates it.
+  function toCsv(rows) {
+    const field = (value) => {
+      const text = value === null || value === undefined ? "" : String(value);
+      return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    };
+    return rows.map((row) => row.map(field).join(",")).join("\r\n");
+  }
+
   // A preview of a document, at one of three sizes.
   //
   // Everything here renders from bytes the view already holds. Nothing is
@@ -209,5 +226,5 @@
   }
 
   global.View = { h, $, $$, announce, toast, confirmDialog, promptDialog,
-                  applySafeArea, formatters, preview, previewSizes, boot };
+                  applySafeArea, formatters, preview, previewSizes, toCsv, boot };
 })(globalThis);

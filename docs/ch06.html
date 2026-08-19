@@ -150,8 +150,8 @@
 <p>One more convention, visible on every code block in this book. A tag above each listing says where the code came from, because a reader who cannot tell which listings are load-bearing has to treat all of them as suspect:</p>
 <p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
 <p><em>Captured</em> means real output from a real run, quoted verbatim, including the parts that are inconvenient. 3 listings in this book are captured, and one of them is a test run reporting its own failures.</p>
-<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 24 of the 97 listings.</p>
-<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 70 extracted listings against their files line by line.</p>
+<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 25 of the 99 listings.</p>
+<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 71 extracted listings against their files line by line.</p>
 <h2 id="a-worked-failure-table">A worked failure table</h2>
 <p>Here is the same capability, <code>file.export</code>, written out as the template asks, so that the shape is concrete before Part II starts using it eighty-nine times. Read the middle column first. Knowing <em>when</em> you learn about a failure determines where the handling code goes: an initialisation-time answer belongs in the code that decides what to render at all, and a click-time answer belongs next to the control.</p>
 <div class="table-wrap"><table>

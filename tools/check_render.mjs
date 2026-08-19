@@ -509,6 +509,22 @@ async function runCase(spec, name, browser, workdir) {
           + `error(s), first is ${JSON.stringify(list[0])}`);
         await browser.evalFrame("window.__errors.length = 0");
       }
+      // Evaluate an expression inside the view and compare it. For pure
+      // helpers this is the only honest test: the fixtures are realistic, so
+      // they never contain the value that breaks the function, and a helper
+      // that is only ever called with safe input is a helper nobody has
+      // tested.
+      if (step.evalExpect) {
+        for (const check of step.evalExpect) {
+          const got = await browser.evalFrame(
+            `JSON.stringify(${check.expression})`);
+          const actual = JSON.parse(got ?? "null");
+          if (actual !== check.equals) {
+            problems.push(`${label}: ${check.expression} gave `
+              + `${JSON.stringify(actual)}, expected ${JSON.stringify(check.equals)}`);
+          }
+        }
+      }
       if (step.expectMessage) {
         const want = step.expectMessage;
         const log = JSON.parse(await browser.evalPage(
@@ -670,7 +686,8 @@ async function main() {
     browser.frameSession = null;
     const problems = await runCase(spec, name, browser, workdir);
     const count = (spec.steps ?? []).reduce(
-      (n, s) => n + (s.expect?.length ?? 0), 0);
+      (n, s) => n + (s.expect?.length ?? 0) + (s.evalExpect?.length ?? 0)
+        + (s.expectMessage ? 1 : 0), 0);
     assertions += count;
     console.log(`  ${name}: ${count} assertion(s) on rendered output`
       + (problems.length ? "  FAILED" : ""));

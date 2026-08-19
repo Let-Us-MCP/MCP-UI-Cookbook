@@ -175,9 +175,13 @@ View.boot({ name: "data-explorer", version: "1.0.0" }, {}, async (instance) => {
   $("#reload").onclick = load;
 
   const picked = () => rows.filter((r) => selected.has(r.id));
-  const csv = () => ["service,env,version,p95,errors,deployed",
-    ...picked().map((r) => [r.service, r.env, r.version, r.p95, r.errors,
-                            r.at].join(","))].join("\n");
+  // Built through the shared helper, which quotes any field containing a
+  // comma, a quote or a newline. Joining with "," directly is the version that
+  // works until a service is called "checkout, eu" and then silently does not.
+  const csv = () => View.toCsv([
+    ["service", "env", "version", "p95", "errors", "deployed"],
+    ...picked().map((r) => [r.service, r.env, r.version, r.p95, r.errors, r.at]),
+  ]);
 
   $("#copy").onclick = async () => {
     try { await navigator.clipboard.writeText(csv()); }
