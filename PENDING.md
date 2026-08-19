@@ -68,10 +68,10 @@ complete one.
 
 ## 6. The streaming log announces every line
 
-**The gap.** Recipe 9's log is `role="log"`, so every arriving line is
-announced. At five lines a second that is unusable with a screen reader. The
-correct behaviour is probably a periodic summary rather than per-line
-announcement, and the recipe entry records it as a known limitation.
+**Status: fixed.** Recipe 9's log carries `aria-live="off"` and announces a
+summary every five seconds: "twelve new lines, two errors", and nothing at all
+when nothing arrived. The render harness asserts the attribute, so a future
+edit that restores the implicit live region fails the build.
 
 ## 7. Chapter depth
 

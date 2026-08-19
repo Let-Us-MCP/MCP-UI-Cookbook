@@ -5,7 +5,8 @@
       "expect": [ { "selector": "#log div", "minCount": 24 },
                   { "selector": "#conn", "text": "live" },
                   { "selector": "#log div.err", "minCount": 1 },
-                  { "selector": "#banner", "hidden": true } ] },
+                  { "selector": "#banner", "hidden": true },
+                  { "selector": "#log", "attr": { "name": "aria-live", "value": "off" } } ] },
     { "label": "selecting a line survives more lines arriving",
       "click": "#log div", "settleMs": 200,
       "expect": [ { "selector": "#log div[aria-selected=\"true\"]", "count": 1 } ] } ] }

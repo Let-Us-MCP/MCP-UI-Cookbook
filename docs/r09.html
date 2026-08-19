@@ -169,7 +169,17 @@ if ($(&quot;#follow&quot;).checked) $(&quot;#log&quot;).scrollTop = $(&quot;#log
 <p><strong>The frame is hidden by CSS.</strong> No <code>visibilitychange</code> fires, the console keeps rendering, and nothing tells it otherwise. Chapter 15 has this gap; the mitigation here is that rendering a log line is cheap.</p>
 <p><strong>A burst larger than the buffer.</strong> The buffer is 220 lines, so a burst of a thousand loses the oldest. The rate chip is what tells the user this is happening.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
-<p>The log is <code>role="log"</code>, which is a live region with polite semantics, so new lines are announced without interrupting. At high rates that is unusable, which is a real tension: the correct behaviour at five lines a second is probably to announce a summary, and this recipe does not do that. It is recorded as a known limitation rather than claimed as done. Lines carry their level in text as well as colour. Selection is by click and by keyboard.</p>
+<p>The log carries <code>role="log"</code> for its semantics and <code>aria-live="off"</code> to silence it. A log region is politely live by default, so every arriving line would be read out, and at five lines a second a screen reader user hears nothing but the log. The announcement rate is a property of the interface and not of the data, so the recipe announces a summary every five seconds instead:</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r09-monitoring-console/index.html</code></p><pre class="js"><code>  setInterval(() =&gt; {
+    if (!unannounced) return;
+    const errors = unannouncedErrors
+      ? `, ${unannouncedErrors} error${unannouncedErrors === 1 ? &quot;&quot; : &quot;s&quot;}`
+      : &quot;&quot;;
+    announce(`${unannounced} new line${unannounced === 1 ? &quot;&quot; : &quot;s&quot;}${errors}`);
+    unannounced = 0;
+    unannouncedErrors = 0;
+  }, SUMMARY_MS);</code></pre>
+<p>“Twelve new lines, two errors” is one utterance carrying what a person needs to decide whether to look. Nothing is announced when nothing arrived, so an idle console is silent. Lines carry their level in text as well as colour. Selection is by click and by keyboard.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li><code>tail_logs</code> returns 24 lines and all render.</li>

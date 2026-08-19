@@ -11,6 +11,7 @@ Markers a chapter may use, each on a line of its own:
 
     @cap surface.resize     the generated header block for one entry
     @demo lab-surface       the live application, its source, its transcript
+    @n{listings}            a number computed from the repository, inline
     @index                  the generated capability index
     @matrix                 the generated capability by recipe matrix
     @gaps                   the generated table of unsupported capabilities
@@ -288,6 +289,26 @@ MARKERS = {
 }
 
 MARKER_RE = re.compile(r"<p>(@[a-z]+)(?:\s+([^<\s]+))?</p>")
+
+# A number the repository can compute about itself. Written `@n{listings}` in
+# the prose and replaced here, so that no chapter can carry a stale total.
+import importlib.util as _ilu
+_spec = _ilu.spec_from_file_location("check_counts", ROOT / "tools" / "check_counts.py")
+_counts = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(_counts)
+FACTS = _counts.facts()
+
+COUNT_RE = re.compile(r"@n\{([a-z0-9 ]+)\}")
+
+
+def fill_counts(text: str) -> str:
+    def one(m: re.Match) -> str:
+        key = m.group(1)
+        if key not in FACTS:
+            raise SystemExit(f"@n{{{key}}}: not a known fact; "
+                             f"known are {', '.join(sorted(FACTS))}")
+        return str(FACTS[key])
+    return COUNT_RE.sub(one, text)
 FIG_RE = re.compile(r'<p><img src="(figures/[^"]+)" alt="([^"]*)"\s*/?></p>')
 LISTING_RE = re.compile(
     r"<!--\s*listing:\s*(?P<kind>extracted|captured|illustrative)"
@@ -320,6 +341,7 @@ def transform(body: str) -> str:
     body = re.sub(r'<tr class="(?:header|odd|even)">', "<tr>", body)
     body = LISTING_RE.sub(listing, body)
     body = MARKER_RE.sub(marker, body)
+    body = fill_counts(body)
     body = FIG_RE.sub(figure, body)
     body = body.replace("<table>", '<div class="table-wrap"><table>')
     body = body.replace("</table>", "</table></div>")

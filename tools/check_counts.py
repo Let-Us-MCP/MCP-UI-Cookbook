@@ -77,6 +77,17 @@ FACTS = {
     "illustrative listings": listing_tags["illustrative"],
 }
 
+def facts() -> dict[str, int]:
+    """The numbers the repository knows about itself.
+
+    Imported by `tools/build_site.py` so that a page can render a count
+    instead of asserting one. A number that is generated cannot be stale, and
+    the patterns below then only have to police the numbers still written by
+    hand.
+    """
+    return dict(FACTS)
+
+
 # fact -> phrases the prose may use for it. NUMBER stands for digits or the
 # spelled form, and every pattern is anchored by enough surrounding words that
 # it cannot match an ordinary sentence about capabilities.

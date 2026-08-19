@@ -26,7 +26,10 @@
 
   <div id="banner" class="banner warn" hidden></div>
 
-  <div id="log" role="log" aria-label="Live log"></div>
+  <!-- role="log" is an implicit polite live region, so every appended line
+       would be announced. At five lines a second that is unusable, so the
+       region is silenced and a summary is announced on a timer instead. -->
+  <div id="log" role="log" aria-live="off" aria-label="Live log"></div>
 
   <p class="muted" id="hint">Selection survives new lines. Following stops when
     you scroll up, which is the behaviour every terminal has taught people.</p>
@@ -37,7 +40,14 @@
 <script>
 const { h, $, toast, announce } = View;
 
+// Five seconds is long enough that a burst becomes one sentence and short
+// enough that an error is not stale when it is read out.
+const SUMMARY_MS = 5000;
+
 let lines = 0, since = performance.now(), recent = 0;
+// Counted between summaries, not since the beginning: the announcement says
+// what arrived while the user was not being told.
+let unannounced = 0, unannouncedErrors = 0;
 let selectedId = null;
 let suspended = false;
 let bridge;
@@ -67,6 +77,8 @@ function append(entry) {
   if ($("#follow").checked) $("#log").scrollTop = $("#log").scrollHeight;
   lines += 1;
   recent += 1;
+  unannounced += 1;
+  if (entry.level === "err") unannouncedErrors += 1;
   if (entry.level === "err") attention(entry);
 }
 
@@ -111,6 +123,20 @@ View.boot({ name: "monitoring-console", version: "1.0.0" }, {}, async (instance)
     recent = 0;
     since = performance.now();
   }, 1000);
+
+  // The announcement rate is a property of the interface, not of the data.
+  // A summary every five seconds is legible at any arrival rate, and it says
+  // the thing a person actually wants to know: how much, and was any of it
+  // bad. Nothing is announced when nothing arrived.
+  setInterval(() => {
+    if (!unannounced) return;
+    const errors = unannouncedErrors
+      ? `, ${unannouncedErrors} error${unannouncedErrors === 1 ? "" : "s"}`
+      : "";
+    announce(`${unannounced} new line${unannounced === 1 ? "" : "s"}${errors}`);
+    unannounced = 0;
+    unannouncedErrors = 0;
+  }, SUMMARY_MS);
 
   // Work that nobody is watching is work that should not be running. The
   // console keeps the connection but stops rendering while hidden.
