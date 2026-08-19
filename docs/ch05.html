@@ -74,21 +74,21 @@
 </nav>
 <main>
 <p class="eyebrow">Chapter 5</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>Two shapes, repeated. Parts II and III are capability entries. Part V is recipes.</p>
-<p>Both templates are stated here so you can hold the rest of the book to them, and notice when it falls short.</p>
+<p>Hold the rest of the book to them.</p>
 <h2 id="what-is-in-a-capability-entry">What is in a capability entry?</h2>
 <p>Each entry answers eleven questions in the same order.</p>
 <p><strong>Capability.</strong> Identifier, level, tag, and ground. Generated from the registry, so the prose cannot contradict it.</p>
-<p><strong>Motivation.</strong> Why an application needs this at all. If the honest answer is “it does not, but people expect it”, the entry says that.</p>
-<p><strong>User experience.</strong> What the person sees and does. Written from the outside.</p>
-<p><strong>Application behaviour.</strong> What your code does, including the part it does before anybody clicks anything.</p>
-<p><strong>Host behaviour.</strong> What belongs to the host. This is the half most entries in other documents leave out, and it is the half that determines whether your application works in a host you have never tested against.</p>
-<p><strong>Lifecycle.</strong> Initialisation, execution, cancellation, completion, destruction. Most capabilities are boring here. The ones that are not are the ones that break.</p>
-<p><strong>Security.</strong> Which trust boundary this crosses and what the host is entitled to do about it.</p>
+<p><strong>Motivation.</strong> Why an application needs it. Where the answer is “it does not, but users expect it”, the entry says so: <code>dialog.alert</code> is one.</p>
+<p><strong>User experience.</strong> What the person sees and does, from the outside. For <code>file.export</code>: a button appears, they press it, the host asks where to save.</p>
+<p><strong>Application behaviour.</strong> What your code does, including at startup. For <code>file.export</code>: check <code>hostCapabilities.downloadFile</code> in the initialize result, and render the button only if it is there.</p>
+<p><strong>Host behaviour.</strong> What the host owes you. For <code>file.export</code>: confirm with the user, derive the filename from the last segment of <code>resource.uri</code>, sanitise it against path traversal. Most documents omit this half, and it is the half that decides whether you work in an untested host.</p>
+<p><strong>Lifecycle.</strong> Initialisation, execution, cancellation, completion, destruction. Most entries have nothing to say. <code>lifecycle.beforeClose</code> and <code>tool.invoke</code> have all of it.</p>
+<p><strong>Security.</strong> Which boundary it crosses and what the host may do about it. For <code>file.export</code>: bytes leave the sandbox, so the host may refuse on size or policy.</p>
 <p><strong>Accessibility.</strong> Keyboard, focus, name and role, scaling, motion. Not a section at the end of the book. A section in every entry, because that is the only way it survives contact with a deadline.</p>
 <p><strong>Failure modes.</strong> Unsupported, denied, cancelled, timeout, failed. Five of them, always, in that order.</p>
-<p><strong>Minimal example.</strong> The smallest thing that demonstrates it, running on the page.</p>
-<p><strong>Conformance tests.</strong> The automated checks that decide whether an implementation has it.</p>
-<p>Not every entry in this book spends a paragraph on all eleven. A capability like <code>picker.color</code> has nothing interesting to say about lifecycle. The template is a checklist for the author, not a quota for the reader, and where a section is silent it is because the honest content was one sentence long.</p>
+<p><strong>Minimal example.</strong> The smallest running demonstration. <code>file.export</code> is in <code>lab-clipboard</code>, three buttons and about 20 lines.</p>
+<p><strong>Conformance tests.</strong> The assertions that decide whether an implementation has it. For <code>file.export</code>: <code>ui/download-file</code> is sent when <code>downloadFile</code> is present, and never sent when it is absent.</p>
+<p>Not every entry uses all eleven. <code>picker.color</code> has nothing to say about lifecycle. The template is a checklist for the author, not a quota, and silence means the content was one sentence long.</p>
 <h2 id="the-five-failure-modes">The five failure modes</h2>
 <p>This is the part worth internalising, because it is where the difference between a demonstration and an application lives.</p>
 <p><strong>Unsupported.</strong> <code>hostCapabilities.downloadFile</code> was absent at <code>ui/initialize</code>. Do not render the export button at all. Not disabled with a tooltip, not showing an error when pressed: absent.</p>
@@ -100,25 +100,26 @@
 <img src="figures/diag-failures.png" alt="The five failure modes, and the moment each one is discoverable" />
 <figcaption aria-hidden="true">The five failure modes, and the moment each one is discoverable</figcaption>
 </figure>
-<p>The value of naming all five is that they are discoverable at different times. Unsupported is known before render. Denied and failed are known at the attempt. Cancelled comes from the user or the host at any moment. Timeout is known only by deciding it. An application that handles one of them and calls it error handling has handled the least common one.</p>
+<p>They become discoverable at different moments, which is why naming all five matters. Unsupported is known at <code>ui/initialize</code>. Denied and failed arrive with the response. Cancelled arrives at any time, from either side. Timeout you decide yourself.</p>
+<p>An application that handles only “failed” and calls it error handling has covered one case out of five.</p>
 <h2 id="what-is-in-a-recipe-entry">What is in a recipe entry?</h2>
 <p>Part V uses a different template, because a recipe is an argument rather than a reference.</p>
-<p><strong>Goal.</strong> The conventional application being reproduced, in one line.</p>
-<p><strong>Capability delta.</strong> Which primitives this recipe exercises that no earlier recipe does. This is the load-bearing field. A recipe with an empty delta gets merged or deleted, because it is not teaching anything and not testing anything, and thirteen recipes that each cover the same twelve capabilities would prove nothing about the model’s sufficiency.</p>
-<p><strong>Surface.</strong> What it looks like and how much room it needs.</p>
-<p><strong>Components.</strong> Which Part IV components it composes.</p>
+<p><strong>Goal.</strong> The conventional application being reproduced, in one line. Recipe 5: “editable grid computation”.</p>
+<p><strong>Capability delta.</strong> The primitives this recipe exercises that no earlier one does, generated from the registry. Recipe 1 claims 16; Recipe 13 claims 4. An empty delta means the recipe gets merged or deleted.</p>
+<p><strong>Surface.</strong> What it looks like and how much room it needs. Recipe 1 is one column at any width and asks for <code>maxHeight: 620</code>.</p>
+<p><strong>Components.</strong> Which Part IV components it composes, all from <code>apps/lib/view.css</code>.</p>
 <p><strong>Atomic capabilities.</strong> The full list, generated from the registry.</p>
-<p><strong>Local interactions and agentic interactions.</strong> The split from Chapter 3, declared as a table before any code.</p>
-<p><strong>Host dependencies.</strong> What it needs by conformance level, so a reader can tell whether it will run in their host.</p>
-<p><strong>Failure cases.</strong> What happens when each dependency is absent. The recipes in this book are all built to run at Level 1 with reduced function, and the entry says what “reduced” means.</p>
-<p><strong>Accessibility.</strong> The keyboard-only path through the whole application.</p>
-<p><strong>Conformance checks.</strong> The observable behaviours a host has to produce, in the form the harness asserts them.</p>
+<p><strong>Local and agentic interactions.</strong> The Chapter 3 split, as a table, before any code. Recipe 1 lists 6 local and 4 crossings.</p>
+<p><strong>Host dependencies.</strong> What it needs by level, so you can tell whether it runs in your host. Every recipe here renders at level 1 with reduced function.</p>
+<p><strong>Failure cases.</strong> What happens when each dependency is absent. Recipe 6 sends its export to the clipboard when <code>downloadFile</code> is missing, and says so in a toast.</p>
+<p><strong>Accessibility.</strong> The keyboard-only path through the application. Recipes 6 and 7 say where theirs is incomplete.</p>
+<p><strong>Conformance checks.</strong> The observable behaviours, phrased as the harness asserts them. <code>make render</code> runs 88 of these against real servers.</p>
 <h2 id="why-every-listing-has-a-tag">Why every listing has a tag</h2>
 <p>One more convention, visible on every code block in the book. A tag above each listing says where it came from:</p>
 <p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
 <p><em>Captured</em> means it is real output from a real run, quoted verbatim, including the parts that are inconvenient.</p>
-<p><em>Illustrative</em> means it was written for the page and nothing executes it. Message shapes quoted from the specification are illustrative. So are the sketches of code you might write.</p>
-<p>The reason for the convention is that books about protocols accumulate code that used to work. A reader who cannot tell which listings are load-bearing has to treat all of them as suspect. Chapter 29 describes the check that keeps the tags honest.</p>
+<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 22 of the 55 listings.</p>
+<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 30 extracted listings against their files line by line.</p>
 <h2 id="a-worked-failure-table">A worked failure table</h2>
 <p>Here is the same capability, <code>file.export</code>, written out as the template asks, so that the shape is concrete before Part II starts using it eighty-five times.</p>
 <div class="table-wrap"><table>
@@ -164,7 +165,7 @@
 <h2 id="what-to-remember">What to remember</h2>
 <p>If you take one thing from Part I into the rest of the book, take the failure section. Every capability entry from here on has one, and in almost every case it is longer than the section describing the happy path. That ratio is the point. The happy path is a few lines of code you would have written anyway. The rest is what makes an application survive a host that says no.</p>
 <h2 id="reading-an-entry-critically">Reading an entry critically</h2>
-<p>Two habits worth having, because not every entry in Parts II and III deserves equal trust.</p>
+<p>Not every entry deserves equal trust. Two habits:</p>
 <p><strong>Check the ground badge against your own experience.</strong> A <em>platform</em> entry is a claim about browsers, and browsers differ. A <em>wire</em> entry is a claim about a specification that is still moving, and eight of them carry a draft badge. A <em>gap</em> entry is the strongest claim in the book, because it asserts that something does not exist, and absence is the hardest thing to verify.</p>
 <p><strong>Ask what the failure section leaves out.</strong> The template asks for five modes and most entries have something to say about three. Where an entry is silent on cancelled or timeout, it is usually because the capability is synchronous and local, and that reasoning should be visible rather than assumed. Where it is silent and the capability is neither, the entry is thin and you should treat it as a starting point rather than as a specification.</p>
 

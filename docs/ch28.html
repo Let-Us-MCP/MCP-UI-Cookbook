@@ -85,7 +85,7 @@
 <p>Four parts, and Appendix B carries all four for each of the fourteen.</p>
 <p><strong>The recipe that needs it.</strong> Not a hypothetical. A named application, in this repository, that a reader can run.</p>
 <p><strong>What the workaround costs.</strong> Every gap has one, and stating the cost is what separates a finding from a complaint. Persistence through a server tool costs a round trip and stops working at Level 1. Streaming through repeated tool results costs portability. Approval through a queue-and-perform convention costs the guarantee.</p>
-<p><strong>The shape of a mechanism.</strong> One request, one notification, or one context field, described concretely enough to argue with. <code>ui/set-view-state</code> and a <code>viewState</code> field in the initialize result. A <code>visibility</code> field in <code>ui/notifications/host-context-changed</code>. <code>ui/request-attention</code> with a severity and a label.</p>
+<p><strong>A concrete mechanism.</strong> One request, one notification, or one context field, specific enough to argue with: <code>ui/set-view-state</code> plus a <code>viewState</code> field in the initialize result; a <code>visibility</code> field on <code>ui/notifications/host-context-changed</code>; <code>ui/request-attention</code> with a severity and a label.</p>
 <p><strong>What it reopens.</strong> Chapter 4’s threat model, applied to the proposal. A mechanism that reopens one of the five attacks needs a better story than convenience, and saying which attack in the proposal saves everybody an argument later.</p>
 <h2 id="where-findings-go">Where findings go</h2>
 <p>Upstream, as issues against the extension specification, not into a private extension. A host-specific mechanism for view state solves the problem for one host and fragments it for everybody else, which is the outcome the extension exists to prevent.</p>
@@ -98,7 +98,7 @@
 <p><strong>The fixtures come from real servers.</strong> <code>tools/record_fixtures.mjs</code> starts each recipe’s actual MCP server over stdio, calls the tools listed in its <code>record.json</code>, and writes the responses to <code>fixtures.json</code>. So the sentence this book makes is true: the view in the live pane receives what the code in the server pane produces. The demonstration is honest even though the server is not executing in your browser.</p>
 <p><strong>Nothing is hosted.</strong> Static files on GitHub Pages. No backend, no build server, no runtime. That is possible because an MCP application does not need a model or a server to render, only something willing to answer the host side of a <code>postMessage</code> conversation.</p>
 <h2 id="what-the-transcript-pane-is-for">What the transcript pane is for</h2>
-<p>It is a teaching device and a verification artifact at the same time, and the second use is the one worth noticing.</p>
+<p>It is a teaching device and a test artifact at once.</p>
 <p>The log you see on a page is the same log <code>tools/check_demos.mjs</code> records into <code>conformance/transcripts/</code> when it drives the same page in headless Chrome. Layer 1 of Chapter 26 is literally the thing on screen. When a recipe entry says “selecting a row sends exactly one <code>ui/update-model-context</code>”, you can verify it by selecting a row, and the build verifies it by diffing a file.</p>
 <h2 id="the-fixture-chain-exactly">The fixture chain, exactly</h2>
 <p>The claim that the demonstrations are honest rests on one chain, and it is short enough to state completely.</p>
@@ -113,11 +113,11 @@
 <p>What does not port, and is the honest limit from Chapter 26, is driving the view’s own interface. That needs either the view’s registered tools or a host willing to grant <code>allow-same-origin</code> in a test configuration, and the first is the better answer because it is the same mechanism agents and accessibility tools use.</p>
 <h2 id="try-this-on-any-page">Try this on any page</h2>
 <p>Three things worth doing once, in any demonstration on this site, because they make the whole architecture visible in about a minute.</p>
-<p>Open the Messages tab and reload the view. Watch the handshake: two lines out, one line back, then a size report. That is the whole startup sequence for every MCP application there has ever been.</p>
+<p>Open Messages and reload the view. Watch <code>ui/initialize</code> go out, the result come back, <code>ui/notifications/initialized</code> follow, then <code>ui/notifications/size-changed</code>. Four lines, and every MCP application starts the same way.</p>
 <p>Press a control in the grey strip. Those are the things only a host can do, so the page does them on the host’s behalf, and each one produces a message you can expand and read.</p>
 <p>Then open the <code>index.html</code> tab and find the code that handled it. The file the tab shows is the file the frame above is running, fetched from the same URL, which is the one guarantee that makes a book about a protocol worth reading two months after it was written.</p>
 <h2 id="what-this-book-does-not-do">What this book does not do</h2>
-<p>Two levels above what is here, both worth naming.</p>
+<p>Two escalations exist and neither is built.</p>
 <p>Small client-only examples can be made editable in place with an in-browser bundler, so a reader can change <code>app.tsx</code> and watch the iframe re-render. That needs a custom template carrying the bridge shim, and it is the obvious next step for the labs.</p>
 <p>Full server-plus-view examples can open in a browser-based Node runtime, which boots the actual MCP server in a tab and runs it against a real host. That is how the extension’s own examples run locally against its reference host, and it would turn the recipes from demonstrations into things a reader can fork without installing anything.</p>
 <p>Neither is here. What is here is thirty applications that run, their sources, their transcripts, and a repository where all of it regenerates with one command.</p>

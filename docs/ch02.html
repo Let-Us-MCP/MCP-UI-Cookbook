@@ -228,8 +228,8 @@ host→app  result
 app→host  ui/notifications/initialized
 app→host  ui/notifications/size-changed   { width: 836, height: 147 }
 app→host  ui/notifications/size-changed   { width: 836, height: 306 }</code></pre>
-<p>Five lines, and four facts. The view started. The host answered. The view finished initialising, so the host may now speak. And the view reported its size twice, because the first report was of an empty document and the second was of the drawn one.</p>
-<p>That second size is worth dwelling on. It is not a bug; it is what happens when a view draws asynchronously, which every view does. A host that acted only on the first report would show a 147 pixel frame around 306 pixels of content.</p>
+<p>Five lines, four facts. The view started. The host answered. The view sent <code>ui/notifications/initialized</code>, so the host may now speak. And it reported its size twice, at 147px then 306px.</p>
+<p>The second size is not a bug. Every view draws asynchronously, so the first report measures an empty document. A host that acted only on the first would put a 147px frame around 306px of content.</p>
 <p>The absence of lines is as informative as their presence. No <code>ui/initialize</code> means the view’s script never ran. No <code>ui/notifications/initialized</code> means it threw between connecting and finishing. No <code>size-changed</code> means it never observed its own content, which in a flexible container means a frame that never grows.</p>
 <h2 id="content-or-structuredcontent">content or structuredContent?</h2>
 <p>A tool result has a <code>content</code> array and a <code>structuredContent</code> object, and they are for different readers.</p>

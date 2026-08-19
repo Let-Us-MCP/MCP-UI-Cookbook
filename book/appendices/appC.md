@@ -10,9 +10,9 @@ Levels are cumulative: a host claiming Level 3 passes the checks for Levels 1,
 2 and 3. Extended capabilities are not on these lists, because they are
 optional at any level and their absence must be handled by applications.
 
-Items marked *not standardised* are Core capabilities with no mechanism. A
-host cannot be asked to implement them until the gap in Appendix B is closed,
-and they are listed so that the shape of the missing work is visible.
+Items marked *not standardised* are Core capabilities with no mechanism. No
+host can implement them until the gap in Appendix B closes. They are listed so
+the missing work is countable: 9 of the 67 Core capabilities.
 
 @checklists
 

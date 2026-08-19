@@ -225,7 +225,8 @@ app→host  ui/update-model-context   { selected: [&quot;INC-4133&quot;] }</code
 <p>The lab in Chapter 17 has a control that turns hover publishing on so you can watch this happen, and the counter next to it shows the ratio: thousands of local events, a handful of published facts.</p>
 <h2 id="the-one-exception">The one exception</h2>
 <p>There is a case where routing an ordinary interaction through the model is right: when the user cannot perform it directly. Voice control, accessibility tooling, and hands-free operation all mean the model is the only pointing device available.</p>
-<p>That case is exactly why the extension lets a view register tools of its own. A view that exposes <code>show_panel</code>, <code>highlight_line_item</code> and <code>get_state</code> as tools has given the agent a semantic interface to the same operations the mouse performs, without routing the mouse through the model. Chapter 18 builds one, and it is worth noticing that the same design serves both accessibility and testability: the harness in Part VI drives views through exactly those tools.</p>
+<p>That is why a view can register its own tools. Expose <code>show_panel</code>, <code>highlight_line_item</code> and <code>get_state</code> and the agent gets a semantic interface to the same operations the mouse performs.</p>
+<p>The same tools serve three callers: an agent, an assistive technology, and <code>tools/check_render.mjs</code>, which drives Recipes 4, 7 and 10 through them.</p>
 
 <div class="pager"><a href="ch02.html"><span class="dir">Previous</span>2. What Crosses the Boundary</a><a href="ch04.html" style="text-align:right"><span class="dir">Next</span>4. The Sandbox and What It Costs You</a></div>
 </main>

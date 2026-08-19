@@ -112,9 +112,9 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>A spatial surface needs a fixed height</strong>, which conflicts with letting the frame grow. Pick a height that works at the narrowest width you accept, report it once, and scroll or zoom inside it. A canvas that grows with its content will fight <code>surface.resize</code> and lose.</p>
+<p><strong>Report a fixed height and scroll inside it.</strong> Recipe 6 uses 260px, Recipe 7 uses 280px, both chosen to work at 380px wide. A canvas that grows with its content fights <code>surface.resize</code> and loses.</p>
 <p><strong>Pointer capture, <code>touch-action: none</code>, and zoom about the cursor.</strong> All three in Chapter 9, and all three are the difference between a canvas that feels right and one that fights.</p>
-<p><strong>A minimap is the cheapest orientation aid there is</strong>, and the first thing people miss when it is absent. Recipe 7 draws one into a 220 by 148 canvas in eleven lines and it makes a graph twice as usable.</p>
+<p><strong>Add a minimap.</strong> Recipe 7 draws one into a 220 by 148 <code>&lt;canvas&gt;</code> in eleven lines: <code>fillRect</code> per node, <code>strokeRect</code> for the viewport.</p>
 <p><strong>Every gesture needs a button.</strong> Zoom in, zoom out, reset, fit, and arrow keys to pan. A canvas that can only be operated by dragging cannot be operated at all by a significant number of people, and this is the group where that failure is most common.</p>
 <p><strong>Undo per gesture, not per frame.</strong> A drag produces one transaction on pointerup, not sixty during pointermove. Recipe 7 records the start position on pointerdown and pushes a single transaction at the end.</p>
 <h2 id="media">Media</h2>
@@ -149,7 +149,8 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>Consider not replacing the native controls.</strong> They handle keyboard, screen readers, captions, picture-in-picture, playback rate and every platform’s conventions, and they do it in less code than your version. Replace them when you need controls the native set does not have, and inherit the whole accessibility contract when you do: Space to play, arrows to seek, a labelled slider with <code>aria-valuetext</code> in minutes and seconds rather than in seconds, and a caption toggle with <code>aria-pressed</code>.</p>
+<p><strong>Use the native controls unless you have a reason.</strong> <code>&lt;video controls&gt;</code> handles keyboard, screen readers, captions, picture-in-picture and playback rate in zero lines.</p>
+<p>Replace them and you inherit the contract: Space to play, arrows to seek, <code>aria-valuetext</code> on the slider in minutes and seconds rather than raw seconds, and <code>aria-pressed</code> on the caption toggle. Recipe 12 does all of that in about 40 lines and is still worse than the native set.</p>
 <p><strong>Pause when hidden.</strong> Chapter 14. Audio continuing from a frame nobody can see is genuinely alarming, and it is the fastest way to make a user close a conversation.</p>
 <p><strong>Fullscreen goes through the host.</strong> <code>ui/request-display-mode</code>, not the Fullscreen API, because <code>fullscreen</code> is not in the extension’s permission set. Chapter 16.</p>
 <p><strong>A thumbnail strip is a tab list.</strong> Give it roving tabindex, <code>aria-current</code> on the selected item, and real labels rather than image alt text that says “thumbnail”.</p>
@@ -191,13 +192,13 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>The approval card</strong> is a decision surface with the six provenance fields from Chapter 21 attached, and its whole design argument is that a card without them trains people to click through it. Structurally it is a heading, a consequence sentence, a description list, and two buttons. It is also where a second confirmation belongs for high-risk actions, and where the audit trail is exposed.</p>
-<p><strong>The tool status chip</strong> is a small object that represents one call: its name, its state, its progress, and the controls that apply to it. The states are queued, running, cancelled, failed and done, and each has a different set of available actions. The chip is worth extracting as a component because applications end up with several calls in flight, and a consistent representation of “what is happening” is what makes that legible.</p>
+<p><strong>The approval card</strong> is a heading, a consequence sentence, a <code>&lt;dl&gt;</code> of five provenance fields, and two buttons. Recipe 10 renders “asked by”, “on behalf of”, “tool”, “arguments” and “prior approvals”. High risk adds a second <code>confirmDialog</code>. Without those fields users learn to click through it.</p>
+<p><strong>The tool status chip</strong> carries a name, one of five states, a progress value and exactly the controls that state allows. Queued has none. Running has Cancel. Failed has Retry. Cancelled and Done have neither. Recipe 11 puts the state name in text, not only in colour.</p>
 <p><strong>The streaming log</strong> is the append-only list from Chapter 23 with the selection and follow behaviour that terminals taught everybody: follow the tail until the user scrolls up, then stop following and say so. Recipe 9 turns following off automatically when the user scrolls away from the bottom, which is the behaviour nobody notices when it is right.</p>
 <p><strong>The context inspector</strong> shows what the view has published to the model. It is a debugging tool that deserves to ship. A user who can see that the assistant knows about three selected rows and nothing else can predict what it will say, and the same panel is how a developer finds out that their view has been publishing hover state for a week. Every demonstration in this book has one, in the form of the “Show what the model was told” control.</p>
 <p><strong>The proposal card</strong> is the shape that makes agent editing safe. The agent’s version, visible next to the current one, with Accept and Decline, and accepting recorded as one undo transaction. Chapters 18 and 20 both arrive at it, from prefill and from conflict policy respectively, which is a decent sign that it is the right primitive.</p>
 <h3 id="definition-of-done-for-each">Definition of done, for each</h3>
-<p>Each of the agent-native components has a small definition of done, and they are worth stating because these are the components with no existing reference to copy from.</p>
+<p>No reference implementation exists for these five, so here is a definition of done for each.</p>
 <p><strong>Approval card.</strong> Renders a title, a risk level, a consequence sentence, and a provenance list of at least four fields. Approve and Deny are both single actions; high risk adds a confirmation. Every decision produces exactly one context update carrying the outcome and nothing else. It never accepts an approval over its own tool interface.</p>
 <p><strong>Tool status chip.</strong> Carries a name, one of five states, a progress value when it has one, and exactly the controls that state allows. Queued has none. Running has Cancel. Failed has Retry. Cancelled and Done have neither. The state name is visible as text, not only as a colour.</p>
 <p><strong>Streaming log.</strong> Appends, trims to a cap, and never rebuilds. Follows the tail until the user scrolls away, then stops and shows that it has stopped. Selection is by identifier so it survives the next thousand lines.</p>

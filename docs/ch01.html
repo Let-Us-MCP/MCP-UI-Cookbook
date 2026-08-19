@@ -75,7 +75,7 @@
 <main>
 <p class="eyebrow">Chapter 1</p><h1>The Capability Model</h1><p class="summary">Eighty-five named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</p><p>An MCP application is a web page with most of the web taken away. No storage. No address bar. No window.open, no print, no camera without permission it did not grant itself. Four hundred pixels wide, inside a document it cannot see.</p>
 <p>What it has instead is a message channel to the host. Anything the page cannot do alone, it asks for.</p>
-<p>So the useful question is not “how do I build a table” but “which of the things a table normally does still work in here, and what do I do about the rest”. “It depends on the host” is true and useless, so this book breaks the surface into eighty-five named operations and attaches four facts to each.</p>
+<p>So the question is which of a table’s normal behaviours survive in here. Sorting does. Copying does, with a fallback. Dragging a row out does not. “It depends on the host” is true and useless, so this book breaks the surface into eighty-five named operations and attaches four facts to each.</p>
 <figure>
 <img src="figures/diag-capability.png" alt="The capability model: an identifier, a level, a tag, and a ground" />
 <figcaption aria-hidden="true">The capability model: an identifier, a level, a tag, and a ground</figcaption>
@@ -89,9 +89,10 @@
 <p><strong>Level 2, Interactive.</strong> Focus, keyboard, selection, clipboard, files, dialogs, and errors that recover. Everything at this level is about the application becoming a place where work happens rather than a place where results appear.</p>
 <p><strong>Level 3, Native-Like.</strong> Display modes, spatial interaction, lifecycle awareness, persistence, history, media. This is where applications stop feeling like cards and start feeling like applications, and it is also where the standard runs out fastest.</p>
 <p><strong>Level 4, Agentic.</strong> Tools, streaming, model context, approval, and shared ownership of state. Nothing at this level has a counterpart in ordinary web development, because ordinary web pages do not have a second party that can edit the document while the user is typing in it.</p>
-<p>Levels are cumulative and they are claims. A host that says Level 3 is saying that every Core capability at Levels 1, 2 and 3 behaves the way the entry describes, and Appendix C turns that into a checklist somebody can run.</p>
+<p>Levels are cumulative claims. A host claiming Level 3 is asserting that all 67 Core capabilities at levels 1 to 3 behave as their entries describe. Appendix C turns that into a checklist you can run.</p>
 <h2 id="core-or-extended">Core or Extended?</h2>
-<p>At each level, capabilities are tagged Core or Extended. Core capabilities are mandatory at their level: they are the substance of the claim. Extended capabilities are optional at any level, which is a statement about your code rather than about the host. It means an application that requires an Extended capability must still work when it is absent, and it means the entry has to say what “still work” looks like.</p>
+<p>Core is mandatory at its level: 67 of the 85. Extended is optional at any level: the other 18.</p>
+<p>Extended is a statement about your code, not the host’s. If you use <code>clipboard.read</code> or <code>system.share</code>, your application must still work when they are absent, and the entry says what that looks like.</p>
 <p>Sixty-seven of the eighty-five capabilities are Core. That ratio is not a target, it is what fell out of asking, for each one, whether an application could be recognisably itself without it.</p>
 <h2 id="is-this-a-protocol-feature-or-my-problem">Is this a protocol feature or my problem?</h2>
 <p>The ground badge answers it, and it is the most useful thing on any entry.</p>
@@ -150,7 +151,7 @@
 <p>Everything the host is willing to do is in that answer. If <code>openLinks</code> is absent, the host will not open links, and a view that renders a link anyway is a view with a dead control in it. If <code>serverTools</code> is absent, your refresh button cannot work. If <code>sampling</code> is absent, the view cannot reach a model on its own and has to escalate to the conversation instead.</p>
 <p>The important discipline is not checking. It is checking <em>early</em>. A capability that turns out to be missing at the moment the user presses the button produces an error message; the same capability checked during initialization produces an interface that never offered the button. The demonstration below takes capabilities away one at a time so you can watch the difference.</p>
 <div class="demo" data-demo="lab-handshake" id="lab-handshake"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<p>Press “Become a very poor host” and reload. The view still works. It has fewer buttons, and it says why, and that is the whole of progressive enhancement in this environment.</p>
+<p>Press “Become a very poor host” and reload. The view still renders its table. The link, log and read buttons are gone, and a chip says which capability each one needed.</p>
 <h2 id="build-level-1-first">Build Level 1 first</h2>
 <p>The four levels are cumulative, which means they are also an order of work, and the order is not the one most teams pick.</p>
 <p>Most embedded applications are built by starting from a design and implementing whatever it needs. That produces a view that requires Level 3 on its first day and fails in every host that is not there yet, usually silently, because a missing capability does not error, it simply never arrives.</p>

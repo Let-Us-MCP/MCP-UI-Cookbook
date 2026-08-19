@@ -162,7 +162,8 @@
 <li>A file chosen with <code>&lt;input type="file"&gt;</code> is readable in the view and is not transmitted anywhere the view did not send it.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>Look at the shape of this chapter. Every capability that reaches outside the frame either has a message (<code>ui/open-link</code>, <code>ui/download-file</code>) or is a gap (<code>clipboard.read</code>, <code>system.share</code>, <code>system.print</code>). Every capability that stays inside the frame just works. That line is the sandbox boundary, and once you can see it you can predict which of your requirements are going to be difficult before you write any code.</p>
+<p>Every capability here that reaches outside the frame either has a message (<code>ui/open-link</code>, <code>ui/download-file</code>) or is a gap (<code>clipboard.read</code>, <code>system.share</code>, <code>system.print</code>). Everything that stays inside works.</p>
+<p>That line is the sandbox boundary. Sort your requirements by it before you write code and you will know which ones are expensive.</p>
 
 <div class="pager"><a href="ch09.html"><span class="dir">Previous</span>9. Keyboard, Pointer and Selection</a><a href="ch11.html" style="text-align:right"><span class="dir">Next</span>11. Pickers and Dropzones</a></div>
 </main>

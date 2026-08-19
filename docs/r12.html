@@ -166,7 +166,8 @@ $(&quot;#note&quot;).textContent = mode === target
 <p><strong>Autoplay.</strong> The player never attempts it. Everything starts paused, which is both a policy requirement and good manners.</p>
 <p><strong>Captions with no track selected.</strong> The caption line is hidden rather than showing an empty box.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
-<p>The transport is a labelled group: Play with an <code>aria-label</code> that changes with state, a seek slider with a real name, and a captions toggle with <code>aria-pressed</code>. The frame carries an <code>aria-label</code> describing the clip. The thumbnail strip is a tab list with <code>aria-current</code>. What is missing, and worth naming, is <code>aria-valuetext</code> on the slider in minutes and seconds rather than raw seconds, which is the single most common defect in custom transports.</p>
+<p>Play carries an <code>aria-label</code> that changes with state. The seek slider has a real name, the captions toggle has <code>aria-pressed</code>, the frame has an <code>aria-label</code> naming the clip, and the thumbnail strip is a tab list with <code>aria-current</code>.</p>
+<p>Missing: <code>aria-valuetext</code> on the slider, in minutes and seconds rather than raw seconds. That is the most common defect in custom transports.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li><code>list_clips</code> returns three clips and the strip renders three thumbnails.</li>

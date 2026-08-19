@@ -103,7 +103,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>Refresh is worth noticing. It looks like a crossing and it is not: the view calls the tool directly, and the model is never involved in a button that means “get the current numbers”.</p>
+<p>Refresh looks like a crossing and is not. The view calls <code>service_health</code> itself through <code>tools/call</code>; no model is involved in a button meaning “get the current numbers”.</p>
 <h2 id="what-it-looks-like">What it looks like</h2>
 <p>A responsive grid of tiles, minimum 150 pixels each, so the same view is one column in a narrow panel and four across in a wide one. A drill-down panel opens under the grid rather than as a modal, because a modal in a four hundred pixel frame covers everything.</p>
 <h2 id="updating-in-place">Updating in place</h2>

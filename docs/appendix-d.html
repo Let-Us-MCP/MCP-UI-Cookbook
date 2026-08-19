@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Appendix D. Glossary &middot; The MCP UI Cookbook</title>
-<meta name="description" content="The terms this book uses in a specific way.">
+<meta name="description" content="The terms this book uses in a specific way, each with the message, field or file it corresponds to.">
 <meta property="og:title" content="Appendix D. Glossary">
-<meta property="og:description" content="The terms this book uses in a specific way.">
+<meta property="og:description" content="The terms this book uses in a specific way, each with the message, field or file it corresponds to.">
 <link rel="stylesheet" href="book.css">
 
 </head>
@@ -73,23 +73,23 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Appendix D</p><h1>Glossary</h1><p class="summary">The terms this book uses in a specific way.</p><p><strong>Agent.</strong> The model-driven participant in the conversation. It can call tools, receive context, and act on a view through the tools that view registers. It cannot see the view’s pixels or its DOM.</p>
-<p><strong>Agent boundary.</strong> The line between interactions handled locally inside the view and interactions that involve the model, tools, or external state. Chapter 3.</p>
-<p><strong>Atomic capability.</strong> The smallest independently useful UI or host-interaction operation, with a stable namespaced identifier.</p>
-<p><strong>Capability delta.</strong> For a recipe, the capabilities it exercises that no earlier recipe does. A recipe with an empty delta is merged or deleted.</p>
-<p><strong>Conformance level.</strong> One of four cumulative tiers, Embedded, Interactive, Native-Like and Agentic, that a host may claim. Appendix C.</p>
-<p><strong>Core.</strong> A capability that is mandatory at its level. The substance of a level claim.</p>
-<p><strong>Extended.</strong> A capability that is optional at any level. Applications must handle its absence.</p>
-<p><strong>Golden transcript.</strong> The recorded JSON-RPC message log for a scenario. Replaying and diffing it is Layer 1 of the verification model.</p>
-<p><strong>Ground.</strong> Where a capability’s behaviour comes from: a message on the wire, core MCP, the browser platform, your own code, or nowhere at all.</p>
-<p><strong>Host.</strong> The application the user is in: a chat client, an IDE, a console. It connects to servers, allocates surfaces, and mediates every privileged operation.</p>
-<p><strong>Host context.</strong> The object describing the environment, delivered in the initialize result and updated by partial notifications: theme, styles, locale, timezone, display mode, container dimensions, safe area, device capabilities.</p>
-<p><strong>Ownership map.</strong> For an application where both user and agent can write, the assignment of each region of state to user-owned, agent-owned, or shared. Chapter 20.</p>
-<p><strong>Recipe.</strong> A reference application composed from components, serving as both tutorial and integration test.</p>
-<p><strong>Sandbox proxy.</strong> In web hosts, the outer cross-origin iframe that wraps the view and relays messages, so the host’s origin never shares a document with server-delivered content.</p>
-<p><strong>Structured content.</strong> The <code>structuredContent</code> field of a tool result: data for the view, which never enters the model’s context. Distinct from <code>content</code>, which is what the model reads.</p>
-<p><strong>Surface.</strong> The region the host allocates to an application: inline card, side panel, modal, fullscreen.</p>
-<p><strong>View.</strong> The embedded UI a server delivers as a <code>ui://</code> resource and the host renders in a sandboxed iframe. Used interchangeably with “application” in this book.</p>
+<p class="eyebrow">Appendix D</p><h1>Glossary</h1><p class="summary">The terms this book uses in a specific way, each with the message, field or file it corresponds to.</p><p><strong>Agent.</strong> The model-driven participant. It calls server tools through the host, and it calls <em>your</em> tools through <code>tools/call</code> when you declare <code>appCapabilities.tools</code>. It never sees your pixels or your DOM. Chapter 18.</p>
+<p><strong>Agent boundary.</strong> The line between what runs locally and what crosses to the model. Chapter 3 puts sorting, filtering and selection on the local side.</p>
+<p><strong>Atomic capability.</strong> The smallest independently useful operation, with a namespaced identifier such as <code>surface.resize</code>. All 85 are in Appendix A.</p>
+<p><strong>Capability delta.</strong> The capabilities a recipe exercises that no earlier recipe does, generated into each recipe entry. Recipe 1 claims 16; by Recipe 13 they are down to a handful.</p>
+<p><strong>Conformance level.</strong> One of four cumulative tiers: 1 Embedded, 2 Interactive, 3 Native-Like, 4 Agentic. 9 capabilities sit at level 1, 41 at level 2, 17 at level 3 and 18 at level 4. Appendix C is the checklist.</p>
+<p><strong>Core.</strong> Mandatory at its level. 67 of the 85 are Core.</p>
+<p><strong>Extended.</strong> Optional at any level, so your view must work without it. 18 of the 85.</p>
+<p><strong>Golden transcript.</strong> The recorded JSON-RPC log for one demonstration, in <code>conformance/transcripts/</code>. <code>node tools/check_demos.mjs</code> replays and diffs all 30 of them.</p>
+<p><strong>Ground.</strong> Where a capability’s behaviour comes from: <code>wire</code> (28), <code>core</code> (4), <code>platform</code> (20), <code>app</code> (19) or <code>gap</code> (14). The badge on every entry.</p>
+<p><strong>Host.</strong> The chat client, IDE or console the user is in. It connects to servers, allocates surfaces and mediates every privileged operation. It needs no model to do any of that.</p>
+<p><strong>Host context.</strong> The object in the <code>ui/initialize</code> result: <code>theme</code>, <code>styles</code>, <code>locale</code>, <code>timeZone</code>, <code>displayMode</code>, <code>containerDimensions</code>, <code>safeAreaInsets</code>, <code>deviceCapabilities</code>, <code>platform</code>, <code>userAgent</code>, <code>toolInfo</code>. Updated by <code>ui/notifications/host-context-changed</code>, which carries only changed keys.</p>
+<p><strong>Ownership map.</strong> Each region of state labelled user-owned, agent-owned or shared, written down before the code. Chapter 20; Recipe 4 declares one.</p>
+<p><strong>Recipe.</strong> A reference application that is also an integration test. Thirteen of them, in <code>apps/recipes/</code>, each with an MCP server that runs over stdio.</p>
+<p><strong>Sandbox proxy.</strong> The outer cross-origin iframe a web host must wrap your view in, so the host’s origin never shares a document with server-delivered content. It relays every message except <code>ui/notifications/sandbox-*</code>.</p>
+<p><strong>Structured content.</strong> The <code>structuredContent</code> field of a <code>CallToolResult</code>. Your view reads it; it never enters the model’s context. Distinct from <code>content</code>, which is what the model reads.</p>
+<p><strong>Surface.</strong> The region the host allocates: inline card, side panel, modal or fullscreen. Its size arrives as <code>containerDimensions</code>; its mode as <code>displayMode</code>.</p>
+<p><strong>View.</strong> The HTML your server delivers as a <code>ui://</code> resource with mimeType <code>text/html;profile=mcp-app</code>, rendered in an iframe with <code>allow-scripts</code> and no <code>allow-same-origin</code>. Used interchangeably with “application” here.</p>
 
 <div class="pager"><a href="appendix-c.html"><span class="dir">Previous</span>Appendix C. Conformance Checklists</a><a href="appendix-e.html" style="text-align:right"><span class="dir">Next</span>Appendix E. Prior Art and Sources</a></div>
 </main>

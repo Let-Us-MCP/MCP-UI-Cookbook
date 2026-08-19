@@ -74,7 +74,7 @@
 </nav>
 <main>
 <p class="eyebrow">Chapter 19</p><h1>Tool Invocation and Streaming</h1><p class="summary">The view can call server tools without the model&#x27;s involvement, receive arguments before they finish arriving, and take delivery of a result it was rendered for.</p><p>Your view can call server tools itself. No model sits between the click and the call.</p>
-<p>That is the point of this chapter. <code>tools/call</code> from a view is not asking the agent to do something. It is a straight line: view, host, server, view. Nothing is sampled and nothing enters the conversation.</p>
+<p><code>tools/call</code> from a view is not asking the agent to do anything. It is a straight line: view, host, server, view. Nothing is sampled and nothing enters the conversation.</p>
 <div class="demo" data-demo="lab-tools" id="lab-tools"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="how-do-i-refresh-my-data">How do I refresh my data?</h2>
 <div class="cap" id="tool.invoke"><div class="cap-head"><code class="cap-id">tool.invoke</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Call a server tool from a button, through the host.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>tools/call</code><code>serverTools</code><code>visibility</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-tools">lab-tools</a></dd></dl></div>

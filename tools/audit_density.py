@@ -63,10 +63,24 @@ FLOOR = {"chapters": 0.28, "recipes": 0.30, "frontmatter": 0.16,
 
 
 def sentences(path: Path) -> list[str]:
+    """Prose sentences, with paragraphs unwrapped first.
+
+    The Markdown is hard wrapped at about 78 columns, so splitting on a
+    newline-excluding pattern measures line fragments rather than sentences.
+    Join each paragraph into one line before splitting.
+    """
     raw = FENCE.sub(" ", FRONT.sub("", path.read_text(encoding="utf-8")))
-    body = "\n".join(line for line in raw.splitlines()
-                     if not line.startswith(("#", "|", "@", "<!--", "![")))
-    return [" ".join(s.split()) for s in re.findall(r"[^.!?\n]{25,}[.!?]", body)]
+    kept = [line for line in raw.splitlines()
+            if not line.startswith(("#", "|", "@", "<!--", "!["))]
+    paragraphs = re.split(r"\n\s*\n", "\n".join(kept))
+    out: list[str] = []
+    for para in paragraphs:
+        flat = " ".join(para.split())
+        if len(flat) < 25:
+            continue
+        out += [" ".join(s.split())
+                for s in re.findall(r"[^.!?]{25,}[.!?]", flat)]
+    return out
 
 
 def main() -> int:

@@ -134,7 +134,7 @@
 <div class="cap" id="notify.banner"><div class="cap-head"><code class="cap-id">notify.banner</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Hold a persistent, non-modal status in view.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
 <p>Persistent and non-modal. The distinguishing property is that a banner lasts as long as the condition does, which means something has to remove it when the condition ends.</p>
 <p>Good uses are all statements about the <em>state of the interface</em> rather than about an event: this data is four minutes stale, you are offline and looking at a cached copy, this document is read-only because somebody else has it open, this host does not support downloads so the export button is missing.</p>
-<p>That last one is worth noticing. A banner is how you explain a capability that turned out to be absent, when its absence would otherwise be inexplicable. Chapter 1 argued for silently omitting controls you cannot offer; the exception is when the user is looking for something specific and its absence looks like a bug.</p>
+<p>The last row is the exception to Chapter 1. Normally you omit a control you cannot offer. When the user is hunting for it, a banner saying “this host cannot save files, use Copy” beats a mystery.</p>
 <h2 id="how-do-i-get-attention-from-a-hidden-view">How do I get attention from a hidden view?</h2>
 <div class="cap" id="notify.attention"><div class="cap-head"><code class="cap-id">notify.attention</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Signal from a backgrounded view that a human is needed.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r09.html">Monitoring Console</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-dialogs">lab-dialogs</a></dd></dl></div>
 <p>You cannot. A view that is scrolled away, collapsed, or on a tab nobody is looking at has no way to say a person is needed.</p>
@@ -160,7 +160,8 @@
 <li>A banner is removed when the condition it describes ends.</li>
 </ol>
 <h2 id="what-to-remember">What to remember</h2>
-<p>The whole of this chapter is yours to build, which means the whole of it is also yours to get consistent. Pick one dialog implementation, one toast, one banner, and use them everywhere. The recipes in Part V share exactly one of each, defined once in <code>apps/lib/view.js</code>, and that is the entire reason thirteen applications built over one night look like they came from the same place.</p>
+<p>All of it is yours to build, so all of it is yours to keep consistent. Pick one dialog, one toast, one banner and use them everywhere.</p>
+<p>The 13 recipes share one of each, defined once in <code>apps/lib/view.js</code>: <code>confirmDialog</code>, <code>promptDialog</code>, <code>toast</code> and the <code>.banner</code> class.</p>
 
 <div class="pager"><a href="ch07.html"><span class="dir">Previous</span>7. Focus and Scroll</a><a href="ch09.html" style="text-align:right"><span class="dir">Next</span>9. Keyboard, Pointer and Selection</a></div>
 </main>

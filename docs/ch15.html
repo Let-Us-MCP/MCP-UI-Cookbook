@@ -79,8 +79,8 @@
 <h2 id="where-do-i-keep-state">Where do I keep state?</h2>
 <div class="cap" id="state.save"><div class="cap-head"><code class="cap-id">state.save</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Persist view state keyed to the view&#x27;s identity.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r05.html">Spreadsheet</a>, <a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
 <div class="cap" id="state.restore"><div class="cap-head"><code class="cap-id">state.restore</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Come back up where the user left off.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
-<p>On the server, through a tool.</p>
-<p><code>localStorage</code> either throws or is discarded with the frame, because the view’s origin is opaque. The demo probes it at startup and reports what it found.</p>
+<p>On the server, through a tool call.</p>
+<p><code>localStorage.setItem</code> throws <code>SecurityError</code> in the frame, or gives you a partition discarded with it. The demo probes it at startup and prints what it found.</p>
 <p>There is no message either. No <code>ui/set-state</code>, no <code>ui/get-state</code>, nothing in <code>hostContext</code> that round-trips. The OpenAI Apps SDK has <code>setWidgetState</code>, which is exactly this feature, and the extension’s own “Future Considerations” lists state persistence as deferred.</p>
 <p><strong>The workaround is a server tool.</strong> Persist through <code>tools/call</code>, keyed by something stable that the server knows: a conversation identifier, a document id, the tool’s own arguments. Recipe 4 does this, with a <code>save_document</code> tool marked <code>visibility: ["app"]</code> so the model neither sees it nor can call it.</p>
 <p class="provenance extracted">Extracted from from <code>apps/recipes/r04-document-editor/server.js</code></p><pre class="js"><code>save_document: {
@@ -95,7 +95,7 @@
       text: `Saved revision ${saves} at the server.` }] };
   },
 },</code></pre>
-<p><strong>What the workaround costs.</strong> A round trip for every save, which means debouncing and an autosave interval rather than saving on every keystroke. Server state for something that is conceptually local, like a scroll position or which panel is open, which feels wrong because it is. And no persistence at all when <code>hostCapabilities.serverTools</code> is absent, which is a real Level 1 host.</p>
+<p><strong>What it costs.</strong> A round trip per save, so Recipe 4 debounces at 900ms rather than saving per keystroke. Scroll position and which panel is open end up on a server, which is absurd and is what the gap forces. And with <code>hostCapabilities.serverTools</code> absent you get no persistence at all.</p>
 <p><strong>What a mechanism would look like.</strong> <code>ui/set-view-state</code> and a <code>viewState</code> field in the initialize result, scoped to the view identity the host already has, with a size limit the host enforces. Cheap, obviously useful, and proposed by prior art on both sides of this ecosystem.</p>
 <p><strong>Design around it in the meantime.</strong> Ask what genuinely has to survive. A document does. A sort order probably does not, and reconstructing it from the tool arguments is free. The recipes here persist documents and preferences and deliberately forget everything else, which is not a compromise so much as a discipline the gap forced.</p>
 <h2 id="how-do-i-build-undo">How do I build undo?</h2>
@@ -112,9 +112,9 @@ function apply({ label, forward, back }) {
   announce(label);
 }</code></pre>
 <p>Three properties of that shape matter.</p>
-<p><strong>Clearing the redo stack on a new action</strong> is what makes the history a line rather than a tree, and it is what every user expects.</p>
-<p><strong>A label per transaction</strong> is what lets you say “Undid delete Contracts” instead of “Undid”. In an application where an agent also makes changes, the label is how a user tells whose change they are about to reverse.</p>
-<p><strong>Closures rather than snapshots</strong> is the part that matters in an agentic application. A snapshot-based undo reverts the whole document to an earlier state, which also silently reverts anything the agent did in between. A transaction reverses exactly its own change and leaves the rest alone.</p>
+<p><strong><code>future.length = 0</code> on every new action.</strong> Keeps the history a line rather than a tree, which is what users expect.</p>
+<p><strong>A <code>label</code> per transaction.</strong> Lets you announce “Undid delete Contracts” rather than “Undid”. When an agent also writes, the label is how the user knows whose change they are reversing.</p>
+<p><strong>Closures, not snapshots.</strong> A snapshot undo restores the whole document and silently reverts anything the agent did in between. <code>back()</code> reverses exactly its own change.</p>
 <p><strong>Grouping.</strong> One transaction per meaningful unit, not per event. Typing gets grouped by pause: Recipe 4 commits a transaction after 900 milliseconds of inactivity. Dragging gets one transaction on drop, not one per pointermove. The test is whether a user pressing Undo once gets back to a state they recognise.</p>
 <figure>
 <img src="figures/xkcd-undo.png" alt="One undo stack, two authors" />
@@ -125,12 +125,12 @@ function apply({ label, forward, back }) {
 <div class="cap" id="history.redo"><div class="cap-head"><code class="cap-id">history.redo</code><span class="cap-tag core">Core</span><span class="cap-level">Level 3</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Reapply what was reverted.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-state">lab-state</a></dd></dl></div>
 <p>The operations themselves are four lines each once the transaction model exists. What deserves the attention is what belongs in the stack.</p>
 <p><strong>Include the agent’s changes.</strong> This is the argument of Chapter 20 arriving early. When an agent rewrites a paragraph, that rewrite goes on the same undo stack as the user’s own edits, so a single Cmd+Z takes it back. An agent whose changes cannot be undone is an agent people will not let near their document, and correctly so.</p>
-<p>Recipe 4 makes accepting a proposed rewrite exactly one transaction, so one Undo restores the human’s words. That is the whole safety story for agent-assisted editing, and it is nine lines of code.</p>
+<p>Recipe 4 pushes one transaction when the user accepts a proposed rewrite, so a single Cmd/Ctrl+Z restores their words. Nine lines, and <code>check_render.mjs</code> asserts it.</p>
 <p><strong>Do not include selection, scroll, or view state.</strong> Undo that restores a scroll position feels broken, because the user’s model of undo is about content. Some editors undo selection changes as part of restoring context, which is a defensible variant, but undoing a <em>pure</em> selection change as its own step is not.</p>
 <p><strong>Bind the shortcuts.</strong> Cmd/Ctrl+Z and Shift+Cmd/Ctrl+Z, with the caveats from Chapter 9 about the host possibly owning them. Provide visible buttons too, because a shortcut the user cannot see is a shortcut most users do not have.</p>
 <p><strong>Accessibility.</strong> Announce the label, both ways. A screen reader user pressing Undo needs to hear what was undone; a silent stack change is indistinguishable from a key that did nothing.</p>
 <h2 id="where-the-two-interact">Where the two interact</h2>
-<p>These two capabilities interact in a way worth naming. Undo depth is state, and it is state that does not survive a teardown, because the closures cannot be serialised. So a view that persists its document but not its history comes back with a document it cannot un-edit.</p>
+<p>Undo depth is state that cannot survive a teardown, because <code>forward</code> and <code>back</code> are closures and closures do not serialise. A view that persists its document and not its history returns with a document it cannot un-edit.</p>
 <p>That is usually the right trade. Serialising a transaction stack means representing every operation as data rather than as a closure, which is a substantially larger design, and the value of undoing something from before a reload is low. But it should be a decision rather than a discovery. Recipe 4 persists the document, drops the history, and says so.</p>
 <h2 id="what-actually-has-to-survive">What actually has to survive?</h2>
 <p>Because persistence is expensive here, the useful discipline is to sort state into three buckets before writing any of it.</p>

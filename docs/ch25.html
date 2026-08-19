@@ -121,7 +121,7 @@
 <p><strong>The monitoring console showed every line twice.</strong> It received the tool result it was rendered for and also called the tool itself on mount, so two rows shared an identifier and selecting one selected both.</p>
 <p>Eight findings, seven of them in shipped code. The last three are the interesting ones, because they were invisible to every check that existed before: the messages were all correct, and the interface was wrong. They came from the layer described in the next chapter, which starts a real server, renders the view that server delivers, and then looks at the result.</p>
 <h2 id="what-this-cannot-do">What this cannot do</h2>
-<p>Two things this suite cannot do, stated here rather than buried.</p>
+<p>Two things this suite cannot do.</p>
 <p>It cannot drive the view’s own interface from outside. The frame is sandboxed with an opaque origin and the harness cannot reach its DOM, which is the same property that stops a host reading it. So view-initiated behaviour is driven through the tools a view registers, which covers the recipes that register tools and does not cover the ones that do not. Chapter 26 says exactly which.</p>
 <p>And it cannot tell you whether an application is any good. Every check in this book is about whether a thing works, not about whether it should exist. Chapter 3 is the only defence against building a well tested application that nobody wants, and it is not a test.</p>
 

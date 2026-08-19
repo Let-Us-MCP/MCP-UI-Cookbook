@@ -73,7 +73,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 12</p><h1>Host Environment and Theming</h1><p class="summary">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</p><p>The host sends CSS custom properties. You use them, with your own fallbacks for every one. That is the whole theming contract, and nobody ships a component library.</p>
+<p class="eyebrow">Chapter 12</p><h1>Host Environment and Theming</h1><p class="summary">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</p><p>The host sends CSS custom properties in <code>hostContext.styles.variables</code>. You use them with your own fallback for every one. No component library is involved.</p>
 <p>Seven capabilities describe the environment. All arrive in <code>hostContext</code>, all can change through <code>ui/notifications/host-context-changed</code>, and the most common bug in this group is reading them once at startup.</p>
 <div class="demo" data-demo="lab-theme" id="lab-theme"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
 <h2 id="what-does-the-host-actually-send">What does the host actually send?</h2>

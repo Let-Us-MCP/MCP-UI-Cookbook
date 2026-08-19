@@ -6,9 +6,12 @@ number: A
 summary: All eighty-five identifiers with level, tag, ground, the specification messages behind them, and how many recipes exercise each.
 ---
 
-Generated from `capabilities/registry.py` on every build. The ground column is
-the one to read first: it says whether a capability is a message, the
-platform, your code, or a gap.
+Generated from `capabilities/registry.py` on every build. 85 rows: 9 at level
+1, 41 at level 2, 17 at level 3, 18 at level 4.
+
+Read the ground column first. 28 are messages the extension defines, 4 come
+from core MCP, 20 are the browser, 19 are yours to write, and 14 have no
+mechanism at all.
 
 ## How to read a row
 
@@ -29,8 +32,10 @@ and does not demonstrate.
 
 ## Coverage by recipe
 
-A mark means the recipe exercises the capability. Rows with no marks are
-capabilities this book describes and does not demonstrate; Chapter 27 explains
-what to make of them.
+A mark means the recipe exercises the capability. `make render` asserts 88
+facts about what these 13 applications put on screen.
+
+A row with no marks is a capability this book describes and never demonstrates.
+Chapter 27 says what to make of those.
 
 @matrix
