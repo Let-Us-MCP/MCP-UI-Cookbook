@@ -14,6 +14,14 @@
 <div class="layout">
 <nav class="toc"><a class="brand" href="index.html">The MCP UI Cookbook</a>
 <p class="tagline">From atomic UI capabilities to native-like applications</p>
+<div id="book-search">
+  <label class="sr-only" for="search-input">Search the book</label>
+  <input id="search-input" type="search" placeholder="Search the book"
+         aria-describedby="search-hint" autocomplete="off" spellcheck="false">
+  <p id="search-hint" class="search-hint">Press <kbd>/</kbd> to search</p>
+  <p id="search-status" class="sr-only" role="status" aria-live="polite"></p>
+  <ul id="search-results" aria-label="Search results" hidden></ul>
+</div>
 <div class="part">Front matter</div>
 <a href="preface.html">What This Book Is</a>
 <a href="how-to-read.html">How to Read This Book</a>
@@ -163,5 +171,6 @@
 </div>
 <script type="module" src="demos/demo.js"></script>
 <script src="copy.js"></script>
+<script src="search.js"></script>
 </body>
 </html>

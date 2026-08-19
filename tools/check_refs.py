@@ -36,6 +36,29 @@ def slug_of(path: Path) -> str:
     return m.group(1) if m else path.stem
 
 
+def css_tokens() -> list[str]:
+    """A `var(--name)` that names nothing is a silent failure.
+
+    The declaration is simply dropped, so the element keeps whatever it
+    inherited and the page looks almost right. Two of these shipped in the copy
+    button before anybody noticed, which is exactly how long a silent CSS
+    failure survives.
+    """
+    problems: list[str] = []
+    for sheet in [ROOT / "tools" / "book.css", ROOT / "apps" / "lib" / "view.css"]:
+        if not sheet.exists():
+            continue
+        text = sheet.read_text(encoding="utf-8")
+        defined = set(re.findall(r"(--[a-z0-9-]+)\s*:", text))
+        for match in re.finditer(r"var\(\s*(--[a-z0-9-]+)\s*\)", text):
+            if match.group(1) not in defined:
+                line = text.count("\n", 0, match.start()) + 1
+                problems.append(
+                    f"{sheet.relative_to(ROOT)}:{line}: var({match.group(1)}) "
+                    f"names a token nothing defines")
+    return problems
+
+
 def main() -> int:
     problems: list[str] = []
     seen_caps: Counter[str] = Counter()
@@ -84,6 +107,8 @@ def main() -> int:
     for cap in REGISTRY["capabilities"]:
         if cap["lab"] and cap["lab"] not in DEMOS:
             problems.append(f"{cap['id']}: lab {cap['lab']} has no directory")
+
+    problems.extend(css_tokens())
 
     for line in problems:
         print(f"  {line}")

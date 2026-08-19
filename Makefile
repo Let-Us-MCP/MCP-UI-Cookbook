@@ -5,7 +5,7 @@
 PY   := $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
 NODE := node
 
-.PHONY: all registry site demos figures fixtures check lint refs listings counts wire sandbox \
+.PHONY: all registry site demos figures fixtures check lint refs listings counts wire sandbox search hooks \
         claims transcripts serve venv clean
 
 all: registry fixtures demos figures site
@@ -24,8 +24,9 @@ figures:
 
 site:
 	python3 tools/build_site.py
+	python3 tools/build_search.py
 
-check: lint density refs listings counts claims identifiers webclaims wire sandbox transcripts render
+check: lint density refs listings counts claims identifiers webclaims wire sandbox search transcripts render
 
 lint:
 	python3 tools/lint_prose.py
@@ -46,6 +47,11 @@ wire:
 
 sandbox:
 	node tools/check_sandbox.mjs --check
+
+# The index is generated from docs/, so an edit that never ran `make site`
+# ships a search box that cannot find the thing it was edited to say.
+search:
+	python3 tools/build_search.py --check
 
 counts:
 	python3 tools/check_counts.py
@@ -75,6 +81,10 @@ transcripts:
 # that server's real tool output, and asserts on the resulting DOM.
 render:
 	$(NODE) tools/check_render.mjs
+
+hooks:
+	git config core.hooksPath tools/hooks
+	@echo "hooks installed: tools/hooks"
 
 serve:
 	$(NODE) tools/serve.mjs

@@ -191,7 +191,7 @@ div.principle strong:first-child{color:var(--accent)}
   line-height: 1.6;
   border: 1px solid var(--rule);
   border-radius: 6px;
-  background: var(--bg);
+  background: var(--paper);
   color: var(--muted);
   cursor: pointer;
   opacity: 0;
@@ -206,4 +206,103 @@ div.principle strong:first-child{color:var(--accent)}
   .listing-copy { opacity: 1; }
 }
 
-.listing-copy:hover { color: var(--fg); border-color: var(--fg); }
+.listing-copy:hover { color: var(--ink); border-color: var(--ink); }
+
+/* --- search ---------------------------------------------------------- */
+
+#book-search { position: relative; margin: 14px 0 18px; }
+
+#search-input {
+  width: 100%;
+  padding: 6px 9px;
+  font: inherit;
+  font-size: .88rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+
+#search-input::placeholder { color: var(--muted); }
+
+.search-hint {
+  margin: 5px 0 0;
+  font-size: .72rem;
+  color: var(--muted);
+}
+
+.search-hint kbd {
+  padding: 0 4px;
+  font-family: inherit;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+
+#search-results {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  max-height: 62vh;
+  margin: 6px 0 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 8px 26px rgb(0 0 0 / 18%);
+}
+
+.search-hit { border-bottom: 1px solid var(--rule); }
+.search-hit:last-child { border-bottom: 0; }
+
+.search-hit a {
+  display: block;
+  padding: 8px 10px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.search-where {
+  display: block;
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+.search-sep { color: var(--muted); font-weight: 400; }
+
+.search-snippet {
+  display: block;
+  margin-top: 2px;
+  font-size: .76rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.search-hit a mark {
+  padding: 0 1px;
+  color: inherit;
+  background: var(--accent-soft);
+  box-shadow: inset 0 -2px 0 var(--accent);
+  border-radius: 2px;
+}
+
+.search-hit:hover, .search-hit:focus-within { background: var(--wash); }
+
+/* The listbox is wide content in a narrow column, so it may scroll itself
+ * horizontally, but the page never does. */
+#search-results { overflow-x: hidden; }
+
+/* Visually hidden, still announced. The search label and the result count are
+ * both for screen reader users only: the placeholder names the field on
+ * screen, and the count is a live region with nothing to show. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

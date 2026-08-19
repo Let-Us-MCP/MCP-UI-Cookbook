@@ -1,0 +1,29 @@
+#!/bin/sh
+# Refuse a commit whose generated artifacts do not match the source.
+#
+# `make check` is the full suite and takes minutes, which is the wrong thing to
+# put in front of every commit. These three are the ones that go stale silently:
+# a page edited without rebuilding ships a site that disagrees with the book,
+# and a search index built from those pages then cannot find the edit.
+#
+# Install with: make hooks
+
+set -e
+
+if git diff --cached --quiet -- book docs tools capabilities apps; then
+  exit 0
+fi
+
+echo "pre-commit: rebuilding the site and the search index"
+python3 tools/build_site.py >/dev/null
+python3 tools/build_search.py >/dev/null
+
+if ! git diff --quiet -- docs; then
+  git add docs
+  echo "pre-commit: docs/ was stale and has been rebuilt and staged"
+fi
+
+python3 tools/check_refs.py >/dev/null || {
+  echo "pre-commit: check_refs failed; run 'python3 tools/check_refs.py'" >&2
+  exit 1
+}

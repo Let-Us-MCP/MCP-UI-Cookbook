@@ -355,12 +355,27 @@ def transform(body: str) -> str:
 
 CSS = (ROOT / "tools" / "book.css").read_text(encoding="utf-8")
 COPY_JS = (ROOT / "tools" / "copy.js").read_text(encoding="utf-8")
+SEARCH_JS = (ROOT / "tools" / "search.js").read_text(encoding="utf-8")
+
+# A combobox, per the Authoring Practices pattern: the input owns the ARIA
+# state, the list is a listbox of options, and the count goes to a live region
+# so it is announced without moving focus. It renders as a plain labelled input
+# when JavaScript does not run, which is honest: no index, no results.
+SEARCH_BOX = """<div id="book-search">
+  <label class="sr-only" for="search-input">Search the book</label>
+  <input id="search-input" type="search" placeholder="Search the book"
+         aria-describedby="search-hint" autocomplete="off" spellcheck="false">
+  <p id="search-hint" class="search-hint">Press <kbd>/</kbd> to search</p>
+  <p id="search-status" class="sr-only" role="status" aria-live="polite"></p>
+  <ul id="search-results" aria-label="Search results" hidden></ul>
+</div>"""
 
 
 def sidebar(pages: list[Page], current: str) -> str:
     out = [f'<nav class="toc"><a class="brand" href="index.html">'
            f'{html.escape(TITLE)}</a>',
-           f'<p class="tagline">{html.escape(SUBTITLE)}</p>']
+           f'<p class="tagline">{html.escape(SUBTITLE)}</p>',
+           SEARCH_BOX]
     part = None
     for p in pages:
         if p.part != part:
@@ -414,6 +429,7 @@ def page_html(pages: list[Page], p: Page, body: str, extra_title: str = "",
 </div>
 {demo_script}
 <script src="copy.js"></script>
+<script src="search.js"></script>
 </body>
 </html>
 """
@@ -477,6 +493,7 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "book.css").write_text(CSS, encoding="utf-8")
     (OUT / "copy.js").write_text(COPY_JS, encoding="utf-8")
+    (OUT / "search.js").write_text(SEARCH_JS, encoding="utf-8")
     (OUT / ".nojekyll").write_text("")
 
     seen_caps: set[str] = set()
