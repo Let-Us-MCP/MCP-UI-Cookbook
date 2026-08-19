@@ -551,6 +551,45 @@
       ]
     },
     {
+      "id": "preview.document",
+      "level": 2,
+      "tag": "core",
+      "ground": "platform",
+      "wire": [],
+      "chapter": "ch11",
+      "lab": "r03-file-explorer",
+      "summary": "Show what a document is before anyone acts on it, at a chosen size.",
+      "recipes": [
+        "r03"
+      ]
+    },
+    {
+      "id": "preview.resource",
+      "level": 3,
+      "tag": "extended",
+      "ground": "wire",
+      "wire": [
+        {
+          "spec": "core",
+          "anchor": "resource_link"
+        },
+        {
+          "spec": "apps",
+          "anchor": "serverResources"
+        },
+        {
+          "spec": "apps",
+          "anchor": "resources/read"
+        }
+      ],
+      "chapter": "ch11",
+      "lab": "r03-file-explorer",
+      "summary": "Preview a resource the server linked rather than embedded.",
+      "recipes": [
+        "r03"
+      ]
+    },
+    {
       "id": "file.export",
       "level": 2,
       "tag": "core",
@@ -1606,7 +1645,9 @@
         "picker.resource",
         "resource.read",
         "history.undo",
-        "history.transaction"
+        "history.transaction",
+        "preview.document",
+        "preview.resource"
       ],
       "delta": [
         "input.contextmenu",
@@ -1620,7 +1661,9 @@
         "picker.resource",
         "resource.read",
         "history.undo",
-        "history.transaction"
+        "history.transaction",
+        "preview.document",
+        "preview.resource"
       ]
     },
     {

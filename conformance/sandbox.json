@@ -78,6 +78,23 @@
       "ok": true,
       "value": "returned"
     },
+    "previewDataUri": {
+      "ok": true,
+      "value": "rendered"
+    },
+    "previewObjectUrl": {
+      "ok": true,
+      "value": "rendered",
+      "scheme": "blob:null"
+    },
+    "readFileLocally": {
+      "ok": true,
+      "value": "read 19 characters"
+    },
+    "nestedSandboxedFrame": {
+      "ok": true,
+      "value": "rendered, not readable"
+    },
     "dragOutOfView": {
       "attempted": true,
       "dragStartInView": null,

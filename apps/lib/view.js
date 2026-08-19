@@ -92,6 +92,78 @@
     });
   }
 
+  // A preview of a document, at one of three sizes.
+  //
+  // Everything here renders from bytes the view already holds. Nothing is
+  // fetched, because a view cannot fetch anything its server did not declare,
+  // and nothing is uploaded, because a preview that leaves the frame is not a
+  // preview. `tools/check_sandbox.mjs` records that both routes below work
+  // inside a sandboxed frame with an opaque origin: a data: URI renders, and
+  // so does an object URL made from a File the user dropped.
+  //
+  // `size` is the caller's decision. A list wants "sm", a decision beside a
+  // button wants "md", and reading wants "lg".
+  const PREVIEWABLE_TEXT = /^text\/|json|xml|javascript|markdown/;
+
+  function preview({ name, mimeType = "", text, blob, url, size = "md",
+                     bytes }) {
+    const node = h("div", { class: `preview ${size}` });
+    const meta = [mimeType || "unknown type",
+                  bytes ? `${Math.ceil(bytes / 1024)} kB` : null]
+      .filter(Boolean).join(" · ");
+    node.append(h("div", { class: "preview-head" },
+      h("span", { class: "preview-name", text: name ?? "Untitled" }),
+      h("span", { class: "preview-meta", text: meta })));
+
+    const body = h("div", { class: "preview-body" });
+    if (mimeType.startsWith("image/")) {
+      // Three ways to name the same pixels. A data: URI for bytes that
+      // arrived in a tool result, an object URL for a File the user chose,
+      // and a plain URL only where the server declared the origin in its CSP.
+      const src = url ?? (blob ? `data:${mimeType};base64,${blob}` : null);
+      if (src) {
+        body.append(h("img", { class: "preview-image", src,
+          // The name is the caption; alt text saying "thumbnail" tells a
+          // screen reader user nothing they did not already know.
+          alt: `Preview of ${name ?? "the image"}` }));
+      } else {
+        body.append(h("p", { class: "preview-none",
+          text: "No image data arrived with this file." }));
+      }
+    } else if (typeof text === "string" && PREVIEWABLE_TEXT.test(mimeType)) {
+      // Truncated by size, because reading 400 kB into a 48 pixel box costs
+      // the same as reading it into a large one and shows a fiftieth of it.
+      const limit = size === "sm" ? 220 : size === "md" ? 1200 : 8000;
+      const shown = text.length > limit ? `${text.slice(0, limit)}\n…` : text;
+      body.append(h("pre", { class: "preview-text", text: shown }));
+    } else {
+      // Saying what it is beats rendering bytes as mojibake.
+      body.append(h("p", { class: "preview-none", text:
+        `No preview for ${mimeType || "this type"}. `
+        + "Open it, or download it, to see what is in it." }));
+    }
+    node.append(body);
+    return node;
+  }
+
+  // The size control, as a group of toggles rather than a select: three
+  // options is below the threshold where a menu helps, and the current size
+  // should be visible without opening anything.
+  function previewSizes(current, onPick) {
+    const labels = { sm: "Small", md: "Medium", lg: "Large" };
+    const group = h("div", { class: "preview-sizes", role: "group",
+                             "aria-label": "Preview size" });
+    for (const key of ["sm", "md", "lg"]) {
+      group.append(h("button", {
+        type: "button", class: "quiet", text: labels[key],
+        "aria-pressed": key === current ? "true" : "false",
+        "data-size": key,
+        onclick: () => onPick(key),
+      }));
+    }
+    return group;
+  }
+
   // Safe-area insets arrive as numbers in the host context, not as the CSS
   // env() values a native app would read, because the view is inside someone
   // else's window.
@@ -137,5 +209,5 @@
   }
 
   global.View = { h, $, $$, announce, toast, confirmDialog, promptDialog,
-                  applySafeArea, formatters, boot };
+                  applySafeArea, formatters, preview, previewSizes, boot };
 })(globalThis);

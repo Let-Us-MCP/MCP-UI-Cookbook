@@ -6,6 +6,33 @@
     "result": {
       "tools": [
         {
+          "name": "read_file",
+          "description": "Read one file from the workspace for preview.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/file-explorer",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        },
+        {
           "name": "list_files",
           "description": "List the workspace tree.",
           "inputSchema": {
@@ -36,7 +63,7 @@
           "uri": "ui://cookbook/file-explorer",
           "mimeType": "text/html;profile=mcp-app",
           "text": "<the view's HTML, elided>",
-          "textLength": 7843,
+          "textLength": 10039,
           "_meta": {
             "ui": {
               "csp": {},

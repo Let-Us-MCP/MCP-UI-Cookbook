@@ -89,14 +89,14 @@
 <p class="sub">From atomic UI capabilities to native-like applications</p>
 <p>An MCP application is a sandboxed iframe that speaks JSON-RPC to a host it
 does not trust, on behalf of a user it can see and a model it cannot. This
-book takes that surface apart: 87 atomic capabilities, the components
+book takes that surface apart: 89 atomic capabilities, the components
 they compose into, 13 application recipes that put them
 under load, and a conformance suite that decides whether a host really supports
 what it claims.</p>
 <p>Every capability entry says where its behaviour comes from:
-28 are messages in the MCP Apps extension,
+29 are messages in the MCP Apps extension,
 4 come from core MCP,
-20 are the browser inside the sandbox,
+21 are the browser inside the sandbox,
 19 are yours to build, and
 16 have no standard mechanism at all. The last group is the most
 interesting part of the book.</p>
@@ -110,7 +110,7 @@ running, not recorded. <a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">R
 <div class="cards"><a href="preface.html"><span class="n">&nbsp;</span><div class="t">What This Book Is</div><div class="s">87 capabilities, 30 applications that run on this site, and a build that fails when a sentence stops being true.</div></a>
 <a href="how-to-read.html"><span class="n">&nbsp;</span><div class="t">How to Read This Book</div><div class="s">The four layers, the vocabulary, the labels on every entry, and the one question the whole book is trying to answer.</div></a></div>
 <h2>Part I - Foundations</h2>
-<div class="cards"><a href="ch01.html"><span class="n">Chapter 1</span><div class="t">The Capability Model</div><div class="s">Eighty-seven named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</div></a>
+<div class="cards"><a href="ch01.html"><span class="n">Chapter 1</span><div class="t">The Capability Model</div><div class="s">Eighty-nine named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</div></a>
 <a href="ch02.html"><span class="n">Chapter 2</span><div class="t">What Crosses the Boundary</div><div class="s">The whole wire protocol in one chapter: the handshake, the twenty messages, the double iframe, and the four ways a view finds out what it was rendered for.</div></a>
 <a href="ch03.html"><span class="n">Chapter 3</span><div class="t">One View at a Time</div><div class="s">The unit of rendering is the tool call. There is no page, nothing owns a screen, and two views cannot share one. Most of the hard problems in this book descend from that.</div></a>
 <a href="ch04.html"><span class="n">Chapter 4</span><div class="t">The Local-First Principle</div><div class="s">Sorting a column is not a conversation. Where the agent boundary goes, why it goes there, and what it costs when it goes somewhere else.</div></a>
@@ -155,10 +155,10 @@ running, not recorded. <a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">R
 <h2>Part VI - Verification and conformance</h2>
 <div class="cards"><a href="ch26.html"><span class="n">Chapter 26</span><div class="t">Why Recipes Are the Test Suite</div><div class="s">Capabilities pass in isolation and fail in composition. The thirteen applications exist to find out which, and the completeness test is what they answer.</div></a>
 <a href="ch27.html"><span class="n">Chapter 27</span><div class="t">The Verification Layers</div><div class="s">Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.</div></a>
-<a href="ch28.html"><span class="n">Chapter 28</span><div class="t">The Coverage Matrix and the Checklists</div><div class="s">What eighty-seven capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.</div></a>
+<a href="ch28.html"><span class="n">Chapter 28</span><div class="t">The Coverage Matrix and the Checklists</div><div class="s">What eighty-nine capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.</div></a>
 <a href="ch29.html"><span class="n">Chapter 29</span><div class="t">The Missing Primitive Loop, and the Live Book</div><div class="s">How a gap gets found, what a good proposal looks like, and how a static site runs thirty applications next to their own source without hosting anything.</div></a></div>
 <h2>Appendices</h2>
-<div class="cards"><a href="appendix-a.html"><span class="n">Appendix A</span><div class="t">Capability Index</div><div class="s">All eighty-seven identifiers with level, tag, ground, the specification messages behind them, and how many recipes exercise each.</div></a>
+<div class="cards"><a href="appendix-a.html"><span class="n">Appendix A</span><div class="t">Capability Index</div><div class="s">All eighty-nine identifiers with level, tag, ground, the specification messages behind them, and how many recipes exercise each.</div></a>
 <a href="appendix-b.html"><span class="n">Appendix B</span><div class="t">The Gaps</div><div class="s">Sixteen capabilities with no standard mechanism, what each one costs, and the shape a proposal would take.</div></a>
 <a href="appendix-c.html"><span class="n">Appendix C</span><div class="t">Conformance Checklists</div><div class="s">What a host is claiming when it claims a level, phrased as things a test can assert.</div></a>
 <a href="appendix-d.html"><span class="n">Appendix D</span><div class="t">Glossary</div><div class="s">The terms this book uses in a specific way, each with the message, field or file it corresponds to.</div></a>

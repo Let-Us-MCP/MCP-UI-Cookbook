@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>28. The Coverage Matrix and the Checklists &middot; The MCP UI Cookbook</title>
-<meta name="description" content="What eighty-seven capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.">
+<meta name="description" content="What eighty-nine capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.">
 <meta property="og:title" content="28. The Coverage Matrix and the Checklists">
-<meta property="og:description" content="What eighty-seven capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.">
+<meta property="og:description" content="What eighty-nine capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.">
 <link rel="stylesheet" href="book.css">
 
 </head>
@@ -82,7 +82,7 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 28</p><h1>The Coverage Matrix and the Checklists</h1><p class="summary">What eighty-seven capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.</p><p>Two artifacts come out of the registry on every build, and both are more useful as diagnostics of the book than as references for a reader. A row of the matrix with no marks in it is a capability this book described and never demonstrated, which is a gap in the evidence, and it is visible only because the matrix is generated rather than written.</p>
+<p class="eyebrow">Chapter 28</p><h1>The Coverage Matrix and the Checklists</h1><p class="summary">What eighty-nine capabilities by thirteen recipes actually shows, why the matrix is generated, and what a host is claiming when it claims a level.</p><p>Two artifacts come out of the registry on every build, and both are more useful as diagnostics of the book than as references for a reader. A row of the matrix with no marks in it is a capability this book described and never demonstrated, which is a gap in the evidence, and it is visible only because the matrix is generated rather than written.</p>
 <h2 id="what-the-matrix-shows">What the matrix shows</h2>
 <p>Appendix A carries the full capability by recipe matrix. It is generated from the registry, never hand-maintained, and reading down a column tells you what a recipe needs while reading across a row tells you how well covered a capability is.</p>
 <p>The extremes are where the matrix says something. The middle of it is unsurprising and mostly confirms that recipes use the capabilities their entries say they use.</p>
@@ -137,17 +137,17 @@
 <h2 id="reading-the-deltas-in-order">Reading the deltas in order</h2>
 <p>The delta column is the load-bearing part of the matrix, and reading it in recipe order is the closest thing this book has to evidence for its own premise.</p>
 <p>Recipe 1 claims sixteen capabilities, because it is the baseline: a table, a selection, an export, an escalation. Recipes 2 and 3 add roughly a dozen each, because monitoring and hierarchy are genuinely different surfaces. By Recipe 7 the deltas are down to three or four, and by Recipes 11 to 13 most of what each one needs is already in the model.</p>
-<p>That taper is what convergence looks like. If the thirteenth recipe still needed six new primitives, the honest conclusion would be that eighty-seven is not enough and the model is still growing. It does not, which is weak evidence that the surface has been covered.</p>
+<p>That taper is what convergence looks like. If the thirteenth recipe still needed six new primitives, the honest conclusion would be that eighty-nine is not enough and the model is still growing. It does not, which is weak evidence that the surface has been covered.</p>
 <p>Weak, and worth being precise about why. The recipes were written by the same person who wrote the capability list, against one emulator, in one sitting. Convergence under those conditions could equally mean the recipes were chosen to fit. The test that would settle it is Layer 5 from Chapter 27: someone else’s application, someone else’s host, and a delta that still comes out small.</p>
 <h2 id="the-matrix-is-evidence-not-proof">The matrix is evidence, not proof</h2>
-<p>One last use. The matrix is the closest thing this book has to a proof, and it is not one. What it shows is that thirteen recognisable applications were built from eighty-seven named primitives, that the primitives were sufficient for all thirteen, and that sixteen of them had to be worked around because no mechanism exists.</p>
+<p>One last use. The matrix is the closest thing this book has to a proof, and it is not one. What it shows is that thirteen recognisable applications were built from eighty-nine named primitives, that the primitives were sufficient for all thirteen, and that sixteen of them had to be worked around because no mechanism exists.</p>
 <p>That is evidence for the completeness test in Chapter 26 and not an answer to it. The answer needs Layer 5 from Chapter 27: the same recipes, unmodified, running in hosts that were not built alongside them.</p>
 <h2 id="using-this-on-your-own-project">Using this on your own project</h2>
 <p>The exercise transfers, and it is cheap. Take your application, list the interactions it has, and map each one to a capability identifier from Appendix A. Three things fall out within an hour.</p>
 <p><strong>The host dependency list.</strong> Everything you mapped to a <em>wire</em> capability is something a host has to support, and the level column tells you which hosts those are. That list is what you test against, and it is usually shorter than people fear.</p>
 <p><strong>The gap list.</strong> Anything you mapped to a <em>not standardised</em> capability is a place where you are about to invent a private convention. Better to know before the code than after the second host.</p>
 <p><strong>The work list.</strong> Everything mapped to <em>yours to build</em> is real engineering that no protocol will do for you, and it is typically the largest of the three. Undo, dialogs, toasts and the whole attention system live here.</p>
-<p>An interaction that maps to nothing is the interesting case. Either you have found something the eighty-seven do not cover, which belongs upstream as a finding, or you have described an interaction in terms of your implementation, and never what the user does. Chapter 29 is about telling those two apart.</p>
+<p>An interaction that maps to nothing is the interesting case. Either you have found something the eighty-nine do not cover, which belongs upstream as a finding, or you have described an interaction in terms of your implementation, and never what the user does. Chapter 29 is about telling those two apart.</p>
 
 <div class="pager"><a href="ch27.html"><span class="dir">Previous</span>27. The Verification Layers</a><a href="ch29.html" style="text-align:right"><span class="dir">Next</span>29. The Missing Primitive Loop, and the Live Book</a></div>
 </main>

@@ -148,6 +148,81 @@ window.__openIndexedDB = () => new Promise((resolve) => {
   setTimeout(() => resolve(JSON.stringify({ ok: false, error: "no answer in 2s" })), 2000);
 });
 
+// Can a view show a preview of a document at all? Everything a preview needs
+// is a URL the frame is allowed to load, and an opaque origin plus a
+// restrictive content security policy is exactly where those stop working.
+// A 1x1 PNG is enough: what is being tested is whether the URL loads, not
+// whether the decoder works.
+const PNG_1X1 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8"
+  + "z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+
+function loadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const done = (ok, why) => resolve({ ok, value: ok ? "rendered" : undefined,
+                                        error: ok ? undefined : why });
+    img.onload = () => done(img.naturalWidth > 0, "loaded with no pixels");
+    img.onerror = () => done(false, "the load was blocked or failed");
+    setTimeout(() => done(false, "no answer in 2s"), 2000);
+    img.src = src;
+  });
+}
+
+window.__previewDataUri = () => loadImage("data:image/png;base64," + PNG_1X1)
+  .then((r) => JSON.stringify(r));
+
+window.__previewObjectUrl = async () => {
+  try {
+    const bytes = Uint8Array.from(atob(PNG_1X1), (c) => c.charCodeAt(0));
+    const url = URL.createObjectURL(new Blob([bytes], { type: "image/png" }));
+    const result = await loadImage(url);
+    // The scheme and origin are the finding; the rest of an object URL is a
+    // fresh UUID every run, and recording it would make this file differ from
+    // itself.
+    result.scheme = url.slice(0, url.indexOf("/", 5));
+    URL.revokeObjectURL(url);
+    return JSON.stringify(result);
+  } catch (error) {
+    return JSON.stringify({ ok: false, error: error.name + ": " + error.message.slice(0, 80) });
+  }
+};
+
+// The other half of a preview: reading an uploaded file's bytes without
+// sending them anywhere.
+window.__readFileLocally = async () => {
+  try {
+    const file = new File(["the quick brown fox"], "note.txt", { type: "text/plain" });
+    const text = await file.text();
+    return JSON.stringify({ ok: true, value: "read " + text.length + " characters" });
+  } catch (error) {
+    return JSON.stringify({ ok: false, error: error.name + ": " + error.message.slice(0, 80) });
+  }
+};
+
+// An HTML document previewed inside the view needs a nested frame, and a
+// sandboxed frame may only create a frame at least as restricted as itself.
+window.__nestedFrame = () => new Promise((resolve) => {
+  try {
+    const inner = document.createElement("iframe");
+    inner.setAttribute("sandbox", "");
+    inner.srcdoc = "<p id=probe>nested</p>";
+    inner.onload = () => {
+      const reachable = (() => {
+        try { return !!inner.contentDocument?.getElementById("probe"); }
+        catch { return false; }
+      })();
+      inner.remove();
+      resolve(JSON.stringify({ ok: true,
+        value: reachable ? "rendered and readable" : "rendered, not readable" }));
+    };
+    inner.onerror = () => { inner.remove(); resolve(JSON.stringify({ ok: false, error: "failed" })); };
+    document.body.append(inner);
+    setTimeout(() => resolve(JSON.stringify({ ok: false, error: "no answer in 2s" })), 2000);
+  } catch (error) {
+    resolve(JSON.stringify({ ok: false, error: error.name + ": " + error.message.slice(0, 80) }));
+  }
+});
+
 window.__readClipboard = async () => {
   try {
     const text = await navigator.clipboard.readText();
@@ -333,6 +408,15 @@ async function main() {
     };
 
     results.printCall = JSON.parse(await browser.evalIn(frame, "window.__doPrint()"));
+
+    for (const [name, call] of [
+      ["previewDataUri", "window.__previewDataUri()"],
+      ["previewObjectUrl", "window.__previewObjectUrl()"],
+      ["readFileLocally", "window.__readFileLocally()"],
+      ["nestedSandboxedFrame", "window.__nestedFrame()"],
+    ]) {
+      results[name] = JSON.parse(await browser.evalIn(frame, call));
+    }
 
     // Can anything be dragged out of a view and into the host's own document?
     // Appendix B says no. That is a claim about the browser, so it gets a run.

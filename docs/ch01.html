@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>1. The Capability Model &middot; The MCP UI Cookbook</title>
-<meta name="description" content="Eighty-seven named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.">
+<meta name="description" content="Eighty-nine named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.">
 <meta property="og:title" content="1. The Capability Model">
-<meta property="og:description" content="Eighty-seven named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.">
+<meta property="og:description" content="Eighty-nine named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.">
 <link rel="stylesheet" href="book.css">
 <link rel="stylesheet" href="demos/demo.css">
 </head>
@@ -82,16 +82,16 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 1</p><h1>The Capability Model</h1><p class="summary">Eighty-seven named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</p><p>An MCP application is a web page with most of the web taken away. No storage. No address bar. No window.open, no print, no camera without permission it did not grant itself. Four hundred pixels wide, inside a document it cannot see.</p>
+<p class="eyebrow">Chapter 1</p><h1>The Capability Model</h1><p class="summary">Eighty-nine named operations, four conformance levels, five kinds of ground, and one question you have to ask before using any of them.</p><p>An MCP application is a web page with most of the web taken away. No storage. No address bar. No window.open, no print, no camera without permission it did not grant itself. Four hundred pixels wide, inside a document it cannot see.</p>
 <p>It is also a file you wrote. The model does not generate the view; your server predeclares it as a <code>ui://</code> resource and a tool points at it. What the model controls is when that tool runs and what arguments it carries.</p>
 <p>What the view has instead of the normal web is a message channel to the host, and anything the page cannot do alone it does by asking. That single arrangement explains most of what is strange about building here: the things you would normally call are now requests that can be refused, the refusals arrive asynchronously, and the party refusing them is one you cannot inspect.</p>
-<p>So the question is which of a table’s normal behaviours survive in here. Sorting does. Copying does, with a fallback. Dragging a row out does not. “It depends on the host” is true and useless, so this book breaks the surface into eighty-seven named operations and attaches four facts to each.</p>
+<p>So the question is which of a table’s normal behaviours survive in here. Sorting does. Copying does, with a fallback. Dragging a row out does not. “It depends on the host” is true and useless, so this book breaks the surface into eighty-nine named operations and attaches four facts to each.</p>
 <figure>
 <img src="figures/diag-capability.png" alt="The capability model: an identifier, a level, a tag, and a ground" />
 <figcaption aria-hidden="true">The capability model: an identifier, a level, a tag, and a ground</figcaption>
 </figure>
 <h2 id="why-namespaced-identifiers">Why namespaced identifiers?</h2>
-<p>Every capability has a stable identifier with a namespace: <code>surface.resize</code>, <code>input.selection</code>, <code>clipboard.write</code>, <code>tool.invoke</code>. Flat names are not used. The namespace is not decoration; it is what lets you scan an eighty-seven row index and find the five entries about files without reading any of them, and it is what lets a conformance report say “this host fails four <code>input.*</code> checks” instead of listing four unrelated sentences.</p>
+<p>Every capability has a stable identifier with a namespace: <code>surface.resize</code>, <code>input.selection</code>, <code>clipboard.write</code>, <code>tool.invoke</code>. Flat names are not used. The namespace is not decoration; it is what lets you scan an eighty-nine row index and find the five entries about files without reading any of them, and it is what lets a conformance report say “this host fails four <code>input.*</code> checks” instead of listing four unrelated sentences.</p>
 <p>The identifiers are the book’s own. The extension does not define capability names, it defines messages, and one capability sometimes maps onto two messages while two capabilities sometimes share one. <code>surface.close</code> is the pair <code>ui/notifications/request-teardown</code> and <code>ui/resource-teardown</code>, which are a notification and a request pointing in opposite directions. Calling that one capability is a judgement, and the entry says which messages it means so you can disagree with the judgement without losing the facts.</p>
 <h2 id="what-do-the-four-levels-mean">What do the four levels mean?</h2>
 <p>Capabilities sit on a ladder of four cumulative levels, and the ladder is what turns “this host supports MCP Apps” into a claim somebody can act on. Support is not a boolean. A host that renders a chart beautifully and has no clipboard is a real and reasonable host, and so is one that does everything at Level 2 and nothing at Level 3, and an application needs to be able to tell them apart before it renders a control.</p>
@@ -101,9 +101,9 @@
 <p><strong>Level 4, Agentic.</strong> Tools, streaming, model context, approval, and shared ownership of state. Nothing at this level has a counterpart in ordinary web development, because ordinary web pages do not have a second party that can edit the document while the user is typing in it.</p>
 <p>Levels are cumulative claims. A host claiming Level 3 is asserting that all 67 Core capabilities at levels 1 to 3 behave as their entries describe. Appendix C turns that into a checklist you can run.</p>
 <h2 id="core-or-extended">Core or Extended?</h2>
-<p>Core is mandatory at its level and accounts for 68 of the 87. Extended is optional at any level and accounts for the other 19. The distinction is a statement about your code as much as about the host: if you use an Extended capability your application has to keep working when it is absent, and the entry has to describe what “keep working” looks like.</p>
+<p>Core is mandatory at its level and accounts for 69 of the 89. Extended is optional at any level and accounts for the other 20. The distinction is a statement about your code as much as about the host: if you use an Extended capability your application has to keep working when it is absent, and the entry has to describe what “keep working” looks like.</p>
 <p>Extended is a statement about your code, not the host’s. If you use <code>clipboard.read</code> or <code>system.share</code>, your application must still work when they are absent, and the entry says what that looks like.</p>
-<p>Sixty-eight of the eighty-seven capabilities are Core. That ratio is not a target, it is what fell out of asking, for each one, whether an application could be recognisably itself without it.</p>
+<p>Sixty-eight of the eighty-nine capabilities are Core. That ratio is not a target, it is what fell out of asking, for each one, whether an application could be recognisably itself without it.</p>
 <h2 id="is-this-a-protocol-feature-or-my-problem">Is this a protocol feature or my problem?</h2>
 <p>The ground badge answers it, and it is the single most useful thing on any entry, because the three answers lead to completely different work. A message means reading a specification and handling a refusal. A browser feature means writing ordinary front-end code. A gap means designing around an absence for the life of the product.</p>
 <div class="cap" id="link.open"><div class="cap-head"><code class="cap-id">link.open</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Delegate external navigation instead of attempting it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/open-link</code><code>openLinks</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r08.html">Code and Diff Reviewer</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
@@ -149,10 +149,10 @@
 </tr>
 </tbody>
 </table></div>
-<p>Those counts are generated from the registry, and the twenty-eight wire claims are checked against the specification text on every build. A build where the extension has renamed a message fails before the sentence describing it can go stale.</p>
+<p>Those counts are generated from the registry, and the twenty-nine wire claims are checked against the specification text on every build. A build where the extension has renamed a message fails before the sentence describing it can go stale.</p>
 <figure>
-<img src="figures/diag-grounds.png" alt="Where eighty-seven capabilities actually come from" />
-<figcaption aria-hidden="true">Where eighty-seven capabilities actually come from</figcaption>
+<img src="figures/diag-grounds.png" alt="Where eighty-nine capabilities actually come from" />
+<figcaption aria-hidden="true">Where eighty-nine capabilities actually come from</figcaption>
 </figure>
 <h2 id="what-do-i-check-before-using-any-of-it">What do I check before using any of it?</h2>
 <p><code>hostCapabilities</code>, in the <code>ui/initialize</code> result, before you draw anything. Every capability the host is willing to exercise on your behalf is in that object, and the absence of a field is itself the answer.</p>

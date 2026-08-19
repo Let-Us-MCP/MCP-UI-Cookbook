@@ -86,9 +86,9 @@
 <p><strong>Agent boundary.</strong> The line between what runs locally and what crosses to the model. Chapter 4 puts sorting, filtering and selection on the local side.</p>
 <p><strong>Atomic capability.</strong> The smallest independently useful operation, with a namespaced identifier such as <code>surface.resize</code>. All 87 are in Appendix A.</p>
 <p><strong>Capability delta.</strong> The capabilities a recipe exercises that no earlier recipe does, generated into each recipe entry. Recipe 1 claims 16; by Recipe 13 they are down to a handful.</p>
-<p><strong>Conformance level.</strong> One of four cumulative tiers: 1 Embedded, 2 Interactive, 3 Native-Like, 4 Agentic. 9 capabilities sit at level 1, 41 at level 2, 19 at level 3 and 18 at level 4. Appendix C is the checklist.</p>
-<p><strong>Core.</strong> Mandatory at its level. 68 of the 87 are Core.</p>
-<p><strong>Extended.</strong> Optional at any level, so your view must work without it. 19 of the 87.</p>
+<p><strong>Conformance level.</strong> One of four cumulative tiers: 1 Embedded, 2 Interactive, 3 Native-Like, 4 Agentic. 9 capabilities sit at level 1, 42 at level 2, 20 at level 3 and 18 at level 4. Appendix C is the checklist.</p>
+<p><strong>Core.</strong> Mandatory at its level. 69 of the 89 are Core.</p>
+<p><strong>Extended.</strong> Optional at any level, so your view must work without it. 20 of the 89.</p>
 <p><strong>Golden transcript.</strong> The recorded JSON-RPC log for one demonstration, in <code>conformance/transcripts/</code>. <code>node tools/check_demos.mjs</code> replays and diffs all 30 of them.</p>
 <p><strong>Ground.</strong> Where a capability’s behaviour comes from: <code>wire</code> (28), <code>core</code> (4), <code>platform</code> (20), <code>app</code> (19) or <code>gap</code> (16). The badge on every entry.</p>
 <p><strong>Host.</strong> The chat client, IDE or console the user is in. It connects to servers, allocates surfaces and mediates every privileged operation. It needs no model to do any of that.</p>

@@ -3,11 +3,11 @@ title: Capability Index
 slug: appendix-a
 part: Appendices
 number: A
-summary: All eighty-seven identifiers with level, tag, ground, the specification messages behind them, and how many recipes exercise each.
+summary: All eighty-nine identifiers with level, tag, ground, the specification messages behind them, and how many recipes exercise each.
 ---
 
 Generated from `capabilities/registry.py` on every build. 85 rows: 9 at level
-1, 41 at level 2, 19 at level 3, 18 at level 4.
+1, 42 at level 2, 20 at level 3, 18 at level 4.
 
 Read the ground column first. 28 are messages the extension defines, 4 come
 from core MCP, 20 are the browser, 19 are yours to write, and 14 have no

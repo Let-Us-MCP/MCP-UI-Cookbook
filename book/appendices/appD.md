@@ -21,13 +21,13 @@ recipe does, generated into each recipe entry. Recipe 1 claims 16; by Recipe 13
 they are down to a handful.
 
 **Conformance level.** One of four cumulative tiers: 1 Embedded, 2 Interactive,
-3 Native-Like, 4 Agentic. 9 capabilities sit at level 1, 41 at level 2, 19 at
+3 Native-Like, 4 Agentic. 9 capabilities sit at level 1, 42 at level 2, 20 at
 level 3 and 18 at level 4. Appendix C is the checklist.
 
-**Core.** Mandatory at its level. 68 of the 87 are Core.
+**Core.** Mandatory at its level. 69 of the 89 are Core.
 
-**Extended.** Optional at any level, so your view must work without it. 19 of
-the 87.
+**Extended.** Optional at any level, so your view must work without it. 20 of
+the 89.
 
 **Golden transcript.** The recorded JSON-RPC log for one demonstration, in
 `conformance/transcripts/`. `node tools/check_demos.mjs` replays and diffs all

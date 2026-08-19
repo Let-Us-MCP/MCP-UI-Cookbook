@@ -84,7 +84,7 @@
 <main>
 <p class="eyebrow">Chapter 6</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>Two shapes, repeated throughout. Parts II and III are capability entries and Part V is recipes. Both templates are set out below so you can hold the rest of the book to them and see where it falls short. Where an entry says nothing about a section, the omission is deliberate: <code>picker.color</code> has no interesting lifecycle, and inventing a paragraph about one would be worse than the silence.</p>
 <h2 id="what-is-in-a-capability-entry">What is in a capability entry?</h2>
-<p>Each entry answers eleven questions in the same order, so that a reader who has read one entry knows where to look in all eighty-seven. The order is not arbitrary: it runs from why you would want the capability, through what the user sees, to what your code and the host each owe, and ends at the two sections that decide whether it works in a host you have never opened, which are failure modes and conformance tests.</p>
+<p>Each entry answers eleven questions in the same order, so that a reader who has read one entry knows where to look in all eighty-nine. The order is not arbitrary: it runs from why you would want the capability, through what the user sees, to what your code and the host each owe, and ends at the two sections that decide whether it works in a host you have never opened, which are failure modes and conformance tests.</p>
 <p><strong>Capability.</strong> Identifier, level, tag, and ground. Generated from the registry, so the prose cannot contradict it.</p>
 <p><strong>Motivation.</strong> Why an application needs it. Where the answer is “it does not, but users expect it”, the entry says so: <code>dialog.alert</code> is one.</p>
 <p><strong>User experience.</strong> What the person sees and does, from the outside. For <code>file.export</code>: a button appears, they press it, the host asks where to save.</p>
@@ -141,15 +141,15 @@
 <p><strong>Host dependencies.</strong> What it needs by level, so you can tell whether it runs in your host. Every recipe here renders at level 1 with reduced function.</p>
 <p><strong>Failure cases.</strong> What happens when each dependency is absent. Recipe 6 sends its export to the clipboard when <code>downloadFile</code> is missing, and says so in a toast.</p>
 <p><strong>Accessibility.</strong> The keyboard-only path through the application, stated as a route a reader can follow rather than as a claim. Recipes 6 and 7 describe how a drag is performed without a pointer, because both are canvases and a canvas is where this is hardest.</p>
-<p><strong>Conformance checks.</strong> The observable behaviours, phrased as the harness asserts them. <code>make render</code> runs 110 of these against real servers.</p>
+<p><strong>Conformance checks.</strong> The observable behaviours, phrased as the harness asserts them. <code>make render</code> runs 124 of these against real servers.</p>
 <h2 id="why-every-listing-has-a-tag">Why every listing has a tag</h2>
 <p>One more convention, visible on every code block in this book. A tag above each listing says where the code came from, because a reader who cannot tell which listings are load-bearing has to treat all of them as suspect:</p>
 <p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
 <p><em>Captured</em> means real output from a real run, quoted verbatim, including the parts that are inconvenient. 3 listings in this book are captured, and one of them is a test run reporting its own failures.</p>
-<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 24 of the 94 listings.</p>
-<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 67 extracted listings against their files line by line.</p>
+<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 24 of the 96 listings.</p>
+<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 69 extracted listings against their files line by line.</p>
 <h2 id="a-worked-failure-table">A worked failure table</h2>
-<p>Here is the same capability, <code>file.export</code>, written out as the template asks, so that the shape is concrete before Part II starts using it eighty-seven times. Read the middle column first. Knowing <em>when</em> you learn about a failure determines where the handling code goes: an initialisation-time answer belongs in the code that decides what to render at all, and a click-time answer belongs next to the control.</p>
+<p>Here is the same capability, <code>file.export</code>, written out as the template asks, so that the shape is concrete before Part II starts using it eighty-nine times. Read the middle column first. Knowing <em>when</em> you learn about a failure determines where the handling code goes: an initialisation-time answer belongs in the code that decides what to render at all, and a click-time answer belongs next to the control.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
