@@ -286,6 +286,7 @@ function assertionScript(expect) {
         text,
         value: first && "value" in first ? first.value : undefined,
         attr: check.attr ? first?.getAttribute(check.attr.name) : undefined,
+        prop: check.prop ? first?.[check.prop.name] : undefined,
         noAttr: check.noAttr ? first?.hasAttribute(check.noAttr) : undefined,
         hidden: first ? first.hasAttribute("hidden")
           || getComputedStyle(first).display === "none" : null,
@@ -328,6 +329,10 @@ function compare(expect, actual) {
     if (check.attr && got.attr !== check.attr.value) {
       problems.push(`${where}: expected ${check.attr.name}=`
         + `${JSON.stringify(check.attr.value)}, found ${JSON.stringify(got.attr)}`);
+    }
+    if (check.prop && got.prop !== check.prop.value) {
+      problems.push(`${where}: expected ${check.prop.name}=`
+        + `${JSON.stringify(check.prop.value)}, found ${JSON.stringify(got.prop)}`);
     }
     if (check.hidden !== undefined && got.hidden !== check.hidden) {
       problems.push(`${where}: expected hidden=${check.hidden}, found ${got.hidden}`);

@@ -119,7 +119,7 @@
 <li>Call the tool. Deliver the arguments and result as notifications.</li>
 <li>Proxy the view’s own <code>tools/call</code> back to the same server, and forward that server’s progress notifications onward.</li>
 </ol>
-<p>Then it asserts on the DOM inside the sandboxed frame: row counts, cell text, which element carries <code>aria-current</code>, whether the error banner is hidden. 124 assertions across the thirteen recipes, followed by an <code>axe-core</code> audit of each. Reaching inside that frame at all takes <code>Target.setAutoAttach</code> with <code>flatten: true</code>, because the frame has an opaque origin and no ordinary evaluation crosses into it, which is the same boundary Chapter 5 describes doing its job.</p>
+<p>Then it asserts on the DOM inside the sandboxed frame: row counts, cell text, which element carries <code>aria-current</code>, whether the error banner is hidden. 126 assertions across the thirteen recipes, followed by an <code>axe-core</code> audit of each. Reaching inside that frame at all takes <code>Target.setAutoAttach</code> with <code>flatten: true</code>, because the frame has an opaque origin and no ordinary evaluation crosses into it, which is the same boundary Chapter 5 describes doing its job.</p>
 <p class="provenance captured">Captured output from <code>node tools/check_render.mjs</code></p><pre><code>  r01-data-explorer: 18 assertion(s) on rendered output
   r04-document-editor: 12 assertion(s) on rendered output
   r07-workflow-builder: 15 assertion(s) on rendered output

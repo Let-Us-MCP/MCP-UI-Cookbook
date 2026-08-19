@@ -26,6 +26,8 @@
       "click": "[role=treeitem][data-id=\"cover\"]", "settleMs": 700,
       "expect": [ { "selector": ".preview-image", "count": 1 },
                   { "selector": ".preview-image", "attr": { "name": "alt", "value": "Preview of cover.png" } },
+                  { "selector": ".preview-image", "prop": { "name": "naturalWidth", "value": 64 } },
+                  { "selector": ".preview-image", "prop": { "name": "naturalHeight", "value": 40 } },
                   { "selector": ".preview-text", "count": 0 } ] },
     { "label": "a read that fails says so and keeps the tree",
       "failNextCall": { "isError": true,

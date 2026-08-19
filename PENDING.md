@@ -32,7 +32,7 @@ appeared on screen. Transcripts verified the messages; nothing verified the
 pixels, which is the subject of the book.
 
 **Status: built.** `tools/check_render.mjs` with cases in
-`conformance/render/`. Thirteen recipes, 88 assertions, run by `make render`
+`conformance/render/`. Thirteen recipes, 132 assertions, run by `make render`
 and by CI. It found four bugs on its first pass, three of which no
 message-level check could have caught, including one where the book asserted a
 safety property the code did not have.

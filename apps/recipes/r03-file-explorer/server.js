@@ -25,9 +25,10 @@ const TREE = {
 // a placeholder standing in for one. Small enough to inline; anything larger
 // belongs behind `resources/read`, which is what `cover.png` demonstrates.
 const COVER_PNG =
-  + "iVBORw0KGgoAAAANSUhEUgAAAEAAAAAoCAIAAADBrGu+AAAAVElEQVR42u3PsQnA"
-  + "IAAAQTfIgk4kdrYOYG3rci6QNEpA4eAH+Autj6sLAAAAAAAAAAAbgFTqa0/MR/X1"
-  + "CQAAAADwD+CWAAAAAAAAAAAAAAAAAAAWm1GqLAAO6BMfAAAAAElFTkSuQmCC";
+    "iVBORw0KGgoAAAANSUhEUgAAAEAAAAAoCAMAAAB5EAzbAAAACVBMVEUdKjVNfqjY"
+  + "xKDLIBtRAAAARElEQVR42mNgGAWjAA6YyADDzYBRMAoGGjAyIlgQQBqfgUL9jAwU"
+  + "6h/lj/KxJiiSzWOg1D0MlPqHgdLwYKA0PAe+PAAAj4cD4bYrRbsAAAAASUVORK5C"
+  + "YII=";
 
 const CONTENTS = {
   q3: { mimeType: "text/markdown", text:
