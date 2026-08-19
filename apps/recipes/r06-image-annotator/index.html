@@ -287,10 +287,12 @@ View.boot({ name: "image-annotator", version: "1.0.0" },
       toast("No download capability, so the JSON went to the clipboard");
       return;
     }
-    await bridge.downloadFile([{ type: "resource", resource: {
-      uri: "file:///annotations.json", mimeType: "application/json",
-      text: payload } }]);
-    toast("Handed to the host");
+    const result = await bridge.downloadFile({ contents: [{ type: "resource",
+      resource: { uri: "file:///annotations.json",
+        mimeType: "application/json", text: payload } }] });
+    toast(result?.isError
+      ? "The host declined to save it, or the user cancelled."
+      : "Handed to the host");
   };
 
   stage.addEventListener("dragover", (e) => e.preventDefault());

@@ -118,11 +118,15 @@ View.boot({ name: "clipboard-lab", version: "1.0.0" }, {}, async (bridge) => {
         + "fall back to: a sandboxed frame cannot save a file on its own.");
       return;
     }
-    await bridge.downloadFile([{
+    const result = await bridge.downloadFile({ contents: [{
       type: "resource",
       resource: { uri: "file:///regions.csv", mimeType: "text/csv", text: csv() },
-    }]);
-    say("Handed the file to the host. The host decides where it lands.");
+    }] });
+    // The user cancelling the save dialog lands here, not in a catch. A view
+    // that skips this check tells them the file was written when it was not.
+    say(result?.isError
+      ? "The host declined to save it, or the user cancelled."
+      : "Handed the file to the host. The host decides where it lands.");
   };
 
   // A file input works inside the sandbox with no permission and no message.
@@ -141,10 +145,13 @@ View.boot({ name: "clipboard-lab", version: "1.0.0" }, {}, async (bridge) => {
 
   $("#link").onclick = async () => {
     try {
-      await bridge.openLink("https://modelcontextprotocol.io/specification");
-      say("Link handed to the host.");
+      const result = await bridge.openLink(
+        { url: "https://modelcontextprotocol.io/specification" });
+      say(result?.isError
+        ? "The host declined to open the link."
+        : "Link handed to the host.");
     } catch (error) {
-      say(`The host declined: ${error.message}`);
+      say(`No answer from the host: ${error.message}`);
     }
   };
 

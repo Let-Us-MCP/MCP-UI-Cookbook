@@ -65,10 +65,15 @@ View.boot({ name: "handshake-lab", version: "1.0.0" }, {}, async (bridge) => {
 
   $("#link").onclick = async () => {
     try {
-      await bridge.openLink("https://modelcontextprotocol.io/");
-      show("The host accepted the link. Whether it opened it is its business.");
+      // A refusal is a result, not a rejection: `McpUiOpenLinkResult` carries
+      // `isError`. Only a timeout or a lost bridge reaches the catch.
+      const result = await bridge.openLink(
+        { url: "https://modelcontextprotocol.io/" });
+      show(result?.isError
+        ? "The host declined to open the link."
+        : "The host accepted the link. Whether it opened it is its business.");
     } catch (error) {
-      show(`Refused: ${error.message}`);
+      show(`No answer from the host: ${error.message}`);
     }
   };
 

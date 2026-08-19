@@ -78,14 +78,14 @@ View.boot({ name: "surface-lab", version: "1.0.0" },
         toast("This host has no fullscreen mode.");
         return;
       }
-      const { mode } = await bridge.requestDisplayMode("fullscreen");
+      const { mode } = await bridge.requestDisplayMode({ mode: "fullscreen" });
       // The answer is authoritative, not the request. A host is allowed to
       // say no and return the mode you are still in.
       toast(mode === "fullscreen" ? "Fullscreen granted" : `Host kept ${mode}`);
     };
 
     $("#inline").onclick = async () => {
-      const { mode } = await bridge.requestDisplayMode("inline");
+      const { mode } = await bridge.requestDisplayMode({ mode: "inline" });
       toast(`Display mode is ${mode}`);
     };
 

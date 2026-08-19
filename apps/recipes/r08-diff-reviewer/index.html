@@ -115,19 +115,25 @@ View.boot({ name: "diff-reviewer", version: "1.0.0" },
 
   $("#explain").onclick = async () => {
     const lines = range();
-    await bridge.sendMessage(
-      `Explain this change in ${hunk.file}:\n`
-      + lines.map((l) => `${l.kind === "add" ? "+" : l.kind === "del" ? "-" : " "}`
-          + `${l.text}`).join("\n"));
-    toast("Asked in the conversation");
+    const result = await bridge.sendMessage({ role: "user",
+      content: { type: "text",
+        text: `Explain this change in ${hunk.file}:\n`
+          + lines.map((l) => `${l.kind === "add" ? "+" : l.kind === "del" ? "-" : " "}`
+              + `${l.text}`).join("\n") } });
+    toast(result?.isError
+      ? "The host rejected the message."
+      : "Asked in the conversation");
   };
 
   $("#source").onclick = async () => {
     try {
-      await bridge.openLink(`https://example.invalid/blob/main/${hunk.file}`);
-      toast("Handed to the host");
+      const result = await bridge.openLink(
+        { url: `https://example.invalid/blob/main/${hunk.file}` });
+      toast(result?.isError
+        ? "The host declined to open it."
+        : "Handed to the host");
     } catch (error) {
-      toast(`The host declined: ${error.message}`);
+      toast(`No answer from the host: ${error.message}`);
     }
   };
 

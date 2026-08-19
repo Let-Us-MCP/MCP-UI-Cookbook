@@ -101,13 +101,17 @@
         + &quot;fall back to: a sandboxed frame cannot save a file on its own.&quot;);
       return;
     }
-    await bridge.downloadFile([{
+    const result = await bridge.downloadFile({ contents: [{
       type: &quot;resource&quot;,
       resource: { uri: &quot;file:///regions.csv&quot;, mimeType: &quot;text/csv&quot;, text: csv() },
-    }]);
-    say(&quot;Handed the file to the host. The host decides where it lands.&quot;);
+    }] });
+    // The user cancelling the save dialog lands here, not in a catch. A view
+    // that skips this check tells them the file was written when it was not.
+    say(result?.isError
+      ? &quot;The host declined to save it, or the user cancelled.&quot;
+      : &quot;Handed the file to the host. The host decides where it lands.&quot;);
   };</code></pre>
-<p>That is the <em>unsupported</em> and the happy path in one handler, and the shape generalises: check the capability, say something true when it is absent, and otherwise hand the host a standard MCP content block and let it decide where the bytes land. Nothing here reaches the filesystem, because nothing in a sandboxed frame can.</p>
+<p>That is three of the five failure modes in one handler. <em>Unsupported</em> is the capability check at the top. <em>Denied</em> and <em>cancelled</em> both arrive as <code>isError: true</code> on a result that resolved normally, which is the case most implementations miss, because a promise that resolves looks like success. <em>Timeout</em> and <em>failed</em> reach the caller as a rejection, and the shape generalises: check the capability, say something true when it is absent, and otherwise hand the host a standard MCP content block and let it decide where the bytes land. Nothing here reaches the filesystem, because nothing in a sandboxed frame can.</p>
 <p><strong>Conformance tests.</strong> The assertions that decide whether an implementation has it. For <code>file.export</code>: <code>ui/download-file</code> is sent when <code>downloadFile</code> is present, and never sent when it is absent.</p>
 <p>Not every entry uses all eleven. <code>picker.color</code> has nothing to say about lifecycle, because a native colour input opens and closes without the protocol learning anything about it. The template is a checklist for the author, not a quota, and silence means the content was one sentence long and the sentence was obvious. Padding those sections would make the book longer and the template useless, because a heading that is always present stops being a signal.</p>
 <h2 id="the-five-failure-modes">The five failure modes</h2>
@@ -146,8 +150,8 @@
 <p>One more convention, visible on every code block in this book. A tag above each listing says where the code came from, because a reader who cannot tell which listings are load-bearing has to treat all of them as suspect:</p>
 <p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
 <p><em>Captured</em> means real output from a real run, quoted verbatim, including the parts that are inconvenient. 3 listings in this book are captured, and one of them is a test run reporting its own failures.</p>
-<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 24 of the 96 listings.</p>
-<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 69 extracted listings against their files line by line.</p>
+<p><em>Illustrative</em> means nothing executes it: message shapes quoted from the specification, and sketches of code you might write. 24 of the 97 listings.</p>
+<p>Books about protocols accumulate code that used to work, and a reader who cannot tell which listings are load-bearing has to distrust all of them. <code>tools/check_listings.py</code> checks all 70 extracted listings against their files line by line.</p>
 <h2 id="a-worked-failure-table">A worked failure table</h2>
 <p>Here is the same capability, <code>file.export</code>, written out as the template asks, so that the shape is concrete before Part II starts using it eighty-nine times. Read the middle column first. Knowing <em>when</em> you learn about a failure determines where the handling code goes: an initialisation-time answer belongs in the code that decides what to render at all, and a click-time answer belongs next to the control.</p>
 <div class="table-wrap"><table>

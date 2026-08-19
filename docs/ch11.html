@@ -162,7 +162,18 @@
     &quot;mimeType&quot;: &quot;text/csv&quot;,
     &quot;text&quot;: &quot;service,env,version\ncheckout,production,4.18.2\n&quot; } } ] } }</code></pre>
 <p>For something the host can fetch itself, send a <code>ResourceLink</code> with a URL instead. The difference matters for large files: an <code>EmbeddedResource</code> puts every byte through <code>postMessage</code>, while a <code>ResourceLink</code> lets the host fetch directly, with its own network identity and its own idea of what that URL is allowed to be.</p>
-<p><strong>Failure modes.</strong> This one has no fallback worth the name. If <code>hostCapabilities.downloadFile</code> is absent, a sandboxed frame genuinely cannot save a file. The honest response is to not show an export button, and to offer copy instead, which is what Recipe 6 does: press “Refuse downloads” in its demonstration and the export path switches to the clipboard with a sentence explaining why.</p>
+<p><strong>A refusal resolves. It does not throw.</strong> This is the single most important line in the section and the one that costs people an afternoon. <code>McpUiDownloadFileResult</code> carries an optional <code>isError</code>, and the specification uses it for a host that declined and for a user who cancelled the save dialog. The promise resolves either way:</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r01-data-explorer/index.html</code></p><pre class="js"><code>      const result = await bridge.downloadFile({ contents: [{
+        type: &quot;resource&quot;, resource: { uri: &quot;file:///deployments.csv&quot;,
+          mimeType: &quot;text/csv&quot;, text: csv() } }] });
+      if (result?.isError) {
+        toast(&quot;The host declined to save that file.&quot;);
+        return;
+      }
+      toast(&quot;Handed to the host&quot;);</code></pre>
+<p>A <code>try</code>/<code>catch</code> around that call catches nothing when the user cancels, so the view says the file was saved and no file exists. What a rejection does mean is that no answer arrived at all: a timeout, or the bridge going away. Both need handling and they need different sentences. <code>ui/open-link</code> and <code>ui/message</code> work the same way, with <code>isError</code> on <code>McpUiOpenLinkResult</code> and <code>McpUiMessageResult</code>.</p>
+<p><strong>Pass the params object, not the contents.</strong> <code>App.downloadFile</code> in the extension SDK takes the request’s <code>params</code>, so the argument is <code>{ contents: [...] }</code> and not <code>[...]</code>. Handing it the array directly leaves <code>params.contents</code> undefined, and a host with nothing to download does nothing at all. <code>tools/check_sdk_api.py</code> compares this repository’s bridge against the SDK’s signatures on every build, because the version of that helper which took a bare array is what this book used to publish.</p>
+<p><strong>Failure modes.</strong> Absence has no fallback worth the name. If <code>hostCapabilities.downloadFile</code> is absent, a sandboxed frame genuinely cannot save a file. The honest response is to not show an export button, and to offer copy instead, which is what Recipe 6 does: press “Refuse downloads” in its demonstration and the export path switches to the clipboard with a sentence explaining why.</p>
 <h2 id="how-do-i-open-a-link">How do I open a link?</h2>
 <div class="cap" id="link.open"><div class="cap-head"><code class="cap-id">link.open</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Delegate external navigation instead of attempting it.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>ui/open-link</code><code>openLinks</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r08.html">Code and Diff Reviewer</a>, <a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-clipboard">lab-clipboard</a></dd></dl></div>
 <p>Level 1, and the one capability in this chapter that a purely card-shaped view is likely to need. A summary card with no interaction at all still usually wants to link somewhere: to the ticket, the dashboard, the document it is summarising.</p>
@@ -192,6 +203,7 @@
 <li>With <code>clipboardWrite</code> granted, <code>navigator.clipboard.writeText</code> succeeds inside the frame.</li>
 <li>Without it, the <code>execCommand</code> fallback still copies from a user gesture.</li>
 <li><code>ui/download-file</code> with an <code>EmbeddedResource</code> produces a file named from the last segment of its URI.</li>
+<li>A declined <code>ui/download-file</code> resolves with <code>isError: true</code> and the view says the file was not saved.</li>
 <li><code>ui/download-file</code> with <code>downloadFile</code> absent from <code>hostCapabilities</code> is never sent by a conforming view.</li>
 <li><code>ui/open-link</code> opens outside the sandbox, or returns an error.</li>
 <li>An <code>&lt;a download&gt;</code> inside the frame does nothing, and the view does not rely on it.</li>

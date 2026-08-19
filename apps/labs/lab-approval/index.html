@@ -117,8 +117,11 @@ View.boot({ name: "approval-lab", version: "1.0.0" },
       confirm: "Ask",
     });
     if (!question) return;
-    await bridge.sendMessage(question);
-    toast("Asked in the conversation");
+    const result = await bridge.sendMessage(
+      { role: "user", content: { type: "text", text: question } });
+    toast(result?.isError
+      ? "The host rejected the message."
+      : "Asked in the conversation");
   };
 });
 </script>

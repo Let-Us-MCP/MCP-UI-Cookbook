@@ -194,22 +194,39 @@ View.boot({ name: "data-explorer", version: "1.0.0" }, {}, async (instance) => {
       toast("This host cannot save files. Copy instead.");
       return;
     }
+    // Two different failures, and only one of them throws.
+    //
+    // A host that declines, or a user who cancels the save dialog, answers
+    // with a result carrying `isError: true`. The promise resolves. Code that
+    // only catches reports success for a file that was never written. A throw
+    // means the request got no answer at all: a timeout, or the bridge going
+    // away.
     try {
-      await bridge.downloadFile([{ type: "resource", resource: {
-        uri: "file:///deployments.csv", mimeType: "text/csv", text: csv() } }]);
+      const result = await bridge.downloadFile({ contents: [{
+        type: "resource", resource: { uri: "file:///deployments.csv",
+          mimeType: "text/csv", text: csv() } }] });
+      if (result?.isError) {
+        toast("The host declined to save that file.");
+        return;
+      }
       toast("Handed to the host");
     } catch (error) {
-      toast(`The host declined to save that file. ${error.message}`);
+      toast(`No answer from the host. ${error.message}`);
     }
   };
 
   $("#ask").onclick = async () => {
     try {
-      await bridge.sendMessage(
-        `Why is p95 high on these deployments?\n${csv()}`);
+      const result = await bridge.sendMessage({ role: "user",
+        content: { type: "text",
+          text: `Why is p95 high on these deployments?\n${csv()}` } });
+      if (result?.isError) {
+        toast("The host declined to start a turn.");
+        return;
+      }
       toast("Asked in the conversation");
     } catch (error) {
-      toast(`The host declined to start a turn. ${error.message}`);
+      toast(`No answer from the host. ${error.message}`);
     }
   };
 

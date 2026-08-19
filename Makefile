@@ -5,7 +5,7 @@
 PY   := $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
 NODE := node
 
-.PHONY: all registry site demos figures fixtures check lint refs listings counts wire sandbox search hooks \
+.PHONY: all registry site demos figures fixtures check lint refs listings counts wire sandbox search hooks sdkapi \
         claims transcripts serve venv clean
 
 all: registry fixtures demos figures site
@@ -26,7 +26,7 @@ site:
 	python3 tools/build_site.py
 	python3 tools/build_search.py
 
-check: lint density refs listings counts claims identifiers webclaims wire sandbox search transcripts render
+check: lint density refs listings counts claims identifiers sdkapi webclaims wire sandbox search transcripts render
 
 lint:
 	python3 tools/lint_prose.py
@@ -63,6 +63,12 @@ claims:
 
 identifiers:
 	python3 tools/check_identifiers.py
+
+# The book's listings are extracted from apps that call our bridge. If the
+# bridge and the real SDK disagree, every one of those listings is code a
+# reader cannot run.
+sdkapi:
+	python3 tools/check_sdk_api.py
 
 webclaims:
 	python3 tools/check_web_claims.py

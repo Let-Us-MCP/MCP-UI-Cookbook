@@ -509,6 +509,30 @@ async function runCase(spec, name, browser, workdir) {
           + `error(s), first is ${JSON.stringify(list[0])}`);
         await browser.evalFrame("window.__errors.length = 0");
       }
+      if (step.expectMessage) {
+        const want = step.expectMessage;
+        const log = JSON.parse(await browser.evalPage(
+          `JSON.stringify((window.__host.transcript || [])
+             .filter(e => e.direction === "app\u2192host")
+             .map(e => e.message))`));
+        const found = log.filter((m) => m.method === want.method);
+        if (!found.length) {
+          problems.push(`${label}: no ${want.method} reached the host; `
+            + `the view sent ${log.map((m) => m.method).filter(Boolean).join(", ") || "nothing"}`);
+        } else if (want.contains) {
+          const body = JSON.stringify(found[found.length - 1]);
+          for (const needle of want.contains) {
+            if (!body.includes(needle)) {
+              problems.push(`${label}: ${want.method} did not carry `
+                + `${JSON.stringify(needle)}; it was ${body.slice(0, 220)}`);
+            }
+          }
+        }
+        if (want.count !== undefined && found.length !== want.count) {
+          problems.push(`${label}: expected ${want.count} ${want.method}, `
+            + `found ${found.length}`);
+        }
+      }
       if (step.expect) {
         const actual = await browser.evalFrame(assertionScript(step.expect));
         problems.push(...compare(step.expect, actual)

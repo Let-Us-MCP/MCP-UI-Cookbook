@@ -199,9 +199,18 @@ export class HostEmulator {
         return { contents: [{ uri: params.uri, ...resource }] };
       }
 
+      // Refusal is a result, not an error.
+      //
+      // `McpUiOpenLinkResult`, `McpUiMessageResult` and
+      // `McpUiDownloadFileResult` each carry an optional `isError`, and the
+      // specification uses it for exactly this: the host declined, or the user
+      // cancelled. A JSON-RPC error means the request could not be processed
+      // at all. Getting this backwards is why a view's `catch` never fires and
+      // the user is told their file was saved when it was not.
       case "ui/open-link": {
         if (!this.hostCapabilities.openLinks) {
-          throw new Error("Link opening denied by user");
+          this.onEvent?.("open-link-denied", params);
+          return { isError: true };
         }
         this.onEvent?.("open-link", params);
         return {};
@@ -209,7 +218,8 @@ export class HostEmulator {
 
       case "ui/message": {
         if (!this.hostCapabilities.message) {
-          throw new Error("Message sending denied");
+          this.onEvent?.("message-denied", params);
+          return { isError: true };
         }
         this.onEvent?.("message", params);
         return {};
@@ -242,7 +252,8 @@ export class HostEmulator {
 
       case "ui/download-file": {
         if (!this.hostCapabilities.downloadFile) {
-          throw new Error("Download denied by user");
+          this.onEvent?.("download-denied", params);
+          return { isError: true };
         }
         this.onEvent?.("download", params);
         return {};
