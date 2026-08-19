@@ -60,11 +60,13 @@ recipes are overbuilt in a way no automated check would ever detect.
 
 ## 5. Keyboard routes in two recipes
 
-**The gap.** Recipe 6 has no keyboard route to draw an annotation box. Recipe 7
-has none to draw a connection by position. Both say so in their entries rather
-than claiming otherwise, and both expose the operations as registered tools,
-which is a real answer for agent and assistive-technology use and not a
-complete one.
+**Status: fixed.** Recipe 6 draws a box with a caret, arrow keys and Enter.
+Recipe 7 selects nodes with Enter and moves them with the arrow keys, and its
+nodes are `role="button"` with `aria-pressed` instead of silent focusable
+divs. The render harness gained a `keys` step, so both routes are driven by
+real key events and asserted on the resulting DOM. Both recipes still expose
+the operations as registered tools, which remains the better route for an
+agent.
 
 ## 6. The streaming log announces every line
 

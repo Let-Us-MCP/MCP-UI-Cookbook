@@ -102,7 +102,7 @@ afternoon.
 *Yours to build* means the view implements it and nobody else can. Undo is the
 clearest case: no host can undo your document model for you.
 
-*Not standardised* means there is no mechanism, anywhere, today. Fourteen
+*Not standardised* means there is no mechanism, anywhere, today. Sixteen
 capabilities carry this label. Each entry says what you can do instead, and
 Appendix B collects them into one table, because a list of the things a
 platform cannot yet do is the most actionable page in a book like this.

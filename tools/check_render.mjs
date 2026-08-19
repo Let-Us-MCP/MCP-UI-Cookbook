@@ -250,6 +250,7 @@ function assertionScript(expect) {
         text,
         value: first && "value" in first ? first.value : undefined,
         attr: check.attr ? first?.getAttribute(check.attr.name) : undefined,
+        noAttr: check.noAttr ? first?.hasAttribute(check.noAttr) : undefined,
         hidden: first ? first.hasAttribute("hidden")
           || getComputedStyle(first).display === "none" : null,
       });
@@ -283,6 +284,10 @@ function compare(expect, actual) {
     if (check.value !== undefined && got.value !== check.value) {
       problems.push(`${where}: expected value ${JSON.stringify(check.value)}, `
         + `found ${JSON.stringify(got.value)}`);
+    }
+    if (check.noAttr && got.noAttr !== false) {
+      problems.push(`${where}: expected no ${check.noAttr} attribute, `
+        + `found ${got.noAttr === undefined ? "no such node" : "one"}`);
     }
     if (check.attr && got.attr !== check.attr.value) {
       problems.push(`${where}: expected ${check.attr.name}=`
@@ -378,6 +383,30 @@ async function runCase(spec, name, browser, workdir) {
       if (step.click) {
         await browser.evalFrame(
           `document.querySelector(${JSON.stringify(step.click)}).click()`);
+      }
+      // A keyboard route that no test drives is a keyboard route nobody knows
+      // is broken. `keys` focuses a target and dispatches real KeyboardEvents
+      // into the sandboxed frame, so Recipes 6 and 7 are exercised the way a
+      // keyboard user exercises them.
+      if (step.keys) {
+        const target = step.keysTarget ?? ":focus";
+        await browser.evalFrame(
+          `(() => {
+             const el = document.querySelector(${JSON.stringify(target)});
+             if (!el) throw new Error("no key target " + ${JSON.stringify(target)});
+             el.focus();
+             for (const spec of ${JSON.stringify(step.keys)}) {
+               const key = typeof spec === "string" ? spec : spec.key;
+               const init = { key, code: key, bubbles: true, cancelable: true,
+                              shiftKey: !!(spec.shiftKey), ctrlKey: !!(spec.ctrlKey),
+                              metaKey: !!(spec.metaKey) };
+               (document.activeElement ?? el).dispatchEvent(
+                 new KeyboardEvent("keydown", init));
+               (document.activeElement ?? el).dispatchEvent(
+                 new KeyboardEvent("keyup", init));
+             }
+             return true;
+           })()`);
       }
       if (step.appTool) {
         await browser.evalPage(

@@ -5,4 +5,17 @@
       "expect": [ { "selector": ".box", "count": 2 },
                   { "selector": ".box span", "text": "scratch" },
                   { "selector": "#art rect", "minCount": 5 },
-                  { "selector": "#undo", "attr": { "name": "disabled", "value": "" } } ] } ] }
+                  { "selector": "#undo", "attr": { "name": "disabled", "value": "" } } ] },
+    { "label": "the keyboard draws a box without a pointer",
+      "keysTarget": "#stage",
+      "keys": ["Enter",
+               "ArrowRight", "ArrowRight", "ArrowRight", "ArrowRight",
+               "ArrowDown", "ArrowDown", "ArrowDown",
+               "Enter"],
+      "expect": [ { "selector": ".box", "count": 3 },
+                  { "selector": "#undo", "noAttr": "disabled" } ] },
+    { "label": "Escape abandons a box in progress",
+      "keysTarget": "#stage",
+      "keys": ["Enter", "ArrowRight", "ArrowRight", "Escape"],
+      "expect": [ { "selector": ".box", "count": 3 },
+                  { "selector": "#pending", "count": 0 } ] } ] }

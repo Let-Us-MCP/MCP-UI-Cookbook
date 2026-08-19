@@ -15,6 +15,12 @@
     background:var(--color-text-info); color:var(--color-text-inverse);
     padding:0 4px; border-radius:3px; white-space:nowrap }
   .box.sel { border-style:dashed }
+  /* The keyboard caret. A drawing surface with no visible cursor is a
+   * surface a keyboard user cannot aim. */
+  #caret { position:absolute; width:11px; height:11px; margin:-5px 0 0 -5px;
+    border:2px solid var(--color-text-danger); border-radius:50%;
+    pointer-events:none }
+  #stage:not(:focus-visible) #caret { opacity:.45 }
 </style>
 </head>
 <body>
@@ -29,14 +35,21 @@
     <span class="chip" id="zoom">100%</span>
   </div>
 
-  <div id="stage">
+  <!-- role="application" so arrow keys reach this code instead of being
+       consumed by a screen reader's own browse mode, which is the one place
+       that role is the correct answer. -->
+  <div id="stage" tabindex="0" role="application"
+       aria-label="Annotation surface" aria-describedby="hint">
     <div id="canvas">
+      <div id="caret" hidden></div>
       <svg id="art" width="480" height="300" viewBox="0 0 480 300"
            role="img" aria-label="Sample plate with three surface marks"></svg>
     </div>
   </div>
 
-  <p class="muted" id="hint">Drag on the plate to draw a box. Wheel to zoom,
+  <p class="muted" id="hint">Drag on the plate to draw a box, or focus it and
+    use the arrow keys to move the cursor, Enter to set a corner, Enter again
+    to finish. Shift moves by one pixel, Escape cancels. Wheel to zoom,
     space-drag to pan. Drop a JSON file of boxes to load one.</p>
 </div>
 
@@ -49,6 +62,14 @@ let boxes = [];
 const past = [];
 let scale = 1, panX = 0, panY = 0;
 let bridge;
+
+// The keyboard route to the same operation the pointer performs. A canvas
+// whose only input is a drag is a canvas a keyboard user cannot use at all,
+// and the workaround of exposing a tool covers agents without covering people.
+const STEP = 10, FINE = 1;
+const ART = { w: 480, h: 300 };
+let caret = { x: 60, y: 60 };
+let anchor = null;
 
 // A drawn image rather than a downloaded one: the view declares no external
 // origins, so its content security policy stays empty and honest.
@@ -76,6 +97,22 @@ function apply(entry) {
   announce(entry.label);
 }
 
+function drawCaret() {
+  const node = $("#caret");
+  node.hidden = false;
+  node.style.left = `${caret.x}px`;
+  node.style.top = `${caret.y}px`;
+  const pending = $("#pending");
+  if (pending) pending.remove();
+  if (!anchor) return;
+  $("#canvas").append(h("div", { class: "box sel", id: "pending",
+    style: `left:${Math.min(anchor.x, caret.x)}px;`
+         + `top:${Math.min(anchor.y, caret.y)}px;`
+         + `width:${Math.abs(caret.x - anchor.x)}px;`
+         + `height:${Math.abs(caret.y - anchor.y)}px;`
+         + `border-color:${$("#colour").value};` }));
+}
+
 function draw() {
   $("#canvas").style.transform =
     `translate(${panX}px, ${panY}px) scale(${scale})`;
@@ -88,6 +125,7 @@ function draw() {
       h("span", { text: box.label, style: `background:${box.colour}` })));
   }
   $("#undo").disabled = !past.length;
+  drawCaret();
 }
 
 View.boot({ name: "image-annotator", version: "1.0.0" },
@@ -107,6 +145,56 @@ View.boot({ name: "image-annotator", version: "1.0.0" },
   };
 
   let start = null, ghost = null, panning = false, panFrom = null;
+
+  // The keyboard equivalent of press, drag, release. Arrows move a caret,
+  // Enter sets the first corner and then commits, Escape abandons.
+  const MOVES = { ArrowLeft: [-1, 0], ArrowRight: [1, 0],
+                  ArrowUp: [0, -1], ArrowDown: [0, 1] };
+
+  stage.addEventListener("keydown", (event) => {
+    const move = MOVES[event.key];
+    if (move) {
+      event.preventDefault();
+      const by = event.shiftKey ? FINE : STEP;
+      caret = {
+        x: Math.max(0, Math.min(ART.w, caret.x + move[0] * by)),
+        y: Math.max(0, Math.min(ART.h, caret.y + move[1] * by)),
+      };
+      drawCaret();
+      return;
+    }
+
+    if (event.key === "Escape" && anchor) {
+      event.preventDefault();
+      anchor = null;
+      drawCaret();
+      announce("Box cancelled");
+      return;
+    }
+
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    if (!anchor) {
+      anchor = { ...caret };
+      drawCaret();
+      announce(`Corner set at ${Math.round(anchor.x)}, ${Math.round(anchor.y)}`);
+      return;
+    }
+    const box = {
+      x: Math.min(anchor.x, caret.x), y: Math.min(anchor.y, caret.y),
+      w: Math.abs(caret.x - anchor.x), h: Math.abs(caret.y - anchor.y),
+      label: $("#label").value || "region",
+      colour: $("#colour").value,
+    };
+    anchor = null;
+    if (box.w < 6 || box.h < 6) {
+      drawCaret();
+      announce("Too small to keep");
+      return;
+    }
+    apply({ label: `add ${box.label}`, forward: () => boxes.push(box),
+            back: () => boxes.pop() });
+  });
 
   addEventListener("keydown", (e) => { if (e.code === "Space") panning = true; });
   addEventListener("keyup", (e) => { if (e.code === "Space") panning = false; });

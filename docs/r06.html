@@ -171,7 +171,16 @@ panY = py - ((py - panY) / before) * scale;</code></pre>
 <p><strong>A tiny box.</strong> Drags under six pixels in either dimension are discarded, so a click on the canvas does not leave an invisible annotation.</p>
 <p><strong>A JSON file that is not annotations.</strong> Caught by the <code>try</code> around the parse, reported by name, and the existing boxes are untouched.</p>
 <h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
-<p>This is the recipe with the weakest accessibility story in Part V, and saying so is more useful than claiming otherwise. The zoom and pan have button equivalents through Fit. Drawing a box does not: there is no keyboard route to create an annotation, and a complete implementation would need one, most plausibly a form that takes coordinates or a tool the agent can call on the user’s behalf. The existing boxes are announced when loaded, and the label and colour controls are ordinary form fields.</p>
+<p>The stage is focusable and carries <code>role="application"</code>, which is the one context where that role is correct: arrow keys have to reach this code instead of a screen reader’s browse mode. Arrows move a visible caret by ten pixels, Shift by one, Enter sets the first corner and then commits the box, and Escape abandons one in progress.</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r06-image-annotator/index.html</code></p><pre class="js"><code>    if (event.key !== &quot;Enter&quot;) return;
+    event.preventDefault();
+    if (!anchor) {
+      anchor = { ...caret };
+      drawCaret();
+      announce(`Corner set at ${Math.round(anchor.x)}, ${Math.round(anchor.y)}`);
+      return;
+    }</code></pre>
+<p>That is press, drag and release taken apart into three separate keystrokes, which is what every keyboard equivalent of a drag ends up being. The caret is drawn rather than implied, because a drawing surface with no visible cursor is one a keyboard user cannot aim. The zoom and pan have button equivalents through Fit, the existing boxes are announced when loaded, and the label and colour controls are ordinary form fields.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li><code>load_annotations</code> returns two boxes and both render.</li>

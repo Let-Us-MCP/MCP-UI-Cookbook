@@ -49,6 +49,13 @@ claims = sum(len(c["wire"]) for c in caps)
 core_gaps = sum(1 for c in caps if c["ground"] == "gap" and c["tag"] == "core")
 levels = Counter(c["level"] for c in caps)
 
+RENDER = ROOT / "conformance" / "render"
+render_cases = sorted(RENDER.glob("*.json"))
+render_assertions = sum(
+    len(step.get("expect", []))
+    for case in render_cases
+    for step in json.loads(case.read_text()).get("steps", []))
+
 TAG = re.compile(r"^<!-- listing:\s*(extracted|captured|illustrative)", re.M)
 listing_tags = Counter()
 for page in sorted(BOOK.rglob("*.md")):
@@ -71,6 +78,8 @@ FACTS = {
     "level 2 capabilities": levels[2],
     "level 3 capabilities": levels[3],
     "level 4 capabilities": levels[4],
+    "render cases": len(render_cases),
+    "render assertions": render_assertions,
     "listings": sum(listing_tags.values()),
     "extracted listings": listing_tags["extracted"],
     "captured listings": listing_tags["captured"],
@@ -163,6 +172,14 @@ PATTERNS = {
     "listings": [
         r"of the NUMBER listings",
     ],
+    "render assertions": [
+        r"NUMBER assertion\(s\) against real servers",
+        r"runs NUMBER of these against real servers",
+        r"NUMBER assertions across the thirteen recipes",
+    ],
+    "render cases": [
+        r"NUMBER case\(s\) against real servers",
+    ],
     "extracted listings": [
         r"all NUMBER extracted listings",
     ],
@@ -204,7 +221,10 @@ def main() -> int:
     checked = 0
 
     for path in sorted(BOOK.rglob("*.md")):
-        text = FENCE.sub("", path.read_text(encoding="utf-8"))
+        # The prose is hard wrapped at about 78 columns, so a claim can be
+        # split across a line break. Flatten first, or a wrapped claim is one
+        # this checker silently never reads.
+        text = " ".join(FENCE.sub("", path.read_text(encoding="utf-8")).split())
         rel = path.relative_to(ROOT)
         for fact, patterns in PATTERNS.items():
             correct = FACTS[fact]

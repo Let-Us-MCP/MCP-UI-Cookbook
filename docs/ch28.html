@@ -113,7 +113,7 @@
 <p>That last clause fails most often, so state it as a rule. <strong>A capability advertised and not implemented is worse than one never advertised.</strong> A host that lists <code>downloadFile</code> and then ignores <code>ui/download-file</code> breaks every view that checked <code>hostCapabilities</code> and rewards every view that did not.</p>
 <p><strong>Level 2</strong> adds the interactive set, and the checks are mostly about the host staying out of the way: that keyboard events reach the frame, that the frame’s focus ring is not clipped by host styling, that a context menu inside the frame is not shadowed by the host’s own.</p>
 <p><strong>Level 3</strong> is where hosts diverge most. Display modes, lifecycle signals, and the persistence gap all live here, and a host can be excellent at Levels 1 and 2 while implementing none of Level 3. That is a legitimate position for a host whose views are all cards.</p>
-<p><strong>Level 4</strong> is the agentic set, and it has the largest gap between what the checklist asks and what the specification provides. Nine Core capabilities across all levels have no standard mechanism, and Appendix C marks each of them, because a checklist that asked hosts to implement something unspecified would be worthless.</p>
+<p><strong>Level 4</strong> is the agentic set, and it has the largest gap between what the checklist asks and what the specification provides. Ten Core capabilities across all levels have no standard mechanism, and Appendix C marks each of them, because a checklist that asked hosts to implement something unspecified would be worthless.</p>
 <h2 id="if-you-are-building-a-host">If you are building a host</h2>
 <p>The useful order is not top to bottom. It is:</p>
 <ol type="1">

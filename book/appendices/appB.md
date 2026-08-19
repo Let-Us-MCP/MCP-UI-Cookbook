@@ -3,11 +3,11 @@ title: The Gaps
 slug: appendix-b
 part: Appendices
 number: B
-summary: Fourteen capabilities with no standard mechanism, what each one costs, and the shape a proposal would take.
+summary: Sixteen capabilities with no standard mechanism, what each one costs, and the shape a proposal would take.
 ---
 
 Every entry below is a capability that recognisable applications need and that
-no message, permission or platform feature currently provides. Nine of them
+no message, permission or platform feature currently provides. Ten of them
 are Core, which means they are needed at their conformance level.
 
 ![Sixteen doors that are shut](figures/xkcd-doors.png)
