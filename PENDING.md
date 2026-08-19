@@ -19,10 +19,17 @@ which had a working route the book prescribed and never built, and it recorded
 that `window.print()` fails by returning normally and doing nothing. The paste
 target now exists in `lab-clipboard` and the focus tool in Recipe 13.
 
-**Still open.** Whether drag and drop crosses an opaque-origin frame is
-untested: headless Chrome will not begin a drag, so the run tested nothing and
-says so. The remaining protocol gaps were re-read against a specification
-snapshot confirmed current, and stand.
+**Also closed.** Drag and drop across an opaque-origin frame was recorded as
+untested on the reasoning that headless Chrome will not begin a drag. It will.
+The probe had been pressing at a fixed offset inside the frame rather than on
+the draggable element. Pressing on the element starts the drag, Chrome exports
+a `text/plain` payload out of the sandboxed origin, and a drop carrying it
+reaches the host's own document. Appendix B now says so, including the part
+the harness drives rather than observes: a headless run has no drag loop, so
+the harness dispatches the drop with the intercepted data.
+
+**Still open.** Nothing in this section. The remaining protocol gaps were
+re-read against a specification snapshot confirmed current, and stand.
 
 ## 1. Render conformance against a live server
 
@@ -32,7 +39,7 @@ appeared on screen. Transcripts verified the messages; nothing verified the
 pixels, which is the subject of the book.
 
 **Status: built.** `tools/check_render.mjs` with cases in
-`conformance/render/`. Thirteen recipes, 151 assertions, run by `make render`
+`conformance/render/`. Thirteen recipes, 156 assertions, run by `make render`
 and by CI. It found four bugs on its first pass, three of which no
 message-level check could have caught, including one where the book asserted a
 safety property the code did not have.
@@ -43,10 +50,12 @@ host capability mid-session, `failNextCall` makes the next tool call return
 found two real defects on the first pass: Recipe 1's export button was
 completely silent when the host refused, and Recipe 4 marked the document
 saved when the save had failed, which is silent data loss in an autosaving
-editor.
+editor. Teardown-with-unsaved-work now has a case as well as a lever: Recipe 4
+is left dirty by a refused save, the host starts the handshake, and the case
+asserts that the flush went out, that the document ends saved, and that the
+view answered the host rather than leaving it waiting.
 
-**Still missing inside it.** Teardown-with-unsaved-work has a lever and no
-case using it. Reference-image comparison is absent, and would need stored
+**Still missing inside it.** Reference-image comparison is absent, and would need stored
 images and a tolerance, which is a different kind of brittle. What the harness
 does assert is geometry: `prop` reads a decoded image's `naturalWidth` and
 `box` reads a rendered element's own rectangle, which is what separates a
@@ -117,10 +126,11 @@ edit that restores the implicit live region fails the build.
 
 ## 7. Chapter depth
 
-**The gap.** Chapters run 1,100 to 1,500 words against a 1,500 target. The
-reference volume in this series runs closer to 2,400 per chapter over fewer
-chapters. This one is wider and shallower by design, being a reference rather
-than an argument, but several Part II chapters would carry more worked detail.
+**Status: closed.** The entry described chapters running 1,100 to 1,500 words
+against a 1,500 target. They now run 1,500 to 3,122, mean 1,918 and median
+1,843 across 29 chapters, with none below the target. The reference volume in
+this series runs closer to 2,400 per chapter over fewer chapters, and this one
+is still wider by design, being a reference rather than an argument.
 
 ## 8. Editable examples
 

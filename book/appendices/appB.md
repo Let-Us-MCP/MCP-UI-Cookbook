@@ -92,14 +92,24 @@ drag starting in one place and ending in another, so anything crossing the
 boundary crosses because the browser routed it and not because the protocol
 said it could.
 
-*What the probe could not settle.* Whether HTML5 drag and drop works across an
-opaque-origin frame is a question about the browser, and this suite has no
-answer: headless Chrome will not begin a drag from a synthesised mouse press,
-so `dragstart` never fired and the run tested nothing. It is recorded as
-inconclusive rather than counted with the confirmations. The protocol half of
-this entry stands regardless, and it is the half that matters, because a
-mechanism that works only where the browser happens to allow it is not one an
-application can rely on across hosts.
+*What the probe settled.* Whether HTML5 drag and drop crosses an opaque-origin
+frame is a question about the browser, and the answer is that it does.
+`tools/check_sandbox.mjs` starts a drag on a `draggable` element inside the
+sandboxed frame, `dragstart` fires with `allowed: true`, and Chrome builds a
+real transfer payload carrying `text/plain` out of an origin the host cannot
+read. A drop carrying that payload then reaches the host's own document, text
+intact. An earlier run reported this as inconclusive because it pressed at a
+fixed offset inside the frame rather than on the draggable element, missed it,
+and read the silence as headless refusing to drag.
+
+Two things qualify the result. Chrome exports the payload, but a headless run
+has no drag loop, so the harness dispatches the drop itself with the
+intercepted data. The export is observed; the delivery is driven. And the
+protocol half of this entry is untouched, which is the half that matters: no
+message carries a transfer payload, so a drag that crosses the boundary
+crosses because the browser routed it, and a mechanism that works only where
+the browser happens to allow it is not one an application can rely on across
+hosts.
 
 *Workaround.* Clipboard out, file input or paste in, `resources/read` when the
 object lives on the server anyway. Dropping files *into* a view works and
@@ -108,8 +118,9 @@ needs no permission; `lab-clipboard`, Recipe 3 and Recipe 6 all accept one.
 *Shape.* A serialisable transfer payload carried in a message on drag start
 and drop, with the host mediating both ends.
 
-*Reopens.* Exfiltration, since a drag out is data leaving the frame. Needs the
-same treatment as `ui/download-file`.
+*Reopens.* Exfiltration, since a drag out is data leaving the frame, and the
+probe shows that route is open today with nothing mediating it. Needs the same
+treatment as `ui/download-file`.
 
 ### `clipboard.read`
 

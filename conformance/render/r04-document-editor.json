@@ -1,28 +1,171 @@
-{ "server": "apps/recipes/r04-document-editor/server.js", "tool": "load_document",
-  "arguments": {}, "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}},
-  "steps": [
-    { "label": "document arrives from the server",
-      "expect": [ { "selector": "#doc", "textContains": "renewal is on track" },
-                  { "selector": "#state", "text": "saved" },
-                  { "selector": "#proposal", "hidden": true },
-                  { "selector": "#undo", "attr": { "name": "disabled", "value": "" } } ] },
-    { "label": "the agent proposes a rewrite", "appTool": "propose_rewrite",
-      "arguments": { "html": "<p>The renewal has slipped to the 21st.</p>",
-                     "rationale": "The vendor confirmed the delay." },
-      "expect": [ { "selector": "#proposal", "hidden": false },
-                  { "selector": "#ptext", "textContains": "vendor confirmed" },
-                  { "selector": "#doc", "textContains": "on track" } ] },
-    { "label": "accepting applies it", "click": "#accept",
-      "expect": [ { "selector": "#doc", "textContains": "slipped to the 21st" },
-                  { "selector": "#proposal", "hidden": true } ] },
-    { "label": "one undo restores the human's words", "click": "#undo",
-      "expect": [ { "selector": "#doc", "textContains": "on track" } ] },
-    { "label": "a save that the server refuses leaves the document unsaved",
-      "failNextCall": { "isError": true,
-        "content": [{ "type": "text",
-          "text": "The document store is read only. Nothing was written." }] },
-      "keysTarget": "#doc",
-      "keys": [{ "key": "s", "ctrlKey": true }],
-      "settleMs": 700,
-      "expect": [ { "selector": "#state", "text": "unsaved" },
-                  { "selector": "#log", "textContains": "read only" } ] } ] }
+{
+ "server": "apps/recipes/r04-document-editor/server.js",
+ "tool": "load_document",
+ "arguments": {},
+ "host": {
+  "hostCapabilities": {
+   "serverTools": {},
+   "downloadFile": {},
+   "openLinks": {},
+   "message": {
+    "text": {}
+   },
+   "updateModelContext": {
+    "text": {},
+    "structuredContent": {}
+   },
+   "logging": {},
+   "serverResources": {}
+  },
+  "hostContext": {
+   "theme": "light",
+   "locale": "en-US",
+   "timeZone": "UTC",
+   "displayMode": "inline",
+   "availableDisplayModes": [
+    "inline",
+    "fullscreen"
+   ],
+   "containerDimensions": {
+    "maxHeight": 620
+   },
+   "deviceCapabilities": {
+    "hover": true,
+    "touch": false
+   }
+  }
+ },
+ "steps": [
+  {
+   "label": "document arrives from the server",
+   "expect": [
+    {
+     "selector": "#doc",
+     "textContains": "renewal is on track"
+    },
+    {
+     "selector": "#state",
+     "text": "saved"
+    },
+    {
+     "selector": "#proposal",
+     "hidden": true
+    },
+    {
+     "selector": "#undo",
+     "attr": {
+      "name": "disabled",
+      "value": ""
+     }
+    }
+   ]
+  },
+  {
+   "label": "the agent proposes a rewrite",
+   "appTool": "propose_rewrite",
+   "arguments": {
+    "html": "<p>The renewal has slipped to the 21st.</p>",
+    "rationale": "The vendor confirmed the delay."
+   },
+   "expect": [
+    {
+     "selector": "#proposal",
+     "hidden": false
+    },
+    {
+     "selector": "#ptext",
+     "textContains": "vendor confirmed"
+    },
+    {
+     "selector": "#doc",
+     "textContains": "on track"
+    }
+   ]
+  },
+  {
+   "label": "accepting applies it",
+   "click": "#accept",
+   "expect": [
+    {
+     "selector": "#doc",
+     "textContains": "slipped to the 21st"
+    },
+    {
+     "selector": "#proposal",
+     "hidden": true
+    }
+   ]
+  },
+  {
+   "label": "one undo restores the human's words",
+   "click": "#undo",
+   "expect": [
+    {
+     "selector": "#doc",
+     "textContains": "on track"
+    }
+   ]
+  },
+  {
+   "label": "a save that the server refuses leaves the document unsaved",
+   "failNextCall": {
+    "isError": true,
+    "content": [
+     {
+      "type": "text",
+      "text": "The document store is read only. Nothing was written."
+     }
+    ]
+   },
+   "keysTarget": "#doc",
+   "keys": [
+    {
+     "key": "s",
+     "ctrlKey": true
+    }
+   ],
+   "settleMs": 700,
+   "expect": [
+    {
+     "selector": "#state",
+     "text": "unsaved"
+    },
+    {
+     "selector": "#log",
+     "textContains": "read only"
+    }
+   ]
+  },
+  {
+   "label": "teardown flushes unsaved work before the view disappears",
+   "teardown": "Conversation closed",
+   "settleMs": 900,
+   "expectMessage": {
+    "method": "tools/call",
+    "contains": [
+     "save_document"
+    ]
+   },
+   "expect": [
+    {
+     "selector": "#state",
+     "text": "saved"
+    },
+    {
+     "selector": "#log",
+     "textContains": "Saved revision"
+    }
+   ],
+   "pageExpect": [
+    {
+     "expression": "typeof window.__teardownResult",
+     "equals": "object"
+    },
+    {
+     "expression": "window.__teardownResult && window.__teardownResult.error === undefined",
+     "equals": true
+    }
+   ]
+  }
+ ]
+}

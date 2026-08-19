@@ -574,6 +574,17 @@ async function runCase(spec, name, browser, workdir) {
           }
         }
       }
+      if (step.pageExpect) {
+        for (const check of step.pageExpect) {
+          const got = await browser.evalPage(
+            `JSON.stringify(${check.expression})`);
+          const actual = JSON.parse(got ?? "null");
+          if (actual !== check.equals) {
+            problems.push(`${label}: ${check.expression} gave `
+              + `${JSON.stringify(actual)}, expected ${JSON.stringify(check.equals)}`);
+          }
+        }
+      }
       if (step.expectMessage) {
         const want = step.expectMessage;
         const log = JSON.parse(await browser.evalPage(
@@ -766,7 +777,7 @@ async function main() {
     const problems = await runCase(spec, name, browser, workdir);
     const count = (spec.steps ?? []).reduce(
       (n, s) => n + (s.expect?.length ?? 0) + (s.evalExpect?.length ?? 0)
-        + (s.expectMessage ? 1 : 0), 0);
+        + (s.pageExpect?.length ?? 0) + (s.expectMessage ? 1 : 0), 0);
     assertions += count;
     console.log(`  ${name}: ${count} assertion(s) on rendered output`
       + (problems.length ? "  FAILED" : ""));

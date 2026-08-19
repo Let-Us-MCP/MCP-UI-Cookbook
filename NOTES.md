@@ -136,21 +136,16 @@ it is the right one.
   turn the completeness argument into evidence. It is now the largest gap in
   the book's own verification.
 - **No component layer tests.** Part IV components are a shared stylesheet and
-  helper file rather than a library with stories, and no `axe-core` run is
-  wired in. Accessibility claims come from the Chapter 14 checklist applied by
-  hand.
+  helper file rather than a library with stories, so they are audited only
+  through the recipes that use them. `axe-core` is vendored and does run
+  against all thirteen, after the interactions rather than on load.
 - **No usability sessions.** Every design claim is an argument. Chapter 4's
   local-first principle is the one most exposed to being wrong in a way no
   automated check would detect.
-- **Two recipes have a weak keyboard story.** The image annotator has no
-  keyboard route to draw a box, and the workflow builder has none to draw a
-  connection by position. Both say so in their entries rather than claiming
-  otherwise, and both expose the operations as tools, which is a real answer
-  for agent and assistive-technology use and not a complete one.
-- **Chapters run 1,100 to 1,500 words** against a 1,500 target. The reference
-  volume in this series runs closer to 2,400 per chapter over fewer chapters;
-  this one is wider and shallower by design, being a reference rather than an
-  argument, but several Part II chapters would carry more worked detail.
-- **The streaming log announces every line.** At five lines a second that is
-  unusable with a screen reader, and the correct behaviour is probably a
-  periodic summary. Recorded in Recipe 9 as a known limitation.
+
+`PENDING.md` is the authority on what is open, and this list drifted behind it
+once already: it still described a weak keyboard story in Recipes 6 and 7, a
+log that announces every line, chapters short of their target and an `axe-core`
+run that was not wired in, after all four had been closed. A stale list of
+known limitations is the same defect the book spends Part VI on, which is an
+assertion nothing checks.

@@ -82,7 +82,7 @@ the property that stops a host reading a view. A debugger can, which makes the
 sandbox that ships testable without weakening it.
 
 ```
-node tools/check_render.mjs                  # 13 cases, 151 assertions
+node tools/check_render.mjs                  # 13 cases, 156 assertions
 node tools/check_render.mjs r04-document-editor
 ```
 

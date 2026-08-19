@@ -97,9 +97,29 @@
     },
     "dragOutOfView": {
       "attempted": true,
-      "dragStartInView": null,
-      "hostReceived": null,
-      "verdict": "inconclusive: no drag started in headless, so this run tested nothing"
+      "dragStartInView": {
+        "allowed": true,
+        "types": [
+          "text/plain"
+        ]
+      },
+      "dragData": {
+        "items": [
+          {
+            "mimeType": "text/plain",
+            "data": "from inside the view"
+          }
+        ],
+        "dragOperationsMask": -1
+      },
+      "hostReceived": {
+        "fired": true,
+        "types": [
+          "text/plain"
+        ],
+        "text": "from inside the view"
+      },
+      "verdict": "the view exported transfer data and a drop carrying it reached the host document; the harness carried the drop"
     }
   },
   "control": {

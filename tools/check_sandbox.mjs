@@ -275,6 +275,10 @@ class Browser {
     this.pending = new Map();
     this.sessions = new Set();
     this.frameSession = null;
+    // With Input.setInterceptDrags on, Chrome hands the drag data to the
+    // debugger instead of running the drag itself. Catching this is the only
+    // way to learn that a drag started at all in headless.
+    this.dragIntercepted = null;
     ws.addEventListener("message", (event) => {
       const msg = JSON.parse(event.data);
       if (msg.id && this.pending.has(msg.id)) {
@@ -282,6 +286,9 @@ class Browser {
         this.pending.delete(msg.id);
         msg.error ? reject(new Error(msg.error.message)) : resolve(msg.result);
         return;
+      }
+      if (msg.method === "Input.dragIntercepted") {
+        this.dragIntercepted = msg.params?.data ?? null;
       }
       if (msg.method === "Target.attachedToTarget") {
         const { sessionId, targetInfo } = msg.params;
@@ -425,37 +432,79 @@ async function main() {
     let dragOut = { attempted: true };
     try {
       await browser.send("Input.setInterceptDrags", { enabled: true });
+      // The frame is its own target, so the page session's interception does
+      // not cover a drag that begins inside it.
+      if (frame) {
+        await browser.send("Input.setInterceptDrags", { enabled: true }, frame)
+          .catch(() => {});
+      }
       const box = await browser.evalIn(undefined, `(() => {
         const f = document.getElementById("view").getBoundingClientRect();
         const z = document.getElementById("hostdrop").getBoundingClientRect();
-        return JSON.stringify({ fx: f.x + 40, fy: f.y + 60,
-                                zx: z.x + 40, zy: z.y + 20 });
+        return JSON.stringify({ fx: f.x, fy: f.y,
+                                zx: z.x + z.width / 2, zy: z.y + z.height / 2 });
       })()`);
       const at = JSON.parse(box);
+      // The press has to land on the draggable element, so its position is
+      // read inside the frame and offset by where the frame sits on the page.
+      const inner = JSON.parse(await browser.evalIn(frame, `(() => {
+        const r = document.getElementById("dragme").getBoundingClientRect();
+        return JSON.stringify({ x: r.x + r.width / 2, y: r.y + r.height / 2 });
+      })()`));
+      at.fx += inner.x;
+      at.fy += inner.y;
       await browser.send("Input.dispatchMouseEvent",
         { type: "mousePressed", x: at.fx, y: at.fy, button: "left", clickCount: 1 });
-      await browser.send("Input.dispatchMouseEvent",
-        { type: "mouseMoved", x: at.fx + 10, y: at.fy + 10, button: "left" });
+      // One move is below the threshold that starts a drag. Several, growing,
+      // is what a hand does.
+      for (const d of [6, 14, 26, 44, 70]) {
+        await browser.send("Input.dispatchMouseEvent",
+          { type: "mouseMoved", x: at.fx + d, y: at.fy + d, button: "left",
+            buttons: 1 });
+        await sleep(60);
+      }
       await sleep(300);
       dragOut.dragStartInView = JSON.parse(
         await browser.evalIn(frame, "JSON.stringify(window.__dragstart ?? null)") || "null");
-      await browser.send("Input.dispatchMouseEvent",
-        { type: "mouseReleased", x: at.zx, y: at.zy, button: "left", clickCount: 1 });
+      dragOut.dragData = browser.dragIntercepted;
+      if (browser.dragIntercepted) {
+        // The mouse press only asks for a drag. Once Chrome has handed over
+        // the data the debugger has to carry it, which is what puts the drop
+        // on the host's own document rather than back inside the frame.
+        const data = browser.dragIntercepted;
+        for (const type of ["dragEnter", "dragOver", "drop"]) {
+          await browser.send("Input.dispatchDragEvent",
+            { type, x: at.zx, y: at.zy, data });
+          await sleep(80);
+        }
+      } else {
+        await browser.send("Input.dispatchMouseEvent",
+          { type: "mouseReleased", x: at.zx, y: at.zy, button: "left", clickCount: 1 });
+      }
       await sleep(300);
       dragOut.hostReceived = JSON.parse(
         await browser.evalIn(undefined, "JSON.stringify(window.__hostDrop ?? null)") || "null");
     } catch (error) {
       dragOut.error = String(error.message).slice(0, 120);
     }
-    // Headless Chrome will not begin a drag from a synthesised mouse press, so
-    // `dragstart` never fires and the experiment tests nothing. Reported as
-    // inconclusive rather than folded in with the confirmations: an experiment
-    // that failed to run is not evidence for the thing it was meant to test.
-    dragOut.verdict = dragOut.dragStartInView
-      ? (dragOut.hostReceived
-        ? "a drag left the view and the host document received it"
-        : "a drag started in the view and the host document received nothing")
-      : "inconclusive: no drag started in headless, so this run tested nothing";
+    // The press has to land on the draggable element itself. An earlier run
+    // pressed at a fixed offset inside the frame, missed it, and read the
+    // silence as headless refusing to drag at all.
+    //
+    // Chrome builds the payload and hands it to the debugger, which then
+    // carries it to the drop point, because a headless run has no drag loop
+    // of its own. So `dragIntercepted` is the evidence that an opaque origin
+    // can export transfer data, and the delivery half is driven rather than
+    // observed. That distinction is stated in the verdict.
+    dragOut.verdict = !dragOut.dragStartInView
+      ? "inconclusive: no drag started, so this run tested nothing"
+      : !dragOut.dragData
+        ? "a drag started in the view but Chrome exported no transfer data"
+        : dragOut.hostReceived
+          ? "the view exported transfer data and a drop carrying it reached "
+            + "the host document; the harness carried the drop"
+          : "the view exported transfer data and the host document received "
+            + "nothing";
     results.dragOutOfView = dragOut;
 
     // The control frame is same-origin with the page, so it is reachable
