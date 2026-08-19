@@ -6,7 +6,9 @@
                   { "selector": "#file", "text": "src/transport/retry.ts" },
                   { "selector": "#stat", "text": "+3 -2" },
                   { "selector": ".line.add", "count": 3 },
-                  { "selector": ".line.del", "count": 2 } ] },
+                  { "selector": ".line.del", "count": 2 },
+                  { "selector": ".line.add", "textContains": "const base = 250;" },
+                  { "selector": ".line.del", "textContains": "const base = 100;" } ] },
     { "label": "selecting a line enables escalation", "click": ".line.del",
       "expect": [ { "selector": ".line.sel", "count": 1 },
                   { "selector": "#explain", "attr": { "name": "disabled", "value": null } } ] } ] }

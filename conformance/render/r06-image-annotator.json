@@ -5,6 +5,7 @@
       "expect": [ { "selector": ".box", "count": 2 },
                   { "selector": ".box span", "text": "scratch" },
                   { "selector": "#art rect", "minCount": 5 },
+                  { "selector": "#art rect", "box": { "minWidth": 100, "minHeight": 60 } },
                   { "selector": "#undo", "attr": { "name": "disabled", "value": "" } } ] },
     { "label": "the keyboard draws a box without a pointer",
       "keysTarget": "#stage",
@@ -18,4 +19,5 @@
       "keysTarget": "#stage",
       "keys": ["Enter", "ArrowRight", "ArrowRight", "Escape"],
       "expect": [ { "selector": ".box", "count": 3 },
-                  { "selector": "#pending", "count": 0 } ] } ] }
+                  { "selector": "#pending", "count": 0 },
+                  { "selector": ".box span", "text": "scratch" } ] } ] }

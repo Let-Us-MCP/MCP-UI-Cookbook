@@ -1,12 +1,108 @@
-{ "server": "apps/recipes/r09-monitoring-console/server.js", "tool": "tail_logs",
-  "arguments": {}, "expectToolText": "24 recent lines", "host":{"hostCapabilities":{"serverTools":{},"downloadFile":{},"openLinks":{},"message":{"text":{}},"updateModelContext":{"text":{},"structuredContent":{}},"logging":{},"serverResources":{}},"hostContext":{"theme":"light","locale":"en-US","timeZone":"UTC","displayMode":"inline","availableDisplayModes":["inline","fullscreen"],"containerDimensions":{"maxHeight":620},"deviceCapabilities":{"hover":true,"touch":false}}}, "settleMs": 900,
-  "steps": [
-    { "label": "the tail renders",
-      "expect": [ { "selector": "#log div", "minCount": 24 },
-                  { "selector": "#conn", "text": "live" },
-                  { "selector": "#log div.err", "minCount": 1 },
-                  { "selector": "#banner", "hidden": true },
-                  { "selector": "#log", "attr": { "name": "aria-live", "value": "off" } } ] },
-    { "label": "selecting a line survives more lines arriving",
-      "click": "#log div", "settleMs": 200,
-      "expect": [ { "selector": "#log div[aria-current=\"true\"]", "count": 1 } ] } ] }
+{
+ "server": "apps/recipes/r09-monitoring-console/server.js",
+ "tool": "tail_logs",
+ "arguments": {},
+ "expectToolText": "24 recent lines",
+ "host": {
+  "hostCapabilities": {
+   "serverTools": {},
+   "downloadFile": {},
+   "openLinks": {},
+   "message": {
+    "text": {}
+   },
+   "updateModelContext": {
+    "text": {},
+    "structuredContent": {}
+   },
+   "logging": {},
+   "serverResources": {}
+  },
+  "hostContext": {
+   "theme": "light",
+   "locale": "en-US",
+   "timeZone": "UTC",
+   "displayMode": "inline",
+   "availableDisplayModes": [
+    "inline",
+    "fullscreen"
+   ],
+   "containerDimensions": {
+    "maxHeight": 620
+   },
+   "deviceCapabilities": {
+    "hover": true,
+    "touch": false
+   }
+  }
+ },
+ "settleMs": 900,
+ "steps": [
+  {
+   "label": "the tail renders",
+   "expect": [
+    {
+     "selector": "#log div",
+     "minCount": 24
+    },
+    {
+     "selector": "#log div",
+     "textContains": "handled request in 41ms"
+    },
+    {
+     "selector": "#conn",
+     "text": "live"
+    },
+    {
+     "selector": "#log div.err",
+     "minCount": 1
+    },
+    {
+     "selector": "#log div.err",
+     "textContains": "connection reset by peer"
+    },
+    {
+     "selector": "#banner",
+     "hidden": true
+    },
+    {
+     "selector": "#log",
+     "attr": {
+      "name": "aria-live",
+      "value": "off"
+     }
+    }
+   ]
+  },
+  {
+   "label": "selecting a line survives more lines arriving",
+   "click": "#log div",
+   "settleMs": 400,
+   "expect": [
+    {
+     "selector": "#log div",
+     "minCount": 48
+    },
+    {
+     "selector": "#log div[aria-current=\"true\"]",
+     "count": 1
+    },
+    {
+     "selector": "#log div[aria-current=\"true\"]",
+     "attr": {
+      "name": "data-id",
+      "value": "l0-0"
+     }
+    },
+    {
+     "selector": "#log div[aria-current=\"true\"]",
+     "textContains": "handled request in 41ms"
+    }
+   ],
+   "serverTool": "tail_logs",
+   "arguments": {
+    "after": "l0-23"
+   }
+  }
+ ]
+}

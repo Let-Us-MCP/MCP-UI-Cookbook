@@ -32,7 +32,7 @@ appeared on screen. Transcripts verified the messages; nothing verified the
 pixels, which is the subject of the book.
 
 **Status: built.** `tools/check_render.mjs` with cases in
-`conformance/render/`. Thirteen recipes, 132 assertions, run by `make render`
+`conformance/render/`. Thirteen recipes, 151 assertions, run by `make render`
 and by CI. It found four bugs on its first pass, three of which no
 message-level check could have caught, including one where the book asserted a
 safety property the code did not have.
@@ -46,8 +46,16 @@ saved when the save had failed, which is silent data loss in an autosaving
 editor.
 
 **Still missing inside it.** Teardown-with-unsaved-work has a lever and no
-case using it. No visual assertions, which would need reference images and a
-tolerance, and are a different kind of brittle. And the harness watches for
+case using it. Reference-image comparison is absent, and would need stored
+images and a tolerance, which is a different kind of brittle. What the harness
+does assert is geometry: `prop` reads a decoded image's `naturalWidth` and
+`box` reads a rendered element's own rectangle, which is what separates a
+drawn shape from an element that exists and draws nothing. That gap was real.
+Recipe 3 shipped an inline PNG whose base64 was corrupted by a stray unary
+plus, the book said it was a real image, and a case asserting the `<img>` and
+its `alt` text passed for as long as both were wrong.
+
+The harness also watches for
 unhandled rejections in the frame, which caught a deliberately provoked one
 but did not fire for a real refused request; that detector is a bonus signal
 and not something the suite relies on.

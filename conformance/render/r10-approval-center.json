@@ -5,6 +5,8 @@
       "expect": [ { "selector": ".req", "count": 2 },
                   { "selector": ".req.high", "count": 1 },
                   { "selector": ".req dt", "minCount": 5 },
+                  { "selector": ".req dt", "text": "asked by" },
+                  { "selector": ".req dd", "text": "the agent, in this conversation" },
                   { "selector": "#count", "text": "2" },
                   { "selector": "#trail", "hidden": true } ] },
     { "label": "the agent queues a third", "appTool": "queue_approval",

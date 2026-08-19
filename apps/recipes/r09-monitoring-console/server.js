@@ -31,14 +31,24 @@ serve({
   viewFile: path.join(SELF, "index.html"),
   tools: {
     tail_logs: {
-      description: "Return the most recent log lines.",
+      description: "Return the most recent log lines, or the batch after one "
+        + "the caller already holds.",
       annotations: { readOnlyHint: true },
-      run: () => ({
-        content: [{ type: "text", text:
-          "24 recent lines across four services, including one connection "
-          + "reset from billing." }],
-        structuredContent: { lines: batch(24) },
-      }),
+      inputSchema: { type: "object", properties: { after: { type: "string",
+        description: "Id of the last line already held." } } },
+      // A tail that answers every call with the same batch cannot show a line
+      // arriving, which is the one thing a console is for.
+      run: ({ after } = {}) => {
+        const seed = after
+          ? Number(String(after).match(/^l(\d+)-/)?.[1] ?? 0) + 1 : 0;
+        return {
+          content: [{ type: "text", text: seed === 0
+            ? "24 recent lines across four services, including one connection "
+              + "reset from billing."
+            : `24 further lines, the batch after ${after}.` }],
+          structuredContent: { lines: batch(24, seed) },
+        };
+      },
     },
   },
 });

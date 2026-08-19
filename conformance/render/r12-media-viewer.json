@@ -3,6 +3,8 @@
   "steps": [
     { "label": "the gallery renders",
       "expect": [ { "selector": ".strip button", "count": 3 },
+                  { "selector": ".strip button svg circle", "minCount": 3 },
+                  { "selector": "#frame svg", "box": { "minWidth": 200, "minHeight": 100 } },
                   { "selector": "#clock", "text": "0:00 / 1:36" },
                   { "selector": "#frame", "attr": { "name": "aria-label", "value": "Assembly line, wide" } },
                   { "selector": "#caption", "hidden": true },

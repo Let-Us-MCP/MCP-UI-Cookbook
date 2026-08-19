@@ -59,6 +59,10 @@
           "count": 1
         },
         {
+          "selector": ".task .bar > span",
+          "box": { "minWidth": 40 }
+        },
+        {
           "selector": ".task .steps",
           "textContains": "writing"
         }

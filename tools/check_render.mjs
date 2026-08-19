@@ -255,6 +255,13 @@ window.__host = host;
 // happy path works, which is the smaller half of what an application does.
 window.__deny = (name) => { delete host.hostCapabilities[name]; };
 window.__grant = (name) => { host.hostCapabilities[name] = {}; };
+// The host calling the server again and handing the view the result is how a
+// second batch of anything arrives. The result is the real server's; nothing
+// here fabricates one.
+window.__pushServerTool = async (name, args) => {
+  const result = await host._callServerTool(name, args);
+  host.sendToolResult(result);
+};
 window.__teardown = (reason) => host.teardown(reason)
   .then((r) => { window.__teardownResult = r; })
   .catch((e) => { window.__teardownResult = { error: String(e.message) }; });
@@ -287,6 +294,11 @@ function assertionScript(expect) {
         value: first && "value" in first ? first.value : undefined,
         attr: check.attr ? first?.getAttribute(check.attr.name) : undefined,
         prop: check.prop ? first?.[check.prop.name] : undefined,
+        box: check.box && first
+          ? (({ width, height }) => ({ width: Math.round(width),
+                                       height: Math.round(height) }))
+            (first.getBoundingClientRect())
+          : undefined,
         noAttr: check.noAttr ? first?.hasAttribute(check.noAttr) : undefined,
         hidden: first ? first.hasAttribute("hidden")
           || getComputedStyle(first).display === "none" : null,
@@ -333,6 +345,20 @@ function compare(expect, actual) {
     if (check.prop && got.prop !== check.prop.value) {
       problems.push(`${where}: expected ${check.prop.name}=`
         + `${JSON.stringify(check.prop.value)}, found ${JSON.stringify(got.prop)}`);
+    }
+    if (check.box) {
+      if (!got.box) {
+        problems.push(`${where}: expected a box, found no such node`);
+      } else {
+        if (check.box.minWidth !== undefined && got.box.width < check.box.minWidth) {
+          problems.push(`${where}: expected width >= ${check.box.minWidth}, `
+            + `found ${got.box.width}`);
+        }
+        if (check.box.minHeight !== undefined && got.box.height < check.box.minHeight) {
+          problems.push(`${where}: expected height >= ${check.box.minHeight}, `
+            + `found ${got.box.height}`);
+        }
+      }
     }
     if (check.hidden !== undefined && got.hidden !== check.hidden) {
       problems.push(`${where}: expected hidden=${check.hidden}, found ${got.hidden}`);
@@ -506,6 +532,11 @@ async function runCase(spec, name, browser, workdir) {
              }
              return true;
            })()`);
+      }
+      if (step.serverTool) {
+        await browser.evalPage(
+          `window.__pushServerTool(${JSON.stringify(step.serverTool)}, `
+          + `${JSON.stringify(step.arguments ?? {})})`);
       }
       if (step.appTool) {
         await browser.evalPage(
