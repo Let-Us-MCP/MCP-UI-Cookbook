@@ -341,6 +341,7 @@ function compare(expect, actual) {
 async function runCase(spec, name, browser, workdir) {
   const problems = [];
   let failNext = null;
+  const downloadDir = path.join(workdir, "downloads");
   const server = new ServerConnection(path.join(ROOT, spec.server));
 
   try {
@@ -373,8 +374,13 @@ async function runCase(spec, name, browser, workdir) {
     // Everything the frame loads comes from the server's own resource content.
     fs.mkdirSync(path.join(workdir, "view"), { recursive: true });
     fs.writeFileSync(path.join(workdir, "view", "index.html"), content.text);
+    // The host emulator writes a real file when asked. Nothing in this suite
+    // did that until somebody asked whether the export had been checked and
+    // the answer was that the message had been.
+    const hostConfig = { ...(spec.host ?? {}) };
+    if (spec.expectDownload) hostConfig.performDownloads = true;
     fs.writeFileSync(path.join(workdir, "config.json"),
-      JSON.stringify({ host: spec.host ?? {} }));
+      JSON.stringify({ host: hostConfig }));
 
     // Forward every tool call the view makes to the server that is running.
     browser.onServerCall = async ({ id, name, arguments: args }) => {
@@ -403,6 +409,13 @@ async function runCase(spec, name, browser, workdir) {
           + `${JSON.stringify(String(error.message))})`);
       }
     };
+
+    if (spec.expectDownload) {
+      fs.rmSync(downloadDir, { recursive: true, force: true });
+      fs.mkdirSync(downloadDir, { recursive: true });
+      await browser.send("Browser.setDownloadBehavior",
+        { behavior: "allow", downloadPath: downloadDir, eventsEnabled: true });
+    }
 
     await browser.send("Page.navigate", { url: `http://127.0.0.1:${PORT}/shell.html` });
     await browser.send("Runtime.addBinding", { name: "__mcpCall" });
@@ -553,6 +566,36 @@ async function runCase(spec, name, browser, workdir) {
         const actual = await browser.evalFrame(assertionScript(step.expect));
         problems.push(...compare(step.expect, actual)
           .map((p) => `${label}: ${p}`));
+      }
+    }
+
+    if (spec.expectDownload) {
+      const want = spec.expectDownload;
+      await sleep(900);
+      const files = fs.existsSync(downloadDir)
+        ? fs.readdirSync(downloadDir).filter((f) => !f.endsWith(".crdownload"))
+        : [];
+      if (!files.includes(want.filename)) {
+        problems.push(`no file named ${want.filename} was written; `
+          + `the download directory holds ${files.join(", ") || "nothing"}`);
+      } else {
+        const body = fs.readFileSync(path.join(downloadDir, want.filename), "utf8");
+        for (const needle of want.contains ?? []) {
+          if (!body.includes(needle)) {
+            problems.push(`${want.filename} does not contain `
+              + `${JSON.stringify(needle)}; it starts ${JSON.stringify(body.slice(0, 120))}`);
+          }
+        }
+        if (want.firstLine !== undefined) {
+          const first = body.split(/\r?\n/)[0];
+          if (first !== want.firstLine) {
+            problems.push(`${want.filename} first line is `
+              + `${JSON.stringify(first)}, expected ${JSON.stringify(want.firstLine)}`);
+          }
+        }
+        if (want.crlf && !body.includes("\r\n")) {
+          problems.push(`${want.filename} has no CRLF; RFC 4180 asks for one`);
+        }
       }
     }
 

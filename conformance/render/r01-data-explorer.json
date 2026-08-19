@@ -194,5 +194,13 @@
         }
       ]
     }
-  ]
+  ],
+  "expectDownload": {
+    "filename": "deployments.csv",
+    "firstLine": "service,env,version,p95,errors,deployed",
+    "contains": [
+      "search,staging,2.8.0"
+    ],
+    "crlf": true
+  }
 }

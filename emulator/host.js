@@ -103,6 +103,36 @@ export class HostEmulator {
     return { uri, html, meta: entry._meta };
   }
 
+  // What a host does with the contents it was handed. `EmbeddedResource`
+  // carries the bytes inline as `text` or base64 `blob`; `ResourceLink` names
+  // a URL the host fetches with its own network identity, which this emulator
+  // does not do because it has no network.
+  //
+  // The suggested filename is the last segment of `resource.uri`, per the
+  // specification, sanitised: a server that names a file `../../etc/passwd`
+  // must not get one.
+  _writeDownload(params) {
+    for (const item of params?.contents ?? []) {
+      if (item.type !== "resource") continue;
+      const resource = item.resource ?? {};
+      const name = (resource.uri ?? "download").split("/").pop()
+        .replace(/[^A-Za-z0-9._-]/g, "_") || "download";
+      const type = resource.mimeType || "application/octet-stream";
+      const blob = typeof resource.text === "string"
+        ? new Blob([resource.text], { type })
+        : new Blob([Uint8Array.from(atob(resource.blob ?? ""),
+                                    (c) => c.charCodeAt(0))], { type });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = name;
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    }
+  }
+
   // --- transport --------------------------------------------------------
 
   _send(message, direction) {
@@ -256,6 +286,17 @@ export class HostEmulator {
           return { isError: true };
         }
         this.onEvent?.("download", params);
+        // A real host writes a file. This one only did so once the render
+        // harness started asking, because until then every check verified the
+        // request and nothing verified that anything came out of it.
+        //
+        // Off by default: the demonstrations on this site should not put files
+        // in a reader's downloads folder for clicking a button in a book. The
+        // harness turns it on and asserts the file that lands.
+        if (this.config.performDownloads) {
+          try { this._writeDownload(params); }
+          catch (error) { return { isError: true }; }
+        }
         return {};
       }
 
