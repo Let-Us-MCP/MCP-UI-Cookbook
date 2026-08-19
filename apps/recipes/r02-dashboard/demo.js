@@ -4,8 +4,10 @@ const fixtures = await fetch(new URL("fixtures.json", import.meta.url))
 export const demo = {
   title: "Recipe 2: Dashboard",
   subtitle: "tiles, sparklines, drill-down, and values that change under you",
+  tool: "service_health",
   maxHeight: 520,
-  files: ["index.html", "server.js", "fixtures.json"],
+  files: ["index.html", "server.js", "../lib/mcp-server.js",
+          "fixtures.json"],
   host: {
     hostCapabilities: {
       serverTools: {}, updateModelContext: { text: {}, structuredContent: {} },
@@ -16,10 +18,15 @@ export const demo = {
       displayMode: "inline", availableDisplayModes: ["inline", "fullscreen"],
       containerDimensions: { maxHeight: 500 },
     },
+    resources: {
+      "ui://cookbook/dashboard":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       service_health: {
         descriptor: { name: "service_health", description: "Health metrics",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/dashboard" } } },
         delayMs: 150,
         result: () => fixtures.results.service_health,
       },

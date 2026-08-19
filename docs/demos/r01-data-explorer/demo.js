@@ -6,6 +6,7 @@ const fixtures = await fetch(new URL("fixtures.json", import.meta.url))
 export const demo = {
   title: "Recipe 1: Data Explorer",
   subtitle: "sort, filter, page and select locally; escalate once, with structure",
+  tool: "list_deployments",
   maxHeight: 540,
   files: ["index.html", "server.js", "fixtures.json"],
 
@@ -24,10 +25,15 @@ export const demo = {
       containerDimensions: { maxHeight: 520 },
       deviceCapabilities: { hover: true, touch: false },
     },
+    resources: {
+      "ui://cookbook/data-explorer":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       list_deployments: {
         descriptor: { name: "list_deployments", description: "List deployments",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/data-explorer" } } },
         delayMs: 200,
         result: () => fixtures.results.list_deployments,
       },

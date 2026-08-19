@@ -4,17 +4,24 @@ const fixtures = await fetch(new URL("fixtures.json", import.meta.url))
 export const demo = {
   title: "Recipe 13: Settings and Preferences",
   subtitle: "pickers, validation that waits, save and discard, and a dirty guard",
+  tool: "load_preferences",
   maxHeight: 620,
-  files: ["index.html", "server.js", "fixtures.json"],
+  files: ["index.html", "server.js", "../lib/mcp-server.js",
+          "fixtures.json"],
   host: {
     hostCapabilities: { serverTools: {}, logging: {} },
     hostContext: { theme: "light", locale: "en-GB", timeZone: "Europe/London",
       containerDimensions: { maxHeight: 600 },
       deviceCapabilities: { hover: true, touch: false } },
+    resources: {
+      "ui://cookbook/settings":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       load_preferences: {
         descriptor: { name: "load_preferences", description: "Load preferences",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/settings" } } },
         result: () => fixtures.results.load_preferences,
       },
       save_preferences: {

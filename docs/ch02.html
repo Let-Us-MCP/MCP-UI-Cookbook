@@ -82,11 +82,28 @@
 <h2 id="who-writes-the-javascript">Who writes the JavaScript?</h2>
 <p>You do. The model does not generate your view, and this is the most important thing to understand before reading the rest of the chapter.</p>
 <p>Your server registers a resource under the <code>ui://</code> scheme whose content is a complete HTML5 document with your markup, your CSS and your JavaScript in it. Your tools point at that resource through <code>_meta.ui.resourceUri</code>. When the model calls the tool, the host reads the resource, renders it in a sandboxed iframe, and delivers the tool’s <em>data</em> to it as notifications.</p>
-<p class="provenance illustrative">Illustrative, not run</p><pre class="json"><code>{ &quot;name&quot;: &quot;list_deployments&quot;,
-  &quot;inputSchema&quot;: { &quot;type&quot;: &quot;object&quot; },
-  &quot;_meta&quot;: { &quot;ui&quot;: {
-    &quot;resourceUri&quot;: &quot;ui://cookbook/data-explorer&quot;,
-    &quot;visibility&quot;: [&quot;model&quot;, &quot;app&quot;] } } }</code></pre>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r01-data-explorer/server.js</code></p><pre class="js"><code>      name: &quot;list_deployments&quot;,
+      title: &quot;List deployments&quot;,
+      description: &quot;List recent deployments with latency and error counts.&quot;,
+      inputSchema: {
+        type: &quot;object&quot;,
+        properties: {
+          env: { type: &quot;string&quot;, enum: [&quot;production&quot;, &quot;staging&quot;, &quot;canary&quot;] },
+        },
+      },
+      annotations: { readOnlyHint: true },
+      _meta: { ui: { resourceUri: RESOURCE_URI, visibility: [&quot;model&quot;, &quot;app&quot;] } },</code></pre>
+<p><code>RESOURCE_URI</code> is <code>ui://cookbook/data-explorer</code>, and the same file registers a resource under that URI whose content is <code>index.html</code>. Recipe 1 spells its server out in full; every other recipe server shares <code>apps/lib/mcp-server.js</code>, which makes the same binding in one place:</p>
+<p class="provenance extracted">Extracted from from <code>apps/lib/mcp-server.js</code></p><pre class="js"><code>    // The link from a tool to its view. Without this the tool is a normal
+    // tool and the host renders text, which is the correct fallback.
+    _meta: { ui: { resourceUri, visibility: tool.visibility ?? [&quot;model&quot;, &quot;app&quot;] } },</code></pre>
+<p>You can watch that binding happen. Open any recipe on this site and read the first four lines of its message log, which are host-to-server rather than host-to-view:</p>
+<p class="provenance captured">Captured output from the Data Explorer's message log</p><pre><code>host→server  tools/list
+server→host  result        descriptor carries _meta.ui.resourceUri
+host→server  resources/read  { uri: &quot;ui://cookbook/data-explorer&quot; }
+server→host  result        text/html;profile=mcp-app, 8.4 kB
+app→host     ui/initialize</code></pre>
+<p>Nothing names a file. The host is handed a tool, finds the resource URI in that tool’s metadata, reads the resource, and renders whatever HTML comes back. The view in the frame above those messages is the document that arrived on line four.</p>
 <p>So the division of labour is:</p>
 <div class="table-wrap"><table>
 <thead>

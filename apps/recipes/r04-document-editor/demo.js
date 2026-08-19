@@ -6,8 +6,10 @@ let revision = 1;
 export const demo = {
   title: "Recipe 4: Document Editor",
   subtitle: "undo, autosave through a tool, teardown, and an agent that proposes",
+  tool: "load_document",
   maxHeight: 560,
-  files: ["index.html", "server.js", "fixtures.json"],
+  files: ["index.html", "server.js", "../lib/mcp-server.js",
+          "fixtures.json"],
   host: {
     hostCapabilities: { serverTools: {}, sampling: {}, logging: {},
                         message: { text: {} } },
@@ -15,10 +17,15 @@ export const demo = {
       theme: "light", locale: "en-US", timeZone: "UTC",
       containerDimensions: { maxHeight: 540 },
     },
+    resources: {
+      "ui://cookbook/document-editor":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       load_document: {
         descriptor: { name: "load_document", description: "Load the draft",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/document-editor" } } },
         result: () => fixtures.results.load_document,
       },
       save_document: {

@@ -13,6 +13,7 @@ import { HostEmulator } from "./host.js";
 const METHOD_CLASS = (method) =>
   method?.startsWith("ui/") ? "ui"
   : method?.startsWith("tools/") ? "tools"
+  : method?.startsWith("resources/") ? "tools"
   : method?.startsWith("notifications/") ? "log"
   : method ? "other" : "result";
 
@@ -46,11 +47,25 @@ class Demo {
     await this.boot();
   }
 
+  // A host does not know the URL of a view. It knows a tool, reads
+  // `_meta.ui.resourceUri` off that tool, reads the resource, and renders what
+  // comes back. Recipes go through that sequence for real; the capability labs
+  // have no server, so they load their file directly.
+  async resolveAndRender() {
+    const { html } = await this.host.resolveView(this.spec.tool);
+    const dir = new URL(`${this.base}${this.id}/`, document.baseURI).href;
+    // The returned document is rendered as-is except for a base URL. A real
+    // host hands the HTML to a sandbox proxy on its own origin, where relative
+    // paths resolve; srcdoc has no origin of its own, so the base is how the
+    // view's own stylesheet and bridge still load.
+    this.frame.srcdoc = html.replace(/<head>/i, `<head><base href="${dir}">`);
+  }
+
   render() {
     const spec = this.spec;
 
     this.frame = el("iframe", {
-      src: `${this.base}${this.id}/index.html`,
+      ...(spec.tool ? {} : { src: `${this.base}${this.id}/index.html` }),
       sandbox: "allow-scripts",
       title: spec.title ?? this.id,
       loading: "lazy",
@@ -189,12 +204,15 @@ class Demo {
       type: "button", class: "demo-button ghost", text: "Reload view",
       onclick: () => this.reload(),
     }));
+
+    if (spec.tool) await this.resolveAndRender();
   }
 
   // Reload the view without rebuilding the host, so a control can change
   // what the host claims to support and let the view discover it again.
   reloadFrame() {
-    this.frame.src = this.frame.src;
+    if (this.spec.tool) this.resolveAndRender();
+    else this.frame.src = this.frame.src;
   }
 
   reload() {
@@ -202,7 +220,7 @@ class Demo {
     this.notes.replaceChildren();
     this.rows = 0;
     this.host.destroy();
-    this.frame.src = this.frame.src;
+    if (!this.spec.tool) this.frame.src = this.frame.src;
     this.boot();
   }
 

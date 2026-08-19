@@ -2,6 +2,61 @@
   "demo": "r07-workflow-builder",
   "messages": [
     {
+      "direction": "host→server",
+      "method": "tools/list",
+      "id": "tools/list",
+      "payload": {}
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "tools/list",
+      "payload": {
+        "tools": [
+          {
+            "_meta": {
+              "ui": {
+                "resourceUri": "ui://cookbook/workflow-builder"
+              }
+            },
+            "description": "Load the graph",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "load_workflow"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→server",
+      "method": "resources/read",
+      "id": "resources/read",
+      "payload": {
+        "uri": "ui://cookbook/workflow-builder"
+      }
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "resources/read",
+      "payload": {
+        "contents": [
+          {
+            "_meta": {
+              "ui": {
+                "csp": {},
+                "prefersBorder": true
+              }
+            },
+            "mimeType": "text/html;profile=mcp-app",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 9832 characters",
+            "uri": "ui://cookbook/workflow-builder"
+          }
+        ]
+      }
+    },
+    {
       "direction": "app→host",
       "method": "ui/initialize",
       "id": 1,

@@ -2,6 +2,61 @@
   "demo": "r03-file-explorer",
   "messages": [
     {
+      "direction": "host→server",
+      "method": "tools/list",
+      "id": "tools/list",
+      "payload": {}
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "tools/list",
+      "payload": {
+        "tools": [
+          {
+            "_meta": {
+              "ui": {
+                "resourceUri": "ui://cookbook/file-explorer"
+              }
+            },
+            "description": "List the tree",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "list_files"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→server",
+      "method": "resources/read",
+      "id": "resources/read",
+      "payload": {
+        "uri": "ui://cookbook/file-explorer"
+      }
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "resources/read",
+      "payload": {
+        "contents": [
+          {
+            "_meta": {
+              "ui": {
+                "csp": {},
+                "prefersBorder": true
+              }
+            },
+            "mimeType": "text/html;profile=mcp-app",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 7843 characters",
+            "uri": "ui://cookbook/file-explorer"
+          }
+        ]
+      }
+    },
+    {
       "direction": "app→host",
       "method": "ui/initialize",
       "id": 1,

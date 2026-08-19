@@ -41,6 +41,51 @@ export class HostEmulator {
     removeEventListener("message", this._listener);
   }
 
+  // --- resolving the view -------------------------------------------------
+
+  // How a host actually decides what to render. The model calls a tool; the
+  // host looks that tool up, reads `_meta.ui.resourceUri` off its metadata,
+  // reads that resource, and renders the HTML that comes back. The view is
+  // never named directly by anyone: the binding is the tool's metadata.
+  //
+  // Every step is teed into the transcript, because this sequence is the
+  // thing the book spends Chapter 2 on and it belongs on screen rather than
+  // in prose.
+  async resolveView(toolName) {
+    const tools = this.config.serverTools ?? {};
+    const descriptor = tools[toolName]?.descriptor;
+    this._tee("host→server", {
+      jsonrpc: "2.0", id: "tools/list", method: "tools/list", params: {},
+    });
+    this._tee("server→host", {
+      jsonrpc: "2.0", id: "tools/list",
+      result: { tools: Object.values(tools).map((t) => t.descriptor) },
+    });
+
+    const uri = descriptor?._meta?.ui?.resourceUri;
+    if (!uri) {
+      throw new Error(`${toolName} has no _meta.ui.resourceUri, so a host has `
+        + "nothing to render");
+    }
+
+    this._tee("host→server", {
+      jsonrpc: "2.0", id: "resources/read", method: "resources/read",
+      params: { uri },
+    });
+    const entry = (this.config.resources ?? {})[uri];
+    if (!entry) throw new Error(`Resource not found: ${uri}`);
+    const html = entry.text ?? await fetch(entry.href).then((r) => r.text());
+    this._tee("server→host", {
+      jsonrpc: "2.0", id: "resources/read",
+      result: { contents: [{
+        uri, mimeType: "text/html;profile=mcp-app",
+        text: `${html.slice(0, 60)}… ${html.length} characters`,
+        _meta: entry._meta ?? { ui: { csp: {}, prefersBorder: true } },
+      }] },
+    });
+    return { uri, html, meta: entry._meta };
+  }
+
   // --- transport --------------------------------------------------------
 
   _send(message, direction) {

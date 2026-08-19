@@ -13,17 +13,24 @@ const more = (n) => {
 export const demo = {
   title: "Recipe 9: Monitoring Console",
   subtitle: "sustained streaming, selection that survives it, honest connectivity",
+  tool: "tail_logs",
   maxHeight: 480,
-  files: ["index.html", "server.js", "fixtures.json"],
+  files: ["index.html", "server.js", "../lib/mcp-server.js",
+          "fixtures.json"],
   host: {
     hostCapabilities: { serverTools: {}, logging: {},
       updateModelContext: { text: {}, structuredContent: {} } },
     hostContext: { theme: "light", locale: "en-US", timeZone: "UTC",
       containerDimensions: { maxHeight: 460 } },
+    resources: {
+      "ui://cookbook/monitoring-console":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       tail_logs: {
         descriptor: { name: "tail_logs", description: "Tail the log",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/monitoring-console" } } },
         result: () => fixtures.results.tail_logs,
       },
     },

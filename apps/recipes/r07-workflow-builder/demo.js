@@ -4,16 +4,23 @@ const fixtures = await fetch(new URL("fixtures.json", import.meta.url))
 export const demo = {
   title: "Recipe 7: Workflow Builder",
   subtitle: "a node graph the agent can edit, one undoable step at a time",
+  tool: "load_workflow",
   maxHeight: 520,
-  files: ["index.html", "server.js", "fixtures.json"],
+  files: ["index.html", "server.js", "../lib/mcp-server.js",
+          "fixtures.json"],
   host: {
     hostCapabilities: { serverTools: {}, logging: {} },
     hostContext: { theme: "light", locale: "en-US", timeZone: "UTC",
                    containerDimensions: { maxHeight: 500 } },
+    resources: {
+      "ui://cookbook/workflow-builder":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       load_workflow: {
         descriptor: { name: "load_workflow", description: "Load the graph",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/workflow-builder" } } },
         result: () => fixtures.results.load_workflow,
       },
     },

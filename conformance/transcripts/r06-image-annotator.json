@@ -2,6 +2,61 @@
   "demo": "r06-image-annotator",
   "messages": [
     {
+      "direction": "host→server",
+      "method": "tools/list",
+      "id": "tools/list",
+      "payload": {}
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "tools/list",
+      "payload": {
+        "tools": [
+          {
+            "_meta": {
+              "ui": {
+                "resourceUri": "ui://cookbook/image-annotator"
+              }
+            },
+            "description": "Load boxes",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "load_annotations"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→server",
+      "method": "resources/read",
+      "id": "resources/read",
+      "payload": {
+        "uri": "ui://cookbook/image-annotator"
+      }
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "resources/read",
+      "payload": {
+        "contents": [
+          {
+            "_meta": {
+              "ui": {
+                "csp": {},
+                "prefersBorder": true
+              }
+            },
+            "mimeType": "text/html;profile=mcp-app",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 7463 characters",
+            "uri": "ui://cookbook/image-annotator"
+          }
+        ]
+      }
+    },
+    {
       "direction": "app→host",
       "method": "ui/initialize",
       "id": 1,
@@ -104,6 +159,61 @@
             }
           ]
         }
+      }
+    },
+    {
+      "direction": "host→server",
+      "method": "tools/list",
+      "id": "tools/list",
+      "payload": {}
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "tools/list",
+      "payload": {
+        "tools": [
+          {
+            "_meta": {
+              "ui": {
+                "resourceUri": "ui://cookbook/image-annotator"
+              }
+            },
+            "description": "Load boxes",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "load_annotations"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→server",
+      "method": "resources/read",
+      "id": "resources/read",
+      "payload": {
+        "uri": "ui://cookbook/image-annotator"
+      }
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "resources/read",
+      "payload": {
+        "contents": [
+          {
+            "_meta": {
+              "ui": {
+                "csp": {},
+                "prefersBorder": true
+              }
+            },
+            "mimeType": "text/html;profile=mcp-app",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 7463 characters",
+            "uri": "ui://cookbook/image-annotator"
+          }
+        ]
       }
     },
     {

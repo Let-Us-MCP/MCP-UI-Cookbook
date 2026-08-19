@@ -2,6 +2,61 @@
   "demo": "r05-spreadsheet",
   "messages": [
     {
+      "direction": "host→server",
+      "method": "tools/list",
+      "id": "tools/list",
+      "payload": {}
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "tools/list",
+      "payload": {
+        "tools": [
+          {
+            "_meta": {
+              "ui": {
+                "resourceUri": "ui://cookbook/spreadsheet"
+              }
+            },
+            "description": "Load the sheet",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "load_sheet"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→server",
+      "method": "resources/read",
+      "id": "resources/read",
+      "payload": {
+        "uri": "ui://cookbook/spreadsheet"
+      }
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "resources/read",
+      "payload": {
+        "contents": [
+          {
+            "_meta": {
+              "ui": {
+                "csp": {},
+                "prefersBorder": true
+              }
+            },
+            "mimeType": "text/html;profile=mcp-app",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 7019 characters",
+            "uri": "ui://cookbook/spreadsheet"
+          }
+        ]
+      }
+    },
+    {
       "direction": "app→host",
       "method": "ui/initialize",
       "id": 1,

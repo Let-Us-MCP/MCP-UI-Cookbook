@@ -2,6 +2,61 @@
   "demo": "r08-diff-reviewer",
   "messages": [
     {
+      "direction": "host→server",
+      "method": "tools/list",
+      "id": "tools/list",
+      "payload": {}
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "tools/list",
+      "payload": {
+        "tools": [
+          {
+            "_meta": {
+              "ui": {
+                "resourceUri": "ui://cookbook/diff-reviewer"
+              }
+            },
+            "description": "Load a hunk",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "load_diff"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→server",
+      "method": "resources/read",
+      "id": "resources/read",
+      "payload": {
+        "uri": "ui://cookbook/diff-reviewer"
+      }
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "resources/read",
+      "payload": {
+        "contents": [
+          {
+            "_meta": {
+              "ui": {
+                "csp": {},
+                "prefersBorder": true
+              }
+            },
+            "mimeType": "text/html;profile=mcp-app",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 5353 characters",
+            "uri": "ui://cookbook/diff-reviewer"
+          }
+        ]
+      }
+    },
+    {
       "direction": "app→host",
       "method": "ui/initialize",
       "id": 1,

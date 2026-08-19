@@ -2,6 +2,75 @@
   "demo": "r13-settings",
   "messages": [
     {
+      "direction": "host→server",
+      "method": "tools/list",
+      "id": "tools/list",
+      "payload": {}
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "tools/list",
+      "payload": {
+        "tools": [
+          {
+            "_meta": {
+              "ui": {
+                "resourceUri": "ui://cookbook/settings"
+              }
+            },
+            "description": "Load preferences",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "load_preferences"
+          },
+          {
+            "_meta": {
+              "ui": {
+                "visibility": [
+                  "app"
+                ]
+              }
+            },
+            "description": "Save preferences",
+            "inputSchema": {
+              "type": "object"
+            },
+            "name": "save_preferences"
+          }
+        ]
+      }
+    },
+    {
+      "direction": "host→server",
+      "method": "resources/read",
+      "id": "resources/read",
+      "payload": {
+        "uri": "ui://cookbook/settings"
+      }
+    },
+    {
+      "direction": "server→host",
+      "method": "result",
+      "id": "resources/read",
+      "payload": {
+        "contents": [
+          {
+            "_meta": {
+              "ui": {
+                "csp": {},
+                "prefersBorder": true
+              }
+            },
+            "mimeType": "text/html;profile=mcp-app",
+            "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8… 6291 characters",
+            "uri": "ui://cookbook/settings"
+          }
+        ]
+      }
+    },
+    {
       "direction": "app→host",
       "method": "ui/initialize",
       "id": 1,

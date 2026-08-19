@@ -6,16 +6,23 @@ let mode = "ok";
 export const demo = {
   title: "Recipe 11: Agent Control Center",
   subtitle: "streaming input, progress, cancellation that tells the truth",
+  tool: "run_task",
   maxHeight: 520,
-  files: ["index.html", "server.js", "fixtures.json"],
+  files: ["index.html", "server.js", "../lib/mcp-server.js",
+          "fixtures.json"],
   host: {
     hostCapabilities: { serverTools: {}, logging: {} },
     hostContext: { theme: "light", locale: "en-US", timeZone: "UTC",
       containerDimensions: { maxHeight: 500 } },
+    resources: {
+      "ui://cookbook/agent-control":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       run_task: {
         descriptor: { name: "run_task", description: "Run a task",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/agent-control" } } },
         result: async (args, host) => {
           const steps = ["reading manifest", "scanning segments",
                          "building index", "verifying", "writing"];

@@ -4,8 +4,10 @@ const fixtures = await fetch(new URL("fixtures.json", import.meta.url))
 export const demo = {
   title: "Recipe 6: Image Annotator",
   subtitle: "pointer capture, zoom about the cursor, dropzone, export",
+  tool: "load_annotations",
   maxHeight: 520,
-  files: ["index.html", "server.js", "fixtures.json"],
+  files: ["index.html", "server.js", "../lib/mcp-server.js",
+          "fixtures.json"],
   host: {
     hostCapabilities: { serverTools: {}, downloadFile: {}, logging: {} },
     hostContext: {
@@ -13,10 +15,15 @@ export const demo = {
       displayMode: "inline", availableDisplayModes: ["inline", "fullscreen"],
       containerDimensions: { maxHeight: 500 },
     },
+    resources: {
+      "ui://cookbook/image-annotator":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       load_annotations: {
         descriptor: { name: "load_annotations", description: "Load boxes",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/image-annotator" } } },
         result: () => fixtures.results.load_annotations,
       },
     },

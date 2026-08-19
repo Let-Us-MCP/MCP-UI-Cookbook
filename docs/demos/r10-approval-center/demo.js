@@ -4,17 +4,24 @@ const fixtures = await fetch(new URL("fixtures.json", import.meta.url))
 export const demo = {
   title: "Recipe 10: Approval Center",
   subtitle: "provenance, consent, and a tool interface that refuses to consent",
+  tool: "pending_approvals",
   maxHeight: 560,
-  files: ["index.html", "server.js", "fixtures.json"],
+  files: ["index.html", "server.js", "../lib/mcp-server.js",
+          "fixtures.json"],
   host: {
     hostCapabilities: { serverTools: {}, message: { text: {} },
       updateModelContext: { text: {}, structuredContent: {} }, logging: {} },
     hostContext: { theme: "light", locale: "en-US", timeZone: "America/New_York",
       containerDimensions: { maxHeight: 540 } },
+    resources: {
+      "ui://cookbook/approval-center":
+        { href: new URL("index.html", import.meta.url).href },
+    },
     serverTools: {
       pending_approvals: {
         descriptor: { name: "pending_approvals", description: "Pending actions",
-          inputSchema: { type: "object" } },
+          inputSchema: { type: "object" },
+          _meta: { ui: { resourceUri: "ui://cookbook/approval-center" } } },
         result: () => fixtures.results.pending_approvals,
       },
     },
