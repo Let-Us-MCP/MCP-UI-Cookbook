@@ -86,6 +86,17 @@
     _meta: { ui: { resourceUri, visibility: tool.visibility ?? [&quot;model&quot;, &quot;app&quot;] } },
   }));</code></pre>
 <p>Note that <code>resourceUri</code> is closed over from the server’s own configuration, so every tool on one of these servers points at the same view. That is a property of these thirteen servers and not of the protocol: nothing stops a server binding different tools to different views. What nothing allows is one tool binding to two.</p>
+<p>On the wire the field is a string, and <code>make wire</code> records it from all thirteen servers so that this claim is checkable rather than asserted:</p>
+<p class="provenance extracted">Extracted from from <code>conformance/wire/r02-dashboard.json</code></p><pre class="json"><code>          &quot;_meta&quot;: {
+            &quot;ui&quot;: {
+              &quot;resourceUri&quot;: &quot;ui://cookbook/dashboard&quot;,
+              &quot;visibility&quot;: [
+                &quot;model&quot;,
+                &quot;app&quot;
+              ]
+            }
+          }</code></pre>
+<p>There is no array here and no second field beside it. <code>visibility</code> controls <em>who may call the tool</em>, not what it renders, and a tool visible only to the app still renders exactly one view when it is called.</p>
 <p><strong>Nothing in this protocol owns a screen.</strong> There is no page object, no container that holds several views, and no message anywhere in the extension that describes an arrangement. A large share of the difficulty in building anything beyond a single artifact descends from that one fact.</p>
 <h2 id="what-does-no-page-actually-mean">What does “no page” actually mean?</h2>
 <p>In ordinary web development a page owns the viewport. It issues whatever requests it needs, keeps the responses, decides the arrangement, and commits a render. Composition is a named responsibility held by an object that always exists, and every framework in the last twenty years assumes it.</p>

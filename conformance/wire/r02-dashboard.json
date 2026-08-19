@@ -1,0 +1,49 @@
+{
+  "note": "Recorded by tools/record_wire.mjs from the recipe's own server. Regenerate with `make wire`.",
+  "tools/list": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "tools": [
+        {
+          "name": "service_health",
+          "description": "Current service health metrics with 24 point history.",
+          "inputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/dashboard",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resources/read": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "contents": [
+        {
+          "uri": "ui://cookbook/dashboard",
+          "mimeType": "text/html;profile=mcp-app",
+          "text": "<5402 characters of HTML, elided>",
+          "_meta": {
+            "ui": {
+              "csp": {},
+              "prefersBorder": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

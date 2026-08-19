@@ -1,0 +1,49 @@
+{
+  "note": "Recorded by tools/record_wire.mjs from the recipe's own server. Regenerate with `make wire`.",
+  "tools/list": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "tools": [
+        {
+          "name": "list_clips",
+          "description": "List clips with durations and caption tracks.",
+          "inputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/media-viewer",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resources/read": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "contents": [
+        {
+          "uri": "ui://cookbook/media-viewer",
+          "mimeType": "text/html;profile=mcp-app",
+          "text": "<6171 characters of HTML, elided>",
+          "_meta": {
+            "ui": {
+              "csp": {},
+              "prefersBorder": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -5,7 +5,7 @@
 PY   := $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
 NODE := node
 
-.PHONY: all registry site demos figures fixtures check lint refs listings counts \
+.PHONY: all registry site demos figures fixtures check lint refs listings counts wire \
         claims transcripts serve venv clean
 
 all: registry fixtures demos figures site
@@ -25,7 +25,7 @@ figures:
 site:
 	python3 tools/build_site.py
 
-check: lint density refs listings counts claims identifiers webclaims transcripts render
+check: lint density refs listings counts claims identifiers webclaims wire transcripts render
 
 lint:
 	python3 tools/lint_prose.py
@@ -40,6 +40,9 @@ refs:
 
 listings:
 	python3 tools/check_listings.py
+
+wire:
+	node tools/record_wire.mjs --check
 
 counts:
 	python3 tools/check_counts.py

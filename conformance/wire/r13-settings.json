@@ -1,0 +1,64 @@
+{
+  "note": "Recorded by tools/record_wire.mjs from the recipe's own server. Regenerate with `make wire`.",
+  "tools/list": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "tools": [
+        {
+          "name": "load_preferences",
+          "description": "Load the user's notification and appearance preferences.",
+          "inputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/settings",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        },
+        {
+          "name": "save_preferences",
+          "description": "Persist preferences. Called by the view.",
+          "inputSchema": {
+            "type": "object"
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/settings",
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resources/read": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "contents": [
+        {
+          "uri": "ui://cookbook/settings",
+          "mimeType": "text/html;profile=mcp-app",
+          "text": "<6291 characters of HTML, elided>",
+          "_meta": {
+            "ui": {
+              "csp": {},
+              "prefersBorder": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

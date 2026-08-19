@@ -1,0 +1,69 @@
+{
+  "note": "Recorded by tools/record_wire.mjs from the recipe's own server. Regenerate with `make wire`.",
+  "tools/list": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "tools": [
+        {
+          "name": "load_annotations",
+          "description": "Load saved annotations for the plate.",
+          "inputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/image-annotator",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        },
+        {
+          "name": "save_annotations",
+          "description": "Save annotations back to the server.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "boxes": {
+                "type": "array"
+              }
+            }
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/image-annotator",
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resources/read": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "contents": [
+        {
+          "uri": "ui://cookbook/image-annotator",
+          "mimeType": "text/html;profile=mcp-app",
+          "text": "<7463 characters of HTML, elided>",
+          "_meta": {
+            "ui": {
+              "csp": {},
+              "prefersBorder": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

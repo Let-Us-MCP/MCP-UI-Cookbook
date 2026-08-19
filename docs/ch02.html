@@ -98,12 +98,39 @@
 <p class="provenance extracted">Extracted from from <code>apps/lib/mcp-server.js</code></p><pre class="js"><code>    // The link from a tool to its view. Without this the tool is a normal
     // tool and the host renders text, which is the correct fallback.
     _meta: { ui: { resourceUri, visibility: tool.visibility ?? [&quot;model&quot;, &quot;app&quot;] } },</code></pre>
-<p>You can watch that binding happen. Open any recipe on this site and read the first four lines of its message log, which are host-to-server, not host-to-view:</p>
-<p class="provenance captured">Captured output from the Data Explorer's message log</p><pre><code>host→server  tools/list
-server→host  result        descriptor carries _meta.ui.resourceUri
-host→server  resources/read  { uri: &quot;ui://cookbook/data-explorer&quot; }
-server→host  result        text/html;profile=mcp-app, 8.4 kB
-app→host     ui/initialize</code></pre>
+<p>That is the source. Here is the same binding as JSON on the wire, recorded by <code>make wire</code> from the Data Explorer’s own server. This is what the host actually receives from <code>tools/list</code>:</p>
+<p class="provenance extracted">Extracted from from <code>conformance/wire/r01-data-explorer.json</code></p><pre class="json"><code>        {
+          &quot;name&quot;: &quot;list_deployments&quot;,
+          &quot;title&quot;: &quot;List deployments&quot;,
+          &quot;description&quot;: &quot;List recent deployments with latency and error counts.&quot;,
+          &quot;annotations&quot;: {
+            &quot;readOnlyHint&quot;: true
+          },
+          &quot;_meta&quot;: {
+            &quot;ui&quot;: {
+              &quot;resourceUri&quot;: &quot;ui://cookbook/data-explorer&quot;,
+              &quot;visibility&quot;: [
+                &quot;model&quot;,
+                &quot;app&quot;
+              ]
+            }
+          }
+        },</code></pre>
+<p>The host reads <code>_meta.ui.resourceUri</code> off that descriptor and asks for it by URI. The answer is the view, and the <code>_meta</code> on the way back is a different object with different fields:</p>
+<p class="provenance extracted">Extracted from from <code>conformance/wire/r01-data-explorer.json</code></p><pre class="json"><code>      {
+        &quot;uri&quot;: &quot;ui://cookbook/data-explorer&quot;,
+        &quot;mimeType&quot;: &quot;text/html;profile=mcp-app&quot;,
+        &quot;text&quot;: &quot;&lt;7232 characters of HTML, elided&gt;&quot;,
+        &quot;_meta&quot;: {
+          &quot;ui&quot;: {
+            &quot;csp&quot;: {},
+            &quot;prefersBorder&quot;: true
+          }
+        }
+      }</code></pre>
+<p>The elision is the recorder’s, not the server’s: seven thousand characters of markup teaches nobody anything, and <code>tools/record_wire.mjs</code> replaces any string over 120 characters with a note saying how long it was. Everything else in both listings is verbatim, and <code>make wire</code> fails the build if a server’s answer stops matching what is quoted here.</p>
+<p>The <code>_meta.ui</code> on a <em>tool</em> carries <code>resourceUri</code> and <code>visibility</code>; the <code>_meta.ui</code> on a <em>resource</em> carries <code>csp</code> and <code>prefersBorder</code>. Same namespace, different objects, and confusing them is the most common mistake in a first server. And <code>"csp": {}</code> is declared rather than omitted, because these views load nothing from the network and an empty object says that deliberately.</p>
+<p>You can watch the whole sequence in the browser. Open any recipe on this site and read the first four lines of its message log, which are host-to-server, not host-to-view: <code>tools/list</code>, its result, <code>resources/read</code> with that URI, and the HTML coming back. Only then does the view’s own <code>ui/initialize</code> appear.</p>
 <p>Nothing names a file. The host is handed a tool, finds the resource URI in that tool’s metadata, reads the resource, and renders whatever HTML comes back. The view in the frame above those messages is the document that arrived on line four.</p>
 <p>So the division of labour is:</p>
 <div class="table-wrap"><table>

@@ -1,0 +1,49 @@
+{
+  "note": "Recorded by tools/record_wire.mjs from the recipe's own server. Regenerate with `make wire`.",
+  "tools/list": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "tools": [
+        {
+          "name": "load_diff",
+          "description": "Load the hunk under review.",
+          "inputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/diff-reviewer",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resources/read": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "contents": [
+        {
+          "uri": "ui://cookbook/diff-reviewer",
+          "mimeType": "text/html;profile=mcp-app",
+          "text": "<5353 characters of HTML, elided>",
+          "_meta": {
+            "ui": {
+              "csp": {},
+              "prefersBorder": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

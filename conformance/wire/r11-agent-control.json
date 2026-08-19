@@ -1,0 +1,73 @@
+{
+  "note": "Recorded by tools/record_wire.mjs from the recipe's own server. Regenerate with `make wire`.",
+  "tools/list": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "tools": [
+        {
+          "name": "run_task",
+          "description": "Run a long task and report progress against it.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/agent-control",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        },
+        {
+          "name": "list_tasks",
+          "description": "List tasks the server knows about.",
+          "inputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://cookbook/agent-control",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resources/read": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "contents": [
+        {
+          "uri": "ui://cookbook/agent-control",
+          "mimeType": "text/html;profile=mcp-app",
+          "text": "<5296 characters of HTML, elided>",
+          "_meta": {
+            "ui": {
+              "csp": {},
+              "prefersBorder": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}
