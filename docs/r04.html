@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 4</p><h1>Document Editor</h1><p class="summary">The recipe where the agent writes too. Undo, autosave through a tool, a teardown that flushes, and a rewrite that has to be proposed rather than applied.</p><div class="cap recipe" id="r04"><div class="cap-head"><code class="cap-id">r04</code><span class="cap-tag core">Document Editor</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Authoring with agent-assisted rewriting.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch15.html#history.redo">history.redo</a></code><code><a href="ch15.html#state.save">state.save</a></code><code><a href="ch15.html#state.restore">state.restore</a></code><code><a href="ch14.html#lifecycle.dirty">lifecycle.dirty</a></code><code><a href="ch14.html#lifecycle.beforeClose">lifecycle.beforeClose</a></code><code><a href="ch20.html#state.ownership">state.ownership</a></code><code><a href="ch20.html#state.conflict">state.conflict</a></code><code><a href="ch18.html#ui.prefill">ui.prefill</a></code><code><a href="ch18.html#ui.highlight">ui.highlight</a></code><code><a href="ch09.html#input.shortcut">input.shortcut</a></code><code><a href="ch17.html#agent.sampling">agent.sampling</a></code><code><a href="ch06.html#surface.close">surface.close</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch15.html#history.transaction">history.transaction</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch15.html#history.redo">history.redo</a></code><code><a href="ch15.html#state.save">state.save</a></code><code><a href="ch15.html#state.restore">state.restore</a></code><code><a href="ch14.html#lifecycle.dirty">lifecycle.dirty</a></code><code><a href="ch14.html#lifecycle.beforeClose">lifecycle.beforeClose</a></code><code><a href="ch20.html#state.ownership">state.ownership</a></code><code><a href="ch20.html#state.conflict">state.conflict</a></code><code><a href="ch18.html#ui.prefill">ui.prefill</a></code><code><a href="ch18.html#ui.highlight">ui.highlight</a></code><code><a href="ch09.html#input.shortcut">input.shortcut</a></code><code><a href="ch17.html#agent.sampling">agent.sampling</a></code><code><a href="ch06.html#surface.close">surface.close</a></code></dd></dl></div>
 <p>This is the recipe the ownership model in Chapter 20 was written for, and the one where the gaps in Chapter 15 hurt most. It is also the clearest demonstration of why undo is the safety mechanism that makes agentic editing acceptable.</p>
 <div class="demo" data-demo="r04-document-editor" id="r04-document-editor"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -151,7 +151,7 @@
 <p><strong>Press “Agent proposes a rewrite”.</strong> The document is untouched; the proposal appears below it. Press Accept, then Cmd/Ctrl+Z once. Your words are back.</p>
 <p><strong>Type something, then immediately press “Close the view”.</strong> The note in the transcript reports how many milliseconds the view took to answer <code>ui/resource-teardown</code>, and the save happened inside that window.</p>
 <p><strong>Press “Agent reads the document”.</strong> The tool reports the text and the dirty flag, which is the pull half of the pair whose push half is <code>ui/update-model-context</code>.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -188,11 +188,11 @@
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The host does not wait for the teardown response.</strong> Indistinguishable from the inside. Autosave is what makes it survivable: at worst 900 milliseconds of typing is lost.</p>
 <p><strong>The save fails.</strong> The dirty flag stays set, the chip stays amber, and the next autosave retries. The document is never marked saved on a failure.</p>
 <p><strong>The agent proposes while the user is typing.</strong> The proposal appears below rather than replacing anything, so there is no race. Recipe 20’s lab shows the harder version of this, where the agent writes directly into a shared field.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>The editable region is <code>role="textbox"</code> with <code>aria-multiline</code>. Undo and redo announce their labels. The proposal card is a live region so its arrival is announced, and its buttons are reachable in tab order immediately after the document. Formatting shortcuts are duplicated as toolbar buttons.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

@@ -73,8 +73,9 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 22</p><h1>Components I: Overlays, Controls and Text</h1><p class="summary">What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.</p><p>Part IV is the middle layer. Capabilities are too small to build with; applications are too large to reuse. Components are the pieces with names a designer already uses, and every entry here answers three questions: which capabilities it composes, which Authoring Practices Guide pattern governs its keyboard behaviour, and what changes because it is inside somebody else’s window.</p>
-<p>That third question is the only reason these chapters exist. There are excellent references for building a combobox. There are none for building one that is four hundred pixels wide, inside an opaque origin, next to a model that may fill it in.</p>
+<p class="eyebrow">Chapter 22</p><h1>Components I: Overlays, Controls and Text</h1><p class="summary">What each component composes, which ARIA pattern governs it, and the embedded-specific detail that makes it different from the version you have built before.</p><p>Capabilities are too small to build with. Applications are too large to reuse. Components are the layer in between.</p>
+<p>Every entry answers three questions: what it composes, which Authoring Practices Guide pattern governs its keyboard behaviour, and what changes because it lives in someone else’s window.</p>
+<p>The third question is the only reason these chapters exist. Plenty of references tell you how to build a combobox. None tell you how to build one that is four hundred pixels wide, inside an opaque origin, next to a model that may fill it in.</p>
 <p>The component library the recipes are built from is one CSS file and one helper file, <code>apps/lib/view.css</code> and <code>apps/lib/view.js</code>, about five hundred lines together. Thirteen applications share it, which is why they look like they came from the same place.</p>
 <h2 id="overlays">Overlays</h2>
 <div class="table-wrap"><table>
@@ -127,7 +128,7 @@
 <p><strong>Everything is clipped by the frame.</strong> A popover that would overflow the viewport in a page just overflows; here it is cut off by the iframe’s edge and there is no way to render outside it. Position with the frame’s bounds, not the screen’s, and prefer flipping to a different side over letting the content extend past the boundary. A dropdown that opens downward at the bottom of the frame is a dropdown nobody can read.</p>
 <p><strong>Tooltips need a second route.</strong> They are hover-only by construction, and <code>hostContext.deviceCapabilities.hover</code> tells you when hover does not exist. On a touch device, move the content into the label, a popover triggered by tap, or a description that is always visible.</p>
 <p><strong>Context menus need a keyboard route.</strong> Shift+F10, a visible button, or both. Chapter 9 has the details.</p>
-<h3 id="why-dialog-and-not-a-div">Why <code>&lt;dialog&gt;</code> and not a div</h3>
+<h4 id="why-dialog-and-not-a-div">Why <code>&lt;dialog&gt;</code> and not a div</h4>
 <p>Worth spelling out, because hand-rolled overlays are still the common case and the list of what you lose is longer than people expect.</p>
 <p><code>showModal()</code> puts the dialog in the top layer, which means it renders above everything regardless of stacking context, and no <code>z-index</code> arms race is needed. It makes the rest of the document inert, so clicks and focus cannot reach it. It gives you <code>::backdrop</code> as a real pseudo-element. It handles Escape, firing a <code>cancel</code> event you can intercept. It restores focus to the previously focused element on close. And it carries the modal semantics assistive technology needs without a single ARIA attribute.</p>
 <p>A div with <code>position: fixed</code> gives you none of those, and the versions people write typically reimplement two of them badly. The one thing to remember is the <code>cancel</code> event: a dialog whose promise is only resolved by its buttons hangs forever when the user presses Escape, and in an application that awaits the answer, a hung promise is a frozen interface.</p>
@@ -244,7 +245,7 @@
 <p><strong>Search fields want a shortcut and cannot safely have one.</strong> Cmd/Ctrl+F is the convention and the host may own it. Bind it, expect to lose it sometimes, and always provide the visible field.</p>
 <p><strong>Rich text is where the agent shows up.</strong> A text field can be prefilled and the user sees the value change. A document cannot: the agent’s rewrite has to appear as a proposal, with the original still visible, and accepting it has to be one undo transaction. Recipe 4 is the worked example, and the proposal card is a component in its own right that Chapter 24 lists.</p>
 <p><strong>Code editors are a decision about weight.</strong> A real editor is a large dependency inside a frame with a restrictive CSP and no CDN unless the server declares one. A <code>&lt;pre&gt;</code> with syntax highlighting done server-side covers reading, which is most of what a review interface does. Recipe 8 renders a diff with no editor at all.</p>
-<h2 id="what-each-overlay-costs-in-a-frame">What each overlay costs in a frame</h2>
+<h3 id="what-each-overlay-costs">What each overlay costs</h3>
 <p>A quick reference, because the trade is different here than on a page.</p>
 <div class="table-wrap"><table>
 <thead>
@@ -293,11 +294,12 @@
 </tbody>
 </table></div>
 <p>The pattern in the right-hand column is that the answer is almost always “smaller than you think”. A modal inside a card is a card that has become unusable for the duration; a sheet that covers eighty percent of a small frame is a modal wearing a different animation.</p>
-<h2 id="the-one-component-this-book-would-buy-rather-than-build">The one component this book would buy rather than build</h2>
+<h3 id="the-one-component-worth-not-building">The one component worth not building</h3>
 <p>The combobox, and it is worth being specific about why. It is the most complex pattern in the Authoring Practices Guide. It needs a listbox positioned within a frame that clips it. It needs <code>aria-activedescendant</code>, an expanded state, a value that may or may not be one of the options, and typeahead that does not fight the input. And it needs all of that to work with a virtual list once the option count passes a few hundred.</p>
 <p>Recipe 1 uses a plain <code>&lt;select&gt;</code> for its environment filter for exactly this reason. The filter has four options; a combobox would be worse in every dimension including the one it exists to improve.</p>
-<h2 id="the-embedded-rule-that-applies-to-all-of-them">The embedded rule that applies to all of them</h2>
-<p>Every component in this chapter is smaller than the version you have built before, because the frame is smaller. A toolbar with nine buttons becomes a toolbar with four and an overflow menu. A form with three columns becomes one column. A modal that would be 600 pixels wide has to work at 380.</p>
+<h2 id="design-at-your-narrowest-width">Design at your narrowest width</h2>
+<p>Every component here is smaller than the version you have built before.</p>
+<p>A toolbar of nine buttons becomes four and an overflow menu. A three-column form becomes one column. A 600 pixel modal has to work at 380.</p>
 <p>The useful discipline is to design at the narrowest width you will accept, and to let <code>surface.resize</code> report the height rather than trying to fit a fixed one. Everything in this book is built at 380 pixels first, and the recipes look the same at 900 because the layout only ever had one column to lose.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

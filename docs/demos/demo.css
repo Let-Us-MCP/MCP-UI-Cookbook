@@ -73,33 +73,78 @@
   padding: 5px 9px;
 }
 
-.demo-main {
+
+.demo-code { border-top: 1px solid var(--rule); }
+
+.demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+}
+
+.demo-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  padding: 4px 2px;
+  cursor: pointer;
+}
+.demo-toggle:hover { color: var(--ink); }
+.demo-toggle .chev {
+  width: 0; height: 0;
+  border-left: 5px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transform: rotate(90deg);
+  transition: transform .18s ease;
+}
+.demo-toggle[aria-expanded="false"] .chev { transform: rotate(0deg); }
+
+.demo-bar .spacer { flex: 1 1 auto; }
+
+.demo-copy {
+  font: inherit;
+  font-size: 12px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--muted);
+  cursor: pointer;
+}
+.demo-copy:hover { border-color: var(--accent); color: var(--accent); }
+
+/* The drawer slides. Height is animated rather than transformed so the page
+   below it moves with the panel instead of being covered by it. */
+.demo-drawer {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: stretch;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows .22s ease;
 }
+.demo-drawer.shut { grid-template-rows: 0fr; }
+.demo-drawer-inner { min-height: 0; }
+.demo-drawer.shut .demo-drawer-inner { overflow: hidden; }
 
-/* Above this width the source sits beside the running application. Below it,
-   they stack, because two columns in four hundred pixels is neither. */
-@media (min-width: 1100px) {
-  .demo-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .demo-code { border-left: 1px solid var(--rule); }
-}
-
-.demo-code { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-
-/* The source pane takes whatever height the running application has and
-   scrolls inside it, so the demonstration and its code stay in one frame
-   however long the file is. */
 .demo-code .demo-pane {
-  flex: 1 1 0;
-  min-height: 220px;
-  max-height: none;
+  max-height: 380px;
   border-top: 0;
   overflow: auto;
   overscroll-behavior: contain;
 }
 .demo-code .demo-pane pre { white-space: pre; }
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-drawer, .demo-toggle .chev { transition: none; }
+}
 
 .demo-label {
   font-size: 10.5px;

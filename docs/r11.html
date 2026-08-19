@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 11</p><h1>Agent Control Center</h1><p class="summary">Tasks that stream in before they exist, progress against a running request, cancellation that admits how far it got, and a retry that does not make you start over.</p><div class="cap recipe" id="r11"><div class="cap-head"><code class="cap-id">r11</code><span class="cap-tag core">Agent Control Center</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Observe and steer running tasks.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch19.html#tool.cancel">tool.cancel</a></code><code><a href="ch19.html#tool.partialInput">tool.partialInput</a></code><code><a href="ch16.html#op.cancel">op.cancel</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch19.html#tool.invoke">tool.invoke</a></code><code><a href="ch19.html#tool.cancel">tool.cancel</a></code><code><a href="ch19.html#tool.partialInput">tool.partialInput</a></code><code><a href="ch19.html#tool.partialOutput">tool.partialOutput</a></code><code><a href="ch16.html#op.progress">op.progress</a></code><code><a href="ch16.html#op.cancel">op.cancel</a></code><code><a href="ch16.html#op.retry">op.retry</a></code><code><a href="ch08.html#notify.attention">notify.attention</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch18.html#app.tools">app.tools</a></code></dd></dl></div>
 <p>The recipe about watching work happen. Its delta is the whole of Chapter 16 under load: several operations in flight, each with its own progress, its own cancellation, and its own failure.</p>
 <div class="demo" data-demo="r11-agent-control" id="r11-agent-control"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -123,7 +123,7 @@
 <p><strong>Press “Agent streams a task in”.</strong> The row appears while the name is still <code>Reindex sh</code>, then fills in. That is the difference between an interface that feels immediate and a spinner.</p>
 <p><strong>Start a task and cancel it halfway.</strong> The task reports the step it reached and says that completed steps were not rolled back, which is unglamorous and true.</p>
 <p><strong>Press “Make the next task fail”, then start one.</strong> The failure keeps its step history, explains what state it left, and offers Retry with the same arguments.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -160,11 +160,11 @@
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>A task fails midway.</strong> Press “Make the next task fail”. The task turns red, keeps its step history, shows the server’s explanation, and offers Retry. The explanation is three facts: what failed, what state it left, what to do.</p>
 <p><strong>Cancel everything.</strong> Each running task is cancelled individually, each sends <code>notifications/cancelled</code> with its own request id, and each reports where it stopped.</p>
 <p><strong>A failure while the view is hidden.</strong> Raises a banner that survives until the user returns, which is the same fallback Recipe 9 uses for the same missing capability.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>Each task is a region with a heading and a <code>role="progressbar"</code>. Completion and failure are announced once; progress ticks are not, because a screen reader narrating five steps a second for four tasks is unusable. The step log is scrollable and reachable. Cancel and Retry are ordinary buttons in tab order next to the task they belong to.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

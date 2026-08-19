@@ -73,7 +73,8 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 24</p><h1>Components III: Spatial, Media and Agent-Native</h1><p class="summary">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</p><p>Two familiar groups and one that has no precedent. The last group is the interesting one: five components that could not have been designed before there was a second party that acts on the interface, and that every agentic application ends up needing.</p>
+<p class="eyebrow">Chapter 24</p><h1>Components III: Spatial, Media and Agent-Native</h1><p class="summary">Canvases in a small frame, transports you should probably not replace, and five components that exist only because there is a model in the room.</p><p>Two familiar groups, then five components with no precedent anywhere.</p>
+<p>The last five could not have existed before there was a second party acting on the interface, and every agentic application ends up needing them.</p>
 <h2 id="spatial">Spatial</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -195,14 +196,14 @@
 <p><strong>The streaming log</strong> is the append-only list from Chapter 23 with the selection and follow behaviour that terminals taught everybody: follow the tail until the user scrolls up, then stop following and say so. Recipe 9 turns following off automatically when the user scrolls away from the bottom, which is the behaviour nobody notices when it is right.</p>
 <p><strong>The context inspector</strong> shows what the view has published to the model. It is a debugging tool that deserves to ship. A user who can see that the assistant knows about three selected rows and nothing else can predict what it will say, and the same panel is how a developer finds out that their view has been publishing hover state for a week. Every demonstration in this book has one, in the form of the “Show what the model was told” control.</p>
 <p><strong>The proposal card</strong> is the shape that makes agent editing safe. The agent’s version, visible next to the current one, with Accept and Decline, and accepting recorded as one undo transaction. Chapters 18 and 20 both arrive at it, from prefill and from conflict policy respectively, which is a decent sign that it is the right primitive.</p>
-<h2 id="building-the-five-concretely">Building the five, concretely</h2>
+<h3 id="definition-of-done-for-each">Definition of done, for each</h3>
 <p>Each of the agent-native components has a small definition of done, and they are worth stating because these are the components with no existing reference to copy from.</p>
 <p><strong>Approval card.</strong> Renders a title, a risk level, a consequence sentence, and a provenance list of at least four fields. Approve and Deny are both single actions; high risk adds a confirmation. Every decision produces exactly one context update carrying the outcome and nothing else. It never accepts an approval over its own tool interface.</p>
 <p><strong>Tool status chip.</strong> Carries a name, one of five states, a progress value when it has one, and exactly the controls that state allows. Queued has none. Running has Cancel. Failed has Retry. Cancelled and Done have neither. The state name is visible as text, not only as a colour.</p>
 <p><strong>Streaming log.</strong> Appends, trims to a cap, and never rebuilds. Follows the tail until the user scrolls away, then stops and shows that it has stopped. Selection is by identifier so it survives the next thousand lines.</p>
 <p><strong>Context inspector.</strong> Shows the last payload published to the model, verbatim, and says when nothing has been published. It is one control and about ten lines, and it is the fastest way to find out that a view has been leaking hover state for a week.</p>
 <p><strong>Proposal card.</strong> Shows the agent’s version next to what is currently there, with Accept and Decline. Accepting is one undo transaction. The tool that created it returns “proposed, not applied”, so the agent does not report a change that has not happened.</p>
-<h2 id="the-pattern-behind-all-five">The pattern behind all five</h2>
+<h2 id="what-all-five-have-in-common">What all five have in common</h2>
 <p>Every agent-native component makes an invisible thing visible. What the model was told. What it is doing. What it is proposing. What it wants permission for. What it has been told before.</p>
 <p>That is the design brief for this whole layer, and it comes out of the same constraint the rest of the book keeps hitting: the two parties cannot see each other. The user cannot see the model’s context. The model cannot see the screen. Components that surface one to the other are the ones that make an agentic interface feel like a place rather than a slot machine.</p>
 <h2 id="conformance-checks">Conformance checks</h2>

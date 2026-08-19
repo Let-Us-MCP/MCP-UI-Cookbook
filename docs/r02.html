@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 2</p><h1>Dashboard</h1><p class="summary">Tiles, sparklines, drill-down, and values that keep changing while you look at them.</p><div class="cap recipe" id="r02"><div class="cap-head"><code class="cap-id">r02</code><span class="cap-tag core">Dashboard</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">At-a-glance monitoring with drill-down.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch13.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch16.html#op.progress">op.progress</a></code><code><a href="ch16.html#op.retry">op.retry</a></code><code><a href="ch14.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch18.html#ui.navigate">ui.navigate</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch06.html#surface.resize">surface.resize</a></code><code><a href="ch06.html#surface.viewport">surface.viewport</a></code><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch12.html#env.theme">env.theme</a></code><code><a href="ch13.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch19.html#tool.invoke">tool.invoke</a></code><code><a href="ch19.html#tool.result">tool.result</a></code><code><a href="ch16.html#op.progress">op.progress</a></code><code><a href="ch16.html#op.retry">op.retry</a></code><code><a href="ch14.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch17.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch18.html#ui.navigate">ui.navigate</a></code></dd></dl></div>
 <p>A dashboard is a data explorer that will not hold still. Its capability delta is entirely about that: values updating in place, a drill-down that does not lose them, and a motion preference that has to be respected by something other than a CSS rule.</p>
 <div class="demo" data-demo="r02-dashboard" id="r02-dashboard"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -104,7 +104,7 @@
 </tbody>
 </table></div>
 <p>Refresh is worth noticing. It looks like a crossing and it is not: the view calls the tool directly, and the model is never involved in a button that means “get the current numbers”.</p>
-<h2 id="surface">Surface</h2>
+<h2 id="what-it-looks-like">What it looks like</h2>
 <p>A responsive grid of tiles, minimum 150 pixels each, so the same view is one column in a narrow panel and four across in a wide one. A drill-down panel opens under the grid rather than as a modal, because a modal in a four hundred pixel frame covers everything.</p>
 <h2 id="updating-in-place">Updating in place</h2>
 <p>The tile is not rebuilt when its value changes. The text node and the sparkline are replaced; the tile element, its focus and its position stay.</p>
@@ -121,7 +121,7 @@ tile.querySelector(&quot;svg&quot;)?.replaceWith(spark(m.series));</code></pre>
 <p><strong>Watch the first tile for ten seconds.</strong> The value and the sparkline change; the tile element does not. Tab to it while it is updating and the focus stays put, which is the entire reason it patches instead of rebuilding.</p>
 <p><strong>Open a tile, then press “Show the model context”.</strong> The model is told which panel is open, not which tiles were hovered on the way there.</p>
 <p><strong>Press “Withdraw fullscreen”, then press Expand.</strong> The view checks <code>availableDisplayModes</code> before asking and reports that the mode is gone, instead of sending a request that would be refused.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -153,10 +153,10 @@ tile.querySelector(&quot;svg&quot;)?.replaceWith(spark(m.series));</code></pre>
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>Fullscreen withdrawn mid-session.</strong> Press “Withdraw fullscreen”. The next press of Expand finds the mode absent from <code>availableDisplayModes</code> and says so rather than sending a request that would be refused.</p>
 <p><strong>The refresh fails.</strong> The tiles keep their last values and the freshness chip stops advancing, which is the honest signal: a dashboard whose numbers are wrong is worse than one that admits its numbers are old.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>Each tile is a button with an <code>aria-label</code> that states the metric and its value, so a screen reader user gets “Checkout p95, 412 milliseconds” rather than a heading and a number in separate nodes. Sparklines are <code>aria-hidden="true"</code> and the note under each tile carries the trend in words. Opening a drill-down announces it. The grid is keyboard navigable by tab, and Enter opens.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

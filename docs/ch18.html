@@ -73,12 +73,12 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 18</p><h1>Agent to UI</h1><p class="summary">The host cannot see inside your frame, so an agent that wants to act on your interface has to be given a vocabulary. Registering tools is that vocabulary, and it turns out to be the same mechanism accessibility and testing need.</p><p>The reverse direction is harder than it looks, and the reason is a security property rather than an oversight. Your view is in a sandboxed iframe. The host cannot read its DOM, and should not be able to. So an agent that wants to highlight a row, open a panel, or propose a value has no way to reach in.</p>
-<p>The draft specification’s answer is that the view reaches out: it registers tools, and the host calls them. That single mechanism covers everything in this chapter, and it has three uses that are worth noticing are the same thing.</p>
+<p class="eyebrow">Chapter 18</p><h1>Agent to UI</h1><p class="summary">The host cannot see inside your frame, so an agent that wants to act on your interface has to be given a vocabulary. Registering tools is that vocabulary, and it turns out to be the same mechanism accessibility and testing need.</p><p>Register tools. That is the whole answer, and it covers everything in this chapter.</p>
+<p>The host cannot read your DOM, and should not be able to. So an agent that wants to highlight a row or propose a value has no way to reach in. Instead the view reaches out: it registers tools, and the host calls them.</p>
 <div class="demo" data-demo="lab-apptools" id="lab-apptools"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="tools-the-view-provides">Tools the view provides</h2>
+<h2 id="how-does-the-agent-act-on-my-view">How does the agent act on my view?</h2>
 <div class="cap" id="app.tools"><div class="cap-head"><code class="cap-id">app.tools</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground wire">On the wire</span><span class="cap-ground draft">Draft only</span></div><p class="cap-summary">Expose the view&#x27;s operations as tools the agent can call.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>appCapabilities</code><code>tools/list</code><code>notifications/tools/list_changed</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r07.html">Workflow Builder</a>, <a href="r11.html">Agent Control Center</a></dd><dt>Demo</dt><dd><a href="#lab-apptools">lab-apptools</a></dd></dl></div>
-<p>A view declares <code>tools</code> in <code>appCapabilities</code> during initialisation. The host then sends <code>tools/list</code> to the view, which answers with tool descriptors in the standard MCP shape, and <code>tools/call</code> to invoke one. When the set changes, the view sends <code>notifications/tools/list_changed</code>.</p>
+<p>Declare <code>tools</code> in <code>appCapabilities</code> at startup. The host then sends <code>tools/list</code>, you answer with standard MCP tool descriptors, and it sends <code>tools/call</code> to invoke one. Send <code>notifications/tools/list_changed</code> when the set changes.</p>
 <p class="provenance extracted">Extracted from from <code>apps/labs/lab-apptools/index.html</code></p><pre class="js"><code>bridge.registerTool({
   name: &quot;highlight_line_item&quot;,
   description: &quot;Draw the user&#39;s attention to one line item by index&quot;,
@@ -97,18 +97,18 @@
 <p><strong>They are untrusted.</strong> The code came from a server and runs in a sandbox. Descriptions may not describe side effects honestly, names may collide with server tools, and results should be validated. The specification recommends clear attribution in the host’s UI, per-app or per-server approval, name prefixes, resource limits, and an audit trail.</p>
 <p><strong>They are the only introspection route.</strong> The host has no DOM access, and a view may nest cross-origin frames of its own. If the model is to know anything about the view’s state, the view has to say so, either by pushing with <code>ui/update-model-context</code> or by answering a pull through a tool.</p>
 <p><strong>Annotate honestly.</strong> <code>readOnlyHint: true</code> is the one claim a host will act on, by auto-approving. Marking a mutating tool read-only is the single most consequential lie available in this system.</p>
-<h2 id="highlight">Highlight</h2>
+<h2 id="highlight-point-at-something">Highlight: point at something</h2>
 <div class="cap" id="ui.highlight"><div class="cap-head"><code class="cap-id">ui.highlight</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Let the agent point at a row, a node, or a hunk.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r07.html">Workflow Builder</a>, <a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-apptools">lab-apptools</a></dd></dl></div>
 <p>“Draw attention to this thing”, where the thing is a row, a node, a line, or a region. It is the lightest agent action and the one that makes a conversation about a view feel connected to it.</p>
 <p><strong>Application behaviour.</strong> Implement it as a tool that takes a stable identifier, not a coordinate or a CSS selector. <code>highlight_line_item(index)</code> survives a re-render; <code>highlight("#row-3 &gt; td:nth-child(2)")</code> does not, and hands the agent a way to poke at your internals.</p>
 <p>Make the highlight obviously temporary and obviously the agent’s. Recipe 7 puts a glow on the node and says “agent: highlighted Classify” in the corner, so a user who looks away and back knows who moved what.</p>
 <p><strong>Accessibility.</strong> A highlight that is only visual is invisible to a screen reader user, and this is a change they did not cause. Announce it, once, into the live region from Chapter 13.</p>
-<h2 id="navigate">Navigate</h2>
+<h2 id="navigate-open-the-panel-being-discussed">Navigate: open the panel being discussed</h2>
 <div class="cap" id="ui.navigate"><div class="cap-head"><code class="cap-id">ui.navigate</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Let the agent open the panel it is talking about.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r02.html">Dashboard</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-apptools">lab-apptools</a></dd></dl></div>
 <p>“Open the panel you are talking about.” The agent changes view state: switches a tab, expands a section, scrolls to a result, selects a row.</p>
 <p><strong>The rule that keeps this safe</strong> is that every agent-initiated navigation must be something the user could have done themselves with the mouse, and must be visible when it happens. An agent that silently changes what the user is looking at while they are reading is worse than one that does nothing.</p>
 <p><strong>Design the tool around the user’s vocabulary</strong>, not your component tree. <code>show_panel("items")</code> is a tool the model can use correctly from a description. <code>set_state({activeTabIndex: 1})</code> is one it will use wrongly, and one that breaks when you reorder the tabs.</p>
-<h2 id="prefill">Prefill</h2>
+<h2 id="prefill-propose-never-submit">Prefill: propose, never submit</h2>
 <div class="cap" id="ui.prefill"><div class="cap-head"><code class="cap-id">ui.prefill</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Let the agent propose values, never submit them.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-apptools">lab-apptools</a></dd></dl></div>
 <p>The agent proposes values into inputs. It never submits.</p>
 <p>That distinction is the whole entry. Prefilling a form is enormously useful: the agent has read the ticket, the invoice, the previous three messages, and can fill in six fields the user would have typed. Submitting the form is taking an action in the user’s name, and the signature on it has to be theirs.</p>
@@ -128,7 +128,7 @@
 });</code></pre>
 <p>Note the return value. The tool tells the agent what actually happened, including the part the agent might otherwise assume: the user has not submitted it. An agent that receives “done” will report to the user that it has been done.</p>
 <p><strong>In a document rather than a form</strong>, the same rule produces a diff or a proposal card rather than a silent replacement. Recipe 4 shows the rewrite as a proposal with Accept and Decline, and accepting is one undo transaction.</p>
-<h2 id="reading-the-view">Reading the view</h2>
+<h2 id="let-the-agent-read-the-view">Let the agent read the view</h2>
 <p>The fourth thing to register is not an action at all. <code>get_state</code> lets the agent ask what is currently on screen.</p>
 <p class="provenance extracted">Extracted from from <code>apps/labs/lab-apptools/index.html</code></p><pre class="js"><code>bridge.registerTool({
   name: &quot;get_state&quot;,
@@ -143,13 +143,13 @@
                        submitted: false },
 }));</code></pre>
 <p>This is the pull half of the pair whose push half is <code>ui/update-model-context</code>. Push keeps the model current on the things that always matter; pull lets it ask about the things that occasionally do. Most views want both, and the deciding question is whether a fact is worth spending context on every turn.</p>
-<h2 id="the-three-uses-that-are-one-mechanism">The three uses that are one mechanism</h2>
+<h2 id="three-requirements-one-mechanism">Three requirements, one mechanism</h2>
 <p>Worth stating plainly, because it justifies the effort.</p>
 <p><strong>Agent action.</strong> The subject of this chapter.</p>
 <p><strong>Accessibility and voice.</strong> A user who cannot point still needs to open the panel. An agent driving <code>show_panel</code> on their behalf is doing exactly what the mouse would have done, through an interface designed for it.</p>
 <p><strong>Testing.</strong> A sandboxed frame cannot be driven from outside by a test harness, because the harness cannot reach its DOM either. It can be driven through the same tools. The conformance harness in Part VI drives views this way, and the golden transcripts for this chapter’s demonstration are recordings of a test doing exactly what an agent would do.</p>
 <p>Three requirements, one mechanism, one set of tools to write. That is unusual enough to be worth designing around: if you are choosing which parts of your view to expose, choose the ones that would make all three easier.</p>
-<h2 id="designing-the-tool-surface">Designing the tool surface</h2>
+<h2 id="how-many-tools-and-what-shape">How many tools, and what shape?</h2>
 <p>A view with twenty registered tools is a view whose tools the model will choose between badly. Four to six is the range the recipes here settle on, and the way to get there is to design the surface as a vocabulary rather than as an API.</p>
 <p><strong>Name operations, not implementation.</strong> <code>show_panel("items")</code> reads from a description; <code>set_state({activeTabIndex: 1})</code> does not, and breaks when the tabs are reordered.</p>
 <p><strong>Take stable identifiers.</strong> Names and ids that survive a re-render. Never selectors, never coordinates, never array positions that depend on the current sort.</p>

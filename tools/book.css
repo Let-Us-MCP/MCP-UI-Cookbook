@@ -174,9 +174,3 @@ div.principle{border:1px solid var(--accent);border-left-width:4px;
 div.principle p{margin:0 0 .7em}
 div.principle p:last-child{margin-bottom:0}
 div.principle strong:first-child{color:var(--accent)}
-
-/* Demonstrations are wider than the reading column. A running application next
-   to its own source needs the room, and the text does not. */
-@media (min-width: 1180px) {
-  main .demo { width: calc(100% + 260px); }
-}

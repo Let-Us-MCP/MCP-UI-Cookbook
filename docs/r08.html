@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 8</p><h1>Code and Diff Reviewer</h1><p class="summary">A unified diff where a range of lines is the unit of conversation, and where the model is asked about exactly what the reviewer selected.</p><div class="cap recipe" id="r08"><div class="cap-head"><code class="cap-id">r08</code><span class="cap-tag core">Code and Diff Reviewer</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Review changes with agent context.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch07.html#surface.scroll">surface.scroll</a></code><code><a href="ch10.html#link.open">link.open</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch09.html#input.keyboard">input.keyboard</a></code><code><a href="ch10.html#clipboard.write">clipboard.write</a></code><code><a href="ch17.html#agent.escalate">agent.escalate</a></code><code><a href="ch17.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch18.html#ui.highlight">ui.highlight</a></code><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch07.html#surface.scroll">surface.scroll</a></code><code><a href="ch12.html#env.theme">env.theme</a></code><code><a href="ch10.html#link.open">link.open</a></code></dd></dl></div>
 <p>The recipe that makes the strongest case for structured escalation. A reviewer looking at a diff has a precise question about a precise range, and the difference between sending that range and sending a description of it is the difference between a useful answer and a plausible one.</p>
 <div class="demo" data-demo="r08-diff-reviewer" id="r08-diff-reviewer"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -117,7 +117,7 @@
 <p><strong>Click line 42, then shift-click line 45.</strong> The published context is those four lines with their numbers and their kinds, which is what makes “explain this change” answerable precisely.</p>
 <p><strong>Press “Explain this change”.</strong> The message carries the selected lines with their diff markers, not a description of them.</p>
 <p><strong>Press “Refuse to open links”, then “Open on the server”.</strong> The refusal is reported rather than swallowed, which is the correct handling for a capability that was present at initialisation and declined at use.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -159,10 +159,10 @@
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The host refuses to open links.</strong> Press “Refuse to open links”. The button reports the refusal rather than failing silently, which is the right response for a capability that was present at initialisation and declined at use.</p>
 <p><strong>A very wide line.</strong> The diff pane scrolls horizontally rather than wrapping, because a wrapped diff line breaks the alignment between the number gutter and the content. In a four hundred pixel frame this means horizontal scrolling, which is the least bad option.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>The diff is a labelled group with keyboard navigation by arrow keys, and shift extends. Each line’s kind is carried by a <code>+</code> or <code>-</code> character in the text rather than by colour alone, so it survives forced colours. Comments are announced when added. The selection count and range are available to a screen reader through the live region.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

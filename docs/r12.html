@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 12</p><h1>Media Viewer</h1><p class="summary">A transport, a caption track, an immersion request that goes through the host, and a share button for a capability that does not exist.</p><div class="cap recipe" id="r12"><div class="cap-head"><code class="cap-id">r12</code><span class="cap-tag core">Media Viewer</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Inspect and present media.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch16.html#media.playback">media.playback</a></code><code><a href="ch16.html#media.fullscreen">media.fullscreen</a></code><code><a href="ch10.html#system.share">system.share</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch16.html#media.playback">media.playback</a></code><code><a href="ch16.html#media.fullscreen">media.fullscreen</a></code><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch14.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch14.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch10.html#system.share">system.share</a></code><code><a href="ch13.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch09.html#input.zoompan">input.zoompan</a></code><code><a href="ch10.html#file.export">file.export</a></code></dd></dl></div>
 <p>The recipe with the most platform behaviour and the clearest example of a capability the sandbox simply does not have. It is also the recipe that most often should not be built: the native controls are better than the ones here.</p>
 <div class="demo" data-demo="r12-media-viewer" id="r12-media-viewer"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -119,7 +119,7 @@ $(&quot;#note&quot;).textContent = mode === target
 <p><strong>Press Play, then press “Withdraw fullscreen” and the Fullscreen button.</strong> The view reports the mode the host actually kept, rather than assuming the request succeeded.</p>
 <p><strong>Press Share with links allowed, then press “Refuse to open links” and press it again.</strong> The first goes through <code>ui/open-link</code>; the second falls back to the clipboard and says so. There is no share capability to fall back from.</p>
 <p><strong>Turn captions on and scrub.</strong> The caption line follows the position, and the toggle carries <code>aria-pressed</code> rather than a colour change.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -161,11 +161,11 @@ $(&quot;#note&quot;).textContent = mode === target
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>Fullscreen refused.</strong> The note reports the mode the host kept. The player keeps working at inline size.</p>
 <p><strong>Autoplay.</strong> The player never attempts it. Everything starts paused, which is both a policy requirement and good manners.</p>
 <p><strong>Captions with no track selected.</strong> The caption line is hidden rather than showing an empty box.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>The transport is a labelled group: Play with an <code>aria-label</code> that changes with state, a seek slider with a real name, and a captions toggle with <code>aria-pressed</code>. The frame carries an <code>aria-label</code> describing the clip. The thumbnail strip is a tab list with <code>aria-current</code>. What is missing, and worth naming, is <code>aria-valuetext</code> on the slider in minutes and seconds rather than raw seconds, which is the single most common defect in custom transports.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 3</p><h1>File Explorer</h1><p class="summary">A tree, a context menu, drag to move, and a deletion that is both confirmed and undoable.</p><div class="cap recipe" id="r03"><div class="cap-head"><code class="cap-id">r03</code><span class="cap-tag core">File Explorer</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Hierarchical browse and manage.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch09.html#input.contextmenu">input.contextmenu</a></code><code><a href="ch09.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch09.html#input.longpress">input.longpress</a></code><code><a href="ch08.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch10.html#file.open">file.open</a></code><code><a href="ch10.html#file.dropzone">file.dropzone</a></code><code><a href="ch07.html#surface.focus">surface.focus</a></code><code><a href="ch08.html#notify.toast">notify.toast</a></code><code><a href="ch11.html#picker.resource">picker.resource</a></code><code><a href="ch02.html#resource.read">resource.read</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch15.html#history.transaction">history.transaction</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.contextmenu">input.contextmenu</a></code><code><a href="ch09.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch09.html#input.longpress">input.longpress</a></code><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch10.html#clipboard.write">clipboard.write</a></code><code><a href="ch08.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch10.html#file.open">file.open</a></code><code><a href="ch10.html#file.dropzone">file.dropzone</a></code><code><a href="ch07.html#surface.focus">surface.focus</a></code><code><a href="ch08.html#notify.toast">notify.toast</a></code><code><a href="ch11.html#picker.resource">picker.resource</a></code><code><a href="ch02.html#resource.read">resource.read</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch15.html#history.transaction">history.transaction</a></code></dd></dl></div>
 <p>The recipe that exercises the pointer and keyboard group hardest. Everything in it is Level 2 or below except the tool call that loads the tree, which means it is the recipe most likely to work in a host you have not tested.</p>
 <div class="demo" data-demo="r03-file-explorer" id="r03-file-explorer"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -108,7 +108,7 @@
 </tbody>
 </table></div>
 <p>Every structural operation is local, including the destructive one. That is deliberate: a delete that has to wait for a model is a delete that can fail for reasons the user cannot see.</p>
-<h2 id="surface">Surface</h2>
+<h2 id="what-it-looks-like">What it looks like</h2>
 <p>Two panes side by side above 480 pixels, stacked below. A tree on the left, a property list on the right, a toolbar above both. The context menu is absolutely positioned inside the frame and closes on outside click or Escape.</p>
 <h2 id="confirmation-and-undo-together">Confirmation and undo together</h2>
 <p>The delete path confirms, and the confirmation says the action can be undone.</p>
@@ -127,7 +127,7 @@ apply({ label: `delete ${node.name}`,
 <p><strong>Right click any node.</strong> The menu is drawn by the view, positioned inside the frame, and closes on Escape with focus restored.</p>
 <p><strong>Select a file and press Delete.</strong> The confirmation says the action can be undone, which is what makes the confirmation honest rather than ritual.</p>
 <p><strong>Tab into the tree, then use the arrow keys.</strong> The whole tree is one tab stop.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -160,10 +160,10 @@ apply({ label: `delete ${node.name}`,
 </tbody>
 </table></div>
 <p>This recipe needs the least from the host of any in Part V. Its one hard dependency is the tool call that loads the tree, and a host without <code>serverTools</code> can still deliver that through the initial tool result.</p>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The drop target is not a folder.</strong> <code>dragover</code> only calls <code>preventDefault()</code> for nodes with children, so the drop never fires on a file and there is no error to report.</p>
 <p><strong>Two menus.</strong> A host that shows its own context menu on right click would produce two, and neither party can currently detect the other. Chapter 9 has the gap.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p><code>role="tree"</code> with <code>role="treeitem"</code> children and one roving tabindex, so a hundred-file tree is one tab stop. <code>aria-expanded</code> on folders, <code>aria-selected</code> on the current node. F2 renames, Delete deletes, Cmd/Ctrl+Z undoes. The context menu is reachable from the keyboard and moves focus to its first item. Every action announces its outcome, including undo.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

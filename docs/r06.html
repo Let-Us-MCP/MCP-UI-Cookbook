@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 6</p><h1>Image Annotator</h1><p class="summary">A canvas with pointer capture, zoom about the cursor, a dropzone that validates, and an export that degrades to the clipboard.</p><div class="cap recipe" id="r06"><div class="cap-head"><code class="cap-id">r06</code><span class="cap-tag core">Image Annotator</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Label regions on an image.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch09.html#input.zoompan">input.zoompan</a></code><code><a href="ch13.html#env.contrast">env.contrast</a></code><code><a href="ch11.html#picker.color">picker.color</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.zoompan">input.zoompan</a></code><code><a href="ch09.html#input.pointer">input.pointer</a></code><code><a href="ch09.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch10.html#file.dropzone">file.dropzone</a></code><code><a href="ch10.html#file.export">file.export</a></code><code><a href="ch06.html#surface.displayMode">surface.displayMode</a></code><code><a href="ch13.html#env.contrast">env.contrast</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch11.html#picker.color">picker.color</a></code></dd></dl></div>
 <p>The spatial recipe. Everything in it is Level 2 and 3 platform behaviour except the export, and the export is where the sandbox shows up.</p>
 <div class="demo" data-demo="r06-image-annotator" id="r06-image-annotator"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -103,7 +103,7 @@
 </tr>
 </tbody>
 </table></div>
-<h2 id="surface">Surface</h2>
+<h2 id="what-it-looks-like">What it looks like</h2>
 <p>A fixed-height stage with a transformed world inside it. The image is inline SVG drawn by the view, which is why the recipe declares an empty CSP: a JPEG from a CDN would need <code>resourceDomains</code> and a host willing to allow it.</p>
 <h2 id="zoom-about-the-cursor">Zoom about the cursor</h2>
 <p class="provenance illustrative">Illustrative, not run</p><pre class="js"><code>const before = scale;
@@ -129,7 +129,7 @@ panY = py - ((py - panY) / before) * scale;</code></pre>
 <p><strong>Zoom with the wheel while the pointer is over the burr.</strong> The point under the cursor stays under the cursor. Zooming about the origin is the version that feels wrong, and the six lines that fix it are in Chapter 9.</p>
 <p><strong>Draw a box, then drag past the edge of the stage.</strong> Pointer capture keeps the gesture alive, so the box is the size you drew rather than the size that fit.</p>
 <p><strong>Press “Refuse downloads”, then Export.</strong> The button stays and its behaviour changes: the JSON goes to the clipboard and the toast says why.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -166,10 +166,10 @@ panY = py - ((py - panY) / before) * scale;</code></pre>
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>A tiny box.</strong> Drags under six pixels in either dimension are discarded, so a click on the canvas does not leave an invisible annotation.</p>
 <p><strong>A JSON file that is not annotations.</strong> Caught by the <code>try</code> around the parse, reported by name, and the existing boxes are untouched.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>This is the recipe with the weakest accessibility story in Part V, and saying so is more useful than claiming otherwise. The zoom and pan have button equivalents through Fit. Drawing a box does not: there is no keyboard route to create an annotation, and a complete implementation would need one, most plausibly a form that takes coordinates or a tool the agent can call on the user’s behalf. The existing boxes are announced when loaded, and the label and colour controls are ordinary form fields.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

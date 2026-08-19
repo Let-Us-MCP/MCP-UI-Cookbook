@@ -73,13 +73,13 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 21</p><h1>Approval, Elicitation and the Context Boundary</h1><p class="summary">Two capabilities the extension does not have, one principle it depends on, and an argument about what the model should never be told.</p><p>The last chapter of Part III is the one where the protocol runs out. Human authorisation of a sensitive action is a Level 4 Core capability that has no message. Structured mid-operation questions from a view have no message either. Both are things applications genuinely need, both have partial workarounds, and both are in Appendix B.</p>
-<p>The chapter closes with the principle that has been implicit since Chapter 3: UI state is not automatically model context, and the default has to be silence.</p>
+<p class="eyebrow">Chapter 21</p><h1>Approval, Elicitation and the Context Boundary</h1><p class="summary">Two capabilities the extension does not have, one principle it depends on, and an argument about what the model should never be told.</p><p>This is where the protocol runs out. Human approval has no message. Structured questions from a view have no message. Both are things real applications need.</p>
+<p>The chapter closes with the principle that has been implicit since Chapter 3: UI state is not model context, and the default is silence.</p>
 <div class="demo" data-demo="lab-approval" id="lab-approval"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="approval">Approval</h2>
+<h2 id="how-do-i-require-a-human-signature">How do I require a human signature?</h2>
 <div class="cap" id="approval.request"><div class="cap-head"><code class="cap-id">approval.request</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Require a human signature on a sensitive action.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-approval">lab-approval</a></dd></dl></div>
-<p>Core MCP is built on user consent. The specification says users must explicitly consent to and understand data access and operations, must retain control over what is shared and what actions are authorised, and that hosts should provide clear interfaces for reviewing and authorising activity.</p>
-<p>What the Apps extension does not provide is a way for a <em>view</em> to demand it. A view can render an approval card, and its Approve button is an ordinary button in an untrusted iframe. The host does not know an approval happened. Nothing is signed. Nothing is attested.</p>
+<p>Put the gate on the server, not in the view.</p>
+<p>Core MCP is built on user consent, and the specification is clear that hosts must give users control over what is authorised. What the Apps extension does not give you is a way for a <em>view</em> to demand it. Your Approve button is an ordinary button in an untrusted iframe. Nothing is signed and nothing is attested.</p>
 <p><strong>What that means in practice.</strong> Approval today is a convention rather than a mechanism, and its integrity depends on where the enforcement lives. The enforceable design is:</p>
 <p>The <strong>server</strong> holds the gate. A refund tool does not perform a refund; it queues one and returns a queue id. A separate tool performs it, and that tool is <code>visibility: ["app"]</code> so the model cannot call it, and it requires the queue id. The view calls it after a human presses a button.</p>
 <p>The <strong>view</strong> shows provenance. Who asked, on whose behalf, using which tool, with which arguments, and what the consequence is. Recipe 10’s card carries five provenance fields, and the reason is that an approval card without them is a dialog with a lever attached, and users learn to pull levers.</p>
@@ -98,7 +98,7 @@
 }));</code></pre>
 <p>Registering a tool in order to refuse it looks strange until you consider the alternative. An agent that finds no approval tool will try something else, and what it tries may be a server tool that does not have the gate. An explicit refusal that states the rule is a better interface for a model in the same way it is for a person.</p>
 <p><strong>What a mechanism would look like.</strong> <code>ui/request-approval</code> from the view, answered by the host after the host itself asks the user, returning something the server can verify. The host is the only party in a position to render an authentic consent surface, because it is the only one the user has a trust relationship with.</p>
-<h2 id="elicitation">Elicitation</h2>
+<h2 id="can-i-ask-a-structured-question">Can I ask a structured question?</h2>
 <div class="cap" id="elicit.request"><div class="cap-head"><code class="cap-id">elicit.request</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground gap">Not standardised</span></div><p class="cap-summary">Ask the user a structured question mid-operation.</p><dl class="cap-facts"><dt>Ground</dt><dd>No standard mechanism exists yet. The entry carries a workaround.</dd><dt>Recipes</dt><dd><a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-approval">lab-approval</a></dd></dl></div>
 <p>Core MCP has elicitation: a server can ask the host to collect structured input from the user mid-operation, and SEP-1036 adds a URL mode for out-of-band interactions with a hard requirement that credentials never be collected in form mode.</p>
 <p>That flows server to host. There is no view-to-host elicitation. A view that needs an answer in the middle of something has two options: ask in its own UI, which works but is not host-mediated and therefore carries no more weight than any other pixels in the iframe, or send <code>ui/message</code> and wait for a turn, which is heavy and takes the user out of the flow.</p>
@@ -107,7 +107,7 @@
 <img src="figures/diag-context.png" alt="What crosses the context boundary, and what does not" />
 <figcaption aria-hidden="true">What crosses the context boundary, and what does not</figcaption>
 </figure>
-<h2 id="the-context-boundary">The context boundary</h2>
+<h2 id="what-should-the-model-never-be-told">What should the model never be told?</h2>
 <div class="cap" id="agent.boundary"><div class="cap-head"><code class="cap-id">agent.boundary</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Keep hover, scroll, and sort out of the model&#x27;s context.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r10.html">Approval Center</a></dd><dt>Demo</dt><dd><a href="#lab-approval">lab-approval</a></dd></dl></div>
 <div class="principle">
 <p><strong>The Context Boundary.</strong> UI state is not automatically model context.</p>
@@ -119,7 +119,7 @@
 <p>Context is finite and shared with the conversation, so anything you publish displaces something else. Published state is <em>not</em> deletable in the way it feels: hosts may hold the last update until the next user message, and the model may reason from it for several turns. And some UI state is information the user did not intend to disclose. What somebody hovered over before deciding is a record of their hesitation, and a view that publishes it has told the model something the user would not have said.</p>
 <p><strong>The test.</strong> Would this change a reasonable answer to the next question? Selection changes the answer to “why are these slow”. Hover does not change the answer to anything. Sort order does not, unless the user is about to ask “what is at the top”. Scroll position never does.</p>
 <p><strong>Two directions of failure.</strong> Under-publishing produces the assistant that does not know what “these” refers to, which reads as stupidity. Over-publishing produces a context window full of near-identical snapshots and answers that get worse as the session goes on. The second is harder to notice, because nothing looks broken.</p>
-<h2 id="why-the-enforcement-cannot-live-in-the-view">Why the enforcement cannot live in the view</h2>
+<h2 id="why-the-view-cannot-enforce-it">Why the view cannot enforce it</h2>
 <p>It is worth being precise, because the queue-and-perform pattern looks like security and is only a convention.</p>
 <p>The view is HTML from a server, running in a sandbox, and its Approve button is an ordinary button. Nothing signs the click. Nothing attests that a human made it. A compromised view, or a view whose server was compromised, can call the performing tool directly without rendering anything at all, and the server cannot tell the difference because the call arrives over the same channel with the same credentials.</p>
 <p>What the pattern does buy is real, and it is worth having:</p>

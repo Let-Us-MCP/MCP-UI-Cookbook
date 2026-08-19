@@ -73,11 +73,10 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 20</p><h1>State Ownership and Concurrency</h1><p class="summary">Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.</p><p>Every collaborative editor ever built has had to answer this question, and the answers are well known: locks, operational transforms, conflict-free replicated data types, last-writer-wins with a notice. What is different here is the shape of the second party.</p>
-<p>The agent is not another user. It is fast, it works in bursts, it cannot see the screen, it does not know the human is mid-sentence, and it will happily rewrite a paragraph half a second after the human started typing in it. It also cannot be asked to wait, because it is not present in the way another person would be.</p>
-<p>So this chapter is not about merge algorithms. It is about deciding, in advance, which regions of your state each party owns, and what happens at the boundary.</p>
+<p class="eyebrow">Chapter 20</p><h1>State Ownership and Concurrency</h1><p class="summary">Two parties can write to the same document and neither knows what the other is doing. Declare who owns what before it happens, because afterwards there is no good default.</p><p>Label every region of your state user-owned, agent-owned or shared, before you write any code. It takes ten minutes.</p>
+<p>This is not about merge algorithms. The agent is not another user: it is fast, it works in bursts, it cannot see the screen, it does not know the human is mid-sentence, and it cannot be asked to wait.</p>
 <div class="demo" data-demo="lab-ownership" id="lab-ownership"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-ownership-map">The ownership map</h2>
+<h2 id="who-owns-what">Who owns what?</h2>
 <div class="cap" id="state.ownership"><div class="cap-head"><code class="cap-id">state.ownership</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Declare who owns each region when both parties can write.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a>, <a href="r07.html">Workflow Builder</a></dd><dt>Demo</dt><dd><a href="#lab-ownership">lab-ownership</a></dd></dl></div>
 <p>Every region of application state gets one of three labels.</p>
 <p><strong>User-owned.</strong> The agent may read it and may propose changes to it in conversation. It may not write it. Personal notes, drafts the user has not shared, anything where the point is that a person said it.</p>
@@ -89,7 +88,7 @@
 <img src="figures/diag-ownership.png" alt="Three regions, three owners, one conflict policy each" />
 <figcaption aria-hidden="true">Three regions, three owners, one conflict policy each</figcaption>
 </figure>
-<h2 id="conflict-policy">Conflict policy</h2>
+<h2 id="what-happens-when-both-write">What happens when both write?</h2>
 <div class="cap" id="state.conflict"><div class="cap-head"><code class="cap-id">state.conflict</code><span class="cap-tag core">Core</span><span class="cap-level">Level 4</span><span class="cap-ground app">Yours to build</span></div><p class="cap-summary">Decide what happens when they both do.</p><dl class="cap-facts"><dt>Ground</dt><dd>The view implements it. Nobody else can.</dd><dt>Recipes</dt><dd><a href="r04.html">Document Editor</a></dd><dt>Demo</dt><dd><a href="#lab-ownership">lab-ownership</a></dd></dl></div>
 <p>For each shared region, pick one and say so in the interface.</p>
 <p><strong>Reject.</strong> The write fails and the writer is told. Appropriate when the region is small and the loss is cheap. The tool returns <code>isError: true</code> with an explanation, which the agent can relay.</p>
@@ -114,7 +113,7 @@
   return { content: [{ type: &quot;text&quot;, text: &quot;Offered to the user for review.&quot; }] };
 });</code></pre>
 <p>Two things to notice. The tool tells the agent what actually happened, so it does not report to the user that the summary has been rewritten when it has not. And “held” and “offered” are different outcomes with different words, because an agent that reads “held” can decide to wait and try again.</p>
-<h2 id="refusing-a-write">Refusing a write</h2>
+<h2 id="how-do-i-say-no-to-the-agent">How do I say no to the agent?</h2>
 <p>The user-owned region needs a tool too, and the tool’s job is to say no usefully.</p>
 <p class="provenance extracted">Extracted from from <code>apps/labs/lab-ownership/index.html</code></p><pre class="js"><code>bridge.registerTool({
   name: &quot;write_note&quot;,
@@ -129,16 +128,16 @@
         + &quot;conversation instead of writing it.&quot; }],
 }));</code></pre>
 <p>The alternative, not registering the tool at all, is worse. A model that cannot find a way to write the note will try adjacent tools, or will tell the user it has updated the note when it has not. An explicit refusal that names the correct route is a better interface for a model in exactly the way it is for a person.</p>
-<h2 id="optimistic-ui-and-rollback">Optimistic UI and rollback</h2>
+<h2 id="what-about-optimistic-updates">What about optimistic updates?</h2>
 <p>The other concurrency problem is with the server rather than with the agent.</p>
 <p>A view that applies a change locally and then calls a tool has committed to an outcome it does not have yet. When the call fails, or is cancelled, or the frame is torn down mid-flight, the interface is showing something that never happened.</p>
 <p><strong>The rule.</strong> Optimistic updates need a compensating action recorded at the same moment they are applied, which is the same transaction shape as Chapter 15’s undo. On failure, apply the compensation and say why. On cancellation, apply the compensation only for steps that did not complete, and say how far it got: Recipe 11 reports “stopped after three of five steps, completed steps were not rolled back”, which is unglamorous and true.</p>
 <p><strong>The unrecoverable case.</strong> If the frame is torn down while a write is in flight, nobody rolls anything back. The server may have applied it. This is why writes that matter should be idempotent and keyed, so the next render can ask what actually happened rather than assuming.</p>
-<h2 id="making-the-agents-changes-undoable">Making the agent’s changes undoable</h2>
+<h2 id="put-the-agent-on-the-undo-stack">Put the agent on the undo stack</h2>
 <p>The single most important thing in this chapter, and it belongs to Chapter 15 mechanically.</p>
 <p>Every agent write goes onto the same undo stack as the user’s own edits, as one transaction, with a label that names the agent. One Cmd+Z restores the human’s words. Recipe 4 does this for accepted rewrites, and the whole safety argument for agent-assisted editing rests on it: a change you can take back in one keystroke is a change you can afford to let a model make.</p>
 <p>An agent whose changes are outside the undo stack is an agent whose changes are permanent, and users respond to permanent changes by not using the feature.</p>
-<h2 id="the-four-policies-chosen-by-question">The four policies, chosen by question</h2>
+<h2 id="picking-a-policy-fast">Picking a policy, fast</h2>
 <p>A shortcut for picking one, since the choice is usually made under time pressure.</p>
 <p><strong>Is losing this write cheap?</strong> Reject. The tool says no with a reason and the agent can relay it.</p>
 <p><strong>Is the region a field rather than a document?</strong> Merge, if writes touch different fields, and last-writer-wins with a notice if they do not.</p>

@@ -73,8 +73,9 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 5</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>The rest of this book is two shapes repeated. Parts II and III are capability entries. Part V is recipes. Both templates are stated here, up front, so that the rest of the book can be held to them, and so that you can tell when it fails to be.</p>
-<h2 id="the-atomic-capability-entry">The atomic capability entry</h2>
+<p class="eyebrow">Chapter 5</p><h1>Entries, Recipes, and the Discipline of Degradation</h1><p class="summary">The two templates the rest of the book is written to, the five failure modes every capability has, and why the failure section is the one that earns its keep.</p><p>Two shapes, repeated. Parts II and III are capability entries. Part V is recipes.</p>
+<p>Both templates are stated here so you can hold the rest of the book to them, and notice when it falls short.</p>
+<h2 id="what-is-in-a-capability-entry">What is in a capability entry?</h2>
 <p>Each entry answers eleven questions in the same order.</p>
 <p><strong>Capability.</strong> Identifier, level, tag, and ground. Generated from the registry, so the prose cannot contradict it.</p>
 <p><strong>Motivation.</strong> Why an application needs this at all. If the honest answer is “it does not, but people expect it”, the entry says that.</p>
@@ -90,17 +91,17 @@
 <p>Not every entry in this book spends a paragraph on all eleven. A capability like <code>picker.color</code> has nothing interesting to say about lifecycle. The template is a checklist for the author, not a quota for the reader, and where a section is silent it is because the honest content was one sentence long.</p>
 <h2 id="the-five-failure-modes">The five failure modes</h2>
 <p>This is the part worth internalising, because it is where the difference between a demonstration and an application lives.</p>
-<p><strong>Unsupported.</strong> The host never offered the capability. You knew this at initialisation, before drawing anything, so the correct behaviour is an interface that does not contain the control. Not a disabled control with a tooltip. Not a control that shows an error. The absence of a thing the user never saw.</p>
-<p><strong>Denied.</strong> The capability exists and the host or the user said no to this particular use. This one you learn at the moment of the attempt, so it needs a visible, specific, recoverable response. “The host declined to open that link” tells the user what happened and implies what to do. “Error” does not.</p>
-<p><strong>Cancelled.</strong> Somebody stopped it on purpose. The interface must return to a state that matches reality, which is not always the state before it started. If three of five steps completed, saying “cancelled” and resetting the progress bar to zero is a lie. Chapter 11’s control centre says how far it got.</p>
-<p><strong>Timeout.</strong> No answer came. This is the one people forget, and it is the one that leaves a spinner running until the user reloads. Every request in a sandboxed frame is a request to a party you cannot inspect. Give it a deadline.</p>
-<p><strong>Failed.</strong> It was attempted and did not work. A structured error says what failed, whether retrying could help, and what the recovery action is. Three facts, not one adjective.</p>
+<p><strong>Unsupported.</strong> <code>hostCapabilities.downloadFile</code> was absent at <code>ui/initialize</code>. Do not render the export button at all. Not disabled with a tooltip, not showing an error when pressed: absent.</p>
+<p><strong>Denied.</strong> <code>ui/open-link</code> came back with a JSON-RPC error. Show the host’s message next to the control and leave the control enabled: “The host declined to open that link” says what happened and what to try. “Error” says neither.</p>
+<p><strong>Cancelled.</strong> Someone sent <code>notifications/cancelled</code>, or the host sent <code>ui/notifications/tool-cancelled</code>. Report where it stopped. Recipe 11 writes “Stopped after 3 of 5 steps. Completed steps were not rolled back.” Resetting the bar to zero claims nothing happened, and three steps happened.</p>
+<p><strong>Timeout.</strong> No answer at all. Give every request a deadline, 8 seconds is a reasonable default, and treat expiry as a failure with a retry. Skip this and you ship a spinner that runs until the user reloads the host.</p>
+<p><strong>Failed.</strong> The tool ran and returned <code>isError: true</code>. Its <code>content</code> carries three facts: what failed, what state that leaves, and what to do. “The index volume is full, so nothing was written. Free space and retry.” is 14 words carrying all three.</p>
 <figure>
 <img src="figures/diag-failures.png" alt="The five failure modes, and the moment each one is discoverable" />
 <figcaption aria-hidden="true">The five failure modes, and the moment each one is discoverable</figcaption>
 </figure>
 <p>The value of naming all five is that they are discoverable at different times. Unsupported is known before render. Denied and failed are known at the attempt. Cancelled comes from the user or the host at any moment. Timeout is known only by deciding it. An application that handles one of them and calls it error handling has handled the least common one.</p>
-<h2 id="the-recipe-entry">The recipe entry</h2>
+<h2 id="what-is-in-a-recipe-entry">What is in a recipe entry?</h2>
 <p>Part V uses a different template, because a recipe is an argument rather than a reference.</p>
 <p><strong>Goal.</strong> The conventional application being reproduced, in one line.</p>
 <p><strong>Capability delta.</strong> Which primitives this recipe exercises that no earlier recipe does. This is the load-bearing field. A recipe with an empty delta gets merged or deleted, because it is not teaching anything and not testing anything, and thirteen recipes that each cover the same twelve capabilities would prove nothing about the model’s sufficiency.</p>
@@ -112,7 +113,7 @@
 <p><strong>Failure cases.</strong> What happens when each dependency is absent. The recipes in this book are all built to run at Level 1 with reduced function, and the entry says what “reduced” means.</p>
 <p><strong>Accessibility.</strong> The keyboard-only path through the whole application.</p>
 <p><strong>Conformance checks.</strong> The observable behaviours a host has to produce, in the form the harness asserts them.</p>
-<h2 id="provenance-on-every-listing">Provenance on every listing</h2>
+<h2 id="why-every-listing-has-a-tag">Why every listing has a tag</h2>
 <p>One more convention, visible on every code block in the book. A tag above each listing says where it came from:</p>
 <p><em>Extracted</em> means the lines are read out of a file the tests run. The file name is given, and the demonstration on the same page is running it.</p>
 <p><em>Captured</em> means it is real output from a real run, quoted verbatim, including the parts that are inconvenient.</p>
@@ -158,7 +159,7 @@
 </table></div>
 <p>Five rows, and notice that three of them leave the interface in a different state and two leave it identical. Cancelled and unsupported both produce no error and no message, for opposite reasons: one because nothing was attempted, the other because nothing was ever offered.</p>
 <p>The row people skip is timeout, and skipping it is what produces the single most common defect in embedded applications: a spinner with no end, in a frame whose host stopped listening, that only a reload will clear.</p>
-<h2 id="where-these-templates-came-from">Where these templates came from</h2>
+<h2 id="where-the-templates-came-from">Where the templates came from</h2>
 <p>Both are adapted from how specification-anchored test suites describe web platform features, and the borrowing is deliberate. A capability entry that names its host behaviour and its failure modes can be turned into assertions mechanically, which is what Appendix C does. An entry that describes only the happy path cannot, which is why so much interface documentation is unfalsifiable and therefore ages without anybody noticing.</p>
 <h2 id="what-to-remember">What to remember</h2>
 <p>If you take one thing from Part I into the rest of the book, take the failure section. Every capability entry from here on has one, and in almost every case it is longer than the section describing the happy path. That ratio is the point. The happy path is a few lines of code you would have written anyway. The rest is what makes an application survive a host that says no.</p>

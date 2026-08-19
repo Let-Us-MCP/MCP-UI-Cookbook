@@ -23,6 +23,7 @@ jobs:
       - name: Prose, references, listings, counts
         run: |
           python3 tools/lint_prose.py
+          python3 tools/audit_density.py
           python3 tools/check_refs.py
           python3 tools/check_listings.py
           python3 tools/check_counts.py

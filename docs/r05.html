@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 5</p><h1>Spreadsheet</h1><p class="summary">A grid with a formula evaluator, range selection, and a clipboard format chosen for where the data is going.</p><div class="cap recipe" id="r05"><div class="cap-head"><code class="cap-id">r05</code><span class="cap-tag core">Spreadsheet</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Editable grid computation.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch10.html#clipboard.read">clipboard.read</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch09.html#input.keyboard">input.keyboard</a></code><code><a href="ch09.html#input.shortcut">input.shortcut</a></code><code><a href="ch10.html#clipboard.write">clipboard.write</a></code><code><a href="ch10.html#clipboard.read">clipboard.read</a></code><code><a href="ch15.html#history.transaction">history.transaction</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch15.html#state.save">state.save</a></code><code><a href="ch13.html#a11y.announce">a11y.announce</a></code><code><a href="ch16.html#op.error">op.error</a></code></dd></dl></div>
 <p>The smallest program that needs a real dependency graph. A spreadsheet has cells that refer to other cells, which means it can have cycles, which means it needs an evaluator that detects them and an interface that reports them without losing the user’s text.</p>
 <div class="demo" data-demo="r05-spreadsheet" id="r05-spreadsheet"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -123,7 +123,7 @@
 <p><strong>Type <code>=B2*C2*2</code> into D2.</strong> The column recomputes, and so does the total in D6, because evaluation is recursive rather than cached.</p>
 <p><strong>Type <code>=D2</code> into B2.</strong> The grid shows <code>#CYCLE</code>, the cell keeps your text, and the banner explains. Nothing is cleared.</p>
 <p><strong>Shift with the arrow keys, then press Copy.</strong> The clipboard holds tab-separated values, which is what a spreadsheet expects and what prose is not.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -155,10 +155,10 @@
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>Paste.</strong> There is no clipboard read anywhere, so importing a range from another spreadsheet means pasting into a focused cell and letting the browser deliver it, which works for one cell and not for a range. Chapter 10 has the gap; this recipe is where it costs the most.</p>
 <p><strong>A formula referring to an empty cell.</strong> Evaluates to zero rather than to an error, which is what every spreadsheet does and what users expect.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>Every cell is an <code>&lt;input&gt;</code> with an <code>aria-label</code> carrying its reference, so a screen reader user hears “B4, 1601” rather than “edit text”. Arrows move, shift extends, and the formula bar shows the raw content of the head cell. Changes announce the cell and its new value. The grid is not virtualised, which is a deliberate limit: six rows by four columns, because a virtualised grid with correct accessibility is a much larger piece of work than this recipe is trying to demonstrate.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

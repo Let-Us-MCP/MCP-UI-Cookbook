@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 7</p><h1>Workflow Builder</h1><p class="summary">A node graph the agent can edit through tools, with validation that runs continuously and an undo stack that covers both parties.</p><div class="cap recipe" id="r07"><div class="cap-head"><code class="cap-id">r07</code><span class="cap-tag core">Workflow Builder</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Build and edit a node graph.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch18.html#app.tools">app.tools</a></code><code><a href="ch17.html#agent.intent">agent.intent</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch09.html#input.zoompan">input.zoompan</a></code><code><a href="ch09.html#input.dragdrop">input.dragdrop</a></code><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch09.html#input.contextmenu">input.contextmenu</a></code><code><a href="ch15.html#history.transaction">history.transaction</a></code><code><a href="ch15.html#history.undo">history.undo</a></code><code><a href="ch18.html#ui.highlight">ui.highlight</a></code><code><a href="ch18.html#ui.navigate">ui.navigate</a></code><code><a href="ch18.html#app.tools">app.tools</a></code><code><a href="ch17.html#agent.intent">agent.intent</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch20.html#state.ownership">state.ownership</a></code></dd></dl></div>
 <p>The recipe where the agent is a first-class editor. Everything the mouse can do to this graph, a tool can do, and everything a tool does is one undoable transaction. The topology explorer some applications need is this same surface in read-only mode.</p>
 <div class="demo" data-demo="r07-workflow-builder" id="r07-workflow-builder"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -135,7 +135,7 @@
 <p><strong>Press “Agent: connect Assign owner to Notify”.</strong> An edge appears, the validation chip goes green, and one Cmd/Ctrl+Z removes it. That is the whole safety argument for letting a model edit a graph.</p>
 <p><strong>Press “Agent: connect to a step that is not there”.</strong> The tool fails with the missing name in the message, so the agent can correct itself.</p>
 <p><strong>Drag a node, then press Undo.</strong> One transaction for the whole drag, not sixty.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -167,10 +167,10 @@
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The agent names a step that does not exist.</strong> The tool returns <code>isError: true</code> with the missing name, and the graph is unchanged.</p>
 <p><strong>A node is dragged outside the world.</strong> The world is 1200 by 800 and the transform does not clamp, so a node can be dragged out of view. The minimap is how the user finds it again, which is a mitigation rather than a fix.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>Nodes are focusable and the selection is visible, but this recipe shares Recipe 6’s weakness: there is no keyboard route to draw a connection by position. What it has instead is the tool interface, which a user driving by voice or by assistant can use to do exactly what the mouse does. That is a real answer rather than an excuse, and it is the same mechanism Chapter 18 recommends for accessibility generally.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

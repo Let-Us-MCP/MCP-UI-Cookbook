@@ -25,10 +25,15 @@ figures:
 site:
 	python3 tools/build_site.py
 
-check: lint refs listings counts claims identifiers webclaims transcripts render
+check: lint density refs listings counts claims identifiers webclaims transcripts render
 
 lint:
 	python3 tools/lint_prose.py
+
+# Measures whether sentences carry anything a reader can act on, rather than
+# measuring their length, which is a proxy that rewards staccato waffle.
+density:
+	python3 tools/audit_density.py
 
 refs:
 	python3 tools/check_refs.py

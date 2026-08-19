@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 10</p><h1>Approval Center</h1><p class="summary">A queue of actions waiting for a person, with the provenance that makes approval meaningful and a tool interface that refuses to approve anything.</p><div class="cap recipe" id="r10"><div class="cap-head"><code class="cap-id">r10</code><span class="cap-tag core">Approval Center</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Human review of queued sensitive actions.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch21.html#approval.request">approval.request</a></code><code><a href="ch21.html#agent.boundary">agent.boundary</a></code><code><a href="ch21.html#elicit.request">elicit.request</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch21.html#approval.request">approval.request</a></code><code><a href="ch08.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch17.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch21.html#agent.boundary">agent.boundary</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch08.html#notify.banner">notify.banner</a></code><code><a href="ch13.html#a11y.announce">a11y.announce</a></code><code><a href="ch21.html#elicit.request">elicit.request</a></code><code><a href="ch10.html#link.open">link.open</a></code></dd></dl></div>
 <p>The recipe built on a capability that does not exist. There is no <code>approval.request</code> message, so this recipe is an argument about where the enforcement has to live and what the interface owes the person making the decision.</p>
 <div class="demo" data-demo="r10-approval-center" id="r10-approval-center"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -126,7 +126,7 @@
 <p><strong>Read the provenance on the refund card before deciding.</strong> Five fields, and the one that changes the decision is “prior approvals: none for this customer”.</p>
 <p><strong>Press “Agent queues a deletion”, then “Agent tries to approve it itself”.</strong> The tool refuses and says why. Registering a tool in order to decline it is the point of the recipe.</p>
 <p><strong>Approve the deletion, then press “Show the audit trail”.</strong> The decision is recorded locally and published to the model; how long you took and which cards you expanded are not.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -168,10 +168,10 @@
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>High-risk approval.</strong> Requires a second confirmation naming the consequence, because the card can be read quickly and the money cannot be recalled.</p>
 <p><strong>A question mid-decision.</strong> There is no view-side elicitation, so “Ask in the conversation” sends <code>ui/message</code> and the reviewer waits for a turn. It works and it takes them out of the flow, which is what the gap costs.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>Each card is a region with a heading, and the provenance is a description list so a screen reader reads label and value in pairs. New arrivals are announced. The risk level is carried by text as well as by border colour. Confirmations are <code>&lt;dialog&gt;</code> with focus trapped and returned.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

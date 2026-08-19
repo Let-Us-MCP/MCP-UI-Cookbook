@@ -73,18 +73,19 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 12</p><h1>Host Environment and Theming</h1><p class="summary">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</p><p>A view that looks like it came from somewhere else is a view users treat as an advertisement. Belonging is the job, and the extension’s answer is deliberately modest: the host sends a set of CSS custom properties, the view uses them with its own fallbacks, and nobody ships a component library.</p>
-<p>Seven capabilities describe what the host tells you about the environment. All seven arrive in <code>hostContext</code>, all seven can change through <code>ui/notifications/host-context-changed</code>, and the single most common bug in this group is reading them once.</p>
+<p class="eyebrow">Chapter 12</p><h1>Host Environment and Theming</h1><p class="summary">A theming contract in three layers, seven environment signals, and the reason your view must define every colour it uses even though the host is going to send them.</p><p>The host sends CSS custom properties. You use them, with your own fallbacks for every one. That is the whole theming contract, and nobody ships a component library.</p>
+<p>Seven capabilities describe the environment. All arrive in <code>hostContext</code>, all can change through <code>ui/notifications/host-context-changed</code>, and the most common bug in this group is reading them once at startup.</p>
 <div class="demo" data-demo="lab-theme" id="lab-theme"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-contract-in-three-layers">The contract, in three layers</h2>
+<h2 id="what-does-the-host-actually-send">What does the host actually send?</h2>
 <p>The theming story is layered, and it helps to see which layer each decision belongs to.</p>
 <p><strong>The wire format</strong> is CSS custom properties in <code>hostContext.styles.variables</code>, with an optional block of <code>@font-face</code> or <code>@import</code> rules in <code>styles.css.fonts</code>. The specification standardises the <em>names</em>: background, text, border and ring colours in a fixed set of semantic slots, font families and weights, a type scale, border radii, and four shadow levels.</p>
 <p><strong>The semantics</strong> are roles, not palettes. There is no “blue”. There is <code>--color-background-primary</code> and <code>--color-text-primary</code>, and the pairing is what makes contrast work. A view that uses <code>--color-text-danger</code> on <code>--color-background-danger</code> is legible in every theme; one that uses a red it picked itself on a background the host chose is legible in the theme it was built in.</p>
 <p><strong>The adaptation</strong> is dark mode, contrast, motion and text scale, and only the first of those is on the wire. Chapter 13 covers the others, which are media queries.</p>
 <p>Spacing is deliberately absent from the variable set, and the reason is worth repeating: layouts break when spacing varies from what they were designed against. A host can change your colours safely and cannot change your rhythm safely.</p>
-<h2 id="theme">Theme</h2>
+<h2 id="how-do-i-follow-the-hosts-theme">How do I follow the host’s theme?</h2>
 <div class="cap" id="env.theme"><div class="cap-head"><code class="cap-id">env.theme</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Take the host&#x27;s tokens and follow them when they change.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>styles</code><code>--color-background-primary</code><code>light-dark</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a>, <a href="r02.html">Dashboard</a>, <a href="r08.html">Code and Diff Reviewer</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p><strong>Application behaviour.</strong> Apply the variables to the document root, and define a fallback for every one you use. The specification is explicit that hosts may send all, some, or none, and warns that partial sets cause clashes because views fall back per variable rather than wholesale.</p>
+<p>Apply the variables to the document root, and define a fallback for every one you use.</p>
+<p>Hosts may send all, some or none. The specification warns that partial sets clash, because views fall back per variable rather than wholesale.</p>
 <p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>:root {
   color-scheme: light dark;
   --color-background-primary: light-dark(#ffffff, #16181d);
@@ -112,17 +113,17 @@ for (const [name, value] of Object.entries(variables)) {
 <img src="figures/xkcd-belonging.png" alt="A view that ignores the host’s tokens reads as an advertisement" />
 <figcaption aria-hidden="true">A view that ignores the host’s tokens reads as an advertisement</figcaption>
 </figure>
-<h2 id="locale-and-time">Locale and time</h2>
+<h2 id="whose-clock-and-whose-language">Whose clock and whose language?</h2>
 <div class="cap" id="env.locale"><div class="cap-head"><code class="cap-id">env.locale</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Format numbers, dates, and text for the user&#x27;s region.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>locale</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r01.html">Data Explorer</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
 <div class="cap" id="env.timezone"><div class="cap-head"><code class="cap-id">env.timezone</code><span class="cap-tag core">Core</span><span class="cap-level">Level 1</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Render instants in the timezone the user is actually in.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>timeZone</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p>Two strings, and between them they decide whether numbers, dates, currencies, plurals and sort order look right.</p>
-<p>The rule is that <code>hostContext.locale</code> and <code>hostContext.timeZone</code> are the only correct sources. Not <code>navigator.language</code>, which is the browser’s. Not the system timezone, which is the machine’s. A host serving a user in Tokyo from a server in Virginia will send <code>ja-JP</code> and <code>Asia/Tokyo</code>, and a view that reads the machine will render Virginia’s answer.</p>
+<p><code>hostContext.locale</code> and <code>hostContext.timeZone</code>, always.</p>
+<p>Not <code>navigator.language</code>, which is the browser’s. Not the system timezone, which is the machine’s. A host serving a user in Tokyo from a server in Virginia sends <code>ja-JP</code> and <code>Asia/Tokyo</code>; a view that reads the machine renders Virginia’s answer.</p>
 <p><strong>A concrete failure.</strong> A deployment list showing “Aug 18, 2026, 4:21 AM” because the view formatted a UTC instant with the machine’s offset, while the user is in Tokyo and the deploy happened at lunchtime. Nothing errors. Everybody’s timeline is wrong by nine hours.</p>
 <figure>
 <img src="figures/xkcd-timezone.png" alt="Whose clock is it" />
 <figcaption aria-hidden="true">Whose clock is it</figcaption>
 </figure>
-<h2 id="platform-and-modality">Platform and modality</h2>
+<h2 id="am-i-on-a-phone">Am I on a phone?</h2>
 <div class="cap" id="env.platform"><div class="cap-head"><code class="cap-id">env.platform</code><span class="cap-tag extended">Extended</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Coarse platform shape, used sparingly.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>platform</code><code>userAgent</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
 <div class="cap" id="env.inputMode"><div class="cap-head"><code class="cap-id">env.inputMode</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Size targets for the modality actually in use.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>deviceCapabilities</code><code>touch</code><code>hover</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd><a href="r13.html">Settings and Preferences</a></dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
 <p><code>platform</code> is <code>web</code>, <code>desktop</code> or <code>mobile</code>, and <code>userAgent</code> names the host. Both are Extended, both are coarse, and both should be used sparingly. Reach for a media query or a capability check first; branch on the host name only when you are working around a known bug in a specific host, and comment it with the bug.</p>
@@ -134,9 +135,10 @@ for (const [name, value] of Object.entries(variables)) {
 bridge.on(&quot;hostcontextchanged&quot;, (patch) =&gt; {
   if (patch.deviceCapabilities) describeModality(patch.deviceCapabilities);
 });</code></pre>
-<h2 id="safe-area">Safe area</h2>
+<h2 id="what-are-safeareainsets-for">What are safeAreaInsets for?</h2>
 <div class="cap" id="env.safeArea"><div class="cap-head"><code class="cap-id">env.safeArea</code><span class="cap-tag core">Core</span><span class="cap-level">Level 2</span><span class="cap-ground wire">On the wire</span></div><p class="cap-summary">Keep content out of regions the host has spoken for.</p><dl class="cap-facts"><dt>Messages</dt><dd><code>safeAreaInsets</code></dd><dt>Ground</dt><dd>The MCP Apps extension defines a message for it.</dd><dt>Recipes</dt><dd>none yet</dd><dt>Demo</dt><dd><a href="#lab-theme">lab-theme</a></dd></dl></div>
-<p><code>safeAreaInsets</code> is four numbers in pixels. In a native application these would come from <code>env(safe-area-inset-*)</code>, but a view inside somebody else’s window cannot read that, because the notch is not on its viewport. So the host sends them.</p>
+<p>Four numbers in pixels. Add them to your outermost padding.</p>
+<p>A native app would read <code>env(safe-area-inset-*)</code>. A view inside someone else’s window cannot, because the notch is not on its viewport, so the host sends the numbers instead.</p>
 <p><strong>Application behaviour.</strong> Turn them into custom properties and add them to your outermost padding. The view stylesheet in this repository does exactly that, which is why pressing “Add a notch” in the demonstration visibly moves the content in from every edge.</p>
 <p class="provenance extracted">Extracted from from <code>apps/lib/view.css</code></p><pre class="css"><code>body {
   padding-top: calc(12px + var(--safe-top, 0px));
@@ -145,7 +147,7 @@ bridge.on(&quot;hostcontextchanged&quot;, (patch) =&gt; {
   padding-left: calc(12px + var(--safe-left, 0px));
 }</code></pre>
 <p>The controls most affected are the ones pinned to an edge: a bottom toolbar, a floating action button, a toast stack. Everything in the middle of the view is fine, which is why this bug survives testing on a desktop and appears on the first phone.</p>
-<h2 id="the-variables-grouped-by-what-they-are-for">The variables, grouped by what they are for</h2>
+<h2 id="the-variables-grouped">The variables, grouped</h2>
 <p>The standardised set is long and the grouping is what makes it usable. There are four families, and a view that uses one member of a family should use the rest of it rather than mixing in its own values.</p>
 <p><strong>Backgrounds and text</strong> come in pairs by role: primary, secondary, tertiary, inverse, and the status roles info, success, warning, danger, plus disabled. The pairing is the contrast guarantee. <code>--color-text-danger</code> on <code>--color-background-danger</code> is legible in every theme a host can send; a red you chose on a background the host chose is legible in the theme you tested.</p>
 <p><strong>Borders and rings</strong> mirror the same roles. The ring set exists because focus indication needs to be distinguishable from a border, and a host with an unusual palette needs to be able to say so.</p>

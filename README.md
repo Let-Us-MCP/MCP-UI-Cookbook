@@ -43,11 +43,12 @@ make check     # what CI runs
 make serve     # docs/ on http://127.0.0.1:8977/
 ```
 
-`make check` runs nine things:
+`make check` runs ten things:
 
 | Check | What it proves |
 |---|---|
 | `lint_prose.py` | No em dashes, no slop, no repeated sentences |
+| `audit_density.py` | Sentences carry an identifier, a number or an instruction, not commentary |
 | `check_refs.py` | Every figure exists, every capability has exactly one entry |
 | `check_listings.py` | Every listing tagged *extracted* matches the file it names |
 | `check_counts.py` | Every number the prose asserts is still true |

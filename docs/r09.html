@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 9</p><h1>Monitoring Console</h1><p class="summary">Sustained streaming, a selection that survives it, connectivity reported honestly, and an error that happens while nobody is looking.</p><div class="cap recipe" id="r09"><div class="cap-head"><code class="cap-id">r09</code><span class="cap-tag core">Monitoring Console</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Live operational awareness.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch19.html#tool.partialOutput">tool.partialOutput</a></code><code><a href="ch14.html#lifecycle.connectivity">lifecycle.connectivity</a></code><code><a href="ch14.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch08.html#notify.attention">notify.attention</a></code><code><a href="ch08.html#notify.banner">notify.banner</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch19.html#tool.partialOutput">tool.partialOutput</a></code><code><a href="ch19.html#tool.result">tool.result</a></code><code><a href="ch14.html#lifecycle.connectivity">lifecycle.connectivity</a></code><code><a href="ch14.html#lifecycle.visibility">lifecycle.visibility</a></code><code><a href="ch14.html#lifecycle.suspend">lifecycle.suspend</a></code><code><a href="ch08.html#notify.attention">notify.attention</a></code><code><a href="ch08.html#notify.banner">notify.banner</a></code><code><a href="ch16.html#op.retry">op.retry</a></code><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch06.html#surface.resize">surface.resize</a></code></dd></dl></div>
 <p>The recipe that runs over time, and the one that exposes <code>tool.partialOutput</code> as the most consequential gap in Part III. Everything in it is about staying correct while data keeps arriving.</p>
 <div class="demo" data-demo="r09-monitoring-console" id="r09-monitoring-console"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -122,7 +122,7 @@ if ($(&quot;#follow&quot;).checked) $(&quot;#log&quot;).scrollTop = $(&quot;#log
 <p><strong>Select a log line, then press “Stream 40 more lines”.</strong> The selection survives, because the list appends and trims and never rebuilds.</p>
 <p><strong>Scroll up while lines are arriving.</strong> Following stops and the checkbox unticks itself, which is the behaviour every terminal has taught people.</p>
 <p><strong>Watch the rate chip.</strong> It is the only honest signal that the buffer is dropping lines during a burst.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -164,10 +164,10 @@ if ($(&quot;#follow&quot;).checked) $(&quot;#log&quot;).scrollTop = $(&quot;#log
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The frame is hidden by CSS.</strong> No <code>visibilitychange</code> fires, the console keeps rendering, and nothing tells it otherwise. Chapter 14 has this gap; the mitigation here is that rendering a log line is cheap.</p>
 <p><strong>A burst larger than the buffer.</strong> The buffer is 220 lines, so a burst of a thousand loses the oldest. The rate chip is what tells the user this is happening.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>The log is <code>role="log"</code>, which is a live region with polite semantics, so new lines are announced without interrupting. At high rates that is unusable, which is a real tension: the correct behaviour at five lines a second is probably to announce a summary rather than each line, and this recipe does not do that. It is recorded as a known limitation rather than claimed as done. Lines carry their level in text as well as colour. Selection is by click and by keyboard.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

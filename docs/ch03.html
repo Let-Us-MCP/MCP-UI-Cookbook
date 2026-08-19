@@ -84,23 +84,59 @@
 <img src="figures/xkcd-sorting.png" alt="What stays inside the frame and what is worth a round trip" />
 <figcaption aria-hidden="true">What stays inside the frame and what is worth a round trip</figcaption>
 </figure>
-<h2 id="why-the-line-falls-where-it-does">Why the line falls where it does</h2>
-<p>Four reasons, in descending order of how often they bite.</p>
-<p><strong>Latency.</strong> A local sort is a frame. A model round trip is a second at best and often several. Direct manipulation stops feeling like manipulation at about two hundred milliseconds, which is a threshold no model can meet and no amount of streaming can fake.</p>
-<p><strong>Determinism.</strong> Sorting is a total order. A model asked to sort will usually produce that order and will sometimes produce something else, and the something else is not reproducible, which means it is not testable. Chapter 25 argues that recipes are the test suite; a recipe whose behaviour depends on a sampled token cannot be one.</p>
-<p><strong>Cost.</strong> Every crossing pays for the tokens in both directions, and the context that carries them is finite. A view that publishes its state on every hover has not made the model better informed, it has spent the window on mouse coordinates.</p>
-<p><strong>Trust.</strong> Users learn what a control does by using it. A control that sometimes does something slightly different, because a model interpreted it, teaches people not to trust the control. They stop clicking and start typing into the chat, which is exactly the outcome an embedded application exists to prevent.</p>
-<h2 id="the-test">The test</h2>
+<h2 id="why-the-line-falls-there">Why the line falls there</h2>
+<p>Take one interaction, sorting eight rows by a column, and price it both ways.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Local</th>
+<th>Through the model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code</td>
+<td><code>rows.sort(by)</code></td>
+<td><code>ui/message</code>, then a <code>tools/call</code>, then a re-render</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>one frame, about 16ms</td>
+<td>1 to 3 seconds</td>
+</tr>
+<tr>
+<td>Tokens</td>
+<td>none</td>
+<td>the table in, a tool call out</td>
+</tr>
+<tr>
+<td>Same input, same output</td>
+<td>always</td>
+<td>usually</td>
+</tr>
+<tr>
+<td>Testable</td>
+<td><code>expect(rows[0].service).toBe("billing")</code></td>
+<td>not with an assertion</td>
+</tr>
+</tbody>
+</table></div>
+<p>Direct manipulation stops feeling direct at roughly 200ms, so the second column is already out of budget before the model has read anything.</p>
+<p>The determinism row is the one that decides Part VI. Recipe tests assert that sorting by <code>p95</code> puts <code>billing</code> first. You cannot write that assertion against a sampled token, so any interaction routed through a model drops out of the test suite.</p>
+<p>The cost row compounds. Recipe 1 publishes 4 selected rows once, about 60 tokens. The same view publishing on every <code>mouseenter</code> sends 40 updates crossing the same table, and the host is permitted to forward only the last, so 39 of them bought nothing.</p>
+<p>Trust is the one you cannot measure and will hear about. A control that sorts by the wrong column once in twenty teaches people to stop clicking it and start typing into the chat, which is the outcome an embedded application exists to prevent.</p>
+<h2 id="the-test-in-one-question">The test, in one question</h2>
 <p>For any interaction, ask: <strong>could a competent implementation answer this with the data already in the frame?</strong></p>
 <p>If yes, do it locally. Sorting, filtering, paging, selecting, expanding, zooming, panning, undoing, and formatting all answer yes, and every one of them appears in the recipes as local behaviour.</p>
 <p>If no, ask what is actually missing. Missing <em>data</em> means a tool call, which your view can make directly through the host without the model’s involvement at all: that is <code>tool.invoke</code>, and a refresh button is its canonical use. Missing <em>judgement</em> means the model, and the crossing should carry the user’s intent and the relevant state, not a description of the interface.</p>
 <p>The second half of that answer is the one people skip. “The view needs new data” is not the same as “the model needs to be asked”. A tool call from a button is a straight line: view, host, server, view. The model is not in it.</p>
-<h2 id="three-ways-to-cross-in-increasing-weight">Three ways to cross, in increasing weight</h2>
+<h2 id="three-ways-to-cross">Three ways to cross</h2>
 <p><strong>A tool call.</strong> Cheapest crossing that leaves the frame. The view calls a server tool through the host and gets structured data back. Nothing enters the conversation. Refresh, load more, save, validate against a server rule.</p>
 <p><strong>A context update.</strong> The view tells the model what is currently true about the interface, so that the <em>next</em> thing the user says can be answered against it. This is push: nobody is asked to do anything. “Three rows are selected, here they are.”</p>
 <p><strong>A message.</strong> The view puts something into the conversation and expects a turn to happen. This is the heavy one, and it should be traceable to a deliberate user action, usually a button that says what will happen. “Ask about these rows” is honest. Sorting a column and quietly starting a turn is not.</p>
 <p>Chapter 17 has all three on the wire, and a demonstration where you can watch the difference between publishing a selection and publishing a mouse.</p>
-<h2 id="the-boundary-is-not-a-wall">The boundary is not a wall</h2>
+<h2 id="both-mistakes-are-common">Both mistakes are common</h2>
 <p>Two mistakes are symmetrical and equally common.</p>
 <p>Under-crossing produces an application the model cannot see. The user selects three deployments, asks “why are these slow”, and the model has no idea what “these” refers to because the view never published the selection. From the user’s side this reads as the assistant being stupid, and there is nothing in the interface to suggest why.</p>
 <p>Over-crossing produces the sorting example, plus its uglier relative: a view that publishes its entire state on every change, so the model’s context fills with sixteen near-identical snapshots of a table. The specification is direct about this. Each <code>ui/update-model-context</code> overwrites the previous one, hosts may deduplicate identical updates, and where several arrive before the next user message the host should forward only the last. The protocol is built expecting you to be disciplined and forgiving you when you are not, which is not the same as it being free.</p>
@@ -150,7 +186,7 @@
 </table></div>
 <p>The last row is the one that should decide the design. A tool call that was wrong can be repeated. A context update that was wrong is replaced by the next one. A message that was wrong is a paragraph in somebody’s conversation that they did not ask for, and there is no unsend.</p>
 <p>That asymmetry is why a message needs a deliberate user action behind it and the other two do not, and it is why “the button that starts a turn should say so” is a rule rather than a preference.</p>
-<h2 id="declaring-the-split">Declaring the split</h2>
+<h2 id="write-the-split-down-first">Write the split down first</h2>
 <p>Every recipe in Part V declares its split explicitly, in a table like this one, before any code:</p>
 <div class="table-wrap"><table>
 <thead>
@@ -179,7 +215,7 @@
 </tbody>
 </table></div>
 <p>Writing that table is a five minute exercise that removes most of the architectural argument from the rest of the work. It also produces the list of tools the server actually needs, which is usually shorter than the list somebody was about to build.</p>
-<h2 id="what-over-crossing-looks-like-in-a-transcript">What over-crossing looks like in a transcript</h2>
+<h2 id="what-over-crossing-looks-like">What over-crossing looks like</h2>
 <p>The clearest way to see the principle violated is to watch the messages. A view that publishes on every change produces a log like this:</p>
 <p class="provenance illustrative">Illustrative, not run</p><pre><code>app→host  ui/update-model-context   { hovering: &quot;INC-4102&quot; }
 app→host  ui/update-model-context   { hovering: &quot;INC-4118&quot; }
@@ -187,7 +223,7 @@ app→host  ui/update-model-context   { hovering: &quot;INC-4133&quot; }
 app→host  ui/update-model-context   { selected: [&quot;INC-4133&quot;] }</code></pre>
 <p>Four messages, of which one carries information. The host is permitted to deduplicate and to forward only the last before a user message, so this may cost nothing at all, or it may cost three quarters of the view’s context budget. Neither outcome is one you chose.</p>
 <p>The lab in Chapter 17 has a control that turns hover publishing on so you can watch this happen, and the counter next to it shows the ratio: thousands of local events, a handful of published facts.</p>
-<h2 id="the-one-exception-worth-naming">The one exception worth naming</h2>
+<h2 id="the-one-exception">The one exception</h2>
 <p>There is a case where routing an ordinary interaction through the model is right: when the user cannot perform it directly. Voice control, accessibility tooling, and hands-free operation all mean the model is the only pointing device available.</p>
 <p>That case is exactly why the extension lets a view register tools of its own. A view that exposes <code>show_panel</code>, <code>highlight_line_item</code> and <code>get_state</code> as tools has given the agent a semantic interface to the same operations the mouse performs, without routing the mouse through the model. Chapter 18 builds one, and it is worth noticing that the same design serves both accessibility and testability: the harness in Part VI drives views through exactly those tools.</p>
 

@@ -61,11 +61,12 @@ class Demo {
     this.transcript = el("div", { class: "demo-transcript" });
     this.notes = el("div", { class: "demo-notes" });
 
-    // The source sits beside the running application rather than behind a tab
-    // nobody presses. A cookbook whose code is one click away from its
-    // examples is a cookbook whose code does not get read.
+    // The source slides out from under the running application rather than
+    // sitting beside it. A copy button, because the reason people open a
+    // cookbook is to take the code away.
     this.tabs = {};
     this.panes = {};
+    this.sources = {};
     const files = spec.files ?? [];
     const tabStrip = el("div", { class: "demo-tabs" });
     for (const file of files) {
@@ -78,18 +79,37 @@ class Demo {
         el("pre", {}, el("code", { text: "Loading…" })));
     }
 
-    const codeColumn = el("div", { class: "demo-code" },
-      el("div", { class: "demo-label", text: "Source" }),
-      tabStrip, ...Object.values(this.panes));
+    this.copyButton = el("button", {
+      class: "demo-copy", type: "button", text: "Copy",
+      onclick: () => this.copy(),
+    });
+
+    this.toggle = el("button", {
+      class: "demo-toggle", type: "button",
+      "aria-expanded": "true", "aria-controls": `${this.id}-source`,
+      onclick: () => this.slide(),
+    }, el("span", { class: "chev" }), el("span", { text: "Source" }));
+
+    this.drawer = el("div", {
+      class: "demo-drawer", id: `${this.id}-source`,
+    }, el("div", { class: "demo-drawer-inner" },
+        tabStrip, ...Object.values(this.panes)));
+
+    const codeSection = files.length
+      ? el("div", { class: "demo-code" },
+          el("div", { class: "demo-bar" }, this.toggle,
+            el("span", { class: "spacer" }), this.copyButton),
+          this.drawer)
+      : null;
 
     this.mount.append(
       el("div", { class: "demo-head" },
         el("span", { class: "demo-title", text: spec.title ?? this.id }),
         el("span", { class: "demo-sub", text: spec.subtitle ?? "" })),
-      el("div", { class: "demo-main" },
-        el("div", { class: "demo-live" },
-          this.stage, this.controls, this.notes),
-        files.length ? codeColumn : null),
+      this.stage,
+      this.controls,
+      this.notes,
+      codeSection,
       el("div", { class: "demo-log" },
         el("div", { class: "demo-label", text: "Messages" }),
         this.transcript),
@@ -98,17 +118,48 @@ class Demo {
     if (files.length) this.show(files[0]);
   }
 
+  slide() {
+    const open = this.toggle.getAttribute("aria-expanded") === "true";
+    this.toggle.setAttribute("aria-expanded", open ? "false" : "true");
+    this.drawer.classList.toggle("shut", open);
+  }
+
+  // The clipboard chapter in two paths, used by the page that teaches it.
+  async copy() {
+    const text = this.sources[this.current] ?? "";
+    if (!text) return;
+    let ok = true;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.append(area);
+      area.select();
+      ok = document.execCommand("copy");
+      area.remove();
+    }
+    this.copyButton.textContent = ok ? "Copied" : "Copy failed";
+    setTimeout(() => { this.copyButton.textContent = "Copy"; }, 1600);
+  }
+
   show(key) {
     for (const [name, pane] of Object.entries(this.panes)) {
       pane.hidden = name !== key;
       this.tabs[name].classList.toggle("current", name === key);
     }
+    this.current = key;
     const pane = this.panes[key];
     if (pane.dataset.loaded) return;
     pane.dataset.loaded = "1";
     fetch(`${this.base}${this.id}/${key}`)
       .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
-      .then((text) => { pane.querySelector("code").textContent = text; })
+      .then((text) => {
+        this.sources[key] = text;
+        pane.querySelector("code").textContent = text;
+      })
       .catch(() => {
         pane.querySelector("code").textContent = "Source unavailable.";
       });

@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 13</p><h1>Settings and Preferences</h1><p class="summary">A form, done properly. Native pickers, validation that waits until you have finished typing, save and discard that mean what they say, and a dirty guard on teardown.</p><div class="cap recipe" id="r13"><div class="cap-head"><code class="cap-id">r13</code><span class="cap-tag core">Settings and Preferences</span><span class="cap-level">Needs level 3</span></div><p class="cap-summary">Forms, done properly.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch11.html#picker.date">picker.date</a></code><code><a href="ch11.html#picker.time">picker.time</a></code><code><a href="ch13.html#env.textScale">env.textScale</a></code><code><a href="ch12.html#env.inputMode">env.inputMode</a></code><code><a href="ch12.html#env.fonts">env.fonts</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch11.html#picker.date">picker.date</a></code><code><a href="ch11.html#picker.time">picker.time</a></code><code><a href="ch11.html#picker.color">picker.color</a></code><code><a href="ch13.html#env.textScale">env.textScale</a></code><code><a href="ch13.html#env.contrast">env.contrast</a></code><code><a href="ch13.html#env.reducedMotion">env.reducedMotion</a></code><code><a href="ch13.html#a11y.announce">a11y.announce</a></code><code><a href="ch07.html#surface.focus">surface.focus</a></code><code><a href="ch14.html#lifecycle.dirty">lifecycle.dirty</a></code><code><a href="ch08.html#dialog.confirm">dialog.confirm</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch15.html#state.save">state.save</a></code><code><a href="ch12.html#env.inputMode">env.inputMode</a></code><code><a href="ch12.html#env.fonts">env.fonts</a></code></dd></dl></div>
 <p>The last recipe is the most ordinary and the one most applications need. Its delta is the full picker set and the accessibility requirements of Chapter 13 as the primary subject rather than as a section at the end.</p>
 <div class="demo" data-demo="r13-settings" id="r13-settings"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -119,7 +119,7 @@ if (!email &amp;&amp; (!live || $(&quot;#email&quot;).dataset.touched)) { /* sho
 <p><strong>Type an obviously invalid address and press Save.</strong> Focus moves to the field, the error is announced, and no tool call is sent.</p>
 <p><strong>Edit something, then press “Close with unsaved changes”.</strong> The form saves inside the teardown window before answering the host.</p>
 <p><strong>Press “Switch to ja-JP / Tokyo”.</strong> The stored values do not change and everything rendered does, which is the whole of Chapter 11 in one button.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -151,11 +151,11 @@ if (!email &amp;&amp; (!live || $(&quot;#email&quot;).dataset.touched)) { /* sho
 </tr>
 </tbody>
 </table></div>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The server rejects a value the client accepted.</strong> The message is shown, the form stays dirty, and nothing is marked saved.</p>
 <p><strong>Teardown with unsaved changes.</strong> The view saves inside the teardown window and then answers.</p>
 <p><strong>A host that sends no locale.</strong> <code>Intl</code> falls back to the machine’s default, which is wrong but functional, and the note in the view says which timezone it is using so the discrepancy is at least visible.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>Every field has a real <code>&lt;label&gt;</code> with a <code>for</code>. Errors are associated through <code>aria-describedby</code> and marked with <code>aria-invalid</code>, so a screen reader reads the error as part of the field rather than as a stray paragraph. Fieldsets group related controls with legends. Save failure moves focus to the first invalid field and announces the reason. The whole form is operable from the keyboard, which for a form built from native elements means it was operable from the keyboard before anybody thought about it.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

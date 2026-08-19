@@ -76,7 +76,7 @@
 <p class="eyebrow">Recipe 1</p><h1>Data Explorer</h1><p class="summary">The baseline recipe. A table you can sort, filter, page and select, and one button that turns a selection into a question.</p><div class="cap recipe" id="r01"><div class="cap-head"><code class="cap-id">r01</code><span class="cap-tag core">Data Explorer</span><span class="cap-level">Needs level 4</span></div><p class="cap-summary">Explore structured tool output interactively.</p><dl class="cap-facts"><dt>Capability delta</dt><dd class="ids"><code><a href="ch06.html#surface.resize">surface.resize</a></code><code><a href="ch06.html#surface.viewport">surface.viewport</a></code><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch09.html#input.keyboard">input.keyboard</a></code><code><a href="ch09.html#input.pointer">input.pointer</a></code><code><a href="ch10.html#clipboard.write">clipboard.write</a></code><code><a href="ch10.html#file.export">file.export</a></code><code><a href="ch12.html#env.theme">env.theme</a></code><code><a href="ch12.html#env.locale">env.locale</a></code><code><a href="ch17.html#agent.escalate">agent.escalate</a></code><code><a href="ch17.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch19.html#tool.invoke">tool.invoke</a></code><code><a href="ch19.html#tool.result">tool.result</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch13.html#a11y.announce">a11y.announce</a></code><code><a href="ch01.html#host.capabilities">host.capabilities</a></code></dd><dt>All capabilities</dt><dd class="ids"><code><a href="ch06.html#surface.resize">surface.resize</a></code><code><a href="ch06.html#surface.viewport">surface.viewport</a></code><code><a href="ch09.html#input.selection">input.selection</a></code><code><a href="ch09.html#input.keyboard">input.keyboard</a></code><code><a href="ch09.html#input.pointer">input.pointer</a></code><code><a href="ch10.html#clipboard.write">clipboard.write</a></code><code><a href="ch10.html#file.export">file.export</a></code><code><a href="ch12.html#env.theme">env.theme</a></code><code><a href="ch12.html#env.locale">env.locale</a></code><code><a href="ch17.html#agent.escalate">agent.escalate</a></code><code><a href="ch17.html#agent.contextUpdate">agent.contextUpdate</a></code><code><a href="ch19.html#tool.invoke">tool.invoke</a></code><code><a href="ch19.html#tool.result">tool.result</a></code><code><a href="ch16.html#op.error">op.error</a></code><code><a href="ch13.html#a11y.announce">a11y.announce</a></code><code><a href="ch01.html#host.capabilities">host.capabilities</a></code></dd></dl></div>
 <p>The first recipe is the one most MCP applications actually are: structured data from a tool, rendered as a table, with the interactions people expect from a table. Everything after it adds something; this one establishes what “working” means.</p>
 <div class="demo" data-demo="r01-data-explorer" id="r01-data-explorer"><noscript><p class="demo-error">The live application needs JavaScript. Its source is in the repository under <code>apps/</code>.</p></noscript></div>
-<h2 id="the-split">The split</h2>
+<h2 id="what-stays-local-what-crosses">What stays local, what crosses</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -112,9 +112,9 @@
 </tbody>
 </table></div>
 <p>Six local interactions, four crossings, and every crossing is a button the user pressed on purpose. Nothing here consults a model about how to sort.</p>
-<h2 id="surface">Surface</h2>
+<h2 id="what-it-looks-like">What it looks like</h2>
 <p>One column at any width. A toolbar with a search field, an environment filter and three actions; a scrolling table with six columns; a pager. It reports its height and lets the host grow the frame, up to whatever maximum the host allows.</p>
-<h2 id="components">Components</h2>
+<h2 id="what-it-is-built-from">What it is built from</h2>
 <p>Toolbar, search field, dropdown, table with selection, pagination, toast, banner for the error state. All from <code>apps/lib/view.css</code>.</p>
 <h2 id="how-data-arrives-twice">How data arrives, twice</h2>
 <p>The view is rendered because <code>list_deployments</code> was called, so the rows arrive in <code>ui/notifications/tool-result</code>. It also calls the same tool itself, on mount and from the reload button, through <code>tools/call</code>. Both paths land in the same render function.</p>
@@ -130,7 +130,7 @@
 <p><strong>Press “Break the server”, then “Reload from the server”.</strong> The table keeps its rows, a banner explains that the data is from the previous successful call, and the reload button still works. Press “Fix the server” and reload again.</p>
 <p><strong>Press “Switch to ja-JP / Tokyo”.</strong> Every timestamp and number re-renders. The selection survives, because formatting is a render concern and selection is state.</p>
 <p><strong>Open the <code>server.js</code> tab and find <code>summarise</code>.</strong> That one function is the whole two-channel argument: the model gets its sentence, the view gets the eight records.</p>
-<h2 id="host-dependencies">Host dependencies</h2>
+<h2 id="what-it-needs-from-the-host">What it needs from the host</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -168,11 +168,11 @@
 </tbody>
 </table></div>
 <p>Every row of that table is a real host. The recipe renders and remains useful at Level 1 with none of the Level 4 capabilities, which is the test every recipe in Part V has to pass.</p>
-<h2 id="failure-cases">Failure cases</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
 <p><strong>The tool fails.</strong> Press “Break the server”. The table keeps the rows it had, a banner explains that the data is from the previous successful call, and the reload button still works. An empty table with an error above it would have thrown away the information the user still needed.</p>
 <p><strong>The host cannot save files.</strong> The export button is not rendered. Copy is offered instead, which puts CSV on the clipboard through whichever of the two paths works.</p>
 <p><strong>The locale changes mid-session.</strong> Press “Switch to ja-JP / Tokyo”. Numbers and timestamps re-render; the underlying data does not change; the selection survives.</p>
-<h2 id="accessibility">Accessibility</h2>
+<h2 id="keyboard-and-screen-reader">Keyboard and screen reader</h2>
 <p>The table is a grid with <code>aria-selected</code> on each row and <code>tabindex="0"</code> for keyboard activation. Space toggles selection, and the selected count is announced once per change rather than once per row. Sortable headers carry <code>aria-sort</code>. The error banner is a live region. Every column that is numeric is right-aligned with tabular figures, which is a legibility rather than an accessibility requirement and is the sort of thing that gets dropped first.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">

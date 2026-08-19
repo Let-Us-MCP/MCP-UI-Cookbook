@@ -73,8 +73,8 @@
 <div class="part">Elsewhere</div><a href="https://github.com/Let-Us-MCP/MCP-UI-Cookbook">Repository</a>
 </nav>
 <main>
-<p class="eyebrow">Chapter 26</p><h1>The Verification Layers</h1><p class="summary">Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.</p><p>Verification is layered because the failures are layered. A malformed message and an inaccessible combobox and a host that ignores display mode requests are three different problems, and no single check finds all three.</p>
-<p>This chapter describes six layers and says, for each, what this repository runs today and what it does not. That second half matters: a book that described an aspirational test pyramid and shipped none of it would be exactly the thing Chapter 25 is arguing against.</p>
+<p class="eyebrow">Chapter 26</p><h1>The Verification Layers</h1><p class="summary">Six layers, from a schema to a cross-host dashboard, and an honest account of which of them this repository actually runs.</p><p>Six layers, because the failures are layered. A malformed message, an inaccessible combobox and a host that ignores display mode requests are three different problems and no single check finds all three.</p>
+<p>For each layer this chapter says what this repository runs today and what it does not. The second half matters: describing an aspirational test pyramid and shipping none of it is exactly what Chapter 25 argues against.</p>
 <h2 id="layer-0-schemas">Layer 0: Schemas</h2>
 <p>Capability manifests and every bridge message validate against JSON Schemas derived from the extension specification. Nothing untyped ships.</p>
 <p><strong>What runs here.</strong> The registry is generated from a single Python source and every downstream artifact reads the generated JSON, so an identifier that exists in one place and not another is impossible by construction rather than by discipline. <code>tools/check_claims.py</code> goes further and greps the pinned specification text for every message name the registry claims exists: sixty-eight claims, checked on every build.</p>
@@ -94,7 +94,15 @@
 <p>Saying so is more useful than a passing badge would be.</p>
 <h2 id="layer-2b-render-conformance">Layer 2b: Render conformance</h2>
 <p>The layer the first edition of this suite did not have, and the one the book is actually about. Everything above verifies messages. This verifies the interface that the messages produce.</p>
-<p>For each recipe, <code>tools/check_render.mjs</code> runs the whole chain with no recording anywhere in it. It starts the recipe’s MCP server as a child process over stdio. It performs the host’s <code>initialize</code>, declaring the UI extension the way a host does, so a server is free to register different tools when it is absent. It calls <code>tools/list</code> and reads <code>_meta.ui.resourceUri</code> off the tool. It fetches the view’s HTML through <code>resources/read</code>, and that is the HTML the frame renders: nothing is read from the applications directory or from the built site. It calls the tool, delivers the arguments and the result as notifications, proxies the view’s own <code>tools/call</code> back to the same server, and forwards the server’s progress notifications onward.</p>
+<p>For each recipe, <code>tools/check_render.mjs</code> runs the whole chain with no recording anywhere in it:</p>
+<ol type="1">
+<li>Start the recipe’s MCP server as a child process over stdio.</li>
+<li>Perform the host’s <code>initialize</code>, declaring the UI extension, so a server is free to register different tools when it is absent.</li>
+<li>Call <code>tools/list</code> and read <code>_meta.ui.resourceUri</code> off the tool.</li>
+<li>Fetch the view’s HTML through <code>resources/read</code>. That is what the frame renders. Nothing is read from <code>apps/</code> or from the built site.</li>
+<li>Call the tool. Deliver the arguments and result as notifications.</li>
+<li>Proxy the view’s own <code>tools/call</code> back to the same server, and forward that server’s progress notifications onward.</li>
+</ol>
 <p>Then it asserts on the DOM inside the sandboxed frame.</p>
 <p class="provenance captured">Captured output from <code>node tools/check_render.mjs</code></p><pre><code>  r01-data-explorer: 12 assertion(s) on rendered output
   r04-document-editor: 10 assertion(s) on rendered output
