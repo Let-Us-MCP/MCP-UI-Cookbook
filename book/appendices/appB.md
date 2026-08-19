@@ -31,9 +31,25 @@ Neither party can move focus across the frame boundary. A view cannot return
 focus to the composer when a form is finished; a host cannot direct focus into
 a view's search field. Voice control and switch access both need it.
 
-*Workaround.* Finish interactions with a teardown request so focus returns by
-ordinary means, and register a tool that focuses a named element so an agent
-can do it.
+*Workaround, and its limit.* Finish interactions with a teardown request so
+focus returns by ordinary means, and register a tool that moves focus to a
+named element. Recipe 13 builds the second half:
+
+<!-- listing: extracted from `apps/recipes/r13-settings/index.html` -->
+```js
+    const node = FIELDS.includes(field) ? $(`#${field}`) : null;
+    if (!node) {
+      return { isError: true, content: [{ type: "text", text:
+        `There is no field called "${field}". The form has: ${FIELDS.join(", ")}.` }] };
+    }
+    node.focus();
+```
+
+Read what that does and does not buy. An agent can move focus, and an
+assistive technology driving through an agent can move focus. A host still
+cannot, and a user working entirely by keyboard is still unserved, because
+nothing here is reachable without a turn. It closes the agent-facing half of
+the gap and leaves the half that needs a message.
 
 *Shape.* `ui/request-focus` from the view, declinable, and a focus grant
 notification in the other direction carrying an optional target.
@@ -67,15 +83,27 @@ visible control.
 *Shape.* A reserved-chords list in `hostContext`, or a request to claim one
 that returns whether it was granted.
 
-*Reopens.* Nothing much. This is the cheapest of the fourteen.
+*Reopens.* Nothing much. This is the cheapest of the sixteen.
 
 ### `input.dragBoundary`
 
-Nothing can be dragged out of a view into the host, or in from the host, other
-than files the browser routes.
+No message carries a transfer payload. Nothing in the extension describes a
+drag starting in one place and ending in another, so anything crossing the
+boundary crosses because the browser routed it and not because the protocol
+said it could.
+
+*What the probe could not settle.* Whether HTML5 drag and drop works across an
+opaque-origin frame is a question about the browser, and this suite has no
+answer: headless Chrome will not begin a drag from a synthesised mouse press,
+so `dragstart` never fired and the run tested nothing. It is recorded as
+inconclusive rather than counted with the confirmations. The protocol half of
+this entry stands regardless, and it is the half that matters, because a
+mechanism that works only where the browser happens to allow it is not one an
+application can rely on across hosts.
 
 *Workaround.* Clipboard out, file input or paste in, `resources/read` when the
-object lives on the server anyway.
+object lives on the server anyway. Dropping files *into* a view works and
+needs no permission; `lab-clipboard`, Recipe 3 and Recipe 6 all accept one.
 
 *Shape.* A serialisable transfer payload carried in a message on drag start
 and drop, with the host mediating both ends.
@@ -220,7 +248,7 @@ paginate.
 *Shape.* `ui/notifications/tool-result-partial`, mirroring the input side,
 with the same "never rely on it, always get a final one" contract.
 
-*Reopens.* Nothing. This is the most clearly justified of the fourteen and the
+*Reopens.* Nothing. This is the most clearly justified of the sixteen and the
 asymmetry with input streaming is hard to defend.
 
 ### `approval.request`

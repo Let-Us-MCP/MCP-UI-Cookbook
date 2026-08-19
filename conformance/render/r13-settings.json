@@ -6,4 +6,12 @@
                   { "selector": "#email", "value": "sam@meridian.example" },
                   { "selector": "#state", "text": "no changes" },
                   { "selector": "#save", "attr": { "name": "disabled", "value": "" } },
-                  { "selector": "#email-err", "hidden": true } ] } ] }
+                  { "selector": "#email-err", "hidden": true } ] },
+    { "label": "the agent moves focus into a named field",
+      "appTool": "focus_field", "arguments": { "field": "email" },
+      "settleMs": 400,
+      "expect": [ { "selector": "#live-region", "textContains": "Focus moved to email" } ] },
+    { "label": "an unknown field name is refused, not guessed at",
+      "appTool": "focus_field", "arguments": { "field": "nonesuch" },
+      "settleMs": 400,
+      "expect": [ { "selector": "#live-region", "textContains": "Focus moved to email" } ] } ] }

@@ -84,7 +84,14 @@
 <h2 id="what-each-one-costs-and-what-would-fix-it">What each one costs, and what would fix it</h2>
 <h3 id="surface.focushandoff"><code>surface.focusHandoff</code></h3>
 <p>Neither party can move focus across the frame boundary. A view cannot return focus to the composer when a form is finished; a host cannot direct focus into a view’s search field. Voice control and switch access both need it.</p>
-<p><em>Workaround.</em> Finish interactions with a teardown request so focus returns by ordinary means, and register a tool that focuses a named element so an agent can do it.</p>
+<p><em>Workaround, and its limit.</em> Finish interactions with a teardown request so focus returns by ordinary means, and register a tool that moves focus to a named element. Recipe 13 builds the second half:</p>
+<p class="provenance extracted">Extracted from from <code>apps/recipes/r13-settings/index.html</code></p><pre class="js"><code>    const node = FIELDS.includes(field) ? $(`#${field}`) : null;
+    if (!node) {
+      return { isError: true, content: [{ type: &quot;text&quot;, text:
+        `There is no field called &quot;${field}&quot;. The form has: ${FIELDS.join(&quot;, &quot;)}.` }] };
+    }
+    node.focus();</code></pre>
+<p>Read what that does and does not buy. An agent can move focus, and an assistive technology driving through an agent can move focus. A host still cannot, and a user working entirely by keyboard is still unserved, because nothing here is reachable without a turn. It closes the agent-facing half of the gap and leaves the half that needs a message.</p>
 <p><em>Shape.</em> <code>ui/request-focus</code> from the view, declinable, and a focus grant notification in the other direction carrying an optional target.</p>
 <p><em>Reopens.</em> Focus theft, which is why the request has to be declinable and should require a recent user gesture.</p>
 <h3 id="surface.reveal"><code>surface.reveal</code></h3>
@@ -96,10 +103,11 @@
 <p>A view cannot discover which accelerators the host has taken, and cannot be told when it has collided. From the user’s side an accelerator sometimes works and sometimes does not.</p>
 <p><em>Workaround.</em> Take few, prefer document-scoped conventions, and always show a visible control.</p>
 <p><em>Shape.</em> A reserved-chords list in <code>hostContext</code>, or a request to claim one that returns whether it was granted.</p>
-<p><em>Reopens.</em> Nothing much. This is the cheapest of the fourteen.</p>
+<p><em>Reopens.</em> Nothing much. This is the cheapest of the sixteen.</p>
 <h3 id="input.dragboundary"><code>input.dragBoundary</code></h3>
-<p>Nothing can be dragged out of a view into the host, or in from the host, other than files the browser routes.</p>
-<p><em>Workaround.</em> Clipboard out, file input or paste in, <code>resources/read</code> when the object lives on the server anyway.</p>
+<p>No message carries a transfer payload. Nothing in the extension describes a drag starting in one place and ending in another, so anything crossing the boundary crosses because the browser routed it and not because the protocol said it could.</p>
+<p><em>What the probe could not settle.</em> Whether HTML5 drag and drop works across an opaque-origin frame is a question about the browser, and this suite has no answer: headless Chrome will not begin a drag from a synthesised mouse press, so <code>dragstart</code> never fired and the run tested nothing. It is recorded as inconclusive rather than counted with the confirmations. The protocol half of this entry stands regardless, and it is the half that matters, because a mechanism that works only where the browser happens to allow it is not one an application can rely on across hosts.</p>
+<p><em>Workaround.</em> Clipboard out, file input or paste in, <code>resources/read</code> when the object lives on the server anyway. Dropping files <em>into</em> a view works and needs no permission; <code>lab-clipboard</code>, Recipe 3 and Recipe 6 all accept one.</p>
 <p><em>Shape.</em> A serialisable transfer payload carried in a message on drag start and drop, with the host mediating both ends.</p>
 <p><em>Reopens.</em> Exfiltration, since a drag out is data leaving the frame. Needs the same treatment as <code>ui/download-file</code>.</p>
 <h3 id="clipboard.read"><code>clipboard.read</code></h3>
@@ -151,7 +159,7 @@
 <p>Input streams to the view. Output does not. There is no partial tool result.</p>
 <p><em>Workaround.</em> Poll an app-only tool, rely on a host that re-sends results, or paginate.</p>
 <p><em>Shape.</em> <code>ui/notifications/tool-result-partial</code>, mirroring the input side, with the same “never rely on it, always get a final one” contract.</p>
-<p><em>Reopens.</em> Nothing. This is the most clearly justified of the fourteen and the asymmetry with input streaming is hard to defend.</p>
+<p><em>Reopens.</em> Nothing. This is the most clearly justified of the sixteen and the asymmetry with input streaming is hard to defend.</p>
 <h3 id="approval.request"><code>approval.request</code></h3>
 <p>A view’s Approve button is a button in an untrusted iframe. Nothing is attested, and the host does not know an approval happened.</p>
 <p><em>Workaround.</em> Queue at the server, perform through an app-only tool, and show provenance in the view. A convention, not a guarantee.</p>

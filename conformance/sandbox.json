@@ -77,6 +77,12 @@
     "printCall": {
       "ok": true,
       "value": "returned"
+    },
+    "dragOutOfView": {
+      "attempted": true,
+      "dragStartInView": null,
+      "hostReceived": null,
+      "verdict": "inconclusive: no drag started in headless, so this run tested nothing"
     }
   },
   "control": {

@@ -175,7 +175,21 @@ const SHELL = `<!doctype html>
         style="width:600px;height:200px;border:0"></iframe>
 <iframe id="control" src="probe.html"
         style="width:600px;height:200px;border:0"></iframe>
-<script>window.__hostReady = true;<\/script>
+<div id="hostdrop" style="width:600px;height:80px;background:#eee">host drop zone</div>
+<script>
+window.__hostDrop = null;
+const zone = document.getElementById("hostdrop");
+zone.addEventListener("dragover", (e) => { e.preventDefault(); });
+zone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  window.__hostDrop = {
+    fired: true,
+    types: [...(e.dataTransfer?.types ?? [])],
+    text: e.dataTransfer?.getData("text/plain") ?? null,
+  };
+});
+window.__hostReady = true;
+<\/script>
 </body></html>
 `;
 
@@ -319,6 +333,46 @@ async function main() {
     };
 
     results.printCall = JSON.parse(await browser.evalIn(frame, "window.__doPrint()"));
+
+    // Can anything be dragged out of a view and into the host's own document?
+    // Appendix B says no. That is a claim about the browser, so it gets a run.
+    // The drag is intercepted rather than simulated with raw mouse events,
+    // because Chrome only builds a real dataTransfer for an intercepted drag.
+    let dragOut = { attempted: true };
+    try {
+      await browser.send("Input.setInterceptDrags", { enabled: true });
+      const box = await browser.evalIn(undefined, `(() => {
+        const f = document.getElementById("view").getBoundingClientRect();
+        const z = document.getElementById("hostdrop").getBoundingClientRect();
+        return JSON.stringify({ fx: f.x + 40, fy: f.y + 60,
+                                zx: z.x + 40, zy: z.y + 20 });
+      })()`);
+      const at = JSON.parse(box);
+      await browser.send("Input.dispatchMouseEvent",
+        { type: "mousePressed", x: at.fx, y: at.fy, button: "left", clickCount: 1 });
+      await browser.send("Input.dispatchMouseEvent",
+        { type: "mouseMoved", x: at.fx + 10, y: at.fy + 10, button: "left" });
+      await sleep(300);
+      dragOut.dragStartInView = JSON.parse(
+        await browser.evalIn(frame, "JSON.stringify(window.__dragstart ?? null)") || "null");
+      await browser.send("Input.dispatchMouseEvent",
+        { type: "mouseReleased", x: at.zx, y: at.zy, button: "left", clickCount: 1 });
+      await sleep(300);
+      dragOut.hostReceived = JSON.parse(
+        await browser.evalIn(undefined, "JSON.stringify(window.__hostDrop ?? null)") || "null");
+    } catch (error) {
+      dragOut.error = String(error.message).slice(0, 120);
+    }
+    // Headless Chrome will not begin a drag from a synthesised mouse press, so
+    // `dragstart` never fires and the experiment tests nothing. Reported as
+    // inconclusive rather than folded in with the confirmations: an experiment
+    // that failed to run is not evidence for the thing it was meant to test.
+    dragOut.verdict = dragOut.dragStartInView
+      ? (dragOut.hostReceived
+        ? "a drag left the view and the host document received it"
+        : "a drag started in the view and the host document received nothing")
+      : "inconclusive: no drag started in headless, so this run tested nothing";
+    results.dragOutOfView = dragOut;
 
     // The control frame is same-origin with the page, so it is reachable
     // without a separate session.

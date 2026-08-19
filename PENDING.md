@@ -5,6 +5,25 @@ change the strength of the book's claims. Everything here is also stated in
 the chapter it belongs to, so a reader meets it in context rather than only in
 a list.
 
+## 0. Re-testing the gaps themselves
+
+**The failure.** Appendix B listed sixteen capabilities as absent. Several of
+those entries made claims about a browser rather than about the specification,
+and none of those claims had ever been run. Two entries also prescribed a
+workaround that nobody had built, which is the same defect the book spends
+Part VI warning about: an assertion nothing checks.
+
+**What closed it.** `tools/check_sandbox.mjs` runs a probe in a real sandboxed
+frame with an unsandboxed control beside it. It corrected `clipboard.read`,
+which had a working route the book prescribed and never built, and it recorded
+that `window.print()` fails by returning normally and doing nothing. The paste
+target now exists in `lab-clipboard` and the focus tool in Recipe 13.
+
+**Still open.** Whether drag and drop crosses an opaque-origin frame is
+untested: headless Chrome will not begin a drag, so the run tested nothing and
+says so. The remaining protocol gaps were re-read against a specification
+snapshot confirmed current, and stand.
+
 ## 1. Render conformance against a live server
 
 **The gap.** Until now nothing ran the actual MCP server, rendered the view it
