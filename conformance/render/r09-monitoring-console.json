@@ -9,4 +9,4 @@
                   { "selector": "#log", "attr": { "name": "aria-live", "value": "off" } } ] },
     { "label": "selecting a line survives more lines arriving",
       "click": "#log div", "settleMs": 200,
-      "expect": [ { "selector": "#log div[aria-selected=\"true\"]", "count": 1 } ] } ] }
+      "expect": [ { "selector": "#log div[aria-current=\"true\"]", "count": 1 } ] } ] }

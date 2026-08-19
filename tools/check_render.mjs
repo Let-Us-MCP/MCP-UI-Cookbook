@@ -40,6 +40,30 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const CASES = path.join(ROOT, "conformance", "render");
+// Vendored rather than installed: this repository has no npm dependencies and
+// the audit should not be the thing that introduces one. MPL-2.0, licence
+// alongside it.
+const AXE_SOURCE = fs.readFileSync(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), "vendor", "axe.min.js"),
+  "utf8");
+
+// Rules that assume the thing under audit is a page. A view is a fragment
+// rendered inside somebody else's document: the host owns the <main>, the
+// landmarks and the heading outline, and a view that declared its own would be
+// competing with them. Each of these is disabled with its reason rather than
+// suppressed in a config nobody reads.
+const PAGE_LEVEL_RULES = {
+  "landmark-one-main":
+    "the host's document owns <main>; a view declaring one adds a second",
+  "page-has-heading-one":
+    "the heading outline belongs to the conversation, not to one card in it",
+  "region":
+    "landmark regions are the host's; a view is content inside one of them",
+  "html-has-lang":
+    "the view's own <html lang> is set, but the host's document decides the "
+    + "language a screen reader announces",
+};
+
 const PORT = Number(process.env.RENDER_PORT || 8985);
 const CDP_PORT = Number(process.env.RENDER_CDP || 9235);
 const PROTOCOL_VERSION = "2026-07-28";
@@ -492,6 +516,44 @@ async function runCase(spec, name, browser, workdir) {
       }
     }
 
+    // Layer 3, in the same run. The recipes' accessibility claims came from a
+    // checklist applied by hand, which is worth having and is not evidence.
+    // axe-core is evidence for the part it can see, and the part it cannot
+    // see is still walked by hand and recorded per recipe.
+    //
+    // It runs after the steps rather than on load, so the audit sees the
+    // interface the interactions produced, which is where the defects are.
+    if (!process.env.RENDER_SKIP_AXE) {
+      await browser.evalFrame(AXE_SOURCE + "\n;true");
+      const raw = await browser.evalFrame(`(async () => {
+        const run = await axe.run(document, {
+          resultTypes: ["violations"],
+          runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a",
+                                           "wcag21aa", "wcag22aa", "best-practice"] },
+        });
+        return JSON.stringify(run.violations.map((v) => ({
+          id: v.id, impact: v.impact, help: v.help,
+          nodes: v.nodes.slice(0, 3).map((n) => n.target.join(" ")),
+        })));
+      })()`);
+      const violations = JSON.parse(raw || "[]");
+      const allowed = new Set(Object.keys(spec.axeAllow ?? {}));
+      for (const v of violations) {
+        if (v.id in PAGE_LEVEL_RULES) continue;
+        if (allowed.has(v.id)) continue;
+        problems.push(`axe ${v.id} (${v.impact}): ${v.help} at `
+          + `${v.nodes.join(", ")}`);
+      }
+      // An allowance for a rule that no longer fires is an allowance that has
+      // become a lie, so it fails too.
+      for (const id of allowed) {
+        if (!violations.some((v) => v.id === id)) {
+          problems.push(`axeAllow lists ${id}, which no longer fires; remove it`);
+        }
+      }
+      axeChecked += 1;
+    }
+
     const errors = browser.console.filter((line) =>
       !/favicon|Failed to load resource/.test(line));
     problems.push(...errors.slice(0, 3).map((e) => `console: ${e}`));
@@ -506,6 +568,8 @@ async function runCase(spec, name, browser, workdir) {
 }
 
 // --- main -----------------------------------------------------------------
+
+let axeChecked = 0;
 
 async function main() {
   if (!CHROME) {
@@ -591,7 +655,7 @@ async function main() {
   }
 
   console.log(`${files.length} case(s), ${assertions} assertion(s) against real `
-    + `servers, ${failures} failing`);
+    + `servers, ${axeChecked} audited by axe-core, ${failures} failing`);
   cleanup();
   process.exit(failures ? 1 : 0);
 }

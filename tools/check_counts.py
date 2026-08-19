@@ -110,7 +110,10 @@ PATTERNS = {
         r"NUMBER-row index",
     ],
     "recipes": [
-        r"NUMBER recipes",
+        # Anchored on a determiner: "four recipes" in a sentence about how many
+        # recipes a defect touched is not a claim about how many exist.
+        r"(?:all|the|these|its|of) NUMBER recipes",
+        r"NUMBER recipes,? (?:in|and) ",
         r"NUMBER recognisable applications",
         r"NUMBER recipe apps",
     ],

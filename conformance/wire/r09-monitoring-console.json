@@ -36,7 +36,7 @@
           "uri": "ui://cookbook/monitoring-console",
           "mimeType": "text/html;profile=mcp-app",
           "text": "<the view's HTML, elided>",
-          "textLength": 6677,
+          "textLength": 6836,
           "_meta": {
             "ui": {
               "csp": {},

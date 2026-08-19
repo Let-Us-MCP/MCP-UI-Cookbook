@@ -179,7 +179,8 @@ if ($(&quot;#follow&quot;).checked) $(&quot;#log&quot;).scrollTop = $(&quot;#log
     unannounced = 0;
     unannouncedErrors = 0;
   }, SUMMARY_MS);</code></pre>
-<p>“Twelve new lines, two errors” is one utterance carrying what a person needs to decide whether to look. Nothing is announced when nothing arrived, so an idle console is silent. Lines carry their level in text as well as colour. Selection is by click and by keyboard.</p>
+<p>“Twelve new lines, two errors” is one utterance carrying what a person needs to decide whether to look. Nothing is announced when nothing arrived, so an idle console is silent. Lines carry their level in text as well as colour.</p>
+<p>The selected line carries <code>aria-current</code>, not <code>aria-selected</code>. <code>aria-selected</code> is only allowed on elements with a role that defines a selection, and a <code>div</code> inside a log region has none, so the attribute was invalid and <code>axe-core</code> reported it as critical. <code>aria-current</code> is permitted anywhere and says what is meant. The log itself carries <code>tabindex="0"</code>, because a scrolling region that cannot take focus cannot be scrolled from a keyboard at all.</p>
 <h2 id="conformance-checks">Conformance checks</h2>
 <ol type="1">
 <li><code>tail_logs</code> returns 24 lines and all render.</li>

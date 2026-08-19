@@ -50,13 +50,17 @@ only evidence that would answer the completeness test in Chapter 26.
 
 ## 3. Component layer checks
 
-**The gap.** Part IV components are a shared stylesheet and helper file rather
-than a library with stories, and no `axe-core` run is wired into the build.
-The accessibility claims come from the Chapter 14 checklist applied by hand.
+**Status: partly built.** `axe-core` is vendored and runs against all thirteen
+recipes inside the render harness, after the interactions rather than on load.
+Four page-level rules are disabled by name with a reason each, because a view
+is a fragment and not a page. It found five defects on its first run,
+including one critical ARIA misuse and two contrast failures.
 
-**What would close it.** Each component in isolation with interaction tests, an
-automated accessibility audit, and the ARIA Authoring Practices keyboard
-checklists transcribed into executable assertions.
+**Still missing.** The components are audited only through the recipes that
+use them, because there is no component library with stories to audit them in
+isolation. The ARIA Authoring Practices keyboard checklists are still prose
+rather than executable assertions, though the harness can now dispatch keys
+and two canvases are driven that way.
 
 ## 4. Human usability sessions
 
