@@ -106,7 +106,21 @@ Six of the eleven open entries in the ledger are that one gap. Closing it
 changes every client here, every recorded transcript and several wire listings
 in the book, which is why it is stated rather than patched quietly.
 
-**The host half: still open, and blocked.** This book is pinned to
+**One production host tested.** Claude Code 2.1.237 speaks `2026-07-28` and
+opens with `server/discover` carrying the per-request `_meta` fields. It
+accepts `server/discover` from all thirteen servers and then reports `tools
+fetch failed` on a valid `tools/list`, silently and without a reason. Serving
+the identical descriptor behind a `2025-11-25` `initialize` handshake is
+accepted, so the fault is in the host's modern path rather than in these
+servers. Written up with the captured wire in the `ngmcp` repository under
+`docs/findings/001`.
+
+Two consequences. The `server/discover` work done here is what lets Claude
+Code connect at all, since without it the opening probe fails. And the
+per-request `_meta` gap below is no longer theoretical: a shipping client
+sends those fields on every request today.
+
+**The rest of the host half: still open, and blocked.** This book is pinned to
 `2026-07-28`; the published SDK at 1.30.0 supports up to `2025-11-25` and its
 `Client` refuses the handshake rather than negotiating. So `basic-host` cannot
 drive these servers until one side moves. The check works around it by using
