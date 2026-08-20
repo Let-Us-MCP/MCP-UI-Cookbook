@@ -145,7 +145,18 @@ for (const recipe of recipes) {
     check(recipe, typeof content?.text === "string" && content.text.includes("<"),
       `resources/read on ${uri} returned no markup`);
 
-    // 5. The read-only tools answer, and answer with something in them.
+    // 5. A missing resource errors, and does not error with -32002, which
+    //    this protocol version retired and forbids emitting.
+    const missing = await send("resources/read",
+      { uri: "file:///workspace/does-not-exist" });
+    check(recipe, missing.error !== undefined,
+      `resources/read on a missing uri answered ${brief(missing.result)}`);
+    check(recipe, missing.error?.code !== -32002,
+      "resources/read emitted -32002, which 2026-07-28 forbids; use -32602");
+    check(recipe, missing.result?.contents === undefined,
+      "a missing resource came back with a contents array");
+
+    // 6. The read-only tools answer, and answer with something in them.
     for (const tool of tools) {
       if (!tool.annotations?.readOnlyHint) continue;
       const called = await send("tools/call", { name: tool.name, arguments: {} });

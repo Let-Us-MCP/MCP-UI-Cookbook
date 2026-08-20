@@ -75,21 +75,36 @@ and not something the suite relies on.
 written by the same person who wrote the applications. That is the condition
 under which a capability model looks more general than it is.
 
-**The server half: built.** `tools/check_sdk_client.mjs` drives all thirteen
-recipe servers over `@modelcontextprotocol/sdk`'s own stdio transport, 179
-assertions covering the handshake, `server/discover`, `tools/list`, the
-`_meta.ui.resourceUri` on every tool, the `resources/read` that returns the
-view, and every read-only tool call. It needs `proto/sdk-client/`, which is
-never committed, and skips without it.
+**The server half: built, three checks.** `tools/check_sdk_client.mjs` drives
+all thirteen recipe servers over `@modelcontextprotocol/sdk`'s own stdio
+transport, 218 assertions. `tools/check_differential.mjs` re-serves everything
+they publish through the SDK's own `Server` and reads it back through its
+`Client`, 92 assertions, so the reference implementation's validation sees
+every descriptor and result. `tools/check_musts.py` holds
+`conformance/musts.json`, in which each of the 85 server-directed MUSTs in the
+pinned specification is classified as implemented, not applicable or open with
+a note, and an unclassified one fails the build. The first two need
+`proto/sdk-client/` and skip without it; the third needs the specification
+clone.
 
-It found two defects on first contact, both MUSTs in the pinned specification
-and both in all thirteen servers. Every server answered `initialize` with its
-own `protocolVersion` whatever the client asked for, which is indistinguishable
-from agreement, instead of the `UnsupportedProtocolVersionError` carrying the
-versions it does support. And none implemented `server/discover`. Neither was
-reachable from a host that already speaks `2026-07-28`, which is why nothing
-here had caught them, and it is the case for testing against an implementation
-nobody in this repository wrote.
+They found four defects, all MUSTs, all in all thirteen servers: `initialize`
+answering with its own `protocolVersion` whatever was asked, no
+`server/discover`, `-32002` for a missing resource where this version forbids
+that code and expects `-32602`, and the per-request `_meta` protocol fields
+neither sent nor required. None was reachable from a host that already speaks
+`2026-07-28`, which is why nothing here had caught them.
+
+**The largest open gap is now inside the servers.** `2026-07-28` moved to a
+stateless per-request model: every request carries
+`io.modelcontextprotocol/protocolVersion` and
+`io.modelcontextprotocol/clientCapabilities` in `_meta`, a server MUST reject a
+request missing them with `-32602`, and a server MUST NOT rely on a prior
+request over the same connection to establish that context. This repository is
+still on the connection-state model from earlier versions: the emulator, the
+render driver and both SDK checks send none of it, and no server asks for it.
+Six of the eleven open entries in the ledger are that one gap. Closing it
+changes every client here, every recorded transcript and several wire listings
+in the book, which is why it is stated rather than patched quietly.
 
 **The host half: still open, and blocked.** This book is pinned to
 `2026-07-28`; the published SDK at 1.30.0 supports up to `2025-11-25` and its

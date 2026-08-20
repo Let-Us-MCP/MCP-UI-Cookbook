@@ -109,7 +109,9 @@ export function serve({ name, version = "1.0.0", resourceUri, viewFile,
           }] });
         }
         const extra = resources[params?.uri];
-        if (!extra) return fail(-32002, `Resource not found: ${params?.uri}`);
+        // -32002 was the resource-not-found code through 2025-11-25. This
+        // version forbids emitting it and replaces it with -32602.
+        if (!extra) return fail(-32602, `Resource not found: ${params?.uri}`);
         return reply({ contents: [{ uri: params.uri, ...extra }] });
       }
 

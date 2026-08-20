@@ -178,7 +178,9 @@ function handle(message) {
 
     case "resources/read": {
       const make = RESOURCES[params?.uri];
-      if (!make) return fail(-32002, `Resource not found: ${params?.uri}`);
+      // -32002 was the resource-not-found code through 2025-11-25. This
+      // version forbids emitting it and replaces it with -32602.
+      if (!make) return fail(-32602, `Resource not found: ${params?.uri}`);
       return reply({ contents: [make()] });
     }
 

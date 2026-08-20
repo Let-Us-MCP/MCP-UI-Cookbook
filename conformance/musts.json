@@ -1,0 +1,342 @@
+{
+ "003207322729": {
+  "verdict": "not-applicable",
+  "note": "Binds the client, which sends notifications/cancelled."
+ },
+ "0b3c99c51e97": {
+  "verdict": "implemented",
+  "note": "initialize returns -32022 with data.supported and data.requested for any other version; asserted for all thirteen servers by check_sdk_client.mjs."
+ },
+ "0c82c46366e9": {
+  "verdict": "implemented",
+  "note": "No schema here contains $ref, so nothing is dereferenced."
+ },
+ "0db37229e983": {
+  "verdict": "not-applicable",
+  "note": "Binds the sender of a cancellation, which here is the client."
+ },
+ "0f57fb994ed0": {
+  "verdict": "not-applicable",
+  "note": "MRTR retry ids; no server here returns an input-required response."
+ },
+ "11bed870bed2": {
+  "verdict": "implemented",
+  "note": "The one binary resource is base64 in a blob field; a corrupted encoding here was caught by the render harness asserting naturalWidth."
+ },
+ "125504057246": {
+  "verdict": "implemented",
+  "note": "A missing resource returns an error rather than an empty contents array; the code is now -32602."
+ },
+ "1c58d22a9c07": {
+  "verdict": "not-applicable",
+  "note": "Binds the client's reconnection behaviour."
+ },
+ "1e84154c7310": {
+  "verdict": "open",
+  "note": "No server here tracks in-flight requests, so a cancellation notification is ignored rather than acted on. Recipe 11 cancels through its own tool instead."
+ },
+ "1e93fd7624fe": {
+  "verdict": "open",
+  "note": "Same per-request _meta table as 3621e5bb52a2."
+ },
+ "1eeb0544c918": {
+  "verdict": "open",
+  "note": "The servers read protocol version and capabilities from initialize rather than from each request's _meta, which is exactly the prior-connection-state this forbids. Tracked with 3621e5bb52a2."
+ },
+ "1fee33d844ae": {
+  "verdict": "not-applicable",
+  "note": "No schema dialect is accepted from a client; the servers publish schemas and never consume one."
+ },
+ "202b2dd40659": {
+  "verdict": "implemented",
+  "note": "server/discover returns supportedVersions, capabilities and serverInfo; asserted for all thirteen by check_sdk_client.mjs."
+ },
+ "21f2ade9dd85": {
+  "verdict": "not-applicable",
+  "note": "HTTP status codes; these servers are stdio only."
+ },
+ "229015588bc5": {
+  "verdict": "implemented",
+  "note": "Every inputSchema is an object schema, never null; asserted by check_sdk_client.mjs through tools/list."
+ },
+ "2ae8dd3d398b": {
+  "verdict": "implemented",
+  "note": "A closed stdin ends the process, which cancels everything in flight."
+ },
+ "3030f0df2657": {
+  "verdict": "implemented",
+  "note": "A view whose host lacks a capability falls back rather than failing; this is the subject of Chapter 22 and every recipe's failure-cases table."
+ },
+ "316ceef86e47": {
+  "verdict": "implemented",
+  "note": "No path from a request reaches the filesystem: the file tree is a fixture and reads are keyed by id, which is why Recipe 3's server says so in its header comment."
+ },
+ "3621e5bb52a2": {
+  "verdict": "open",
+  "note": "Clients here send no io.modelcontextprotocol/protocolVersion or clientCapabilities in _meta, and the servers do not reject requests that omit them. The largest open gap; see PENDING."
+ },
+ "3838df8b7260": {
+  "verdict": "open",
+  "note": "Race handling on a cancelled request is untested; nothing here cancels an in-flight server request. Same gap as 1e84154c7310."
+ },
+ "39b60c297438": {
+  "verdict": "implemented",
+  "note": "tools/list returns the declared set; asserted for all thirteen by check_sdk_client.mjs."
+ },
+ "3ff07c3ad34a": {
+  "verdict": "not-applicable",
+  "note": "Binds the client's handling of an invalid tool."
+ },
+ "418bb21a8ecb": {
+  "verdict": "implemented",
+  "note": "Recipe 9 and Recipe 11 increase progress monotonically; the render harness asserts the resulting DOM."
+ },
+ "42cb5706896c": {
+  "verdict": "not-applicable",
+  "note": "No cacheScope is emitted and no list response is paginated."
+ },
+ "45b53229971c": {
+  "verdict": "not-applicable",
+  "note": "Applies to numeric constraints in tool schemas; none of these schemas use them."
+ },
+ "49a986e91051": {
+  "verdict": "implemented",
+  "note": "Node writes and reads UTF-8 on the standard streams by default and nothing changes the encoding."
+ },
+ "4c837d13d4ff": {
+  "verdict": "not-applicable",
+  "note": "resultType is an MRTR field. These servers never return a partial result, so the only value they emit is on server/discover."
+ },
+ "4dc247fc1b61": {
+  "verdict": "not-applicable",
+  "note": "Icon MIME support binds clients that render icons; these servers declare no icons."
+ },
+ "4f5673140d3c": {
+  "verdict": "open",
+  "note": "Nothing reads clientCapabilities per request, so nothing can avoid relying on undeclared ones. Same root cause as 3621e5bb52a2."
+ },
+ "5027dd130f30": {
+  "verdict": "not-applicable",
+  "note": "MAY-level latitude for servers, with no obligation to meet."
+ },
+ "5281d5590940": {
+  "verdict": "implemented",
+  "note": "Implemented in mcp-server.js and in Recipe 1's own copy; asserted for all thirteen by check_sdk_client.mjs."
+ },
+ "58c508aa1f57": {
+  "verdict": "implemented",
+  "note": "mcp-server.js forwards notifications/progress against the running request when the client supplied a progressToken."
+ },
+ "5df88172b2ca": {
+  "verdict": "implemented",
+  "note": "No notifications/message is emitted at all, so none is emitted without a log level."
+ },
+ "5e2e3d0b5745": {
+  "verdict": "open",
+  "note": "Same per-request _meta requirement as 3621e5bb52a2, restated for pagination."
+ },
+ "60f0b25237df": {
+  "verdict": "implemented",
+  "note": "resources/read matches the requested uri against a fixed map and returns an error otherwise, so no unvalidated uri reaches anything."
+ },
+ "62b865dc9101": {
+  "verdict": "not-applicable",
+  "note": "Describes host application choices, not server obligations."
+ },
+ "6325340f1377": {
+  "verdict": "not-applicable",
+  "note": "No paginated list response exists to keep consistent."
+ },
+ "65d0d832816a": {
+  "verdict": "implemented",
+  "note": "Base protocol, versioning and request/response are implemented in apps/lib/mcp-server.js and asserted by check_sdk_client.mjs."
+ },
+ "68c70fab5cbe": {
+  "verdict": "not-applicable",
+  "note": "x-mcp-header constraints apply to the HTTP transport."
+ },
+ "6ad599f5d504": {
+  "verdict": "not-applicable",
+  "note": "No server here implements subscriptions/listen."
+ },
+ "6b96f4e29d89": {
+  "verdict": "implemented",
+  "note": "resources/list returns the view resource plus any extras; exercised by the render harness and check_sdk_client.mjs."
+ },
+ "6dffa1a1cc9d": {
+  "verdict": "implemented",
+  "note": "Every message is JSON-RPC 2.0; the framing is one object per line in mcp-server.js and the SDK's own transport parses it."
+ },
+ "72a1794b1b1e": {
+  "verdict": "not-applicable",
+  "note": "No subscriptions/listen stream exists to tear down."
+ },
+ "737480ee0646": {
+  "verdict": "implemented",
+  "note": "No subscription filter is accepted and no unrequested notification type is sent."
+ },
+ "779e2e10f0fa": {
+  "verdict": "not-applicable",
+  "note": "Describes a client's fallback for legacy servers."
+ },
+ "7c2b28a7a140": {
+  "verdict": "implemented",
+  "note": "The servers write only responses and notifications to stdout; they originate no request."
+ },
+ "802fce17884e": {
+  "verdict": "open",
+  "note": "Input validation is per tool and partial, there are no access controls and no rate limiting, because these servers hold fixture data and run as a local subprocess. Stated rather than claimed as met."
+ },
+ "85c754508132": {
+  "verdict": "implemented",
+  "note": "No server here sends notifications/cancelled at all."
+ },
+ "86e7a3d7ee88": {
+  "verdict": "implemented",
+  "note": "Ids come from the client and are echoed unchanged; the servers never originate a request id."
+ },
+ "880035165cc7": {
+  "verdict": "not-applicable",
+  "note": "No server here declares the completions capability."
+ },
+ "8908c58c79c1": {
+  "verdict": "not-applicable",
+  "note": "No server here declares an outputSchema, so nothing must conform to one."
+ },
+ "8bde9cd5cc56": {
+  "verdict": "not-applicable",
+  "note": "Binds the client half of the transport."
+ },
+ "8eed39f86a5d": {
+  "verdict": "not-applicable",
+  "note": "No completion interface is exposed."
+ },
+ "8fafb3f3a7bd": {
+  "verdict": "implemented",
+  "note": "No server-sent cancellation is emitted, so none references the wrong request."
+ },
+ "93964c61a9f7": {
+  "verdict": "open",
+  "note": "Same per-request _meta requirement as 3621e5bb52a2, restated for resources."
+ },
+ "991c7f8f8431": {
+  "verdict": "not-applicable",
+  "note": "Binds the client's correlation of subscription notifications."
+ },
+ "9d86d9de9d7e": {
+  "verdict": "implemented",
+  "note": "The resource set is a module constant, so it cannot vary per connection."
+ },
+ "a0abcd7b677c": {
+  "verdict": "not-applicable",
+  "note": "No server here implements subscriptions/listen, so no notification is delivered on such a stream."
+ },
+ "a27c216ac0bb": {
+  "verdict": "not-applicable",
+  "note": "No opt-in remote $ref mode exists to disable."
+ },
+ "a3d29cc47b0e": {
+  "verdict": "implemented",
+  "note": "The only extension identifier used is io.modelcontextprotocol/ui, which carries the reserved prefix."
+ },
+ "a86290a33d14": {
+  "verdict": "implemented",
+  "note": "The tool set is a module constant, so it cannot vary per connection or as a side effect."
+ },
+ "a883ee64ff57": {
+  "verdict": "open",
+  "note": "MissingRequiredClientCapabilityError (-32021) is never emitted because per-request capabilities are not read. Same root cause as 3621e5bb52a2."
+ },
+ "a890e0e83312": {
+  "verdict": "open",
+  "note": "Same per-request _meta requirement as 3621e5bb52a2, restated for tools."
+ },
+ "acdbe01757cf": {
+  "verdict": "implemented",
+  "note": "Every inputSchema is a plain 2020-12 object schema with no $schema field, which is the default dialect."
+ },
+ "b008cae6cead": {
+  "verdict": "not-applicable",
+  "note": "SHOULD-level guidance about tasks and threads; no MUST binds these servers."
+ },
+ "b37de2ba2083": {
+  "verdict": "implemented",
+  "note": "No notifications/message is emitted, and no subscriptions/listen stream exists."
+ },
+ "b8418f0aa471": {
+  "verdict": "implemented",
+  "note": "The servers assume no meaning for legacy codes because they neither emit nor receive them."
+ },
+ "ba30493a362d": {
+  "verdict": "implemented",
+  "note": "notifications/* carry no id and get no response; mcp-server.js returns null for them."
+ },
+ "be14382d0c1b": {
+  "verdict": "implemented",
+  "note": "The token comes off the running request's _meta.progressToken and is used only while that request is open."
+ },
+ "c2f6a517d94e": {
+  "verdict": "not-applicable",
+  "note": "No custom transport is implemented."
+ },
+ "cfa194f46104": {
+  "verdict": "not-applicable",
+  "note": "No MRTR request is served and no response here is cacheable."
+ },
+ "d65c4b677ae5": {
+  "verdict": "not-applicable",
+  "note": "MAY-level guidance about XDG MIME types for file:// resources."
+ },
+ "d70448e42db5": {
+  "verdict": "implemented",
+  "note": "The views read only _meta.ui, which the UI extension defines; no assumption is made about reserved core keys."
+ },
+ "db8be200bd19": {
+  "verdict": "implemented",
+  "note": "The stdio binding delivers both directions; the render harness and check_sdk_client.mjs both exercise it."
+ },
+ "dbada530b325": {
+  "verdict": "not-applicable",
+  "note": "No cache and no authorization context."
+ },
+ "df502f97a034": {
+  "verdict": "implemented",
+  "note": "No code in -32000..-32019 is allocated here; the only codes emitted are -32601, -32602 and -32022."
+ },
+ "df6032dd4855": {
+  "verdict": "implemented",
+  "note": "-32022 is the only reserved-range code emitted and it is used with its specified meaning, asserted by check_sdk_client.mjs."
+ },
+ "e00988482cc8": {
+  "verdict": "not-applicable",
+  "note": "Nothing here polls."
+ },
+ "e54e0ef9ca46": {
+  "verdict": "implemented",
+  "note": "One JSON object per line on stdin and stdout, newline delimited, in mcp-server.js."
+ },
+ "ec4a5f8fea9c": {
+  "verdict": "not-applicable",
+  "note": "SHOULD-level guidance for the host application, which is Chapter 18's subject rather than a server obligation."
+ },
+ "ef7f4b9d040c": {
+  "verdict": "not-applicable",
+  "note": "No server here declares the logging capability."
+ },
+ "efe0defc7b99": {
+  "verdict": "not-applicable",
+  "note": "Binds clients receiving annotations."
+ },
+ "f064eea8db81": {
+  "verdict": "implemented",
+  "note": "-32002 was emitted for a missing resource until this ledger caught it; both servers now use -32602."
+ },
+ "f7d04da611eb": {
+  "verdict": "implemented",
+  "note": "No ttlMs is returned; server/discover omits it rather than returning a negative value."
+ },
+ "fdc3912f1103": {
+  "verdict": "implemented",
+  "note": "No log messages are emitted. The fixtures carry no credentials or personal data."
+ }
+}

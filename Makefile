@@ -5,7 +5,7 @@
 PY   := $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
 NODE := node
 
-.PHONY: all registry site demos figures fixtures check lint refs listings counts wire sandbox search hooks sdkapi sdkclient \
+.PHONY: all registry site demos figures fixtures check lint refs listings counts wire sandbox search hooks sdkapi sdkclient differential musts \
         claims transcripts serve venv clean
 
 all: registry fixtures demos figures site
@@ -26,7 +26,7 @@ site:
 	python3 tools/build_site.py
 	python3 tools/build_search.py
 
-check: lint density refs listings counts claims identifiers sdkapi sdkclient webclaims wire sandbox search transcripts render
+check: lint density refs listings counts claims identifiers musts sdkapi sdkclient differential webclaims wire sandbox search transcripts render
 
 lint:
 	python3 tools/lint_prose.py
@@ -73,11 +73,22 @@ sdkapi:
 webclaims:
 	python3 tools/check_web_claims.py
 
+# Every server-directed MUST in the pinned specification has to be classified
+# in conformance/musts.json. An unclassified one fails, so a specification
+# update surfaces the new obligation instead of passing silently.
+musts:
+	python3 tools/check_musts.py
+
 # Layer 5 of Chapter 27, the server half. Drives every recipe server with the
 # real SDK's transport rather than the host written here. Needs
 # proto/sdk-client/, which is never committed, and skips without it.
 sdkclient:
 	$(NODE) tools/check_sdk_client.mjs
+
+# The other half of layer 5: everything the servers publish, re-served through
+# the reference implementation and read back, so its own validation sees it.
+differential:
+	$(NODE) tools/check_differential.mjs
 
 # Downloads the W3C, WHATWG and ecosystem references the book cites into
 # proto/refs/, which is never committed.

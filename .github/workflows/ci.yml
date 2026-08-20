@@ -32,6 +32,7 @@ jobs:
           python3 tools/check_claims.py
           python3 tools/check_identifiers.py
           python3 tools/check_web_claims.py
+          python3 tools/check_musts.py
       - name: Build the demos and the site
         run: |
           python3 tools/build_demos.py
@@ -49,5 +50,6 @@ jobs:
           npm install --no-audit --no-fund @modelcontextprotocol/sdk
           cd ../..
           node tools/check_sdk_client.mjs
+          node tools/check_differential.mjs
       - name: The site must be committed and current
         run: git diff --exit-code -- docs
